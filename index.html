@@ -730,12 +730,14 @@
             #socratic-modal { display: none !important; }
             #print-guide-area {
                 display: block !important;
-                position: fixed;
-                top: 0; left: 0;
+                position: static !important;   /* fluye en varias páginas: ya no se corta */
                 width: 100%;
-                height: auto;
-                z-index: 9999;
             }
+            /* Evita que estos bloques se partan a la mitad entre páginas */
+            .pgi-q-block, .pgi-sign-row, .pgi-eval-grid, .pgi-verdict-box,
+            .pgi-obs-area, .pgi-student-row { page-break-inside: avoid; break-inside: avoid; }
+            .pgi-section-title { page-break-after: avoid; }
+            .pgi-page { padding: 0 !important; max-width: none !important; margin: 0 !important; }
         }
         #print-guide-area {
             display: none;
@@ -973,7 +975,7 @@
         /* Print-specific overrides */
         @page {
             size: A4;
-            margin: 0;
+            margin: 1.2cm 1.4cm;
         }
 
         /* Badge "Generado con IA contextual" */
@@ -1544,14 +1546,16 @@
         //  GENERACIÓN DE PREGUNTAS OFFLINE BASADAS EN EL TEXTO REAL
         // =====================================================================
         function generarPreguntasOffline(text) {
+            // ================================================================
+            //  MOTOR SOCRÁTICO OFFLINE ESPECIALIZADO v3
             // ----------------------------------------------------------------
-            //  Generador de preguntas de reflexión OFFLINE.
-            //  Analiza el texto real del estudiante (palabras clave, términos
-            //  propios/técnicos, oraciones, cifras) y construye preguntas
-            //  socráticas ancladas al contenido. Usa un amplio banco de
-            //  variantes y selección aleatoria: cada análisis produce un
-            //  conjunto distinto y profundo de preguntas, incluso sin conexión.
-            // ----------------------------------------------------------------
+            //  Sin conexión, analiza el texto real del estudiante en tres
+            //  capas: (1) léxico/entidades, (2) estructura argumental
+            //  (comparación, causa-efecto, opinión, cifras) y (3) DOMINIO
+            //  temático (medio ambiente, historia, ciencia, etc.). Con eso
+            //  arma contra-preguntas socráticas profundas y ancladas al texto,
+            //  eligiendo de un amplio banco con variación aleatoria.
+            // ================================================================
             const shuffle = arr => { const a = arr.slice(); for (let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; };
             const pick = arr => arr[Math.floor(Math.random()*arr.length)];
 
@@ -1560,103 +1564,169 @@
                 'aunque','mientras','después','antes','durante','través','mismo',
                 'estos','estas','tienen','puede','están','parte','debe','hacer',
                 'todos','todas','cada','como','para','pero','sino','dicha','dicho',
-                'propia','propio','haber','estar','tener','siendo','había','través',
+                'propia','propio','haber','estar','tener','siendo','había','entonces',
                 'esta','este','esto','aquel','aquella','cual','cuyo','cuya','quien',
-                'algo','alguien','alguno','ninguno','cualquier','tanto','entonces',
+                'algo','alguien','alguno','ninguno','cualquier','tanto','además',
                 'siempre','nunca','jamás','quizás','acaso','según','mediante','ademas',
-                'además','respecto','manera','forma','caso','tipo','punto','nivel','vez',
+                'respecto','manera','forma','caso','tipo','punto','nivel','vez','cosa',
                 'muchos','muchas','otros','otras','algunos','algunas','solo','sólo',
-                'hacia','sería','serían','fueron','hemos','hicieron','poder','sobretodo'
+                'hacia','sería','serían','fueron','hemos','hicieron','poder','nuestro',
+                'nuestra','porqué','cuales','sobretodo','generalmente','realmente'
             ]);
 
-            // --- Palabras clave por frecuencia ---
-            const clean = text.toLowerCase().replace(/[.,¡!¿?;:()\[\]{}«»""''\-–—]/g,' ');
+            const lower = text.toLowerCase();
+            const clean = lower.replace(/[.,¡!¿?;:()\[\]{}«»""''\-–—]/g,' ');
             const allWords = clean.split(/\s+/).filter(w => w.length > 4 && !/^\d+$/.test(w));
             const freq = {};
             allWords.forEach(w => { if (!STOPWORDS.has(w)) freq[w] = (freq[w]||0)+1; });
-            const keywords = Object.entries(freq)
-                .sort((a,b) => b[1]-a[1])
-                .slice(0, 12)
-                .map(([w]) => w);
+            const keywords = Object.entries(freq).sort((a,b)=>b[1]-a[1]).slice(0,14).map(([w])=>w);
 
-            // --- Términos propios/técnicos (mayúscula inicial) ---
-            const capsTerms = (text.match(/[A-ZÁÉÍÓÚÑ][a-záéíóúñ]{3,}(?:\s+[A-ZÁÉÍÓÚÑ][a-záéíóúñ]{3,})?/g) || []);
-            const capsFreq = {};
+            // Términos propios / técnicos (mayúscula inicial)
             const capsExcl = ['Este','Esta','Esto','Estos','Estas','Ese','Esa','Esos','Esas',
                 'Los','Las','Una','Uno','Unos','Unas','Con','Sin','Por','Para','Que','Como',
                 'Cuando','Donde','Aunque','Desde','Hasta','Pero','Sobre','Entre','Cada','Sus',
-                'Nuestro','Nuestra','Además','También','Según','Porque','Mientras','Luego'];
-            capsTerms.forEach(t => {
-                const w = t.trim();
-                if (w.split(' ').every(p => p.length >= 4)) capsFreq[w] = (capsFreq[w]||0)+1;
-            });
-            const topSpecific = Object.entries(capsFreq)
-                .filter(([w]) => !capsExcl.includes(w))
-                .sort((a,b)=>b[1]-a[1])
-                .slice(0,5)
-                .map(([w])=>w);
+                'Nuestro','Nuestra','Además','También','Según','Porque','Mientras','Luego','El','La'];
+            const capsFreq = {};
+            (text.match(/[A-ZÁÉÍÓÚÑ][a-záéíóúñ]{3,}(?:\s+[A-ZÁÉÍÓÚÑ][a-záéíóúñ]{3,})?/g) || [])
+                .forEach(t => { const w=t.trim(); if (w.split(' ').every(p=>p.length>=4)) capsFreq[w]=(capsFreq[w]||0)+1; });
+            const topSpecific = Object.entries(capsFreq).filter(([w])=>!capsExcl.includes(w))
+                .sort((a,b)=>b[1]-a[1]).slice(0,5).map(([w])=>w);
 
-            // --- Oraciones representativas ---
-            const sentences = (text.match(/[^.!?¡¿]{25,}[.!?]/g) || [])
-                .map(s => s.trim().replace(/\s+/g,' '));
-            const frag = s => {
-                if (!s) return '';
-                const t = s.replace(/^[\s,;:¿¡"']+/,'');
-                return t.length > 95 ? t.substring(0,95).trim()+'…' : t.replace(/[.!?]+$/,'');
-            };
+            // Oraciones representativas
+            const sentences = (text.match(/[^.!?¡¿]{25,}[.!?]/g) || []).map(s => s.trim().replace(/\s+/g,' '));
+            const frag = s => { if(!s) return ''; const t=s.replace(/^[\s,;:¿¡"']+/,''); return t.length>95 ? t.substring(0,95).trim()+'…' : t.replace(/[.!?]+$/,''); };
             const firstS = frag(sentences[0] || '');
             const midS   = frag(sentences[Math.floor(sentences.length/2)] || '');
             const lastS  = frag(sentences[sentences.length-1] || '');
 
-            // --- Cifras / datos ---
+            // Cifras / datos
             const numbers = (text.match(/\d+(?:[.,]\d+)?\s?(?:%|por ciento|años?|millones?|mil|km|kg|pesos)?/gi) || [])
-                .map(s => s.trim()).filter(s => /\d/.test(s) && s.length <= 18);
-            const hasNum = numbers.length > 0;
+                .map(s=>s.trim()).filter(s=>/\d/.test(s) && s.length<=18);
+            const hasNum = numbers.length>0;
             const someNum = hasNum ? pick(numbers) : null;
 
-            // --- Tokens base (con respaldos genéricos) ---
+            // Señales estructurales del argumento
+            const hasCompare = /\b(m[áa]s que|menos que|a diferencia|en cambio|mientras que|comparad|por el contrario|igual que|similar a|frente a)\b/i.test(text);
+            const hasCause   = /\b(porque|debido a|por lo tanto|por eso|ya que|gracias a|provoca|causa|genera|conlleva|por consiguiente|gener[oó]|produce)\b/i.test(text);
+            const hasOpinion = /\b(creo|pienso|opino|considero|me parece|en mi opini[óo]n|a mi juicio|estoy de acuerdo|no estoy de acuerdo|deber[íi]amos)\b/i.test(text);
+
+            // Tokens base con respaldos
             const k1 = keywords[0] || 'la idea principal';
             const k2 = keywords[1] || 'la idea central';
             const k3 = topSpecific[0] || keywords[2] || 'el tema que desarrollas';
             const k4 = topSpecific[1] || keywords[3] || k1;
             const tema = topSpecific[0] || keywords[0] || 'tu texto';
 
-            // --- Banco de preguntas por categoría (muchas variantes) ---
-            const bancos = {};
+            // ---- Detección de DOMINIO temático ----
+            const LEXICONS = {
+                medioambiente: ['contamina','ambient','clima','ecolog','reciclaj','residuo','basura','especie','planeta','sostenib','sustentab','emisi','calentamiento','naturaleza','deforest','biodivers','plástico','plastico','vertedero'],
+                historia: ['histor','guerra','siglo','independencia','revoluci','imperio','conquista','batalla','dictadura','colonia','civilizaci','antigu','monarqu','rep[úu]blica','prócer','indígena'],
+                literatura: ['novela','poema','poes','autor','personaje','narrador','met[áa]fora','cuento','protagonista','verso','literari','cap[íi]tulo','relato','lectura','escritor'],
+                ciencia: ['c[ée]lula','[áa]tomo','energ[íi]a','experimento','qu[íi]mica','f[íi]sica','biolog','hip[óo]tesis','organismo','gravedad','mol[ée]cula','ecosistema','fotos[íi]ntesis','reacci[óo]n','materia'],
+                tecnologia: ['tecnolog','internet','digital','software','computador','robot','inteligencia artificial','red social','aplicaci[óo]n','dispositivo','algoritmo','videojuego','pantalla','celular','smartphone'],
+                sociedad: ['sociedad','derecho','justicia','igualdad','respeto','comunidad','ciudadan','discrimin','libertad','democracia','convivencia','bullying','acoso','inclusi','g[ée]nero','valores'],
+                salud: ['salud','enfermedad','alimentaci','nutrici','ejercicio','mental','droga','virus','m[ée]dic','bienestar','obesidad','adicci','vacuna','higiene','pandemia'],
+                economia: ['dinero','econom[íi]a','mercado','empresa','pobreza','consumo','comercio','producci','empleo','desempleo','sueldo','presupuesto','inflaci','salario'],
+                deporte: ['deporte','f[úu]tbol','jugador','equipo','competencia','entrenamiento','partido','atleta','campeonato'],
+                arte: ['arte','m[úu]sica','pintura','artista','dibujo','canci[óo]n','danza','teatro','instrumento','escultura','melod[íi]a']
+            };
+            let dominio = null, mejor = 0;
+            for (const [tema_, terms] of Object.entries(LEXICONS)) {
+                let c = 0; terms.forEach(t => { if (new RegExp(t).test(lower)) c++; });
+                if (c > mejor) { mejor = c; dominio = tema_; }
+            }
+            if (mejor < 2) dominio = null;
 
+            const DOMINIO_Q = {
+                medioambiente: [
+                    `Tu texto trata un problema ambiental ligado a "${k1}". ¿Qué acción concreta podrías hacer tú, en tu casa o tu colegio, esta misma semana para aportar a esa causa?`,
+                    `Sobre "${k3}": ¿quién tiene la mayor responsabilidad —el Estado, las empresas o las personas— y por qué? Defiende tu postura con un argumento propio.`,
+                    `Si nadie hiciera nada frente a lo que planteas sobre "${k1}", ¿cómo imaginas tu comunidad dentro de 20 años? Describe ese escenario.`,
+                    `Mucha gente conoce este problema pero no actúa. Según lo que escribiste, ¿por qué crees que ocurre esa contradicción?`
+                ],
+                historia: [
+                    `Tu texto se sitúa en un contexto histórico ligado a "${k1}". ¿Qué causas explican que ese hecho ocurriera y no otro?`,
+                    `Si "${k3}" hubiese tenido un desenlace distinto, ¿cómo sería hoy nuestra sociedad? Argumenta tu hipótesis.`,
+                    `¿Qué semejanzas ves entre lo que describes sobre "${k1}" y algo que ocurra en la actualidad? Da un ejemplo.`,
+                    `¿Desde qué punto de vista está contada esta historia? ¿Qué protagonista o versión crees que quedó fuera de tu relato?`
+                ],
+                literatura: [
+                    `En tu texto trabajas con "${k1}". ¿Qué crees que se quiso transmitir con eso? Justifícalo señalando una parte concreta.`,
+                    `Elige un personaje o idea de "${k3}". Si pudieras hacerle una pregunta, ¿cuál sería y qué crees que respondería?`,
+                    `¿Con qué emoción o experiencia tuya conectas lo que escribes sobre "${k1}"? Explica esa conexión.`,
+                    `¿Qué cambiaría en tu texto si el final o el tono fueran distintos? Propón una alternativa y defiéndela.`
+                ],
+                ciencia: [
+                    `Explica "${k1}" como si tuvieras que demostrarlo a tu curso con un experimento: ¿qué pasos seguirías?`,
+                    `¿Qué evidencia respalda lo que afirmas sobre "${k3}"? Si no la tienes a mano, ¿cómo y dónde la buscarías?`,
+                    `¿Dónde puedes observar "${k1}" en la vida real? Da un ejemplo cotidiano y explícalo.`,
+                    `¿Qué pasaría si una de las condiciones que mencionas sobre "${k1}" cambiara? Predice el resultado y razónalo.`
+                ],
+                tecnologia: [
+                    `Tu texto aborda "${k1}". ¿Qué beneficios y qué riesgos tiene para alguien de tu edad? Da un ejemplo de cada uno.`,
+                    `Sobre "${k3}": ¿cómo era la vida de las personas antes de que existiera y qué cambió? Compara.`,
+                    `¿Qué uso responsable harías de "${k1}" y qué considerarías un abuso? Explica la diferencia.`,
+                    `Si tuvieras que explicarle "${k1}" a tus abuelos, ¿qué ejemplo de la vida diaria usarías?`
+                ],
+                sociedad: [
+                    `Tu texto plantea un tema social vinculado a "${k1}". ¿Cómo se manifiesta eso en tu colegio o tu barrio? Da un ejemplo concreto.`,
+                    `Sobre "${k3}": ¿qué nos corresponde a las personas comunes y qué a las autoridades? Argumenta.`,
+                    `¿Estás totalmente de acuerdo con lo que escribiste sobre "${k1}" o hay un matiz? Defiende tu postura con sinceridad.`,
+                    `¿Qué pequeño cambio de actitud propondrías para mejorar lo que describes sobre "${k1}"? ¿Por qué crees que funcionaría?`
+                ],
+                salud: [
+                    `Tu texto trata sobre "${k1}". ¿Qué hábito concreto de tu vida diaria se relaciona con eso y cómo podrías mejorarlo?`,
+                    `Sobre "${k3}": ¿qué información confiable usarías para tomar una buena decisión y dónde la buscarías?`,
+                    `¿Por qué crees que mucha gente sabe lo que es saludable pero no lo practica? Relaciónalo con tu texto.`,
+                    `Si tuvieras que convencer a un amigo de cuidar su "${k1}", ¿qué argumento real le darías?`
+                ],
+                economia: [
+                    `Tu texto aborda "${k1}". ¿Cómo afecta eso al presupuesto de una familia como la tuya? Da un ejemplo concreto.`,
+                    `Sobre "${k3}": ¿quién gana y quién pierde en esa situación? Explica tu razonamiento.`,
+                    `¿Qué decisión económica cotidiana (comprar, ahorrar, gastar) se relaciona con lo que escribiste? Descríbela.`,
+                    `¿Crees que el problema que planteas sobre "${k1}" tiene solución? ¿Quién debería actuar y cómo?`
+                ],
+                deporte: [
+                    `Tu texto trata sobre "${k1}". ¿Qué aprendizaje de vida (esfuerzo, equipo, frustración) se puede sacar de eso? Da un ejemplo tuyo.`,
+                    `Sobre "${k3}": ¿qué cualidades marcan la diferencia y cómo se entrenan? Relaciónalo con tu experiencia.`,
+                    `¿Cómo se conecta lo que escribiste sobre "${k1}" con tu propia vida fuera de la cancha?`
+                ],
+                arte: [
+                    `Tu texto habla de "${k1}". ¿Qué sensación busca provocar y con qué recurso lo logra? Explica con un detalle concreto.`,
+                    `Sobre "${k3}": ¿qué dice de la época o la cultura en que se creó? Argumenta.`,
+                    `¿Con qué experiencia o emoción personal conectas "${k1}"? Describe esa conexión.`
+                ]
+            };
+
+            // ---- Bancos generales ----
+            const bancos = {};
             bancos.comprension = [
-                `Tu texto se apoya en la idea de "${k1}". Explícala con tus propias palabras, sin repetir las frases que escribiste, y señala por qué es central en tu trabajo.`,
+                `Tu texto se apoya en la idea de "${k1}". Explícala con tus propias palabras, sin repetir las frases que escribiste, y señala por qué es central.`,
                 `Define "${k1}" como si se lo explicaras a un compañero que nunca ha oído ese término. ¿Qué ejemplo propio usarías?`,
                 `Cuando hablas de "${k2}", ¿a qué te refieres exactamente? Distínguelo de otra idea parecida con la que podría confundirse.`,
-                `¿Qué relación existe entre "${k1}" y "${k2}" dentro de tu argumento? Explica cómo una idea conduce a la otra.`,
-                `Si tuvieras que resumir lo que dices sobre "${k3}" en una sola frase distinta a la del texto, ¿cómo lo dirías?`,
-                `Usaste la palabra "${k1}" en tu trabajo. ¿Por qué es la más adecuada y no un sinónimo? ¿Qué matiz aporta?`
+                `¿Qué relación existe entre "${k1}" y "${k2}" en tu argumento? Explica cómo una idea conduce a la otra.`,
+                `Usaste la palabra "${k1}". ¿Por qué es la más adecuada y no un sinónimo? ¿Qué matiz aporta?`
             ];
-
             bancos.evidencia = [
-                `Una de tus afirmaciones es ${midS ? '"'+midS+'"' : 'una idea clave de tu texto'}. ¿En qué fuente, lectura o experiencia concreta te apoyaste para sostenerla?`,
+                `Una de tus afirmaciones es ${midS ? '"'+midS+'"' : 'una idea clave de tu texto'}. ¿En qué fuente, lectura o experiencia te apoyaste para sostenerla?`,
                 `¿De dónde obtuviste la información sobre "${k3}"? Indica el origen y explica por qué lo consideras confiable.`,
                 `Señala la parte de tu texto que más te costó respaldar. ¿Con qué evidencia o ejemplo la defenderías ahora mismo?`,
-                `Si un compañero dudara de lo que escribes sobre "${k2}", ¿con qué prueba o ejemplo concreto lo convencerías?`
+                `Si un compañero dudara de lo que escribes sobre "${k2}", ¿con qué prueba concreta lo convencerías?`
             ];
-            if (hasNum) {
-                bancos.evidencia.push(`Mencionas el dato "${someNum}". ¿De dónde proviene esa cifra y qué significa realmente dentro de tu argumento?`);
-            }
+            if (hasNum) bancos.evidencia.push(`Mencionas el dato "${someNum}". ¿De dónde proviene esa cifra y qué significa realmente dentro de tu argumento?`);
 
             bancos.aplicacion = [
-                `Considerando lo que planteas sobre "${k3}", ¿qué consecuencia real tiene en tu vida diaria o en tu entorno? Da un ejemplo que NO esté en el texto.`,
+                `Considerando lo que planteas sobre "${k3}", ¿qué consecuencia real tiene en tu vida diaria? Da un ejemplo que NO esté en el texto.`,
                 `¿Dónde podrías observar "${k1}" funcionando en el mundo real (tu barrio, tu colegio, las noticias)? Describe una situación concreta.`,
                 `Si aplicaras la idea central de tu texto a un problema de tu comunidad, ¿qué cambiarías y por qué?`,
                 `Imagina que debes enseñar "${k2}" a un niño más pequeño. ¿Con qué ejemplo cotidiano se lo harías entender?`
             ];
-
             bancos.critica = [
                 `¿Qué argumento podría usar alguien que NO está de acuerdo con tu postura sobre "${k1}"? ¿Cómo le responderías?`,
                 `Señala una debilidad o un límite de tu propio planteamiento sobre "${k3}". Ningún texto es perfecto: ¿cuál es el suyo?`,
                 `Si los hechos sobre "${k2}" fueran distintos, ¿cambiaría tu conclusión? Explica en qué condiciones.`,
                 `¿Qué pregunta importante queda SIN responder en tu texto? ¿Por qué decidiste no abordarla?`
             ];
-
             bancos.reflexion = [
                 `Más allá de la nota, ¿qué aprendiste tú al pensar sobre "${k1}"? ¿En qué cambió tu manera de ver el tema?`,
                 `¿Por qué crees que este tema es importante para ti, como estudiante y como persona? Conecta "${k2}" con algo que te haya pasado o que te preocupe.`,
@@ -1664,42 +1734,42 @@
                 `¿Qué opinas TÚ, sinceramente, sobre "${k3}"? Comparte tu opinión personal, no la que crees que se espera.`,
                 `Completa con tus propias palabras: "Lo más valioso que descubrí al trabajar sobre ${tema} fue…". Luego explícalo.`
             ];
-
             bancos.metacognicion = [
                 `Describe paso a paso cómo hiciste este trabajo: ¿por dónde empezaste, qué buscaste primero y cómo ordenaste tus ideas sobre "${k1}"?`,
                 `¿Qué parte de este texto te tomó más tiempo y por qué? ¿Qué hiciste cuando te trabaste?`,
                 `Si tuvieras que volver a escribirlo, ¿qué mejorarías de tu manera de explicar "${k2}"?`
             ];
-
             bancos.detalle = [];
             if (firstS) bancos.detalle.push(`Tu texto comienza diciendo "${firstS}". ¿Por qué elegiste empezar así y qué querías provocar en quien lo lee?`);
             if (lastS && lastS !== firstS) bancos.detalle.push(`Cierras con la idea "${lastS}". ¿Por qué decidiste terminar ahí y qué conclusión querías dejar?`);
-            if (midS && midS !== firstS && midS !== lastS) bancos.detalle.push(`En tu escrito aparece la idea: "${midS}". Desarróllala más: ¿qué quisiste decir exactamente y qué ejemplo la respalda?`);
+            if (midS && midS !== firstS && midS !== lastS) bancos.detalle.push(`En tu escrito aparece: "${midS}". Desarróllala más: ¿qué quisiste decir exactamente y qué ejemplo la respalda?`);
 
-            // --- Selección diversa: columna pedagógica + variación aleatoria ---
-            const opcionales = shuffle(['aplicacion','critica','metacognicion','detalle'])
-                .filter(c => (bancos[c] || []).length > 0);
-            const categorias = ['comprension', 'evidencia', opcionales[0] || 'aplicacion', 'reflexion'];
+            bancos.estructura = [];
+            if (hasCompare) bancos.estructura.push(`Tu texto compara o contrasta ideas en torno a "${k1}". Explica esa comparación: ¿en qué se parecen y en qué se diferencian de verdad?`);
+            if (hasCause) bancos.estructura.push(`Planteas una relación de causa y efecto sobre "${k1}". ¿Estás seguro de que una cosa causa la otra, o podrían influir otros factores? Justifica.`);
+            if (hasOpinion) bancos.estructura.push(`Expresas una opinión personal en tu texto. ¿En qué evidencia o experiencia la basas? ¿Qué le dirías a alguien que opina lo contrario?`);
 
-            const preguntas = [];
+            const dominioQ = dominio ? DOMINIO_Q[dominio] : [];
+
+            // ---- Selección: dominio + comprensión + evidencia/estructura + reflexión ----
             const usadas = new Set();
-            categorias.forEach(cat => {
-                const banco = (bancos[cat] || []).filter(q => !usadas.has(q));
-                if (banco.length) {
-                    const q = pick(banco);
-                    usadas.add(q);
-                    preguntas.push(q);
-                }
-            });
+            const seleccion = [];
+            const add = arr => { const opts=(arr||[]).filter(q=>q && !usadas.has(q)); if (opts.length){ const q=pick(opts); usadas.add(q); seleccion.push(q); } };
 
-            // Asegurar al menos 3 preguntas si algún banco quedó vacío
-            const todas = shuffle(Object.values(bancos).flat());
-            for (const q of todas) {
-                if (preguntas.length >= 4) break;
-                if (!usadas.has(q)) { usadas.add(q); preguntas.push(q); }
-            }
+            add(dominioQ);
+            add(bancos.comprension);
+            add(bancos.estructura.length ? bancos.estructura : bancos.evidencia);
+            if (!bancos.estructura.length) { /* evidencia ya usada */ } else { add(bancos.evidencia); }
+            add(bancos.reflexion);
 
-            return { preguntas };
+            // Completar hasta 4 con variedad
+            const reserva = shuffle([].concat(
+                dominioQ, bancos.aplicacion, bancos.critica, bancos.detalle,
+                bancos.metacognicion, bancos.comprension, bancos.evidencia, bancos.reflexion
+            ));
+            for (const q of reserva) { if (seleccion.length >= 4) break; if (!usadas.has(q)) { usadas.add(q); seleccion.push(q); } }
+
+            return { preguntas: seleccion.slice(0, 4) };
         }
 
         // =====================================================================
