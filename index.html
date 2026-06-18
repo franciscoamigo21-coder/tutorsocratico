@@ -1476,52 +1476,38 @@
         // =====================================================================
         //  GENERACIÓN DE PREGUNTAS CONTEXTUALES VÍA API (mejorado)
         // =====================================================================
+        // ====================================================================
+        //  CONFIGURACIÓN DEL MODO ONLINE (IA)
+        // --------------------------------------------------------------------
+        //  Pega aquí la URL de tu Cloudflare Worker (ver cloudflare-worker.js).
+        //  Mientras diga "REEMPLAZA", la app usa el modo offline mejorado.
+        // ====================================================================
+        const API_PROXY_URL = "https://REEMPLAZA-CON-TU-WORKER.workers.dev";
+
         async function generarPreguntasContextuales(texto, probabilidadIA, clicheList) {
-            const nivelAlerta = probabilidadIA >= 70 ? "ALTA (muy probable IA)" 
-                              : probabilidadIA >= 35 ? "MEDIA (posible híbrido IA/humano)" 
+            const nivelAlerta = probabilidadIA >= 70 ? "ALTA (muy probable IA)"
+                              : probabilidadIA >= 35 ? "MEDIA (posible híbrido IA/humano)"
                               : "BAJA (probable humano)";
-            
-            const promptSistema = `Eres el "Tutor Socrático ASE-IA" del Colegio Presidente José Joaquín Prieto (SIP Red de Colegios, La Pintana, Chile).
 
-TAREA: Lee el texto del estudiante y genera preguntas de defensa oral TOTALMENTE ANCLADAS al contenido real del texto.
+            if (!API_PROXY_URL || API_PROXY_URL.indexOf("REEMPLAZA") !== -1) {
+                throw new Error("Proxy de IA no configurado");
+            }
 
-REGLAS ESTRICTAS:
-1. Las preguntas DEBEN citar o referirse a algo concreto del texto: un dato específico, un ejemplo real, un argumento puntual, un término técnico, una cifra, una persona mencionada, un evento. NO hagas preguntas genéricas que apliquen a cualquier texto.
-2. Para "preguntas_defensa": genera 3 preguntas (no 2). La primera sobre comprensión de un concepto clave usado en el texto. La segunda sobre la fuente o evidencia que respalda el argumento principal. La tercera sobre una consecuencia o aplicación real de lo planteado.
-4. Nivel de exigencia según alerta de IA: ${nivelAlerta}. Si es alta, las preguntas deben ser más técnicas y detalladas.
-5. Responde SOLO con JSON válido, sin markdown, sin texto adicional.
-
-FORMATO DE RESPUESTA (JSON exacto):
-{
-  "preguntas_defensa": [
-    "Pregunta 1 sobre comprensión de concepto específico del texto",
-    "Pregunta 2 sobre fuente/evidencia de un argumento del texto",
-    "Pregunta 3 sobre aplicación o consecuencia de lo planteado"
-  ]
-}`;
-
-            const response = await fetch("https://api.anthropic.com/v1/messages", {
+            // Solo se envía el texto y el contexto; la API key vive en el Worker.
+            const response = await fetch(API_PROXY_URL, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
-                    model: "claude-sonnet-4-6",
-                    max_tokens: 1200,
-                    system: promptSistema,
-                    messages: [{
-                        role: "user",
-                        content: `ALERTA DETECTADA: ${nivelAlerta}\nClichés encontrados: ${clicheList.length > 0 ? clicheList.slice(0,5).join(', ') : 'ninguno'}\n\nTEXTO DEL ESTUDIANTE:\n"""\n${texto.substring(0, 3000)}\n"""\n\nGenera el JSON solicitado.`
-                    }]
+                    texto: texto.substring(0, 4000),
+                    nivelAlerta,
+                    clicheList: (clicheList || []).slice(0, 8)
                 })
             });
 
-            if (!response.ok) throw new Error(`API error ${response.status}`);
-            const data = await response.json();
-            const textBlock = (data.content||[]).find(b=>b.type==="text");
-            if (!textBlock) throw new Error("Sin contenido de texto en respuesta");
-            let raw = textBlock.text.trim().replace(/^```json\s*/i,'').replace(/^```/,'').replace(/```$/,'').trim();
-            const parsed = JSON.parse(raw);
-            if (!parsed.preguntas_defensa || !Array.isArray(parsed.preguntas_defensa))
-                throw new Error("Estructura JSON inválida");
+            if (!response.ok) throw new Error(`Proxy error ${response.status}`);
+            const parsed = await response.json();
+            if (!parsed.preguntas_defensa || !Array.isArray(parsed.preguntas_defensa) || parsed.preguntas_defensa.length === 0)
+                throw new Error("Respuesta del proxy inválida");
             return parsed;
         }
 
@@ -1750,7 +1736,7 @@ FORMATO DE RESPUESTA (JSON exacto):
 
             try {
                 const ia = await generarPreguntasContextuales(text, probabilidadIA, clicheList);
-                preguntasDefensa = ia.preguntas_defensa.slice(0, 3);
+                preguntasDefensa = ia.preguntas_defensa.slice(0, 4);
             } catch(e) {
                 console.error("Error API:", e);
                 contextualOk = false;
