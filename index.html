@@ -761,7 +761,7 @@
             .pgi-q-block, .pgi-sign-row, .pgi-eval-grid, .pgi-verdict-box,
             .pgi-obs-area, .pgi-student-row { page-break-inside: avoid; break-inside: avoid; }
             .pgi-section-title { page-break-after: avoid; }
-            .pgi-page { padding: 0 !important; max-width: none !important; margin: 0 !important; }
+            .pgi-page { padding: 1.3cm 1.5cm !important; max-width: none !important; margin: 0 !important; }
         }
         #print-guide-area {
             display: none;
@@ -995,9 +995,11 @@
         }
 
         /* Print-specific overrides */
+        /* margin:0 elimina el encabezado/pie automático del navegador
+           (dirección web y hora). La fecha la pone la propia guía. */
         @page {
             size: A4;
-            margin: 1.2cm 1.4cm;
+            margin: 0;
         }
 
         /* Badge "Generado con IA contextual" */
