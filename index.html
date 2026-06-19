@@ -1528,8 +1528,14 @@
                 })
             });
 
-            if (!response.ok) throw new Error(`Proxy error ${response.status}`);
-            const parsed = await response.json();
+            let parsed = null;
+            try { parsed = await response.json(); } catch (_) {}
+            if (!response.ok || !parsed) {
+                const motivo = (parsed && parsed.error)
+                    ? (parsed.error + (parsed.detalle ? ' — ' + parsed.detalle : ''))
+                    : ('HTTP ' + response.status);
+                throw new Error(motivo);
+            }
             if (!parsed.preguntas_defensa || !Array.isArray(parsed.preguntas_defensa) || parsed.preguntas_defensa.length === 0)
                 throw new Error("Respuesta del proxy inválida");
             return parsed;
@@ -1872,6 +1878,7 @@
 
             let preguntasDefensa = [];
             let contextualOk = true;
+            window._motivoOffline = '';
 
             try {
                 const ia = await generarPreguntasContextuales(text, probabilidadIA, clicheList);
@@ -1879,6 +1886,7 @@
             } catch(e) {
                 console.error("Error API:", e);
                 contextualOk = false;
+                window._motivoOffline = (e && e.message) ? e.message : 'desconocido';
                 const offlineQA = generarPreguntasOffline(text);
                 preguntasDefensa = offlineQA.preguntas;
             }
@@ -1913,7 +1921,8 @@
 
             const badgeIA = contextualOk
                 ? `<span class="ai-context-badge"><i class="fas fa-wand-magic-sparkles"></i> Generadas por ASE-IA según el contenido</span>`
-                : `<span class="ai-context-badge" style="background:rgba(255,152,0,.12);border-color:rgba(255,152,0,.4);color:var(--alert-color);"><i class="fas fa-wifi-slash"></i> Modo sin conexión</span>`;
+                : `<span class="ai-context-badge" style="background:rgba(255,152,0,.12);border-color:rgba(255,152,0,.4);color:var(--alert-color);"><i class="fas fa-wifi-slash"></i> Modo sin conexión</span>`
+                  + (window._motivoOffline ? `<div style="margin-top:.4rem;font-size:.72rem;color:#ff9aa8;background:rgba(244,67,54,.10);border:1px solid rgba(244,67,54,.3);border-radius:6px;padding:.35rem .6rem;word-break:break-word;"><strong>Detalle técnico (IA):</strong> ${String(window._motivoOffline).replace(/[<>]/g,'')}</div>` : '');
 
             resultsArea.innerHTML = `
                 <!-- VEREDICTO -->
