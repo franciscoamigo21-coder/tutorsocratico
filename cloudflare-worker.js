@@ -67,6 +67,16 @@ export default {
     if (request.method === "OPTIONS") {
       return new Response(null, { status: 204, headers: cors });
     }
+    // Chequeo de salud: abrir la URL del Worker en el navegador (GET) muestra
+    // si la clave está configurada y qué modelo usa, SIN exponer la clave.
+    if (request.method === "GET") {
+      return json({
+        ok: true,
+        servicio: "Tutor Socratico Worker",
+        claveConfigurada: !!env.ANTHROPIC_API_KEY,
+        modelo: MODEL,
+      }, 200, cors);
+    }
     if (request.method !== "POST") {
       return json({ error: "Método no permitido" }, 405, cors);
     }
@@ -118,7 +128,9 @@ export default {
     }
 
     if (!aiResp.ok) {
-      return json({ error: `Error IA ${aiResp.status}` }, 502, cors);
+      let detalle = "";
+      try { detalle = (await aiResp.text()).slice(0, 400); } catch (_) {}
+      return json({ error: `Error IA ${aiResp.status}`, detalle }, 502, cors);
     }
 
     const data = await aiResp.json();
