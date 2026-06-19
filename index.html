@@ -571,6 +571,17 @@
             display: block;
             text-align: center;
         }
+        .modal-cloud .modal-icon-img {
+            width: 92px;
+            height: 92px;
+            border-radius: 50%;
+            object-fit: cover;
+            background: #ffffff;
+            border: 3px solid var(--accent-gold);
+            box-shadow: 0 0 0 5px rgba(255, 193, 7, 0.10), 0 10px 26px rgba(0, 0, 0, 0.4);
+            display: inline-block;
+            vertical-align: middle;
+        }
         .modal-cloud p {
             color: #cfd8e8;
             font-size: 0.95rem;
@@ -1128,7 +1139,7 @@
     <div class="modal-overlay" id="socratic-modal" onclick="if(event.target===this)cerrarModal()">
         <div class="modal-cloud">
             <button class="modal-close" onclick="cerrarModal()"><i class="fas fa-times"></i></button>
-            <span class="modal-icon">🤖✨</span>
+            <span class="modal-icon"><img class="modal-icon-img" id="modal-robot-icon" alt="Tutor Socrático ASE-IA"></span>
             <h2>¿Qué es el Tutor Socrático ASE-IA?</h2>
             <p>El <strong>Tutor Socrático</strong> es un sistema de inteligencia artificial desarrollado para el <strong>Colegio Presidente José Joaquín Prieto</strong> que ayuda a los profesores a verificar la autoría real de los textos de sus estudiantes y a fomentar el pensamiento crítico profundo.</p>
             <ul class="step-list">
@@ -1138,15 +1149,15 @@
                 </li>
                 <li>
                     <span class="step-num">2</span>
-                    <span><strong>Preguntas de defensa oral:</strong> Genera 2 preguntas personalizadas y ancladas al contenido específico del texto. Si el alumno copió, no podrá responderlas sin haberlo leído y comprendido realmente.</span>
+                    <span><strong>Preguntas de defensa oral:</strong> Genera 4 preguntas personalizadas y ancladas al contenido específico del texto (comprensión, evidencia, aplicación y reflexión). Si el alumno copió, no podrá responderlas sin haberlo leído y comprendido realmente.</span>
                 </li>
                 <li>
                     <span class="step-num">3</span>
-                    <span><strong>Reflexión socrática:</strong> Formula una pregunta profunda que obliga al estudiante a conectar una idea concreta de su texto con su realidad cotidiana, fomentando el aprendizaje genuino.</span>
+                    <span><strong>Reflexión socrática:</strong> Entre esas preguntas se incluyen reflexiones que obligan al estudiante a conectar una idea concreta de su texto con su realidad cotidiana, fomentando el aprendizaje genuino.</span>
                 </li>
                 <li>
                     <span class="step-num">4</span>
-                    <span><strong>Guía remedial imprimible:</strong> Genera un documento PDF listo para imprimir con el veredicto, las preguntas de defensa y la reflexión, para que el profesor pueda usarlo en entrevistas presenciales.</span>
+                    <span><strong>Guía formativa imprimible:</strong> Genera una guía lista para imprimir (o guardar en PDF) con las preguntas de reflexión y espacios de respuesta, para usarla en entrevistas presenciales.</span>
                 </li>
             </ul>
             <p style="font-size:0.82rem; color: #7a8fa8; margin-top:0.5rem;">El método socrático —llamado así por el filósofo Sócrates— consiste en hacer preguntas para guiar al estudiante a descubrir el conocimiento por sí mismo, en lugar de simplemente entregarle las respuestas.</p>
@@ -2099,6 +2110,12 @@
            EFECTO MONEDA 3D — el logo gira siguiendo el movimiento del cursor
            y se agranda. Da una distinción tipo "moneda girando".
         ===================================================================== */
+        (function () {
+            const src = (document.querySelector('.logo-container img') || {}).src;
+            const el = document.getElementById('modal-robot-icon');
+            if (src && el) el.src = src;
+        })();
+
         (function () {
             const logo = document.querySelector('.logo-container');
             if (!logo) return;
