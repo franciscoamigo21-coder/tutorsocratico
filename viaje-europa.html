@@ -16,17 +16,33 @@
   <!-- lucide (iconografía) -->
   <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
 
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
 
   <script>
     tailwind.config = {
       theme: {
         extend: {
-          fontFamily: { sans: ['"Plus Jakarta Sans"', 'system-ui', 'sans-serif'] },
-          keyframes: {
-            fadeUp: { '0%': { opacity: 0, transform: 'translateY(10px)' }, '100%': { opacity: 1, transform: 'translateY(0)' } },
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'system-ui', 'sans-serif'],
+            display: ['"Cormorant Garamond"', 'Georgia', 'serif'],
           },
-          animation: { fadeUp: 'fadeUp .45s ease both' },
+          colors: {
+            ink: '#1c1917',
+            sand: '#f7f3ec',
+            wine: '#7c2d12',
+          },
+          keyframes: {
+            fadeUp: { '0%': { opacity: 0, transform: 'translateY(12px)' }, '100%': { opacity: 1, transform: 'translateY(0)' } },
+            kenburns: { '0%': { transform: 'scale(1)' }, '100%': { transform: 'scale(1.12)' } },
+            shimmer: { '0%': { backgroundPosition: '-200% 0' }, '100%': { backgroundPosition: '200% 0' } },
+          },
+          animation: {
+            fadeUp: 'fadeUp .5s ease both',
+            kenburns: 'kenburns 14s ease-out alternate infinite',
+            shimmer: 'shimmer 6s linear infinite',
+          },
         },
       },
     };
@@ -35,13 +51,22 @@
     html { scroll-behavior: smooth; }
     body { -webkit-font-smoothing: antialiased; }
     ::-webkit-scrollbar { width: 10px; height: 10px; }
-    ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 999px; }
-    ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: #d6cfc2; border-radius: 999px; }
+    ::-webkit-scrollbar-thumb:hover { background: #b9b09d; }
     .no-scrollbar::-webkit-scrollbar { display: none; }
     .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    /* Texturas y detalles editoriales */
+    .paper { background-color: #f7f3ec; background-image:
+      radial-gradient(rgba(124,45,18,0.035) 1px, transparent 1px),
+      radial-gradient(rgba(30,58,138,0.03) 1px, transparent 1px);
+      background-size: 22px 22px, 22px 22px; background-position: 0 0, 11px 11px; }
+    .text-shadow-lg { text-shadow: 0 2px 24px rgba(0,0,0,0.45); }
+    .gold-rule { background: linear-gradient(90deg, transparent, #c79a3a, transparent); }
+    .glass { background: rgba(255,255,255,0.7); backdrop-filter: blur(14px) saturate(1.2); }
   </style>
 </head>
-<body class="bg-slate-50 font-sans text-slate-800">
+<body class="paper font-sans text-ink">
   <div id="root"></div>
 
   <!--
@@ -113,6 +138,69 @@
       Londres:   { flag: "🇬🇧", grad: "from-rose-600 to-indigo-700", soft: "bg-rose-50 text-rose-700 ring-rose-200",       dot: "bg-rose-600" },
       Chile:     { flag: "🇨🇱", grad: "from-blue-600 to-red-600",     soft: "bg-blue-50 text-blue-700 ring-blue-200",      dot: "bg-blue-600" },
     };
+
+    const cls = (...a) => a.filter(Boolean).join(" ");
+
+    /* ------------------------------------------------------------------ */
+    /*  IMÁGENES (cargan en el navegador; con respaldo elegante)           */
+    /*  Si una foto no carga, se muestra una "postal" con degradado.       */
+    /* ------------------------------------------------------------------ */
+    const U = (id, w = 1200) => `https://images.unsplash.com/photo-${id}?auto=format&fit=crop&w=${w}&q=70`;
+    const IMG = {
+      cityCover: {
+        Barcelona: U("1583422409516-2895a77efded"),
+        Roma:      U("1552832230-c0197dd311b5"),
+        París:     U("1502602898657-3e91760cbb34"),
+        Londres:   U("1513635269975-59663e0ac1ad"),
+        Chile:     U("1478827387698-1527781a4887"),
+      },
+      // Portada por día (atracción principal)
+      day: {
+        1:  U("1583422409516-2895a77efded"), 2:  U("1561409037-c7be81613c1f"),
+        3:  U("1552832230-c0197dd311b5"),    4:  U("1531572753322-ad063cecc140"),
+        5:  U("1555992828-ca4dbe41d294"),    6:  U("1525874684015-58379d421a52"),
+        7:  U("1502602898657-3e91760cbb34"), 8:  U("1550340499-a6c60fc8287c"),
+        9:  U("1529655683826-aba9b3e77383"), 10: U("1513635269975-59663e0ac1ad"),
+        11: U("1486299267070-83823f5448dd"), 12: U("1500380804539-4e1e8c1e7118"),
+        13: U("1533929736458-ca588d08c8be"), 14: U("1520986606214-8b456906c813"),
+        15: U("1583779457094-7f4d8c1ed5cf"), 16: U("1436491865332-7a61a109cc05"),
+      },
+    };
+
+    /* Componente de imagen con respaldo "postal" si la URL falla */
+    const Photo = ({ src, alt, gradient = "from-slate-700 to-slate-900", icon = "Camera", label, className = "", imgClass = "", kenburns = false, children }) => {
+      const [ok, setOk] = useState(Boolean(src));
+      return (
+        <div className={cls("relative overflow-hidden", className)}>
+          {/* Respaldo postal siempre debajo */}
+          <div className={cls("absolute inset-0 bg-gradient-to-br", gradient)}>
+            <div className="absolute inset-0 opacity-20"
+              style={{ backgroundImage: "radial-gradient(rgba(255,255,255,.8) 1px, transparent 1px)", backgroundSize: "16px 16px" }} />
+            <div className="absolute inset-0 flex flex-col items-center justify-center text-white/85">
+              <Icon name={icon} size={40} strokeWidth={1.5} />
+              {label && <span className="mt-2 font-display text-lg italic tracking-wide">{label}</span>}
+            </div>
+          </div>
+          {/* Foto real encima */}
+          {ok && (
+            <img src={src} alt={alt || label || ""} loading="lazy" onError={() => setOk(false)}
+              className={cls("absolute inset-0 h-full w-full object-cover", kenburns && "animate-kenburns", imgClass)} />
+          )}
+          {children}
+        </div>
+      );
+    };
+
+    /* ------------------------------------------------------------------ */
+    /*  NUESTRA META (fotos de la pareja → dream board)                    */
+    /*  Coloca tus fotos en  img/meta-1.jpg ... img/meta-4.jpg            */
+    /* ------------------------------------------------------------------ */
+    const META = [
+      { src: "img/meta-1.jpg", caption: "Cada aventura juntos…", place: "Nuestros viajes" },
+      { src: "img/meta-2.jpg", caption: "…cada puerto, cada paseo…", place: "Valparaíso" },
+      { src: "img/meta-3.jpg", caption: "…nos prepara para el gran salto…", place: "De la mano" },
+      { src: "img/meta-4.jpg", caption: "…la próxima parada: ¡Europa!", place: "Sol y mar" },
+    ];
 
     /* ------------------------------------------------------------------ */
     /*  DATOS DEL ITINERARIO                                               */
@@ -719,14 +807,13 @@
     /* ------------------------------------------------------------------ */
     /*  Componentes de UI                                                  */
     /* ------------------------------------------------------------------ */
-    const cls = (...a) => a.filter(Boolean).join(" ");
 
     /* Mapa estilizado (placeholder) */
     const MapPanel = ({ map, city }) => {
       const theme = CITY[city] || CITY.Barcelona;
       const q = encodeURIComponent(map.area + " " + (city === "Chile" ? "" : city));
       return (
-        <div className="rounded-2xl border border-slate-200 overflow-hidden bg-white">
+        <div className="rounded-3xl border border-stone-200 overflow-hidden bg-white">
           <div className={cls("relative h-40 sm:h-44 bg-gradient-to-br", theme.grad)}>
             {/* retícula tipo mapa */}
             <div className="absolute inset-0 opacity-30"
@@ -783,35 +870,43 @@
     const DayCard = ({ d, open, onToggle }) => {
       const theme = CITY[d.city] || CITY.Barcelona;
       return (
-        <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
-          {/* Cabecera */}
-          <button onClick={onToggle}
-            className="flex w-full items-center gap-3 sm:gap-4 p-4 text-left transition hover:bg-slate-50">
-            <div className={cls("flex h-14 w-14 shrink-0 flex-col items-center justify-center rounded-xl bg-gradient-to-br text-white", theme.grad)}>
-              <span className="text-[10px] font-semibold uppercase opacity-90">Día</span>
-              <span className="text-xl font-extrabold leading-none">{d.day}</span>
-            </div>
-            <div className="min-w-0 flex-1">
-              <div className="flex items-center gap-2 text-sm text-slate-500">
-                <Icon name="Calendar" size={14} /> {d.date}
-                <span className={cls("ml-1 inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-semibold ring-1", theme.soft)}>
-                  {theme.flag} {d.city}
-                </span>
+        <div className={cls("group overflow-hidden rounded-3xl border bg-white shadow-sm transition-all", open ? "border-stone-300 shadow-lg ring-1 ring-stone-200" : "border-stone-200 hover:shadow-md")}>
+          {/* Cabecera con foto de portada */}
+          <button onClick={onToggle} className="block w-full text-left">
+            <Photo src={IMG.day[d.day]} gradient={"bg-gradient-to-br " + theme.grad} icon="Camera"
+              label={d.city} className="h-32 sm:h-40" kenburns={open}>
+              <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/25 to-transparent" />
+              <div className="absolute inset-0 flex items-end p-4">
+                <div className="flex w-full items-end gap-3">
+                  <div className="flex h-14 w-14 shrink-0 flex-col items-center justify-center rounded-2xl bg-white/15 text-white ring-1 ring-white/30 backdrop-blur">
+                    <span className="text-[9px] font-semibold uppercase tracking-widest opacity-90">Día</span>
+                    <span className="font-display text-2xl font-bold leading-none">{d.day}</span>
+                  </div>
+                  <div className="min-w-0 flex-1 text-white">
+                    <div className="flex items-center gap-2 text-[12px] font-medium opacity-95">
+                      <Icon name="Calendar" size={13} /> {d.date}
+                      <span className="inline-flex items-center gap-1 rounded-full bg-white/20 px-2 py-0.5 text-[11px] backdrop-blur">
+                        {theme.flag} {d.city}
+                      </span>
+                      {d.transfer && (
+                        <span className="hidden sm:inline-flex items-center gap-1 rounded-full bg-sky-500/80 px-2 py-0.5 text-[11px]">
+                          <Icon name={d.transfer.icon} size={12} /> Traslado
+                        </span>
+                      )}
+                    </div>
+                    <h3 className="font-display text-xl sm:text-2xl font-bold leading-tight text-shadow-lg">{d.title}</h3>
+                  </div>
+                  <span className={cls("flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white/20 text-white ring-1 ring-white/30 backdrop-blur transition-transform", open && "rotate-180")}>
+                    <Icon name="ChevronDown" size={20} />
+                  </span>
+                </div>
               </div>
-              <h3 className="truncate text-base sm:text-lg font-bold text-slate-800">{d.title}</h3>
-            </div>
-            {d.transfer && (
-              <span className="hidden sm:inline-flex items-center gap-1 rounded-full bg-sky-100 px-2.5 py-1 text-xs font-semibold text-sky-700">
-                <Icon name={d.transfer.icon} size={13} /> Traslado
-              </span>
-            )}
-            <Icon name="ChevronDown" size={22}
-              className={cls("shrink-0 text-slate-400 transition-transform", open && "rotate-180")} />
+            </Photo>
           </button>
 
           {/* Contenido */}
           {open && (
-            <div className="border-t border-slate-100 p-4 animate-fadeUp">
+            <div className="border-t border-stone-100 p-4 animate-fadeUp">
               {d.transfer && <div className="mb-4"><TransferBanner t={d.transfer} /></div>}
               <div className="grid gap-5 lg:grid-cols-3">
                 {/* Bloques del día */}
@@ -874,7 +969,71 @@
       );
     };
 
+    /* Título de sección editorial */
+    const SectionTitle = ({ icon, kicker, title, sub }) => (
+      <div className="text-center sm:text-left">
+        {kicker && (
+          <div className="mb-1 flex items-center justify-center sm:justify-start gap-2 text-xs font-semibold uppercase tracking-[0.2em] text-wine/70">
+            {icon && <Icon name={icon} size={15} />} {kicker}
+          </div>
+        )}
+        <h3 className="font-display text-3xl sm:text-4xl font-bold text-ink leading-tight">{title}</h3>
+        {sub && <p className="mt-1 text-stone-500">{sub}</p>}
+        <div className="mt-3 h-px w-24 mx-auto sm:mx-0 gold-rule" />
+      </div>
+    );
+
     /* ---------------------------- VISTAS ------------------------------ */
+
+    /* Nuestra meta: dream board con las fotos de la pareja */
+    const MetaView = () => (
+      <div className="space-y-8">
+        <SectionTitle icon="Heart" kicker="Por esto ahorramos"
+          title="Nuestra meta: Europa, juntos"
+          sub="De cada rincón que recorremos aquí, soñamos con el próximo: 16 días por Barcelona, Roma, París y Londres." />
+
+        {/* Dream board */}
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {META.map((m, i) => (
+            <Photo key={i} src={m.src} gradient="from-stone-300 to-stone-500" icon="ImagePlus"
+              label={`img/meta-${i + 1}.jpg`}
+              className={cls("group h-72 rounded-3xl shadow-md ring-1 ring-stone-200 transition-transform hover:-translate-y-1",
+                i % 2 ? "sm:translate-y-4" : "")}>
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent opacity-90" />
+              <div className="absolute top-3 left-3 rounded-full bg-white/85 px-2.5 py-1 text-[11px] font-semibold text-wine backdrop-blur">
+                {m.place}
+              </div>
+              <div className="absolute inset-x-0 bottom-0 p-4 text-white">
+                <p className="font-display text-xl italic leading-snug text-shadow-lg">{m.caption}</p>
+              </div>
+            </Photo>
+          ))}
+        </div>
+
+        {/* Cuenta atrás emocional / motivación */}
+        <div className="grid gap-4 md:grid-cols-3">
+          {[
+            { icon: "PiggyBank", t: "El plan", d: "Cada peso ahorrado nos acerca un día más a despegar rumbo a Barcelona." },
+            { icon: "Footprints", t: "El entrenamiento", d: "Valparaíso, la playa, los museos… practicamos ser viajeros en casa." },
+            { icon: "Sparkles", t: "El sueño", d: "Brindar frente a la Torre Eiffel y perdernos por Trastevere tomados de la mano." },
+          ].map((k, i) => (
+            <div key={i} className="rounded-3xl border border-stone-200 bg-white p-5 text-center sm:text-left">
+              <div className="mb-2 inline-flex h-11 w-11 items-center justify-center rounded-2xl bg-rose-50 text-rose-600">
+                <Icon name={k.icon} size={20} />
+              </div>
+              <p className="font-display text-xl font-bold text-ink">{k.t}</p>
+              <p className="text-sm text-stone-500">{k.d}</p>
+            </div>
+          ))}
+        </div>
+
+        <div className="rounded-3xl border border-dashed border-stone-300 bg-white/60 p-4 text-center text-sm text-stone-500">
+          <Icon name="Info" size={15} className="inline mr-1 -mt-0.5" />
+          ¿No ves tus fotos? Súbelas al repositorio en <code className="rounded bg-stone-100 px-1.5 py-0.5 text-wine">img/meta-1.jpg</code> … <code className="rounded bg-stone-100 px-1.5 py-0.5 text-wine">img/meta-4.jpg</code> y aparecerán aquí automáticamente.
+        </div>
+      </div>
+    );
+
     const ItineraryView = () => {
       const [open, setOpen] = useState(1);
       const [filter, setFilter] = useState("Todas");
@@ -884,25 +1043,25 @@
         [filter]
       );
       return (
-        <div className="space-y-4">
+        <div className="space-y-5">
           {/* Filtros por ciudad */}
           <div className="flex flex-wrap gap-2">
             {cities.map(c => (
               <button key={c} onClick={() => setFilter(c)}
                 className={cls("inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-sm font-semibold ring-1 transition",
-                  filter === c ? "bg-slate-800 text-white ring-slate-800" : "bg-white text-slate-600 ring-slate-200 hover:bg-slate-100")}>
+                  filter === c ? "bg-ink text-white ring-ink shadow" : "bg-white text-stone-600 ring-stone-200 hover:bg-stone-100")}>
                 {c !== "Todas" && CITY[c]?.flag} {c}
               </button>
             ))}
           </div>
-          <div className="flex items-center justify-between text-sm text-slate-500">
+          <div className="flex items-center justify-between text-sm text-stone-500">
             <span>{days.length} día{days.length !== 1 && "s"}</span>
             <div className="flex gap-3">
-              <button onClick={() => setOpen("all")} className="font-semibold text-sky-600 hover:text-sky-700">Expandir todo</button>
-              <button onClick={() => setOpen(null)} className="font-semibold text-slate-500 hover:text-slate-700">Colapsar</button>
+              <button onClick={() => setOpen("all")} className="font-semibold text-wine hover:opacity-80">Expandir todo</button>
+              <button onClick={() => setOpen(null)} className="font-semibold text-stone-500 hover:text-stone-700">Colapsar</button>
             </div>
           </div>
-          <div className="space-y-3">
+          <div className="space-y-4">
             {days.map(d => (
               <DayCard key={d.day} d={d}
                 open={open === "all" || open === d.day}
@@ -913,21 +1072,41 @@
       );
     };
 
+    const CITY_INFO = {
+      Barcelona: "Gaudí, mar y modernismo catalán.",
+      Roma: "La ciudad eterna: imperio y dolce vita.",
+      París: "Arte, luces y la ville lumière.",
+      Londres: "Realeza, mercados y energía cosmopolita.",
+    };
+
     const MapView = () => (
-      <div className="space-y-5">
-        <div className="rounded-2xl bg-white border border-slate-200 p-5">
-          <h3 className="mb-1 flex items-center gap-2 text-lg font-bold text-slate-800">
-            <Icon name="Map" size={20} className="text-sky-600" /> Ruta del viaje
-          </h3>
-          <p className="text-sm text-slate-500">4 ciudades · 16 días · 3 vuelos + 1 tren entre destinos.</p>
-          {/* Ruta visual */}
-          <div className="mt-4 flex flex-wrap items-center gap-2">
+      <div className="space-y-6">
+        <SectionTitle icon="Map" kicker="El recorrido" title="La ruta del viaje" sub="4 ciudades · 16 días · 3 vuelos + 1 tren entre destinos." />
+
+        {/* Galería de ciudades */}
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {["Barcelona", "Roma", "París", "Londres"].map((c) => (
+            <Photo key={c} src={IMG.cityCover[c]} gradient={"bg-gradient-to-br " + CITY[c].grad}
+              icon="Landmark" label={c} className="h-52 rounded-3xl shadow-sm ring-1 ring-stone-200" kenburns>
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+              <div className="absolute inset-0 flex flex-col justify-end p-4 text-white">
+                <span className="text-3xl">{CITY[c].flag}</span>
+                <h4 className="font-display text-2xl font-bold leading-tight text-shadow-lg">{c}</h4>
+                <p className="text-xs text-white/85">{CITY_INFO[c]}</p>
+              </div>
+            </Photo>
+          ))}
+        </div>
+
+        {/* Ruta visual */}
+        <div className="rounded-3xl glass border border-stone-200 p-5">
+          <div className="flex flex-wrap items-center gap-2">
             {["Barcelona", "Roma", "París", "Londres", "Barcelona", "Chile"].map((c, i, arr) => (
               <React.Fragment key={i}>
-                <span className={cls("inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-sm font-semibold ring-1", CITY[c].soft)}>
+                <span className={cls("inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-sm font-semibold ring-1 bg-white", CITY[c].soft)}>
                   {CITY[c].flag} {c}
                 </span>
-                {i < arr.length - 1 && <Icon name={i === 2 ? "Train" : "Plane"} size={16} className="text-slate-400" />}
+                {i < arr.length - 1 && <Icon name={i === 2 ? "Train" : "Plane"} size={16} className="text-stone-400" />}
               </React.Fragment>
             ))}
           </div>
@@ -935,13 +1114,13 @@
 
         <div className="grid gap-4 md:grid-cols-2">
           {ITINERARY.map(d => (
-            <div key={d.day} className="rounded-2xl border border-slate-200 bg-white overflow-hidden">
-              <div className="flex items-center gap-2 px-4 py-2.5 border-b border-slate-100">
-                <span className="text-sm font-bold text-slate-700">Día {d.day}</span>
+            <div key={d.day} className="rounded-3xl border border-stone-200 bg-white overflow-hidden shadow-sm">
+              <div className="flex items-center gap-2 px-4 py-2.5 border-b border-stone-100">
+                <span className="font-display text-base font-bold text-stone-700">Día {d.day}</span>
                 <span className={cls("inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-semibold ring-1", CITY[d.city].soft)}>
                   {CITY[d.city].flag} {d.city}
                 </span>
-                <span className="ml-auto text-xs text-slate-400">{d.date}</span>
+                <span className="ml-auto text-xs text-stone-400">{d.date}</span>
               </div>
               <div className="p-3">
                 <MapPanel map={d.map} city={d.city} />
@@ -969,7 +1148,7 @@
       return (
         <div className="space-y-5">
           <div className="flex items-center justify-between">
-            <h3 className="flex items-center gap-2 text-lg font-bold text-slate-800">
+            <h3 className="flex items-center gap-2 font-display text-2xl font-bold text-ink">
               <Icon name="Wallet" size={20} className="text-emerald-600" /> Presupuesto estimado
             </h3>
             <div className="inline-flex rounded-lg bg-slate-100 p-1 text-sm font-semibold">
@@ -989,7 +1168,7 @@
               { l: "Estancia (16 días)", v: stayTotal, i: "Hotel", c: "text-violet-600 bg-violet-50" },
               { l: "Total aproximado / persona", v: grand, i: "Wallet", c: "text-emerald-600 bg-emerald-50" },
             ].map((k, i) => (
-              <div key={i} className="rounded-2xl border border-slate-200 bg-white p-4">
+              <div key={i} className="rounded-3xl border border-stone-200 bg-white p-4">
                 <div className={cls("mb-2 inline-flex h-9 w-9 items-center justify-center rounded-lg", k.c)}>
                   <Icon name={k.i} size={18} />
                 </div>
@@ -1000,7 +1179,7 @@
           </div>
 
           {/* Transporte */}
-          <div className="rounded-2xl border border-slate-200 bg-white overflow-hidden">
+          <div className="rounded-3xl border border-stone-200 bg-white overflow-hidden">
             <div className="px-4 py-3 border-b border-slate-100 font-bold text-slate-700 flex items-center gap-2">
               <Icon name="Plane" size={18} className="text-sky-600" /> Vuelos y tren
             </div>
@@ -1018,7 +1197,7 @@
           </div>
 
           {/* Por ciudad */}
-          <div className="rounded-2xl border border-slate-200 bg-white overflow-hidden">
+          <div className="rounded-3xl border border-stone-200 bg-white overflow-hidden">
             <div className="px-4 py-3 border-b border-slate-100 font-bold text-slate-700 flex items-center gap-2">
               <Icon name="Building2" size={18} className="text-violet-600" /> Gasto diario por ciudad
             </div>
@@ -1070,12 +1249,12 @@
     const TipsView = () => (
       <div className="space-y-6">
         <div>
-          <h3 className="mb-3 flex items-center gap-2 text-lg font-bold text-slate-800">
+          <h3 className="mb-3 flex items-center gap-2 font-display text-2xl font-bold text-ink">
             <Icon name="Lightbulb" size={20} className="text-amber-500" /> Recomendaciones inteligentes
           </h3>
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
             {SMART_TIPS.map((t, i) => (
-              <div key={i} className="rounded-2xl border border-slate-200 bg-white p-4">
+              <div key={i} className="rounded-3xl border border-stone-200 bg-white p-4">
                 <div className="mb-2 inline-flex h-9 w-9 items-center justify-center rounded-lg bg-amber-50 text-amber-600">
                   <Icon name={t.icon} size={18} />
                 </div>
@@ -1088,7 +1267,7 @@
 
         <div className="grid gap-4 lg:grid-cols-2">
           {TIPS.map((c, i) => (
-            <div key={i} className="rounded-2xl border border-slate-200 bg-white overflow-hidden">
+            <div key={i} className="rounded-3xl border border-stone-200 bg-white overflow-hidden">
               <div className={cls("bg-gradient-to-r px-4 py-3 text-white font-bold text-lg", c.color)}>{c.country}</div>
               <div className="grid gap-4 p-4 sm:grid-cols-2">
                 <div>
@@ -1133,9 +1312,9 @@
 
       return (
         <div className="space-y-5">
-          <div className="rounded-2xl border border-slate-200 bg-white p-5">
+          <div className="rounded-3xl border border-stone-200 bg-white p-5">
             <div className="flex items-center justify-between mb-3">
-              <h3 className="flex items-center gap-2 text-lg font-bold text-slate-800">
+              <h3 className="flex items-center gap-2 font-display text-2xl font-bold text-ink">
                 <Icon name="ListChecks" size={20} className="text-emerald-600" /> Checklist de viaje
               </h3>
               <span className="text-sm font-bold text-slate-600">{completed}/{total}</span>
@@ -1151,7 +1330,7 @@
 
           <div className="grid gap-4 md:grid-cols-2">
             {Object.entries(CHECKLIST).map(([cat, items]) => (
-              <div key={cat} className="rounded-2xl border border-slate-200 bg-white overflow-hidden">
+              <div key={cat} className="rounded-3xl border border-stone-200 bg-white overflow-hidden">
                 <div className="px-4 py-3 border-b border-slate-100 font-bold text-slate-700">{cat}</div>
                 <ul className="divide-y divide-slate-100">
                   {items.map((it, i) => (
@@ -1176,19 +1355,68 @@
     /*  APP                                                                */
     /* ------------------------------------------------------------------ */
     const TABS = [
+      { id: "meta", label: "Nuestra Meta", icon: "Heart" },
       { id: "itinerario", label: "Itinerario", icon: "CalendarDays" },
-      { id: "mapa", label: "Mapas", icon: "Map" },
+      { id: "mapa", label: "Ciudades", icon: "Map" },
       { id: "presupuesto", label: "Presupuesto", icon: "Wallet" },
-      { id: "tips", label: "Recomendaciones", icon: "Lightbulb" },
+      { id: "tips", label: "Tips", icon: "Lightbulb" },
       { id: "checklist", label: "Checklist", icon: "ListChecks" },
     ];
 
+    /* Hero cinematográfico */
+    const Hero = ({ tab, onCta }) => {
+      const isMeta = tab === "meta";
+      return (
+        <section className="relative">
+          <Photo src={isMeta ? META[3].src : IMG.day[7]} kenburns
+            gradient={isMeta ? "from-rose-700 via-stone-800 to-indigo-900" : "from-indigo-900 via-stone-900 to-sky-900"}
+            icon={isMeta ? "Heart" : "Plane"} className="h-[78vh] min-h-[460px] max-h-[680px]">
+            <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/45 to-black/30" />
+            <div className="absolute inset-0 flex items-center">
+              <div className="mx-auto w-full max-w-6xl px-5">
+                <div className="max-w-2xl animate-fadeUp text-white">
+                  <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-white/30 bg-white/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.2em] backdrop-blur">
+                    <Icon name="Compass" size={14} /> {isMeta ? "Un sueño en construcción" : "Invierno en Europa · 18 Ene – 2 Feb"}
+                  </div>
+                  <h2 className="font-display text-5xl sm:text-7xl font-bold leading-[0.95] text-shadow-lg">
+                    {isMeta ? <>Algún día,<br/><span className="italic text-rose-200">nosotros en Europa</span></>
+                            : <>16 días<br/><span className="italic text-sky-200">por Europa</span></>}
+                  </h2>
+                  <p className="mt-4 max-w-xl text-base sm:text-lg text-white/85">
+                    {isMeta
+                      ? "Cada viaje que hacemos juntos es un ensayo de este gran sueño: recorrer Barcelona, Roma, París y Londres de la mano."
+                      : "Cuatro capitales, tres vuelos y un Eurostar. Un itinerario detallado mañana, mediodía, tarde y noche — con mapas, costos y dónde comer y comprar."}
+                  </p>
+                  <div className="mt-7 flex flex-wrap items-center gap-3">
+                    <button onClick={onCta}
+                      className="inline-flex items-center gap-2 rounded-full bg-white px-5 py-3 text-sm font-bold text-ink shadow-lg transition hover:scale-[1.03]">
+                      <Icon name={isMeta ? "Map" : "CalendarDays"} size={18} />
+                      {isMeta ? "Ver nuestro itinerario" : "Explorar día a día"}
+                    </button>
+                    <div className="flex items-center gap-4 text-sm text-white/80">
+                      <span className="flex items-center gap-1.5"><Icon name="MapPin" size={15} /> 4 ciudades</span>
+                      <span className="flex items-center gap-1.5"><Icon name="Plane" size={15} /> 3 vuelos + 1 tren</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="absolute bottom-5 left-1/2 -translate-x-1/2 text-white/70 animate-bounce">
+              <Icon name="ChevronDown" size={26} />
+            </div>
+          </Photo>
+        </section>
+      );
+    };
+
     function App() {
-      const [tab, setTab] = useState("itinerario");
+      const [tab, setTab] = useState("meta");
       const [menu, setMenu] = useState(false);
+      const setTab2 = (t) => { setTab(t); setMenu(false); if (typeof window !== "undefined" && window.scrollTo) window.scrollTo({ top: 0, behavior: "smooth" }); };
 
       const render = () => {
         switch (tab) {
+          case "meta": return <MetaView />;
           case "mapa": return <MapView />;
           case "presupuesto": return <BudgetView />;
           case "tips": return <TipsView />;
@@ -1197,25 +1425,27 @@
         }
       };
 
+      const showHero = tab === "meta" || tab === "itinerario";
+
       return (
         <div className="min-h-screen">
           {/* HEADER */}
-          <header className="sticky top-0 z-40 border-b border-slate-200 bg-white/85 backdrop-blur">
+          <header className="sticky top-0 z-40 border-b border-stone-200/70 glass">
             <div className="mx-auto flex max-w-6xl items-center gap-3 px-4 py-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-sky-500 to-indigo-600 text-white shadow">
+              <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-wine to-rose-700 text-white shadow-md">
                 <Icon name="Plane" size={20} />
               </div>
               <div className="min-w-0">
-                <h1 className="truncate text-base sm:text-lg font-extrabold text-slate-800 leading-tight">Eurotrip · 16 Días</h1>
-                <p className="hidden sm:block text-xs text-slate-500">Barcelona · Roma · París · Londres · 18 Ene – 2 Feb</p>
+                <h1 className="truncate font-display text-xl sm:text-2xl font-bold text-ink leading-none">Eurotrip <span className="text-wine">·</span> Nosotros</h1>
+                <p className="hidden sm:block text-[11px] uppercase tracking-[0.18em] text-stone-500">Barcelona · Roma · París · Londres</p>
               </div>
 
               {/* Nav desktop */}
               <nav className="ml-auto hidden md:flex items-center gap-1">
                 {TABS.map(t => (
-                  <button key={t.id} onClick={() => setTab(t.id)}
-                    className={cls("inline-flex items-center gap-1.5 rounded-lg px-3 py-2 text-sm font-semibold transition",
-                      tab === t.id ? "bg-slate-800 text-white" : "text-slate-600 hover:bg-slate-100")}>
+                  <button key={t.id} onClick={() => setTab2(t.id)}
+                    className={cls("inline-flex items-center gap-1.5 rounded-full px-3.5 py-2 text-sm font-semibold transition",
+                      tab === t.id ? "bg-ink text-white shadow" : "text-stone-600 hover:bg-stone-100")}>
                     <Icon name={t.icon} size={16} /> {t.label}
                   </button>
                 ))}
@@ -1223,18 +1453,18 @@
 
               {/* Botón menú móvil */}
               <button onClick={() => setMenu(m => !m)}
-                className="ml-auto md:hidden inline-flex h-10 w-10 items-center justify-center rounded-lg text-slate-700 hover:bg-slate-100">
+                className="ml-auto md:hidden inline-flex h-11 w-11 items-center justify-center rounded-xl text-ink hover:bg-stone-100">
                 <Icon name={menu ? "X" : "Menu"} size={24} />
               </button>
             </div>
 
             {/* Menú móvil */}
             {menu && (
-              <nav className="md:hidden border-t border-slate-100 bg-white px-3 py-2 animate-fadeUp">
+              <nav className="md:hidden border-t border-stone-100 bg-white px-3 py-2 animate-fadeUp">
                 {TABS.map(t => (
-                  <button key={t.id} onClick={() => { setTab(t.id); setMenu(false); }}
-                    className={cls("flex w-full items-center gap-2.5 rounded-lg px-3 py-2.5 text-sm font-semibold transition",
-                      tab === t.id ? "bg-slate-800 text-white" : "text-slate-600 hover:bg-slate-100")}>
+                  <button key={t.id} onClick={() => setTab2(t.id)}
+                    className={cls("flex w-full items-center gap-2.5 rounded-xl px-3 py-3 text-sm font-semibold transition",
+                      tab === t.id ? "bg-ink text-white" : "text-stone-600 hover:bg-stone-100")}>
                     <Icon name={t.icon} size={18} /> {t.label}
                   </button>
                 ))}
@@ -1243,42 +1473,21 @@
           </header>
 
           {/* HERO */}
-          {tab === "itinerario" && (
-            <section className="bg-gradient-to-br from-slate-900 via-indigo-900 to-sky-900 text-white">
-              <div className="mx-auto max-w-6xl px-4 py-8 sm:py-10">
-                <p className="text-sm font-semibold uppercase tracking-widest text-sky-300">Invierno en Europa</p>
-                <h2 className="mt-1 text-3xl sm:text-4xl font-extrabold leading-tight">Tu aventura de 16 días</h2>
-                <p className="mt-2 max-w-2xl text-slate-300">4 capitales, 3 vuelos y un viaje en Eurostar. Itinerario detallado mañana, mediodía, tarde y noche — con mapas, costos y dónde comer y comprar.</p>
-                <div className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-4">
-                  {[
-                    { i: "CalendarDays", l: "16 días", s: "18 Ene – 2 Feb" },
-                    { i: "MapPin", l: "4 ciudades", s: "BCN · ROM · PAR · LON" },
-                    { i: "Plane", l: "3 vuelos + 1 tren", s: "Eurostar incluido" },
-                    { i: "Wallet", l: "Presupuesto", s: "Estimado por persona" },
-                  ].map((k, i) => (
-                    <div key={i} className="rounded-2xl bg-white/10 p-3.5 ring-1 ring-white/15 backdrop-blur">
-                      <Icon name={k.i} size={20} className="text-sky-300" />
-                      <p className="mt-1.5 font-bold">{k.l}</p>
-                      <p className="text-xs text-slate-300">{k.s}</p>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </section>
-          )}
+          {showHero && <Hero tab={tab} onCta={() => setTab2(tab === "meta" ? "itinerario" : "mapa")} />}
 
           {/* CONTENIDO */}
-          <main className="mx-auto max-w-6xl px-4 py-6 sm:py-8">
+          <main className="mx-auto max-w-6xl px-4 py-8 sm:py-12">
             {render()}
           </main>
 
           {/* FOOTER */}
-          <footer className="border-t border-slate-200 bg-white">
-            <div className="mx-auto max-w-6xl px-4 py-6 text-center text-sm text-slate-400">
-              <p className="flex items-center justify-center gap-1.5">
-                <Icon name="Plane" size={15} /> Eurotrip Planner · Hecho para disfrutar el viaje
+          <footer className="mt-8 border-t border-stone-200 bg-white">
+            <div className="mx-auto max-w-6xl px-4 py-8 text-center">
+              <div className="mx-auto mb-3 h-px w-28 gold-rule" />
+              <p className="flex items-center justify-center gap-2 font-display text-xl font-semibold text-ink">
+                <Icon name="Heart" size={18} className="text-wine" /> Hecho con cariño para nuestro viaje soñado
               </p>
-              <p className="mt-1 text-xs">Costos y recomendaciones son estimaciones referenciales; verifica precios y horarios antes de viajar.</p>
+              <p className="mt-2 text-xs text-stone-400 max-w-xl mx-auto">Costos y recomendaciones son estimaciones referenciales; verifica precios y horarios antes de viajar. Fotos de ciudades vía Unsplash.</p>
             </div>
           </footer>
         </div>
