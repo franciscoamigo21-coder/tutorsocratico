@@ -142,65 +142,22 @@
     const cls = (...a) => a.filter(Boolean).join(" ");
 
     /* ------------------------------------------------------------------ */
-    /*  IMÁGENES (cargan en el navegador; con respaldo elegante)           */
-    /*  Si una foto no carga, se muestra una "postal" con degradado.       */
+    /*  Lienzo "postal": degradado decorativo por ciudad (sin imágenes).   */
     /* ------------------------------------------------------------------ */
-    const U = (id, w = 1200) => `https://images.unsplash.com/photo-${id}?auto=format&fit=crop&w=${w}&q=70`;
-    const IMG = {
-      cityCover: {
-        Barcelona: U("1583422409516-2895a77efded"),
-        Roma:      U("1552832230-c0197dd311b5"),
-        París:     U("1502602898657-3e91760cbb34"),
-        Londres:   U("1513635269975-59663e0ac1ad"),
-        Chile:     U("1478827387698-1527781a4887"),
-      },
-      // Portada por día (atracción principal)
-      day: {
-        1:  U("1583422409516-2895a77efded"), 2:  U("1561409037-c7be81613c1f"),
-        3:  U("1552832230-c0197dd311b5"),    4:  U("1531572753322-ad063cecc140"),
-        5:  U("1555992828-ca4dbe41d294"),    6:  U("1525874684015-58379d421a52"),
-        7:  U("1502602898657-3e91760cbb34"), 8:  U("1550340499-a6c60fc8287c"),
-        9:  U("1529655683826-aba9b3e77383"), 10: U("1513635269975-59663e0ac1ad"),
-        11: U("1486299267070-83823f5448dd"), 12: U("1500380804539-4e1e8c1e7118"),
-        13: U("1533929736458-ca588d08c8be"), 14: U("1520986606214-8b456906c813"),
-        15: U("1583779457094-7f4d8c1ed5cf"), 16: U("1436491865332-7a61a109cc05"),
-      },
-    };
-
-    /* Componente de imagen con respaldo "postal" si la URL falla */
-    const Photo = ({ src, alt, gradient = "from-slate-700 to-slate-900", icon = "Camera", label, className = "", imgClass = "", kenburns = false, children }) => {
-      const [ok, setOk] = useState(Boolean(src));
-      return (
-        <div className={cls("relative overflow-hidden", className)}>
-          {/* Respaldo postal siempre debajo */}
-          <div className={cls("absolute inset-0 bg-gradient-to-br", gradient)}>
-            <div className="absolute inset-0 opacity-20"
-              style={{ backgroundImage: "radial-gradient(rgba(255,255,255,.8) 1px, transparent 1px)", backgroundSize: "16px 16px" }} />
-            <div className="absolute inset-0 flex flex-col items-center justify-center text-white/85">
-              <Icon name={icon} size={40} strokeWidth={1.5} />
-              {label && <span className="mt-2 font-display text-lg italic tracking-wide">{label}</span>}
-            </div>
-          </div>
-          {/* Foto real encima */}
-          {ok && (
-            <img src={src} alt={alt || label || ""} loading="lazy" onError={() => setOk(false)}
-              className={cls("absolute inset-0 h-full w-full object-cover", kenburns && "animate-kenburns", imgClass)} />
-          )}
-          {children}
+    const Postcard = ({ gradient = "from-slate-700 to-slate-900", icon = "Landmark", label, className = "", big = false, children }) => (
+      <div className={cls("relative overflow-hidden bg-gradient-to-br", gradient, className)}>
+        {/* textura de puntos */}
+        <div className="absolute inset-0 opacity-20"
+          style={{ backgroundImage: "radial-gradient(rgba(255,255,255,.85) 1px, transparent 1px)", backgroundSize: "16px 16px" }} />
+        {/* brillo diagonal sutil */}
+        <div className="absolute -inset-x-10 -top-10 h-32 rotate-12 bg-white/10 blur-2xl" />
+        <div className="absolute inset-0 flex flex-col items-center justify-center text-white/90">
+          <Icon name={icon} size={big ? 64 : 40} strokeWidth={1.25} />
+          {label && <span className={cls("mt-2 font-display italic tracking-wide", big ? "text-3xl" : "text-lg")}>{label}</span>}
         </div>
-      );
-    };
-
-    /* ------------------------------------------------------------------ */
-    /*  NUESTRA META (fotos de la pareja → dream board)                    */
-    /*  Coloca tus fotos en  img/meta-1.jpg ... img/meta-4.jpg            */
-    /* ------------------------------------------------------------------ */
-    const META = [
-      { src: "img/meta-1.jpg", caption: "Cada aventura juntos…", place: "Nuestros viajes" },
-      { src: "img/meta-2.jpg", caption: "…cada puerto, cada paseo…", place: "Valparaíso" },
-      { src: "img/meta-3.jpg", caption: "…nos prepara para el gran salto…", place: "De la mano" },
-      { src: "img/meta-4.jpg", caption: "…la próxima parada: ¡Europa!", place: "Sol y mar" },
-    ];
+        {children}
+      </div>
+    );
 
     /* ------------------------------------------------------------------ */
     /*  DATOS DEL ITINERARIO                                               */
@@ -209,9 +166,9 @@
       {
         day: 1, date: "18 Ene", city: "Barcelona", title: "Llegada a Barcelona",
         map: { area: "Eixample & Sagrada Família", points: [
-          { n: "Paseo de Gracia", note: "Casa Batlló y La Pedrera, a 2 cuadras una de otra" },
-          { n: "Sagrada Família", note: "10 min en Metro (L2/L5) desde Pg. de Gràcia" },
-          { n: "Barrio Gótico", note: "Tapas nocturnas, 12 min en metro" },
+          { n: "Paseo de Gracia", note: "Casa Batlló y La Pedrera, a 2 cuadras una de otra", how: "Metro L2/L3/L4 estación Passeig de Gràcia; la salida da directo a la avenida." },
+          { n: "Sagrada Família", note: "A ~10 min del Paseo de Gracia", how: "Metro L2 o L5 hasta la parada Sagrada Família: sales justo frente a la basílica." },
+          { n: "Barrio Gótico", note: "Tapas nocturnas", how: "Metro L3 hasta Liceu o Drassanes; o 15 min a pie bajando por Pg. de Gràcia." },
         ]},
         blocks: [
           { period: "Mañana", items: [
@@ -240,9 +197,9 @@
         day: 2, date: "19 Ene", city: "Barcelona", title: "Güell, Gótico y vuelo a Roma",
         transfer: { from: "Barcelona", to: "Roma", mode: "Vuelo directo", detail: "Vueling / Ryanair / ITA · ~1h45 · BCN → FCO/CIA", icon: "Plane" },
         map: { area: "Gràcia → Ciutat Vella → Aeropuerto", points: [
-          { n: "Park Güell", note: "Zona Monumental con reserva; mosaicos de Gaudí" },
-          { n: "Barrio Gótico", note: "Catedral y Plaça Reial, casco antiguo medieval" },
-          { n: "Aeropuerto El Prat", note: "30–40 min en Aerobús desde el centro" },
+          { n: "Park Güell", note: "Zona Monumental con reserva; mosaicos de Gaudí", how: "Metro L3 hasta Lesseps o Vallcarca + 10 min cuesta arriba, o bus 116 hasta la entrada." },
+          { n: "Barrio Gótico", note: "Catedral y Plaça Reial", how: "Metro L3 dirección centro hasta Liceu (bajada directa desde Lesseps)." },
+          { n: "Aeropuerto El Prat", note: "Para el vuelo a Roma", how: "Aerobús A1/A2 desde Pl. Catalunya (~35 min) o Metro L9 Sud hasta el aeropuerto." },
         ]},
         blocks: [
           { period: "Mañana", items: [
@@ -270,10 +227,10 @@
       {
         day: 3, date: "20 Ene", city: "Roma", title: "La Roma Imperial",
         map: { area: "Centro histórico de Roma", points: [
-          { n: "Coliseo", note: "Punto de partida; arco de Constantino al lado" },
-          { n: "Panteón", note: "15 min caminando desde el Coliseo" },
-          { n: "Piazza Navona", note: "5 min del Panteón; fuentes de Bernini" },
-          { n: "Fontana di Trevi", note: "8 min del Panteón; lanza tu moneda" },
+          { n: "Coliseo", note: "Punto de partida; arco de Constantino al lado", how: "Metro Línea B hasta la parada 'Colosseo': sales frente al monumento." },
+          { n: "Panteón", note: "15 min del Coliseo", how: "A pie por Via dei Fori Imperiali y Via del Corso (~15 min), o bus 51/85/87." },
+          { n: "Piazza Navona", note: "5 min del Panteón", how: "A pie, 5 min al oeste del Panteón por Via dei Sediari." },
+          { n: "Fontana di Trevi", note: "Espectacular de noche", how: "A pie, ~8 min al noreste del Panteón por Via delle Muratte." },
         ]},
         blocks: [
           { period: "Mañana", items: [
@@ -303,9 +260,9 @@
       {
         day: 4, date: "21 Ene", city: "Roma", title: "Ciudad del Vaticano",
         map: { area: "Vaticano y Borgo", points: [
-          { n: "Museos Vaticanos", note: "Incluye la Capilla Sixtina; reserva imprescindible" },
-          { n: "Basílica de San Pedro", note: "Junto a los museos; sube a la cúpula" },
-          { n: "Castel Sant'Angelo", note: "10 min a pie por la Via della Conciliazione" },
+          { n: "Museos Vaticanos", note: "Incluye la Capilla Sixtina; reserva imprescindible", how: "Metro Línea A hasta 'Ottaviano-S.Pietro' + 10 min a pie hasta la entrada." },
+          { n: "Basílica de San Pedro", note: "Sube a la cúpula", how: "5 min a pie desde los Museos, bordeando la muralla vaticana hasta la plaza." },
+          { n: "Castel Sant'Angelo", note: "Terraza sobre el Tíber", how: "10 min a pie desde San Pedro por la Via della Conciliazione." },
         ]},
         blocks: [
           { period: "Mañana", items: [
@@ -334,9 +291,9 @@
       {
         day: 5, date: "22 Ene", city: "Roma", title: "Trastevere bohemio",
         map: { area: "Trastevere", points: [
-          { n: "Villa Farnesina", note: "Frescos de Rafael; entrada tranquila" },
-          { n: "Santa Maria in Trastevere", note: "5 min; mosaicos dorados medievales" },
-          { n: "Piazza di Santa Maria", note: "Corazón social del barrio" },
+          { n: "Villa Farnesina", note: "Frescos de Rafael", how: "Tranvía 8 desde Piazza Venezia hasta 'Belli' + 5 min a pie al lungotevere." },
+          { n: "Santa Maria in Trastevere", note: "Mosaicos dorados medievales", how: "5 min a pie hacia el interior del barrio desde Villa Farnesina." },
+          { n: "Piazza di Santa Maria", note: "Corazón social del barrio", how: "La plaza está frente a la basílica, en pleno corazón de Trastevere." },
         ]},
         blocks: [
           { period: "Mañana", items: [
@@ -366,9 +323,9 @@
         day: 6, date: "23 Ene", city: "Roma", title: "Borghese y vuelo a París",
         transfer: { from: "Roma", to: "París", mode: "Vuelo directo", detail: "easyJet / Vueling / Air France · ~2h10 · FCO → CDG/ORY", icon: "Plane" },
         map: { area: "Norte del centro → Aeropuerto", points: [
-          { n: "Villa Borghese", note: "Gran parque; Galleria Borghese con reserva" },
-          { n: "Piazza del Popolo", note: "Bajando del parque por el Pincio" },
-          { n: "Plaza de España", note: "8 min; la famosa escalinata" },
+          { n: "Villa Borghese", note: "Galleria Borghese con reserva", how: "Metro Línea A hasta 'Spagna' y sube por el ascensor/escaleras al parque." },
+          { n: "Piazza del Popolo", note: "Obelisco e iglesias gemelas", how: "Baja del parque por la terraza del Pincio (~10 min a pie con vistas)." },
+          { n: "Plaza de España", note: "La famosa escalinata", how: "8 min a pie desde Piazza del Popolo por Via del Babuino; o Metro 'Spagna'." },
         ]},
         blocks: [
           { period: "Mañana", items: [
@@ -396,10 +353,10 @@
       {
         day: 7, date: "24 Ene", city: "París", title: "París clásico",
         map: { area: "Orillas del Sena", points: [
-          { n: "Museo del Louvre", note: "La Gioconda; reserva con franja horaria" },
-          { n: "Notre Dame", note: "20 min a pie por la orilla del Sena (Île de la Cité)" },
-          { n: "Trocadéro", note: "Mejor mirador de la Torre Eiffel" },
-          { n: "Torre Eiffel", note: "Cruzando el Sena desde el Trocadéro" },
+          { n: "Museo del Louvre", note: "La Gioconda; reserva con franja horaria", how: "Metro L1/L7 hasta 'Palais Royal – Musée du Louvre' (acceso por el Carrousel)." },
+          { n: "Notre Dame", note: "Île de la Cité", how: "20 min a pie por la orilla del Sena, o Metro L4 hasta 'Cité'." },
+          { n: "Trocadéro", note: "Mejor mirador de la torre", how: "Metro L6/L9 hasta 'Trocadéro': la explanada da de frente a la Torre Eiffel." },
+          { n: "Torre Eiffel", note: "Subida al atardecer", how: "Cruza el Sena a pie desde Trocadéro (~10 min) o RER C 'Champ de Mars'." },
         ]},
         blocks: [
           { period: "Mañana", items: [
@@ -429,9 +386,9 @@
       {
         day: 8, date: "25 Ene", city: "París", title: "Luxemburgo y Montmartre",
         map: { area: "Rive Gauche → Montmartre", points: [
-          { n: "Jardines de Luxemburgo", note: "Parque elegante en el Barrio Latino" },
-          { n: "Montmartre", note: "Metro L4/L12; barrio de artistas en la colina" },
-          { n: "Sacré-Cœur", note: "Cima de Montmartre; vistas de todo París" },
+          { n: "Jardines de Luxemburgo", note: "Parque elegante del Barrio Latino", how: "RER B hasta 'Luxembourg', o Metro L4 hasta 'Saint-Sulpice' + 5 min." },
+          { n: "Montmartre", note: "Barrio de artistas en la colina", how: "Metro L2 'Anvers' o L12 'Abbesses'; luego sube la colina (o el funicular)." },
+          { n: "Sacré-Cœur", note: "Vistas de todo París", how: "Funicular de Montmartre desde 'Anvers', o las escalinatas hasta la cima." },
         ]},
         blocks: [
           { period: "Mañana", items: [
@@ -461,9 +418,9 @@
         day: 9, date: "26 Ene", city: "Londres", title: "Eurostar y Westminster",
         transfer: { from: "París", to: "Londres", mode: "Tren Eurostar", detail: "Gare du Nord → St Pancras · ~2h20 · llega antes para control de pasaportes", icon: "Train" },
         map: { area: "Westminster & South Bank", points: [
-          { n: "Abadía de Westminster", note: "Coronaciones reales; gótico imponente" },
-          { n: "Big Ben & Parlamento", note: "2 min; postal junto al Támesis" },
-          { n: "London Eye", note: "Cruzando el puente de Westminster" },
+          { n: "Abadía de Westminster", note: "Gótico imponente, coronaciones reales", how: "Tube Circle/District/Jubilee hasta 'Westminster' (salida Westminster Abbey)." },
+          { n: "Big Ben & Parlamento", note: "Postal junto al Támesis", how: "2 min a pie al salir de la estación de Westminster." },
+          { n: "London Eye", note: "La gran noria del South Bank", how: "Cruza el Westminster Bridge a pie (~5 min) hasta la orilla sur." },
         ]},
         blocks: [
           { period: "Mañana", items: [
@@ -492,9 +449,9 @@
       {
         day: 10, date: "27 Ene", city: "Londres", title: "Notting Hill & West End",
         map: { area: "Notting Hill → West End", points: [
-          { n: "Notting Hill", note: "Casas de colores y Portobello Road" },
-          { n: "Portobello Market", note: "Mercadillo de antigüedades (sáb. más grande)" },
-          { n: "West End", note: "Metro Central Line; teatros de Londres" },
+          { n: "Notting Hill", note: "Casas de colores", how: "Tube Central/Circle/District hasta 'Notting Hill Gate'." },
+          { n: "Portobello Market", note: "Antigüedades (sáb. más grande)", how: "5 min a pie cuesta abajo desde Notting Hill Gate por Pembridge Rd." },
+          { n: "West End", note: "Teatros de Londres", how: "Tube Central Line hasta 'Tottenham Court Road' o 'Leicester Square'." },
         ]},
         blocks: [
           { period: "Mañana", items: [
@@ -523,9 +480,9 @@
       {
         day: 11, date: "28 Ene", city: "Londres", title: "Realeza y museos",
         map: { area: "St. James → South Kensington", points: [
-          { n: "Palacio de Buckingham", note: "Cambio de guardia (ciertos días)" },
-          { n: "10 Adam Street", note: "Elegante calle georgiana cerca del Strand" },
-          { n: "Museo de Historia Natural", note: "Entrada gratis; el famoso esqueleto y dinos" },
+          { n: "Palacio de Buckingham", note: "Cambio de guardia (ciertos días)", how: "Tube Victoria/Piccadilly hasta 'Green Park' + 8 min por St James's Park." },
+          { n: "10 Adam Street", note: "Calle georgiana cerca del Strand", how: "Tube Northern/Bakerloo 'Charing Cross' + 5 min a pie hacia el Strand." },
+          { n: "Museo de Historia Natural", note: "Entrada gratis; dinosaurios", how: "Tube Piccadilly/District/Circle hasta 'South Kensington' (túnel directo)." },
         ]},
         blocks: [
           { period: "Mañana", items: [
@@ -554,10 +511,10 @@
       {
         day: 12, date: "29 Ene", city: "Londres", title: "Estadios, música y parques",
         map: { area: "Este → Oeste de Londres", points: [
-          { n: "Estadio de Londres", note: "Queen Elizabeth Olympic Park (Stratford)" },
-          { n: "Abbey Road", note: "El cruce peatonal de los Beatles (NW8)" },
-          { n: "Hyde Park", note: "Gran parque central; Speakers' Corner" },
-          { n: "Battersea Park", note: "Junto al Támesis; la central eléctrica reconvertida" },
+          { n: "Estadio de Londres", note: "Queen Elizabeth Olympic Park", how: "Tube/Overground/Elizabeth Line hasta 'Stratford' + 10 min por el parque." },
+          { n: "Abbey Road", note: "El cruce de los Beatles", how: "Tube Jubilee hasta 'St John's Wood' + 5 min a pie hasta el cruce." },
+          { n: "Hyde Park", note: "Speakers' Corner y Serpentine", how: "Tube hasta 'Hyde Park Corner' o 'Marble Arch'." },
+          { n: "Battersea Park", note: "Central eléctrica reconvertida", how: "Northern Line hasta 'Battersea Power Station', o tren a 'Battersea Park'." },
         ]},
         blocks: [
           { period: "Mañana", items: [
@@ -585,9 +542,9 @@
       {
         day: 13, date: "30 Ene", city: "Londres", title: "Tower Bridge & la City",
         map: { area: "City of London", points: [
-          { n: "Tower Bridge", note: "El puente levadizo victoriano más famoso" },
-          { n: "Torre de Londres", note: "Al lado; joyas de la corona (opcional)" },
-          { n: "The City", note: "Distrito financiero: The Gherkin, Sky Garden gratis" },
+          { n: "Tower Bridge", note: "El puente levadizo victoriano", how: "Tube District/Circle hasta 'Tower Hill' + 5 min a pie hasta el puente." },
+          { n: "Torre de Londres", note: "Joyas de la corona (opcional)", how: "Justo al lado del puente, saliendo de la estación 'Tower Hill'." },
+          { n: "The City", note: "The Gherkin y Sky Garden gratis", how: "10 min a pie al norte; o Tube hasta 'Bank' o 'Monument'." },
         ]},
         blocks: [
           { period: "Mañana", items: [
@@ -616,10 +573,10 @@
       {
         day: 14, date: "31 Ene", city: "Londres", title: "Camden & museos",
         map: { area: "Camden / Bloomsbury / Oxford St", points: [
-          { n: "Camden Town", note: "Cultura alternativa y música" },
-          { n: "Camden Market", note: "Street food mundial y moda alternativa" },
-          { n: "Museo Británico", note: "Gratis; Piedra Rosetta y momias" },
-          { n: "Oxford Street", note: "La gran calle comercial de Londres" },
+          { n: "Camden Town", note: "Cultura alternativa y música", how: "Tube Northern Line hasta 'Camden Town'." },
+          { n: "Camden Market", note: "Street food y moda alternativa", how: "2 min a pie desde la estación hacia el canal (Camden Lock)." },
+          { n: "Museo Británico", note: "Piedra Rosetta y momias", how: "Tube Central/Northern hasta 'Tottenham Court Rd' o 'Holborn' + 5 min." },
+          { n: "Oxford Street", note: "La gran calle comercial", how: "Tube Central/Victoria/Bakerloo hasta 'Oxford Circus'." },
         ]},
         blocks: [
           { period: "Mañana", items: [
@@ -649,9 +606,9 @@
         day: 15, date: "1 Feb", city: "Barcelona", title: "Regreso a Barcelona",
         transfer: { from: "Londres", to: "Barcelona", mode: "Vuelo directo", detail: "British Airways / Vueling / easyJet / Ryanair · ~2h10 · LON → BCN", icon: "Plane" },
         map: { area: "Londres → Barcelona", points: [
-          { n: "Aeropuerto de Londres", note: "Heathrow/Gatwick/Stansted/Luton según aerolínea" },
-          { n: "Barceloneta", note: "Playa y paseo marítimo para la tarde libre" },
-          { n: "Centro de BCN", note: "Las Ramblas y última cena de tapas" },
+          { n: "Aeropuerto de Londres", note: "Según tu aerolínea", how: "Heathrow Express/Piccadilly, Gatwick Express o tren a Stansted/Luton según el aeropuerto." },
+          { n: "Barceloneta", note: "Playa y paseo marítimo", how: "Metro L4 hasta 'Barceloneta' + 8 min a pie hasta la playa." },
+          { n: "Centro de BCN", note: "Las Ramblas y cena de tapas", how: "Metro L3 hasta 'Liceu' o 'Catalunya' para llegar a Las Ramblas." },
         ]},
         blocks: [
           { period: "Mañana", items: [
@@ -679,8 +636,8 @@
         day: 16, date: "2 Feb", city: "Chile", title: "Regreso a Chile",
         transfer: { from: "Barcelona", to: "Santiago de Chile", mode: "Vuelo de regreso", detail: "BCN → SCL (con escala, p. ej. Madrid o São Paulo)", icon: "Plane" },
         map: { area: "Barcelona → Santiago", points: [
-          { n: "Aeropuerto El Prat (BCN)", note: "Llega 3h antes para vuelo intercontinental" },
-          { n: "Vuelo de regreso", note: "Largo con escala; descansa e hidrátate" },
+          { n: "Aeropuerto El Prat (BCN)", note: "Llega 3h antes (vuelo intercontinental)", how: "Aerobús desde Pl. Catalunya (~35 min) o Metro L9 Sud hasta el aeropuerto." },
+          { n: "Vuelo de regreso", note: "Largo con escala; descansa e hidrátate", how: "Embarca en la puerta asignada; revisa la pantalla de salidas para tu vuelo." },
         ]},
         blocks: [
           { period: "Mañana", items: [
@@ -809,38 +766,57 @@
     /* ------------------------------------------------------------------ */
 
     /* Mapa estilizado (placeholder) */
+    /* Enlace a Google Maps para un lugar concreto (búsqueda por nombre + ciudad) */
+    const gmaps = (name, city) =>
+      `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(name + (city && city !== "Chile" ? ", " + city : ""))}`;
+
     const MapPanel = ({ map, city }) => {
       const theme = CITY[city] || CITY.Barcelona;
-      const q = encodeURIComponent(map.area + " " + (city === "Chile" ? "" : city));
       return (
         <div className="rounded-3xl border border-stone-200 overflow-hidden bg-white">
-          <div className={cls("relative h-40 sm:h-44 bg-gradient-to-br", theme.grad)}>
+          <div className={cls("relative h-28 sm:h-32 bg-gradient-to-br", theme.grad)}>
             {/* retícula tipo mapa */}
             <div className="absolute inset-0 opacity-30"
               style={{ backgroundImage: "linear-gradient(#fff 1px, transparent 1px), linear-gradient(90deg, #fff 1px, transparent 1px)", backgroundSize: "26px 26px" }} />
             <div className="absolute inset-0 flex items-center justify-center">
-              <Icon name="MapPinned" size={46} className="text-white/90 drop-shadow" />
+              <Icon name="MapPinned" size={40} className="text-white/90 drop-shadow" />
             </div>
-            <div className="absolute bottom-2 left-3 text-white">
-              <p className="text-[11px] uppercase tracking-wider opacity-90">Zona del día</p>
-              <p className="font-bold leading-tight">{map.area}</p>
-            </div>
-          </div>
-          <div className="p-3 space-y-2">
-            {map.points.map((p, i) => (
-              <div key={i} className="flex items-start gap-2 text-sm">
-                <span className={cls("mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-[11px] font-bold text-white", theme.dot)}>{i + 1}</span>
-                <div>
-                  <span className="font-semibold text-slate-800">{p.n}</span>
-                  <span className="text-slate-500"> · {p.note}</span>
-                </div>
+            <div className="absolute bottom-2 left-3 right-3 flex items-end justify-between text-white">
+              <div>
+                <p className="text-[11px] uppercase tracking-wider opacity-90">Zona del día</p>
+                <p className="font-bold leading-tight">{map.area}</p>
               </div>
-            ))}
-            <a href={`https://www.google.com/maps/search/?api=1&query=${q}`} target="_blank" rel="noreferrer"
-               className="mt-1 inline-flex items-center gap-1.5 text-sm font-semibold text-sky-600 hover:text-sky-700">
-              <Icon name="Navigation" size={15} /> Abrir en Google Maps
-            </a>
+              <a href={gmaps(map.area, city)} target="_blank" rel="noreferrer"
+                 className="inline-flex items-center gap-1 rounded-full bg-white/90 px-2.5 py-1 text-[11px] font-bold text-ink hover:bg-white">
+                <Icon name="Map" size={12} /> Ver zona
+              </a>
+            </div>
           </div>
+          <ul className="divide-y divide-stone-100">
+            {map.points.map((p, i) => (
+              <li key={i} className="p-3">
+                <div className="flex items-start gap-2.5">
+                  <span className={cls("mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-[11px] font-bold text-white", theme.dot)}>{i + 1}</span>
+                  <div className="min-w-0 flex-1">
+                    <div className="flex items-start justify-between gap-2">
+                      <p className="font-semibold text-ink leading-tight">{p.n}</p>
+                      <a href={gmaps(p.n, city)} target="_blank" rel="noreferrer"
+                         className="inline-flex shrink-0 items-center gap-1 rounded-full bg-sky-50 px-2 py-0.5 text-[11px] font-semibold text-sky-700 ring-1 ring-sky-200 hover:bg-sky-100">
+                        <Icon name="Navigation" size={11} /> Maps
+                      </a>
+                    </div>
+                    {p.note && <p className="text-[13px] text-stone-500 leading-snug">{p.note}</p>}
+                    {p.how && (
+                      <p className="mt-1 flex items-start gap-1.5 text-[13px] text-stone-600">
+                        <Icon name="Route" size={13} className="mt-0.5 shrink-0 text-wine" />
+                        <span><span className="font-semibold text-stone-700">Cómo llegar:</span> {p.how}</span>
+                      </p>
+                    )}
+                  </div>
+                </div>
+              </li>
+            ))}
+          </ul>
         </div>
       );
     };
@@ -871,10 +847,9 @@
       const theme = CITY[d.city] || CITY.Barcelona;
       return (
         <div className={cls("group overflow-hidden rounded-3xl border bg-white shadow-sm transition-all", open ? "border-stone-300 shadow-lg ring-1 ring-stone-200" : "border-stone-200 hover:shadow-md")}>
-          {/* Cabecera con foto de portada */}
+          {/* Cabecera con portada decorativa */}
           <button onClick={onToggle} className="block w-full text-left">
-            <Photo src={IMG.day[d.day]} gradient={"bg-gradient-to-br " + theme.grad} icon="Camera"
-              label={d.city} className="h-32 sm:h-40" kenburns={open}>
+            <Postcard gradient={theme.grad} icon="Landmark" className="h-32 sm:h-40">
               <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/25 to-transparent" />
               <div className="absolute inset-0 flex items-end p-4">
                 <div className="flex w-full items-end gap-3">
@@ -901,7 +876,7 @@
                   </span>
                 </div>
               </div>
-            </Photo>
+            </Postcard>
           </button>
 
           {/* Contenido */}
@@ -985,55 +960,6 @@
 
     /* ---------------------------- VISTAS ------------------------------ */
 
-    /* Nuestra meta: dream board con las fotos de la pareja */
-    const MetaView = () => (
-      <div className="space-y-8">
-        <SectionTitle icon="Heart" kicker="Por esto ahorramos"
-          title="Nuestra meta: Europa, juntos"
-          sub="De cada rincón que recorremos aquí, soñamos con el próximo: 16 días por Barcelona, Roma, París y Londres." />
-
-        {/* Dream board */}
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {META.map((m, i) => (
-            <Photo key={i} src={m.src} gradient="from-stone-300 to-stone-500" icon="ImagePlus"
-              label={`img/meta-${i + 1}.jpg`}
-              className={cls("group h-72 rounded-3xl shadow-md ring-1 ring-stone-200 transition-transform hover:-translate-y-1",
-                i % 2 ? "sm:translate-y-4" : "")}>
-              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent opacity-90" />
-              <div className="absolute top-3 left-3 rounded-full bg-white/85 px-2.5 py-1 text-[11px] font-semibold text-wine backdrop-blur">
-                {m.place}
-              </div>
-              <div className="absolute inset-x-0 bottom-0 p-4 text-white">
-                <p className="font-display text-xl italic leading-snug text-shadow-lg">{m.caption}</p>
-              </div>
-            </Photo>
-          ))}
-        </div>
-
-        {/* Cuenta atrás emocional / motivación */}
-        <div className="grid gap-4 md:grid-cols-3">
-          {[
-            { icon: "PiggyBank", t: "El plan", d: "Cada peso ahorrado nos acerca un día más a despegar rumbo a Barcelona." },
-            { icon: "Footprints", t: "El entrenamiento", d: "Valparaíso, la playa, los museos… practicamos ser viajeros en casa." },
-            { icon: "Sparkles", t: "El sueño", d: "Brindar frente a la Torre Eiffel y perdernos por Trastevere tomados de la mano." },
-          ].map((k, i) => (
-            <div key={i} className="rounded-3xl border border-stone-200 bg-white p-5 text-center sm:text-left">
-              <div className="mb-2 inline-flex h-11 w-11 items-center justify-center rounded-2xl bg-rose-50 text-rose-600">
-                <Icon name={k.icon} size={20} />
-              </div>
-              <p className="font-display text-xl font-bold text-ink">{k.t}</p>
-              <p className="text-sm text-stone-500">{k.d}</p>
-            </div>
-          ))}
-        </div>
-
-        <div className="rounded-3xl border border-dashed border-stone-300 bg-white/60 p-4 text-center text-sm text-stone-500">
-          <Icon name="Info" size={15} className="inline mr-1 -mt-0.5" />
-          ¿No ves tus fotos? Súbelas al repositorio en <code className="rounded bg-stone-100 px-1.5 py-0.5 text-wine">img/meta-1.jpg</code> … <code className="rounded bg-stone-100 px-1.5 py-0.5 text-wine">img/meta-4.jpg</code> y aparecerán aquí automáticamente.
-        </div>
-      </div>
-    );
-
     const ItineraryView = () => {
       const [open, setOpen] = useState(1);
       const [filter, setFilter] = useState("Todas");
@@ -1086,15 +1012,20 @@
         {/* Galería de ciudades */}
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {["Barcelona", "Roma", "París", "Londres"].map((c) => (
-            <Photo key={c} src={IMG.cityCover[c]} gradient={"bg-gradient-to-br " + CITY[c].grad}
-              icon="Landmark" label={c} className="h-52 rounded-3xl shadow-sm ring-1 ring-stone-200" kenburns>
-              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
-              <div className="absolute inset-0 flex flex-col justify-end p-4 text-white">
-                <span className="text-3xl">{CITY[c].flag}</span>
-                <h4 className="font-display text-2xl font-bold leading-tight text-shadow-lg">{c}</h4>
-                <p className="text-xs text-white/85">{CITY_INFO[c]}</p>
-              </div>
-            </Photo>
+            <a key={c} href={gmaps(c, "")} target="_blank" rel="noreferrer" className="block">
+              <Postcard gradient={CITY[c].grad} icon="Landmark"
+                className="h-52 rounded-3xl shadow-sm ring-1 ring-stone-200 transition-transform hover:-translate-y-1">
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+                <div className="absolute inset-0 flex flex-col justify-end p-4 text-white">
+                  <span className="text-3xl">{CITY[c].flag}</span>
+                  <h4 className="font-display text-2xl font-bold leading-tight text-shadow-lg">{c}</h4>
+                  <p className="text-xs text-white/85">{CITY_INFO[c]}</p>
+                  <span className="mt-2 inline-flex items-center gap-1 text-[11px] font-semibold text-white/90">
+                    <Icon name="Navigation" size={12} /> Ver en Google Maps
+                  </span>
+                </div>
+              </Postcard>
+            </a>
           ))}
         </div>
 
@@ -1355,7 +1286,6 @@
     /*  APP                                                                */
     /* ------------------------------------------------------------------ */
     const TABS = [
-      { id: "meta", label: "Nuestra Meta", icon: "Heart" },
       { id: "itinerario", label: "Itinerario", icon: "CalendarDays" },
       { id: "mapa", label: "Ciudades", icon: "Map" },
       { id: "presupuesto", label: "Presupuesto", icon: "Wallet" },
@@ -1364,59 +1294,50 @@
     ];
 
     /* Hero cinematográfico */
-    const Hero = ({ tab, onCta }) => {
-      const isMeta = tab === "meta";
-      return (
-        <section className="relative">
-          <Photo src={isMeta ? META[3].src : IMG.day[7]} kenburns
-            gradient={isMeta ? "from-rose-700 via-stone-800 to-indigo-900" : "from-indigo-900 via-stone-900 to-sky-900"}
-            icon={isMeta ? "Heart" : "Plane"} className="h-[78vh] min-h-[460px] max-h-[680px]">
-            <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/45 to-black/30" />
-            <div className="absolute inset-0 flex items-center">
-              <div className="mx-auto w-full max-w-6xl px-5">
-                <div className="max-w-2xl animate-fadeUp text-white">
-                  <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-white/30 bg-white/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.2em] backdrop-blur">
-                    <Icon name="Compass" size={14} /> {isMeta ? "Un sueño en construcción" : "Invierno en Europa · 18 Ene – 2 Feb"}
-                  </div>
-                  <h2 className="font-display text-5xl sm:text-7xl font-bold leading-[0.95] text-shadow-lg">
-                    {isMeta ? <>Algún día,<br/><span className="italic text-rose-200">nosotros en Europa</span></>
-                            : <>16 días<br/><span className="italic text-sky-200">por Europa</span></>}
-                  </h2>
-                  <p className="mt-4 max-w-xl text-base sm:text-lg text-white/85">
-                    {isMeta
-                      ? "Cada viaje que hacemos juntos es un ensayo de este gran sueño: recorrer Barcelona, Roma, París y Londres de la mano."
-                      : "Cuatro capitales, tres vuelos y un Eurostar. Un itinerario detallado mañana, mediodía, tarde y noche — con mapas, costos y dónde comer y comprar."}
-                  </p>
-                  <div className="mt-7 flex flex-wrap items-center gap-3">
-                    <button onClick={onCta}
-                      className="inline-flex items-center gap-2 rounded-full bg-white px-5 py-3 text-sm font-bold text-ink shadow-lg transition hover:scale-[1.03]">
-                      <Icon name={isMeta ? "Map" : "CalendarDays"} size={18} />
-                      {isMeta ? "Ver nuestro itinerario" : "Explorar día a día"}
-                    </button>
-                    <div className="flex items-center gap-4 text-sm text-white/80">
-                      <span className="flex items-center gap-1.5"><Icon name="MapPin" size={15} /> 4 ciudades</span>
-                      <span className="flex items-center gap-1.5"><Icon name="Plane" size={15} /> 3 vuelos + 1 tren</span>
-                    </div>
+    const Hero = ({ onCta }) => (
+      <section className="relative">
+        <Postcard gradient="from-indigo-900 via-stone-900 to-sky-900" icon="Plane"
+          className="h-[70vh] min-h-[440px] max-h-[640px]">
+          <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/45 to-black/30" />
+          <div className="absolute inset-0 flex items-center">
+            <div className="mx-auto w-full max-w-6xl px-5">
+              <div className="max-w-2xl animate-fadeUp text-white">
+                <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-white/30 bg-white/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.2em] backdrop-blur">
+                  <Icon name="Compass" size={14} /> Invierno en Europa · 18 Ene – 2 Feb
+                </div>
+                <h2 className="font-display text-5xl sm:text-7xl font-bold leading-[0.95] text-shadow-lg">
+                  16 días<br/><span className="italic text-sky-200">por Europa</span>
+                </h2>
+                <p className="mt-4 max-w-xl text-base sm:text-lg text-white/85">
+                  Cuatro capitales, tres vuelos y un Eurostar. Un itinerario detallado mañana, mediodía, tarde y noche — con mapas, cómo llegar, costos y dónde comer y comprar.
+                </p>
+                <div className="mt-7 flex flex-wrap items-center gap-3">
+                  <button onClick={onCta}
+                    className="inline-flex items-center gap-2 rounded-full bg-white px-5 py-3 text-sm font-bold text-ink shadow-lg transition hover:scale-[1.03]">
+                    <Icon name="Map" size={18} /> Ver ciudades y rutas
+                  </button>
+                  <div className="flex items-center gap-4 text-sm text-white/80">
+                    <span className="flex items-center gap-1.5"><Icon name="MapPin" size={15} /> 4 ciudades</span>
+                    <span className="flex items-center gap-1.5"><Icon name="Plane" size={15} /> 3 vuelos + 1 tren</span>
                   </div>
                 </div>
               </div>
             </div>
-            <div className="absolute bottom-5 left-1/2 -translate-x-1/2 text-white/70 animate-bounce">
-              <Icon name="ChevronDown" size={26} />
-            </div>
-          </Photo>
-        </section>
-      );
-    };
+          </div>
+          <div className="absolute bottom-5 left-1/2 -translate-x-1/2 text-white/70 animate-bounce">
+            <Icon name="ChevronDown" size={26} />
+          </div>
+        </Postcard>
+      </section>
+    );
 
     function App() {
-      const [tab, setTab] = useState("meta");
+      const [tab, setTab] = useState("itinerario");
       const [menu, setMenu] = useState(false);
       const setTab2 = (t) => { setTab(t); setMenu(false); if (typeof window !== "undefined" && window.scrollTo) window.scrollTo({ top: 0, behavior: "smooth" }); };
 
       const render = () => {
         switch (tab) {
-          case "meta": return <MetaView />;
           case "mapa": return <MapView />;
           case "presupuesto": return <BudgetView />;
           case "tips": return <TipsView />;
@@ -1425,7 +1346,7 @@
         }
       };
 
-      const showHero = tab === "meta" || tab === "itinerario";
+      const showHero = tab === "itinerario";
 
       return (
         <div className="min-h-screen">
@@ -1473,7 +1394,7 @@
           </header>
 
           {/* HERO */}
-          {showHero && <Hero tab={tab} onCta={() => setTab2(tab === "meta" ? "itinerario" : "mapa")} />}
+          {showHero && <Hero onCta={() => setTab2("mapa")} />}
 
           {/* CONTENIDO */}
           <main className="mx-auto max-w-6xl px-4 py-8 sm:py-12">
@@ -1487,7 +1408,7 @@
               <p className="flex items-center justify-center gap-2 font-display text-xl font-semibold text-ink">
                 <Icon name="Heart" size={18} className="text-wine" /> Hecho con cariño para nuestro viaje soñado
               </p>
-              <p className="mt-2 text-xs text-stone-400 max-w-xl mx-auto">Costos y recomendaciones son estimaciones referenciales; verifica precios y horarios antes de viajar. Fotos de ciudades vía Unsplash.</p>
+              <p className="mt-2 text-xs text-stone-400 max-w-xl mx-auto">Costos, recomendaciones y rutas de "cómo llegar" son estimaciones referenciales; verifica precios, horarios y líneas de transporte antes de viajar.</p>
             </div>
           </footer>
         </div>
