@@ -142,7 +142,34 @@
     const cls = (...a) => a.filter(Boolean).join(" ");
 
     /* ------------------------------------------------------------------ */
-    /*  Lienzo "postal": degradado decorativo por ciudad (sin imágenes).   */
+    /*  IMÁGENES (cargan en el navegador; con respaldo "postal" elegante)  */
+    /*  Fuente: Unsplash CDN. Si una foto no carga, se ve el degradado.    */
+    /* ------------------------------------------------------------------ */
+    const U = (id, w = 1100) => `https://images.unsplash.com/photo-${id}?auto=format&fit=crop&w=${w}&q=72`;
+    const IMG = {
+      hero: U("1502602898657-3e91760cbb34", 1600), // Torre Eiffel
+      cityCover: {
+        Barcelona: U("1583422409516-2895a77efded"),
+        Roma:      U("1552832230-c0197dd311b5"),
+        París:     U("1502602898657-3e91760cbb34"),
+        Londres:   U("1513635269975-59663e0ac1ad"),
+        Chile:     U("1478827387698-1527781a4887"),
+      },
+      // Portada por día (lugar principal de la jornada)
+      day: {
+        1:  U("1583422409516-2895a77efded"), 2:  U("1551634979-2b11f8c946fe"),
+        3:  U("1552832230-c0197dd311b5"),    4:  U("1531572753322-ad063cecc140"),
+        5:  U("1531425300797-d5dc8b021c84"), 6:  U("1525874684015-58379d421a52"),
+        7:  U("1502602898657-3e91760cbb34"), 8:  U("1550340499-a6c60fc8287c"),
+        9:  U("1529655683826-aba9b3e77383"), 10: U("1513635269975-59663e0ac1ad"),
+        11: U("1486299267070-83823f5448dd"), 12: U("1505761671935-60b3a7427bad"),
+        13: U("1533929736458-ca588d08c8be"), 14: U("1520986606214-8b456906c813"),
+        15: U("1539037116277-4db20889f2d4"), 16: U("1436491865332-7a61a109cc05"),
+      },
+    };
+
+    /* ------------------------------------------------------------------ */
+    /*  Lienzo "postal": degradado decorativo por ciudad (respaldo).       */
     /* ------------------------------------------------------------------ */
     const Postcard = ({ gradient = "from-slate-700 to-slate-900", icon = "Landmark", label, className = "", big = false, children }) => (
       <div className={cls("relative overflow-hidden bg-gradient-to-br", gradient, className)}>
@@ -157,6 +184,44 @@
         </div>
         {children}
       </div>
+    );
+
+    /* Foto real con respaldo: si la URL falla, queda el lienzo "postal" */
+    const Photo = ({ src, alt, gradient, icon, label, className = "", kenburns = false, children }) => {
+      const [ok, setOk] = useState(Boolean(src));
+      return (
+        <div className={cls("relative overflow-hidden", className)}>
+          <Postcard gradient={gradient} icon={icon} label={label} className="absolute inset-0 h-full w-full" />
+          {ok && (
+            <img src={src} alt={alt || label || ""} loading="lazy" onError={() => setOk(false)}
+              className={cls("absolute inset-0 h-full w-full object-cover", kenburns && "animate-kenburns")} />
+          )}
+          {children}
+        </div>
+      );
+    };
+
+    /* ------------------------------------------------------------------ */
+    /*  Iconos de transporte: detecta el modo mencionado en un texto       */
+    /*  (metro, tren, tranvía, bus, a pie, funicular, avión…)              */
+    /* ------------------------------------------------------------------ */
+    const TRANSPORT_MODES = [
+      { re: /\b(metro|tube|underground|subte)\b/i,                 icon: "TrainFront",       label: "Metro" },
+      { re: /\b(rer)\b|eurostar|\btren\b|express|railway|renfe/i,  icon: "TrainFrontTunnel", label: "Tren" },
+      { re: /\b(tranv[ií]a|tram)\b/i,                              icon: "TramFront",        label: "Tranvía" },
+      { re: /aerob[uú]s|autob[uú]s|\bbus\b/i,                      icon: "Bus",        label: "Bus" },
+      { re: /funicular/i,                                          icon: "CableCar",   label: "Funicular" },
+      { re: /a pie|caminando|camina|min a pie/i,                   icon: "Footprints", label: "A pie" },
+      { re: /vuelo|avi[oó]n|aeropuerto|aterri|embarc|embarq|despeg/i, icon: "Plane",   label: "Avión" },
+      { re: /barco|ferry|crucero/i,                               icon: "Ship",       label: "Barco" },
+    ];
+    const detectModes = (text) => TRANSPORT_MODES.filter(m => m.re.test(text || ""));
+
+    /* Chip pequeño con icono + etiqueta */
+    const ModeChip = ({ icon, label }) => (
+      <span className="inline-flex items-center gap-1 rounded-full bg-white px-2 py-0.5 text-[11px] font-semibold text-ink ring-1 ring-stone-200">
+        <Icon name={icon} size={12} className="text-wine" /> {label}
+      </span>
     );
 
     /* ------------------------------------------------------------------ */
@@ -807,10 +872,15 @@
                     </div>
                     {p.note && <p className="text-[13px] text-stone-500 leading-snug">{p.note}</p>}
                     {p.how && (
-                      <p className="mt-1 flex items-start gap-1.5 text-[13px] text-stone-600">
-                        <Icon name="Route" size={13} className="mt-0.5 shrink-0 text-wine" />
-                        <span><span className="font-semibold text-stone-700">Cómo llegar:</span> {p.how}</span>
-                      </p>
+                      <div className="mt-1.5 rounded-xl bg-stone-50 p-2 ring-1 ring-stone-100">
+                        <div className="mb-1 flex flex-wrap items-center gap-1.5">
+                          <span className="inline-flex items-center gap-1 text-[11px] font-bold uppercase tracking-wide text-wine">
+                            <Icon name="Route" size={13} /> Cómo llegar
+                          </span>
+                          {detectModes(p.how).map((m, k) => <ModeChip key={k} icon={m.icon} label={m.label} />)}
+                        </div>
+                        <p className="text-[13px] text-stone-600 leading-snug">{p.how}</p>
+                      </div>
                     )}
                   </div>
                 </div>
@@ -821,36 +891,58 @@
       );
     };
 
-    const TransferBanner = ({ t }) => (
-      <div className="flex items-center gap-3 rounded-xl bg-sky-50 ring-1 ring-sky-200 px-3.5 py-2.5 text-sky-800">
-        <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-sky-600 text-white shrink-0">
-          <Icon name={t.icon} size={18} />
+    const TransferBanner = ({ t }) => {
+      const modes = detectModes(t.mode + " " + t.detail);
+      return (
+        <div className="flex items-start gap-3 rounded-2xl bg-sky-50 ring-1 ring-sky-200 px-3.5 py-3 text-sky-900">
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-sky-600 text-white shrink-0">
+            <Icon name={t.icon} size={20} />
+          </div>
+          <div className="text-sm">
+            <p className="flex items-center gap-1.5 font-bold">
+              <Icon name="MapPin" size={13} /> {t.from}
+              <Icon name="MoveRight" size={14} className="text-sky-500" />
+              <Icon name="MapPin" size={13} /> {t.to}
+            </p>
+            <div className="my-1 flex flex-wrap items-center gap-1.5">
+              {modes.map((m, k) => <ModeChip key={k} icon={m.icon} label={m.label} />)}
+            </div>
+            <p className="text-sky-700/90 text-[13px]">{t.detail}</p>
+          </div>
         </div>
-        <div className="text-sm">
-          <p className="font-bold">{t.from} → {t.to} · {t.mode}</p>
-          <p className="text-sky-700/90 text-[13px]">{t.detail}</p>
-        </div>
-      </div>
-    );
+      );
+    };
 
-    const ActivityCard = ({ item }) => (
-      <div className="group rounded-xl border border-slate-200 bg-white p-3.5 transition hover:shadow-md hover:border-slate-300">
-        <div className="mb-1.5 flex items-center justify-between gap-2">
-          <h4 className="font-bold text-slate-800 leading-tight">{item.name}</h4>
-          <Badge type={item.type} sm />
+    const ACT_ICON = { "Atracción": "Camera", "Transporte": "Plane", "Comida": "Utensils", "Compras": "ShoppingBag" };
+    const ActivityCard = ({ item }) => {
+      const modes = item.type === "Transporte" ? detectModes(item.desc) : [];
+      return (
+        <div className="group rounded-2xl border border-stone-200 bg-white p-3.5 transition hover:shadow-md hover:border-stone-300">
+          <div className="mb-1.5 flex items-center justify-between gap-2">
+            <h4 className="flex items-center gap-1.5 font-bold text-ink leading-tight">
+              <Icon name={ACT_ICON[item.type] || "MapPin"} size={15} className="shrink-0 text-wine" />
+              {item.name}
+            </h4>
+            <Badge type={item.type} sm />
+          </div>
+          <p className="text-sm text-stone-500 leading-snug">{item.desc}</p>
+          {modes.length > 0 && (
+            <div className="mt-2 flex flex-wrap items-center gap-1.5">
+              {modes.map((m, k) => <ModeChip key={k} icon={m.icon} label={m.label} />)}
+            </div>
+          )}
         </div>
-        <p className="text-sm text-slate-500 leading-snug">{item.desc}</p>
-      </div>
-    );
+      );
+    };
 
     const DayCard = ({ d, open, onToggle }) => {
       const theme = CITY[d.city] || CITY.Barcelona;
       return (
         <div className={cls("group overflow-hidden rounded-3xl border bg-white shadow-sm transition-all", open ? "border-stone-300 shadow-lg ring-1 ring-stone-200" : "border-stone-200 hover:shadow-md")}>
-          {/* Cabecera con portada decorativa */}
+          {/* Cabecera con foto de portada */}
           <button onClick={onToggle} className="block w-full text-left">
-            <Postcard gradient={theme.grad} icon="Landmark" className="h-32 sm:h-40">
-              <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/25 to-transparent" />
+            <Photo src={IMG.day[d.day]} gradient={theme.grad} icon="Landmark" className="h-32 sm:h-44" kenburns={open}>
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
               <div className="absolute inset-0 flex items-end p-4">
                 <div className="flex w-full items-end gap-3">
                   <div className="flex h-14 w-14 shrink-0 flex-col items-center justify-center rounded-2xl bg-white/15 text-white ring-1 ring-white/30 backdrop-blur">
@@ -876,7 +968,7 @@
                   </span>
                 </div>
               </div>
-            </Postcard>
+            </Photo>
           </button>
 
           {/* Contenido */}
@@ -891,8 +983,10 @@
                     return (
                       <div key={i}>
                         <div className="mb-2 flex items-center gap-2">
-                          <Icon name={p.icon} size={18} className={p.cls} />
-                          <h5 className="text-sm font-bold uppercase tracking-wide text-slate-600">{b.period}</h5>
+                          <span className={cls("flex h-7 w-7 items-center justify-center rounded-full bg-white ring-1 ring-stone-200", p.cls)}>
+                            <Icon name={p.icon} size={16} />
+                          </span>
+                          <h5 className="text-sm font-bold uppercase tracking-wide text-stone-600">{b.period}</h5>
                         </div>
                         <div className="grid gap-2.5 sm:grid-cols-2">
                           {b.items.map((it, j) => <ActivityCard key={j} item={it} />)}
@@ -909,10 +1003,15 @@
                       </div>
                       <ul className="space-y-2">
                         {d.food.map((f, i) => (
-                          <li key={i} className="text-sm">
-                            <span className="font-semibold text-slate-800">{f.n}</span>
-                            <span className="ml-1 rounded bg-amber-200/60 px-1.5 py-0.5 text-[11px] font-semibold text-amber-800">{f.p}</span>
-                            <p className="text-slate-500 leading-snug">{f.d}</p>
+                          <li key={i} className="flex gap-2 text-sm">
+                            <Icon name="UtensilsCrossed" size={14} className="mt-0.5 shrink-0 text-amber-600" />
+                            <div>
+                              <span className="font-semibold text-ink">{f.n}</span>
+                              <span className="ml-1 inline-flex items-center gap-0.5 rounded bg-amber-200/60 px-1.5 py-0.5 text-[11px] font-semibold text-amber-800">
+                                <Icon name="Coins" size={10} /> {f.p}
+                              </span>
+                              <p className="text-stone-500 leading-snug">{f.d}</p>
+                            </div>
                           </li>
                         ))}
                       </ul>
@@ -923,9 +1022,12 @@
                       </div>
                       <ul className="space-y-2">
                         {d.shopping.map((s, i) => (
-                          <li key={i} className="text-sm">
-                            <span className="font-semibold text-slate-800">{s.n}</span>
-                            <p className="text-slate-500 leading-snug">{s.d}</p>
+                          <li key={i} className="flex gap-2 text-sm">
+                            <Icon name={/qué comprar/i.test(s.n) ? "Gift" : "Tag"} size={14} className="mt-0.5 shrink-0 text-rose-500" />
+                            <div>
+                              <span className="font-semibold text-ink">{s.n}</span>
+                              <p className="text-stone-500 leading-snug">{s.d}</p>
+                            </div>
                           </li>
                         ))}
                       </ul>
@@ -1013,7 +1115,7 @@
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {["Barcelona", "Roma", "París", "Londres"].map((c) => (
             <a key={c} href={gmaps(c, "")} target="_blank" rel="noreferrer" className="block">
-              <Postcard gradient={CITY[c].grad} icon="Landmark"
+              <Photo src={IMG.cityCover[c]} gradient={CITY[c].grad} icon="Landmark" kenburns
                 className="h-52 rounded-3xl shadow-sm ring-1 ring-stone-200 transition-transform hover:-translate-y-1">
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
                 <div className="absolute inset-0 flex flex-col justify-end p-4 text-white">
@@ -1024,7 +1126,7 @@
                     <Icon name="Navigation" size={12} /> Ver en Google Maps
                   </span>
                 </div>
-              </Postcard>
+              </Photo>
             </a>
           ))}
         </div>
@@ -1296,9 +1398,16 @@
     /* Hero cinematográfico */
     const Hero = ({ onCta }) => (
       <section className="relative">
-        <Postcard gradient="from-indigo-900 via-stone-900 to-sky-900" icon="Plane"
+        <Photo src={IMG.hero} gradient="from-indigo-900 via-stone-900 to-sky-900" icon="Plane" kenburns
           className="h-[70vh] min-h-[440px] max-h-[640px]">
           <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/45 to-black/30" />
+          {/* Sello tipo pasaporte */}
+          <div className="absolute top-6 right-6 hidden rotate-12 sm:flex h-28 w-28 flex-col items-center justify-center rounded-full border-4 border-double border-white/40 text-center text-white/85">
+            <Icon name="Stamp" size={16} className="mb-0.5" />
+            <span className="font-display text-2xl font-bold leading-none">EUROPA</span>
+            <span className="text-[9px] uppercase tracking-[0.3em]">Ene · Feb</span>
+            <span className="mt-1 text-base leading-none">🇪🇸 🇮🇹 🇫🇷 🇬🇧</span>
+          </div>
           <div className="absolute inset-0 flex items-center">
             <div className="mx-auto w-full max-w-6xl px-5">
               <div className="max-w-2xl animate-fadeUp text-white">
@@ -1327,7 +1436,7 @@
           <div className="absolute bottom-5 left-1/2 -translate-x-1/2 text-white/70 animate-bounce">
             <Icon name="ChevronDown" size={26} />
           </div>
-        </Postcard>
+        </Photo>
       </section>
     );
 
