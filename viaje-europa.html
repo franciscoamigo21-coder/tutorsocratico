@@ -1,0 +1,1313 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Eurotrip · 16 Días · Barcelona · Roma · París · Londres</title>
+  <meta name="description" content="Planificador de viaje interactivo de 16 días por Europa: itinerario, mapas, presupuesto, recomendaciones y checklist." />
+
+  <!-- React + ReactDOM -->
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  <!-- Babel para JSX en el navegador -->
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <!-- Tailwind CSS (Play CDN) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- lucide (iconografía) -->
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['"Plus Jakarta Sans"', 'system-ui', 'sans-serif'] },
+          keyframes: {
+            fadeUp: { '0%': { opacity: 0, transform: 'translateY(10px)' }, '100%': { opacity: 1, transform: 'translateY(0)' } },
+          },
+          animation: { fadeUp: 'fadeUp .45s ease both' },
+        },
+      },
+    };
+  </script>
+  <style>
+    html { scroll-behavior: smooth; }
+    body { -webkit-font-smoothing: antialiased; }
+    ::-webkit-scrollbar { width: 10px; height: 10px; }
+    ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 999px; }
+    ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+  </style>
+</head>
+<body class="bg-slate-50 font-sans text-slate-800">
+  <div id="root"></div>
+
+  <!--
+    El JSX se guarda como texto y se compila con Babel usando el runtime "classic"
+    (React.createElement) para que funcione con React cargado como global UMD,
+    sin necesidad de un bundler ni de "react/jsx-runtime".
+  -->
+  <script type="text/jsx-source" id="app-source">
+    const { useState, useEffect, useMemo, useRef } = React;
+
+    /* ------------------------------------------------------------------ */
+    /*  Icono basado en lucide (set lucide-react renderizado en navegador) */
+    /* ------------------------------------------------------------------ */
+    const Icon = ({ name, size = 22, className = "", strokeWidth = 2, ...rest }) => {
+      const L = window.lucide || {};
+      // El icono puede estar en lucide.icons[name] o como lucide[name] según el build UMD.
+      let node = (L.icons && L.icons[name]) || L[name] || null;
+      if (node && node.iconNode) node = node.iconNode; // forma { iconNode: [...] }
+      const children = Array.isArray(node) ? node : null;
+      if (!children) {
+        // Fallback discreto si el icono no existe en esta versión de lucide.
+        return <span className={cls("inline-block rounded-full bg-current opacity-40", className)} style={{ width: size * 0.45, height: size * 0.45 }} />;
+      }
+      return (
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width={size} height={size} viewBox="0 0 24 24"
+          fill="none" stroke="currentColor" strokeWidth={strokeWidth}
+          strokeLinecap="round" strokeLinejoin="round"
+          className={className} {...rest}
+        >
+          {children.map((c, i) => React.createElement(c[0], { key: i, ...c[1] }))}
+        </svg>
+      );
+    };
+
+    /* ------------------------------------------------------------------ */
+    /*  Sistema de etiquetas (badges)                                      */
+    /* ------------------------------------------------------------------ */
+    const BADGE = {
+      "Atracción":  { icon: "Landmark",    cls: "bg-indigo-100 text-indigo-700 ring-indigo-200" },
+      "Transporte": { icon: "Plane",       cls: "bg-sky-100 text-sky-700 ring-sky-200" },
+      "Comida":     { icon: "Utensils",    cls: "bg-amber-100 text-amber-700 ring-amber-200" },
+      "Compras":    { icon: "ShoppingBag", cls: "bg-rose-100 text-rose-700 ring-rose-200" },
+    };
+    const Badge = ({ type, sm }) => {
+      const b = BADGE[type] || BADGE["Atracción"];
+      return (
+        <span className={`inline-flex items-center gap-1 rounded-full ring-1 font-semibold ${b.cls} ${sm ? "px-2 py-0.5 text-[11px]" : "px-2.5 py-1 text-xs"}`}>
+          <Icon name={b.icon} size={sm ? 12 : 14} strokeWidth={2.4} />
+          {type}
+        </span>
+      );
+    };
+
+    /* Periodos del día */
+    const PERIODS = {
+      "Mañana":   { icon: "Sunrise", cls: "text-amber-500" },
+      "Mediodía": { icon: "Sun",     cls: "text-orange-500" },
+      "Tarde":    { icon: "Sunset",  cls: "text-rose-500" },
+      "Noche":    { icon: "Moon",    cls: "text-indigo-500" },
+    };
+
+    /* Tema por ciudad */
+    const CITY = {
+      Barcelona: { flag: "🇪🇸", grad: "from-amber-500 to-rose-500",  soft: "bg-amber-50 text-amber-700 ring-amber-200",  dot: "bg-amber-500" },
+      Roma:      { flag: "🇮🇹", grad: "from-orange-500 to-red-600",  soft: "bg-orange-50 text-orange-700 ring-orange-200", dot: "bg-orange-500" },
+      París:     { flag: "🇫🇷", grad: "from-sky-500 to-indigo-600",  soft: "bg-sky-50 text-sky-700 ring-sky-200",         dot: "bg-sky-500" },
+      Londres:   { flag: "🇬🇧", grad: "from-rose-600 to-indigo-700", soft: "bg-rose-50 text-rose-700 ring-rose-200",       dot: "bg-rose-600" },
+      Chile:     { flag: "🇨🇱", grad: "from-blue-600 to-red-600",     soft: "bg-blue-50 text-blue-700 ring-blue-200",      dot: "bg-blue-600" },
+    };
+
+    /* ------------------------------------------------------------------ */
+    /*  DATOS DEL ITINERARIO                                               */
+    /* ------------------------------------------------------------------ */
+    const ITINERARY = [
+      {
+        day: 1, date: "18 Ene", city: "Barcelona", title: "Llegada a Barcelona",
+        map: { area: "Eixample & Sagrada Família", points: [
+          { n: "Paseo de Gracia", note: "Casa Batlló y La Pedrera, a 2 cuadras una de otra" },
+          { n: "Sagrada Família", note: "10 min en Metro (L2/L5) desde Pg. de Gràcia" },
+          { n: "Barrio Gótico", note: "Tapas nocturnas, 12 min en metro" },
+        ]},
+        blocks: [
+          { period: "Mañana", items: [
+            { type: "Transporte", name: "Llegada y check-in", desc: "Aterriza en BCN-El Prat y toma el Aerobús (€7.25) o Metro L9 hasta el alojamiento." },
+          ]},
+          { period: "Mediodía", items: [
+            { type: "Atracción", name: "Paseo de Gracia", desc: "Casa Batlló (Gaudí) y La Pedrera (Casa Milà), las dos joyas modernistas de la avenida." },
+          ]},
+          { period: "Tarde", items: [
+            { type: "Atracción", name: "Sagrada Família", desc: "La basílica inacabada de Gaudí. Reserva con horario fijo para evitar filas." },
+          ]},
+          { period: "Noche", items: [
+            { type: "Comida", name: "Cena de tapas", desc: "Ruta de tapas por el Barrio Gótico / El Born para estrenar el viaje." },
+          ]},
+        ],
+        food: [
+          { n: "El Xampanyet (El Born)", d: "Bar de tapas clásico y cava. Anchoas y conservas legendarias.", p: "€18–25 p/p" },
+          { n: "Bar del Pla", d: "Tapas modernas cerca del Museo Picasso.", p: "€20–30 p/p" },
+        ],
+        shopping: [
+          { n: "Paseo de Gracia", d: "Flagship stores y diseño; ideal para mirar escaparates." },
+          { n: "Qué comprar", d: "Turrón, aceite de oliva, abanicos pintados a mano." },
+        ],
+      },
+      {
+        day: 2, date: "19 Ene", city: "Barcelona", title: "Güell, Gótico y vuelo a Roma",
+        transfer: { from: "Barcelona", to: "Roma", mode: "Vuelo directo", detail: "Vueling / Ryanair / ITA · ~1h45 · BCN → FCO/CIA", icon: "Plane" },
+        map: { area: "Gràcia → Ciutat Vella → Aeropuerto", points: [
+          { n: "Park Güell", note: "Zona Monumental con reserva; mosaicos de Gaudí" },
+          { n: "Barrio Gótico", note: "Catedral y Plaça Reial, casco antiguo medieval" },
+          { n: "Aeropuerto El Prat", note: "30–40 min en Aerobús desde el centro" },
+        ]},
+        blocks: [
+          { period: "Mañana", items: [
+            { type: "Atracción", name: "Park Güell", desc: "Jardines y arquitectura de Gaudí con vistas a la ciudad. Reserva la Zona Monumental." },
+          ]},
+          { period: "Mediodía", items: [
+            { type: "Atracción", name: "Barrio Gótico", desc: "Catedral de Barcelona, Plaça Reial y callejuelas medievales." },
+            { type: "Comida", name: "Almuerzo rápido", desc: "Menú del día en una bodega del Gótico antes de ir al aeropuerto." },
+          ]},
+          { period: "Tarde", items: [
+            { type: "Transporte", name: "Vuelo BCN → Roma", desc: "Vuelo directo (Vueling/Ryanair/ITA). Llega a Fiumicino o Ciampino." },
+          ]},
+          { period: "Noche", items: [
+            { type: "Transporte", name: "Traslado al centro de Roma", desc: "Leonardo Express (€14, 32 min) de FCO a Termini, o bus low-cost (€6)." },
+          ]},
+        ],
+        food: [
+          { n: "La Pubilla (Gràcia)", d: "Cocina catalana de mercado cerca del Park Güell.", p: "€25–35 p/p" },
+        ],
+        shopping: [
+          { n: "Mercat de la Boqueria", d: "Frutas, jamón y zumos; compra snacks para el vuelo." },
+          { n: "Qué comprar", d: "Chocolate, embutidos envasados, cerámica catalana." },
+        ],
+      },
+      {
+        day: 3, date: "20 Ene", city: "Roma", title: "La Roma Imperial",
+        map: { area: "Centro histórico de Roma", points: [
+          { n: "Coliseo", note: "Punto de partida; arco de Constantino al lado" },
+          { n: "Panteón", note: "15 min caminando desde el Coliseo" },
+          { n: "Piazza Navona", note: "5 min del Panteón; fuentes de Bernini" },
+          { n: "Fontana di Trevi", note: "8 min del Panteón; lanza tu moneda" },
+        ]},
+        blocks: [
+          { period: "Mañana", items: [
+            { type: "Atracción", name: "Coliseo Romano", desc: "El anfiteatro icónico. Entrada combinada con Foro Romano y Palatino." },
+          ]},
+          { period: "Mediodía", items: [
+            { type: "Atracción", name: "Panteón de Agripa", desc: "Templo romano perfectamente conservado con su óculo abierto al cielo." },
+            { type: "Comida", name: "Pausa pizza al taglio", desc: "Porción de pizza romana de pie, al estilo local." },
+          ]},
+          { period: "Tarde", items: [
+            { type: "Atracción", name: "Piazza Navona", desc: "Plaza barroca con la Fontana dei Quattro Fiumi de Bernini." },
+          ]},
+          { period: "Noche", items: [
+            { type: "Atracción", name: "Fontana di Trevi", desc: "Espectacular de noche e iluminada. Lanza una moneda para volver a Roma." },
+            { type: "Comida", name: "Cena romana", desc: "Cacio e pepe o carbonara en una trattoria del centro." },
+          ]},
+        ],
+        food: [
+          { n: "Trattoria Da Enzo al 29", d: "Carbonara y cacio e pepe auténticas (reserva).", p: "€25–35 p/p" },
+          { n: "Giolitti", d: "Gelato histórico cerca del Panteón.", p: "€3–5" },
+        ],
+        shopping: [
+          { n: "Via del Corso", d: "Calle comercial principal entre el Panteón y P. del Popolo." },
+          { n: "Qué comprar", d: "Pasta artesanal, aceite, recuerdos del Vaticano." },
+        ],
+      },
+      {
+        day: 4, date: "21 Ene", city: "Roma", title: "Ciudad del Vaticano",
+        map: { area: "Vaticano y Borgo", points: [
+          { n: "Museos Vaticanos", note: "Incluye la Capilla Sixtina; reserva imprescindible" },
+          { n: "Basílica de San Pedro", note: "Junto a los museos; sube a la cúpula" },
+          { n: "Castel Sant'Angelo", note: "10 min a pie por la Via della Conciliazione" },
+        ]},
+        blocks: [
+          { period: "Mañana", items: [
+            { type: "Atracción", name: "Museos Vaticanos", desc: "Galerías inmensas que culminan en la Capilla Sixtina de Miguel Ángel. Reserva temprano." },
+          ]},
+          { period: "Mediodía", items: [
+            { type: "Atracción", name: "Basílica de San Pedro", desc: "La basílica más grande del mundo. Sube a la cúpula para una vista 360°." },
+            { type: "Comida", name: "Almuerzo en Borgo Pio", desc: "Calle peatonal con trattorias a pasos del Vaticano." },
+          ]},
+          { period: "Tarde", items: [
+            { type: "Atracción", name: "Castillo de Sant'Angelo", desc: "Antiguo mausoleo de Adriano con terraza panorámica sobre el Tíber." },
+          ]},
+          { period: "Noche", items: [
+            { type: "Comida", name: "Aperitivo en Prati", desc: "Spritz + cicchetti en el elegante barrio de Prati." },
+          ]},
+        ],
+        food: [
+          { n: "Bonci Pizzarium", d: "La mejor pizza al taglio de Roma, cerca del Vaticano.", p: "€8–12" },
+          { n: "Old Bridge Gelateria", d: "Gelato generoso junto a los Museos Vaticanos.", p: "€3–4" },
+        ],
+        shopping: [
+          { n: "Via Cola di Rienzo", d: "Calle comercial de Prati, menos turística que Via del Corso." },
+          { n: "Qué comprar", d: "Rosarios, estampas y recuerdos religiosos oficiales." },
+        ],
+      },
+      {
+        day: 5, date: "22 Ene", city: "Roma", title: "Trastevere bohemio",
+        map: { area: "Trastevere", points: [
+          { n: "Villa Farnesina", note: "Frescos de Rafael; entrada tranquila" },
+          { n: "Santa Maria in Trastevere", note: "5 min; mosaicos dorados medievales" },
+          { n: "Piazza di Santa Maria", note: "Corazón social del barrio" },
+        ]},
+        blocks: [
+          { period: "Mañana", items: [
+            { type: "Atracción", name: "Villa Farnesina", desc: "Villa renacentista con frescos de Rafael, incluida la Galatea." },
+          ]},
+          { period: "Mediodía", items: [
+            { type: "Atracción", name: "Barrio de Trastevere", desc: "Callejones empedrados, hiedra y la Roma más auténtica y bohemia." },
+            { type: "Comida", name: "Almuerzo en trattoria", desc: "Saltimbocca o supplì en una trattoria de barrio." },
+          ]},
+          { period: "Tarde", items: [
+            { type: "Atracción", name: "Basílica de Santa Maria in Trastevere", desc: "Una de las iglesias más antiguas de Roma, con mosaicos dorados." },
+          ]},
+          { period: "Noche", items: [
+            { type: "Comida", name: "Cena + ambiente", desc: "Trastevere se enciende de noche: música y terrazas en Piazza di Santa Maria." },
+          ]},
+        ],
+        food: [
+          { n: "Tonnarello", d: "Clásico de Trastevere; pasta fresca y ambiente animado.", p: "€20–30 p/p" },
+          { n: "Suppizza / I Supplì", d: "Supplì (croquetas de arroz) para llevar.", p: "€2–4" },
+        ],
+        shopping: [
+          { n: "Mercatino di Trastevere", d: "Artesanía y vintage en puestos de barrio." },
+          { n: "Qué comprar", d: "Cuadernos de cuero, jabones artesanales, limoncello." },
+        ],
+      },
+      {
+        day: 6, date: "23 Ene", city: "Roma", title: "Borghese y vuelo a París",
+        transfer: { from: "Roma", to: "París", mode: "Vuelo directo", detail: "easyJet / Vueling / Air France · ~2h10 · FCO → CDG/ORY", icon: "Plane" },
+        map: { area: "Norte del centro → Aeropuerto", points: [
+          { n: "Villa Borghese", note: "Gran parque; Galleria Borghese con reserva" },
+          { n: "Piazza del Popolo", note: "Bajando del parque por el Pincio" },
+          { n: "Plaza de España", note: "8 min; la famosa escalinata" },
+        ]},
+        blocks: [
+          { period: "Mañana", items: [
+            { type: "Atracción", name: "Villa Borghese", desc: "El gran pulmón verde de Roma. Pasea por sus jardines y miradores." },
+          ]},
+          { period: "Mediodía", items: [
+            { type: "Atracción", name: "Piazza del Popolo", desc: "Plaza monumental con obelisco e iglesias gemelas, al pie del Pincio." },
+            { type: "Atracción", name: "Plaza de España", desc: "La escalinata de Trinità dei Monti, punto de encuentro icónico." },
+          ]},
+          { period: "Tarde", items: [
+            { type: "Transporte", name: "Vuelo Roma → París", desc: "Vuelo directo (easyJet/Vueling/Air France) a CDG u Orly." },
+          ]},
+          { period: "Noche", items: [
+            { type: "Transporte", name: "Llegada a París", desc: "RER B (CDG) o Orlybus hasta el centro; check-in y descanso." },
+          ]},
+        ],
+        food: [
+          { n: "Caffè Canova-Tadolini", d: "Café-museo con esculturas cerca de Plaza de España.", p: "€10–18" },
+        ],
+        shopping: [
+          { n: "Via dei Condotti", d: "Lujo italiano desde la Plaza de España (mirar o comprar)." },
+          { n: "Qué comprar", d: "Corbatas de seda, café italiano en grano, pañuelos." },
+        ],
+      },
+      {
+        day: 7, date: "24 Ene", city: "París", title: "París clásico",
+        map: { area: "Orillas del Sena", points: [
+          { n: "Museo del Louvre", note: "La Gioconda; reserva con franja horaria" },
+          { n: "Notre Dame", note: "20 min a pie por la orilla del Sena (Île de la Cité)" },
+          { n: "Trocadéro", note: "Mejor mirador de la Torre Eiffel" },
+          { n: "Torre Eiffel", note: "Cruzando el Sena desde el Trocadéro" },
+        ]},
+        blocks: [
+          { period: "Mañana", items: [
+            { type: "Atracción", name: "Museo del Louvre", desc: "El museo más visitado del mundo. Prioriza la Gioconda, la Venus y las antigüedades." },
+          ]},
+          { period: "Mediodía", items: [
+            { type: "Atracción", name: "Catedral de Notre Dame", desc: "Joya gótica en la Île de la Cité, reabierta y restaurada." },
+            { type: "Comida", name: "Almuerzo en bistró", desc: "Croque-monsieur o quiche cerca del Sena." },
+          ]},
+          { period: "Tarde", items: [
+            { type: "Atracción", name: "Plaza del Trocadéro", desc: "La mejor postal de la Torre Eiffel; perfecta para fotos." },
+          ]},
+          { period: "Noche", items: [
+            { type: "Atracción", name: "Torre Eiffel", desc: "Sube al atardecer; cada hora destella con luces tras anochecer." },
+            { type: "Comida", name: "Cena con vista", desc: "Crêpe salada y vino en Champ de Mars frente a la torre." },
+          ]},
+        ],
+        food: [
+          { n: "Café Marly", d: "Bajo las arcadas del Louvre, con vista a la pirámide.", p: "€25–40 p/p" },
+          { n: "Crêperie en Rue Cler", d: "Crêpes y galettes cerca de la Torre Eiffel.", p: "€10–18" },
+        ],
+        shopping: [
+          { n: "Carrousel du Louvre", d: "Galería comercial bajo el museo." },
+          { n: "Qué comprar", d: "Macarons (Ladurée), perfumes, papelería fina." },
+        ],
+      },
+      {
+        day: 8, date: "25 Ene", city: "París", title: "Luxemburgo y Montmartre",
+        map: { area: "Rive Gauche → Montmartre", points: [
+          { n: "Jardines de Luxemburgo", note: "Parque elegante en el Barrio Latino" },
+          { n: "Montmartre", note: "Metro L4/L12; barrio de artistas en la colina" },
+          { n: "Sacré-Cœur", note: "Cima de Montmartre; vistas de todo París" },
+        ]},
+        blocks: [
+          { period: "Mañana", items: [
+            { type: "Atracción", name: "Jardines de Luxemburgo", desc: "Jardines a la francesa con el Palacio del Senado y el estanque central." },
+          ]},
+          { period: "Mediodía", items: [
+            { type: "Comida", name: "Almuerzo en el Barrio Latino", desc: "Bistró clásico en Saint-Germain antes de subir a Montmartre." },
+          ]},
+          { period: "Tarde", items: [
+            { type: "Atracción", name: "Barrio de Montmartre", desc: "Place du Tertre, pintores, viñedo y callejones bohemios." },
+          ]},
+          { period: "Noche", items: [
+            { type: "Atracción", name: "Basílica del Sacré-Cœur", desc: "Cúpula blanca con la mejor vista panorámica de París al atardecer." },
+            { type: "Comida", name: "Cena en Montmartre", desc: "Boeuf bourguignon en una brasserie de la colina." },
+          ]},
+        ],
+        food: [
+          { n: "Le Consulat", d: "Café-restaurante histórico y fotogénico de Montmartre.", p: "€20–35 p/p" },
+          { n: "La Maison Rose", d: "Icónico café rosado de las callejuelas.", p: "€18–30 p/p" },
+        ],
+        shopping: [
+          { n: "Marché Saint-Pierre", d: "Telas y recuerdos al pie de Montmartre." },
+          { n: "Qué comprar", d: "Cuadros de artistas locales, imanes de la Torre Eiffel, té." },
+        ],
+      },
+      {
+        day: 9, date: "26 Ene", city: "Londres", title: "Eurostar y Westminster",
+        transfer: { from: "París", to: "Londres", mode: "Tren Eurostar", detail: "Gare du Nord → St Pancras · ~2h20 · llega antes para control de pasaportes", icon: "Train" },
+        map: { area: "Westminster & South Bank", points: [
+          { n: "Abadía de Westminster", note: "Coronaciones reales; gótico imponente" },
+          { n: "Big Ben & Parlamento", note: "2 min; postal junto al Támesis" },
+          { n: "London Eye", note: "Cruzando el puente de Westminster" },
+        ]},
+        blocks: [
+          { period: "Mañana", items: [
+            { type: "Transporte", name: "Eurostar a Londres", desc: "De Gare du Nord a St Pancras International. Llega 60–90 min antes." },
+          ]},
+          { period: "Mediodía", items: [
+            { type: "Atracción", name: "Westminster", desc: "Abadía de Westminster, Big Ben y las Casas del Parlamento junto al río." },
+            { type: "Comida", name: "Almuerzo en pub", desc: "Primer fish & chips o pie en un pub tradicional." },
+          ]},
+          { period: "Tarde", items: [
+            { type: "Atracción", name: "London Eye", desc: "La gran noria del South Bank con vistas de toda la ciudad." },
+          ]},
+          { period: "Noche", items: [
+            { type: "Atracción", name: "Paseo por el Támesis", desc: "South Bank iluminado: street food, músicos y skyline nocturno." },
+          ]},
+        ],
+        food: [
+          { n: "The Sherlock Holmes Pub", d: "Pub temático cerca de Trafalgar; fish & chips clásico.", p: "£15–22 p/p" },
+          { n: "Borough Market (cerca)", d: "Mercado gastronómico de referencia en South Bank.", p: "£8–15" },
+        ],
+        shopping: [
+          { n: "Tienda del Parlamento", d: "Souvenirs oficiales de Westminster." },
+          { n: "Qué comprar", d: "Té (English Breakfast), galletas shortbread, imanes de cabinas rojas." },
+        ],
+      },
+      {
+        day: 10, date: "27 Ene", city: "Londres", title: "Notting Hill & West End",
+        map: { area: "Notting Hill → West End", points: [
+          { n: "Notting Hill", note: "Casas de colores y Portobello Road" },
+          { n: "Portobello Market", note: "Mercadillo de antigüedades (sáb. más grande)" },
+          { n: "West End", note: "Metro Central Line; teatros de Londres" },
+        ]},
+        blocks: [
+          { period: "Mañana", items: [
+            { type: "Atracción", name: "Notting Hill", desc: "Calles de casas pastel y fachadas fotogénicas del oeste de Londres." },
+          ]},
+          { period: "Mediodía", items: [
+            { type: "Compras", name: "Portobello Road / Market", desc: "Antigüedades, vintage y puestos de comida. Ganga garantizada." },
+            { type: "Compras", name: "Poundland (£1)", desc: "Cadena de todo a ~£1: snacks, souvenirs baratos y básicos de viaje." },
+          ]},
+          { period: "Tarde", items: [
+            { type: "Comida", name: "Street food en Portobello", desc: "Paella callejera, churros o sándwiches gourmet del mercado." },
+          ]},
+          { period: "Noche", items: [
+            { type: "Atracción", name: "Show en el West End", desc: "Un musical (El Rey León, Los Miserables, Wicked). Compra entradas con antelación." },
+          ]},
+        ],
+        food: [
+          { n: "The Churchill Arms", d: "Pub cubierto de flores con cocina tailandesa dentro.", p: "£12–20 p/p" },
+          { n: "Farm Girl Café", d: "Brunch fotogénico en Notting Hill.", p: "£12–18" },
+        ],
+        shopping: [
+          { n: "Portobello Market", d: "El mercadillo más famoso de Londres: vintage y antigüedades." },
+          { n: "Poundland", d: "Todo a ~£1; ideal para souvenirs y snacks baratos." },
+        ],
+      },
+      {
+        day: 11, date: "28 Ene", city: "Londres", title: "Realeza y museos",
+        map: { area: "St. James → South Kensington", points: [
+          { n: "Palacio de Buckingham", note: "Cambio de guardia (ciertos días)" },
+          { n: "10 Adam Street", note: "Elegante calle georgiana cerca del Strand" },
+          { n: "Museo de Historia Natural", note: "Entrada gratis; el famoso esqueleto y dinos" },
+        ]},
+        blocks: [
+          { period: "Mañana", items: [
+            { type: "Atracción", name: "Palacio de Buckingham", desc: "Residencia real. Si hay Cambio de Guardia, llega temprano para buen sitio." },
+          ]},
+          { period: "Mediodía", items: [
+            { type: "Atracción", name: "10 Adam Street", desc: "Arquitectura georgiana elegante cerca del Strand y Covent Garden." },
+            { type: "Comida", name: "Almuerzo en Covent Garden", desc: "Mercado cubierto con cafés y artistas callejeros." },
+          ]},
+          { period: "Tarde", items: [
+            { type: "Atracción", name: "Museo de Historia Natural", desc: "Entrada gratuita: dinosaurios, ballena azul y arquitectura espectacular." },
+          ]},
+          { period: "Noche", items: [
+            { type: "Comida", name: "Cena en South Kensington", desc: "Barrio elegante con restaurantes variados junto a los museos." },
+          ]},
+        ],
+        food: [
+          { n: "Dishoom (Covent Garden)", d: "Cocina india-bombay; el bacon naan es legendario.", p: "£18–28 p/p" },
+          { n: "V&A Café", d: "El café de museo más bonito de Londres (entrada gratis).", p: "£8–14" },
+        ],
+        shopping: [
+          { n: "Covent Garden", d: "Boutiques, Apple Market y artesanos." },
+          { n: "Qué comprar", d: "Mermeladas, recuerdos reales, perfumes ingleses." },
+        ],
+      },
+      {
+        day: 12, date: "29 Ene", city: "Londres", title: "Estadios, música y parques",
+        map: { area: "Este → Oeste de Londres", points: [
+          { n: "Estadio de Londres", note: "Queen Elizabeth Olympic Park (Stratford)" },
+          { n: "Abbey Road", note: "El cruce peatonal de los Beatles (NW8)" },
+          { n: "Hyde Park", note: "Gran parque central; Speakers' Corner" },
+          { n: "Battersea Park", note: "Junto al Támesis; la central eléctrica reconvertida" },
+        ]},
+        blocks: [
+          { period: "Mañana", items: [
+            { type: "Atracción", name: "Estadio de Londres", desc: "El estadio olímpico de 2012 en el Olympic Park de Stratford." },
+          ]},
+          { period: "Mediodía", items: [
+            { type: "Atracción", name: "Abbey Road", desc: "Recrea la mítica foto del cruce de los Beatles frente a los estudios." },
+            { type: "Comida", name: "Almuerzo informal", desc: "Café cerca de St John's Wood antes de seguir al parque." },
+          ]},
+          { period: "Tarde", items: [
+            { type: "Atracción", name: "Hyde Park", desc: "El gran parque real: Serpentine, Speakers' Corner y Kensington Gardens." },
+          ]},
+          { period: "Noche", items: [
+            { type: "Atracción", name: "Battersea Park", desc: "Atardecer junto al río y la icónica Battersea Power Station reconvertida en centro comercial." },
+          ]},
+        ],
+        food: [
+          { n: "Battersea Power Station food hall", d: "Patio gastronómico con vistas al Támesis.", p: "£12–20 p/p" },
+        ],
+        shopping: [
+          { n: "Battersea Power Station", d: "Centro comercial dentro de la antigua central eléctrica." },
+          { n: "Qué comprar", d: "Merchandising de los Beatles, vinilos, ropa deportiva." },
+        ],
+      },
+      {
+        day: 13, date: "30 Ene", city: "Londres", title: "Tower Bridge & la City",
+        map: { area: "City of London", points: [
+          { n: "Tower Bridge", note: "El puente levadizo victoriano más famoso" },
+          { n: "Torre de Londres", note: "Al lado; joyas de la corona (opcional)" },
+          { n: "The City", note: "Distrito financiero: The Gherkin, Sky Garden gratis" },
+        ]},
+        blocks: [
+          { period: "Mañana", items: [
+            { type: "Atracción", name: "Tower Bridge", desc: "Camina por la pasarela de cristal sobre el Támesis o admíralo desde abajo." },
+          ]},
+          { period: "Mediodía", items: [
+            { type: "Atracción", name: "City de Londres", desc: "Rascacielos como The Gherkin y el Walkie-Talkie con el Sky Garden gratuito (reserva)." },
+            { type: "Comida", name: "Almuerzo en Leadenhall Market", desc: "Mercado victoriano cubierto (escenario de Harry Potter)." },
+          ]},
+          { period: "Tarde", items: [
+            { type: "Atracción", name: "Sky Garden", desc: "Mirador-jardín gratuito en lo alto del Walkie-Talkie. Reserva online." },
+          ]},
+          { period: "Noche", items: [
+            { type: "Comida", name: "Cena con vista", desc: "Pub histórico de la City o cena junto al río en Shad Thames." },
+          ]},
+        ],
+        food: [
+          { n: "The Counting House", d: "Pub en un antiguo banco victoriano de la City.", p: "£14–22 p/p" },
+          { n: "Duck & Waffle (cerca)", d: "Vistas 24h desde la altura (reserva).", p: "£30–45 p/p" },
+        ],
+        shopping: [
+          { n: "Leadenhall Market", d: "Galería victoriana con tiendas y pubs." },
+          { n: "Qué comprar", d: "Paraguas británicos, corbatas, gemelos." },
+        ],
+      },
+      {
+        day: 14, date: "31 Ene", city: "Londres", title: "Camden & museos",
+        map: { area: "Camden / Bloomsbury / Oxford St", points: [
+          { n: "Camden Town", note: "Cultura alternativa y música" },
+          { n: "Camden Market", note: "Street food mundial y moda alternativa" },
+          { n: "Museo Británico", note: "Gratis; Piedra Rosetta y momias" },
+          { n: "Oxford Street", note: "La gran calle comercial de Londres" },
+        ]},
+        blocks: [
+          { period: "Mañana", items: [
+            { type: "Atracción", name: "Camden Town", desc: "Barrio rebelde y musical; estatuas, canales y tiendas excéntricas." },
+          ]},
+          { period: "Mediodía", items: [
+            { type: "Comida", name: "Camden Market", desc: "El mejor street food de Londres: de bao chino a halloumi fries." },
+            { type: "Compras", name: "Camden Market", desc: "Moda alternativa, vinilos, cuero y artesanía indie." },
+          ]},
+          { period: "Tarde", items: [
+            { type: "Atracción", name: "Museo Británico", desc: "Entrada gratuita: Piedra Rosetta, mármoles del Partenón y momias egipcias." },
+          ]},
+          { period: "Noche", items: [
+            { type: "Compras", name: "Oxford Street", desc: "Alternativa de compras: Primark, Selfridges y las grandes cadenas." },
+          ]},
+        ],
+        food: [
+          { n: "Camden Market food stalls", d: "Decenas de puestos del mundo entero.", p: "£8–15" },
+          { n: "Poppies Fish & Chips", d: "Fish & chips de estilo retro (sucursal Camden).", p: "£14–20" },
+        ],
+        shopping: [
+          { n: "Camden Market", d: "Moda alternativa, vintage y recuerdos originales." },
+          { n: "Oxford Street", d: "Cadenas grandes; Primark para básicos baratos." },
+        ],
+      },
+      {
+        day: 15, date: "1 Feb", city: "Barcelona", title: "Regreso a Barcelona",
+        transfer: { from: "Londres", to: "Barcelona", mode: "Vuelo directo", detail: "British Airways / Vueling / easyJet / Ryanair · ~2h10 · LON → BCN", icon: "Plane" },
+        map: { area: "Londres → Barcelona", points: [
+          { n: "Aeropuerto de Londres", note: "Heathrow/Gatwick/Stansted/Luton según aerolínea" },
+          { n: "Barceloneta", note: "Playa y paseo marítimo para la tarde libre" },
+          { n: "Centro de BCN", note: "Las Ramblas y última cena de tapas" },
+        ]},
+        blocks: [
+          { period: "Mañana", items: [
+            { type: "Transporte", name: "Vuelo Londres → Barcelona", desc: "Vuelo directo (BA/Vueling/easyJet/Ryanair). Confirma de qué aeropuerto sales." },
+          ]},
+          { period: "Mediodía", items: [
+            { type: "Transporte", name: "Llegada y traslado", desc: "Aerobús o Metro L9 al centro; deja el equipaje." },
+          ]},
+          { period: "Tarde", items: [
+            { type: "Atracción", name: "Tarde libre: playa / centro", desc: "Relájate en la Barceloneta o pasea por Las Ramblas y el puerto." },
+          ]},
+          { period: "Noche", items: [
+            { type: "Comida", name: "Última cena de despedida", desc: "Paella o tapas frente al mar para cerrar el viaje." },
+          ]},
+        ],
+        food: [
+          { n: "Can Solé (Barceloneta)", d: "Arroces y paella junto a la playa desde 1903.", p: "€30–45 p/p" },
+        ],
+        shopping: [
+          { n: "Las Ramblas / El Corte Inglés", d: "Últimas compras y recuerdos de última hora." },
+          { n: "Qué comprar", d: "Turrón, fuet envasado, recuerdos del FC Barcelona." },
+        ],
+      },
+      {
+        day: 16, date: "2 Feb", city: "Chile", title: "Regreso a Chile",
+        transfer: { from: "Barcelona", to: "Santiago de Chile", mode: "Vuelo de regreso", detail: "BCN → SCL (con escala, p. ej. Madrid o São Paulo)", icon: "Plane" },
+        map: { area: "Barcelona → Santiago", points: [
+          { n: "Aeropuerto El Prat (BCN)", note: "Llega 3h antes para vuelo intercontinental" },
+          { n: "Vuelo de regreso", note: "Largo con escala; descansa e hidrátate" },
+        ]},
+        blocks: [
+          { period: "Mañana", items: [
+            { type: "Transporte", name: "Traslado al aeropuerto", desc: "Sal con holgura; check-in internacional 3 horas antes." },
+          ]},
+          { period: "Mediodía", items: [
+            { type: "Transporte", name: "Vuelo de regreso a Chile", desc: "Vuelo largo (normalmente con escala). ¡Buen viaje de vuelta!" },
+          ]},
+        ],
+        food: [
+          { n: "Última caña/café en el aeropuerto", d: "Despídete de Europa con un café con leche.", p: "€4–8" },
+        ],
+        shopping: [
+          { n: "Duty Free", d: "Perfumes, chocolate y licores libres de impuestos." },
+          { n: "Qué comprar", d: "Lo que olvidaste: chocolates, jamón envasado al vacío permitido." },
+        ],
+      },
+    ];
+
+    /* ------------------------------------------------------------------ */
+    /*  PRESUPUESTO (estimaciones 2026, aprox. por persona)                */
+    /* ------------------------------------------------------------------ */
+    const BUDGET = {
+      flights: [
+        { route: "Barcelona → Roma", mode: "Vuelo (Vueling/Ryanair/ITA)", eur: 70 },
+        { route: "Roma → París", mode: "Vuelo (easyJet/Vueling/Air France)", eur: 90 },
+        { route: "París → Londres", mode: "Tren Eurostar (reserva anticipada)", eur: 80 },
+        { route: "Londres → Barcelona", mode: "Vuelo (BA/Vueling/easyJet)", eur: 95 },
+        { route: "Barcelona → Santiago", mode: "Vuelo intercontinental (referencia)", eur: 950 },
+      ],
+      cities: [
+        { city: "Barcelona", nights: 1, lodging: 90, food: 45, transport: 12, attractions: 60 },
+        { city: "Roma", nights: 4, lodging: 85, food: 40, transport: 8, attractions: 45 },
+        { city: "París", nights: 3, lodging: 110, food: 50, transport: 9, attractions: 50 },
+        { city: "Londres", nights: 6, lodging: 130, food: 55, transport: 14, attractions: 35 },
+      ],
+      notes: [
+        "Cifras por persona y por día (alojamiento es por habitación doble / 2).",
+        "Reserva vuelos y Eurostar con 1–2 meses de antelación para estos precios.",
+        "En Londres usa una tarjeta contactless: tope diario (cap) ~£8.50 en zonas 1–2.",
+        "Muchos museos de Londres (Británico, Historia Natural, V&A) son gratis.",
+      ],
+    };
+
+    const GBP_PER_EUR = 0.85; // referencia
+
+    /* ------------------------------------------------------------------ */
+    /*  TIPS: Gastronomía y Souvenirs por país                             */
+    /* ------------------------------------------------------------------ */
+    const TIPS = [
+      {
+        country: "España 🇪🇸", color: "from-amber-500 to-rose-500",
+        food: ["Tapas y pan con tomate", "Paella / arroz a banda en Barceloneta", "Jamón ibérico y cava", "Crema catalana de postre"],
+        souvenirs: ["Turrón y chocolate", "Aceite de oliva y embutidos envasados", "Cerámica y abanicos", "Camiseta del FC Barcelona"],
+        where: "La Boqueria, Las Ramblas, El Corte Inglés.",
+      },
+      {
+        country: "Italia 🇮🇹", color: "from-orange-500 to-red-600",
+        food: ["Pizza al taglio (porción)", "Carbonara y cacio e pepe", "Supplì callejeros", "Gelato (Giolitti, Old Bridge)"],
+        souvenirs: ["Pasta artesanal y aceite", "Café italiano en grano", "Cuero (cuadernos, carteras)", "Recuerdos del Vaticano"],
+        where: "Via del Corso, Via Cola di Rienzo, mercadillos de Trastevere.",
+      },
+      {
+        country: "Francia 🇫🇷", color: "from-sky-500 to-indigo-600",
+        food: ["Croissants y pain au chocolat", "Crêpes y galettes", "Quesos y vino", "Macarons (Ladurée / Pierre Hermé)"],
+        souvenirs: ["Macarons en lata", "Perfumes y cosmética", "Papelería y arte de Montmartre", "Té Mariage Frères"],
+        where: "Carrousel du Louvre, Marché Saint-Pierre, boutiques de Saint-Germain.",
+      },
+      {
+        country: "Reino Unido 🇬🇧", color: "from-rose-600 to-indigo-700",
+        food: ["Fish & chips", "English breakfast", "Afternoon tea con scones", "Curry indio (Dishoom)"],
+        souvenirs: ["Té y galletas shortbread", "Souvenirs reales y cabinas rojas", "Vinilos y merch de los Beatles", "Gangas en Poundland (£1) y Primark"],
+        where: "Portobello Market, Camden Market, Oxford Street, Poundland.",
+      },
+    ];
+
+    const SMART_TIPS = [
+      { icon: "Plane", t: "Equipaje de mano", d: "Con low-cost (Ryanair/Vueling), revisa medidas y paga el equipaje online: en aeropuerto cuesta el doble." },
+      { icon: "CreditCard", t: "Pagos sin comisión", d: "Lleva una tarjeta tipo Wise/Revolut para evitar comisiones de cambio EUR/GBP." },
+      { icon: "Train", t: "Eurostar", d: "Llega 60–90 min antes a Gare du Nord: hay control de pasaportes (frontera UK)." },
+      { icon: "Smartphone", t: "eSIM / datos", d: "Una eSIM con cobertura UE + UK te ahorra roaming entre los 4 países." },
+      { icon: "Ticket", t: "Reservas con hora", d: "Sagrada Família, Coliseo, Vaticano, Louvre y Torre Eiffel: compra con franja horaria." },
+      { icon: "Snowflake", t: "Es invierno", d: "Enero es frío (0–10°C): abrigo, capas, paraguas e impermeable, sobre todo en Londres." },
+    ];
+
+    /* ------------------------------------------------------------------ */
+    /*  CHECKLIST                                                          */
+    /* ------------------------------------------------------------------ */
+    const CHECKLIST = {
+      "Reservas y entradas": [
+        "Vuelos BCN→Roma, Roma→París, Londres→BCN",
+        "Tren Eurostar (París→Londres)",
+        "Entrada Sagrada Família (hora fija)",
+        "Entrada Coliseo + Foro Romano",
+        "Museos Vaticanos + Capilla Sixtina",
+        "Museo del Louvre (franja horaria)",
+        "Subida a la Torre Eiffel",
+        "Show del West End (Londres)",
+        "Sky Garden (reserva gratuita)",
+        "Alojamientos en las 4 ciudades",
+      ],
+      "Documentos": [
+        "Pasaporte vigente (+6 meses)",
+        "Visado/ETIAS o ETA si corresponde",
+        "Seguro de viaje internacional",
+        "Copias digitales de documentos",
+        "Tarjetas de embarque guardadas offline",
+      ],
+      "Dinero y tecnología": [
+        "Tarjeta sin comisión (Wise/Revolut)",
+        "Algo de efectivo en EUR y GBP",
+        "eSIM o plan de datos UE+UK",
+        "Adaptador de enchufe (UK tipo G distinto)",
+        "Power bank cargado",
+      ],
+      "Ropa de invierno": [
+        "Abrigo y capas térmicas",
+        "Paraguas e impermeable (Londres)",
+        "Calzado cómodo e impermeable",
+        "Bufanda, gorro y guantes",
+      ],
+    };
+
+    /* ------------------------------------------------------------------ */
+    /*  Componentes de UI                                                  */
+    /* ------------------------------------------------------------------ */
+    const cls = (...a) => a.filter(Boolean).join(" ");
+
+    /* Mapa estilizado (placeholder) */
+    const MapPanel = ({ map, city }) => {
+      const theme = CITY[city] || CITY.Barcelona;
+      const q = encodeURIComponent(map.area + " " + (city === "Chile" ? "" : city));
+      return (
+        <div className="rounded-2xl border border-slate-200 overflow-hidden bg-white">
+          <div className={cls("relative h-40 sm:h-44 bg-gradient-to-br", theme.grad)}>
+            {/* retícula tipo mapa */}
+            <div className="absolute inset-0 opacity-30"
+              style={{ backgroundImage: "linear-gradient(#fff 1px, transparent 1px), linear-gradient(90deg, #fff 1px, transparent 1px)", backgroundSize: "26px 26px" }} />
+            <div className="absolute inset-0 flex items-center justify-center">
+              <Icon name="MapPinned" size={46} className="text-white/90 drop-shadow" />
+            </div>
+            <div className="absolute bottom-2 left-3 text-white">
+              <p className="text-[11px] uppercase tracking-wider opacity-90">Zona del día</p>
+              <p className="font-bold leading-tight">{map.area}</p>
+            </div>
+          </div>
+          <div className="p-3 space-y-2">
+            {map.points.map((p, i) => (
+              <div key={i} className="flex items-start gap-2 text-sm">
+                <span className={cls("mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-[11px] font-bold text-white", theme.dot)}>{i + 1}</span>
+                <div>
+                  <span className="font-semibold text-slate-800">{p.n}</span>
+                  <span className="text-slate-500"> · {p.note}</span>
+                </div>
+              </div>
+            ))}
+            <a href={`https://www.google.com/maps/search/?api=1&query=${q}`} target="_blank" rel="noreferrer"
+               className="mt-1 inline-flex items-center gap-1.5 text-sm font-semibold text-sky-600 hover:text-sky-700">
+              <Icon name="Navigation" size={15} /> Abrir en Google Maps
+            </a>
+          </div>
+        </div>
+      );
+    };
+
+    const TransferBanner = ({ t }) => (
+      <div className="flex items-center gap-3 rounded-xl bg-sky-50 ring-1 ring-sky-200 px-3.5 py-2.5 text-sky-800">
+        <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-sky-600 text-white shrink-0">
+          <Icon name={t.icon} size={18} />
+        </div>
+        <div className="text-sm">
+          <p className="font-bold">{t.from} → {t.to} · {t.mode}</p>
+          <p className="text-sky-700/90 text-[13px]">{t.detail}</p>
+        </div>
+      </div>
+    );
+
+    const ActivityCard = ({ item }) => (
+      <div className="group rounded-xl border border-slate-200 bg-white p-3.5 transition hover:shadow-md hover:border-slate-300">
+        <div className="mb-1.5 flex items-center justify-between gap-2">
+          <h4 className="font-bold text-slate-800 leading-tight">{item.name}</h4>
+          <Badge type={item.type} sm />
+        </div>
+        <p className="text-sm text-slate-500 leading-snug">{item.desc}</p>
+      </div>
+    );
+
+    const DayCard = ({ d, open, onToggle }) => {
+      const theme = CITY[d.city] || CITY.Barcelona;
+      return (
+        <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+          {/* Cabecera */}
+          <button onClick={onToggle}
+            className="flex w-full items-center gap-3 sm:gap-4 p-4 text-left transition hover:bg-slate-50">
+            <div className={cls("flex h-14 w-14 shrink-0 flex-col items-center justify-center rounded-xl bg-gradient-to-br text-white", theme.grad)}>
+              <span className="text-[10px] font-semibold uppercase opacity-90">Día</span>
+              <span className="text-xl font-extrabold leading-none">{d.day}</span>
+            </div>
+            <div className="min-w-0 flex-1">
+              <div className="flex items-center gap-2 text-sm text-slate-500">
+                <Icon name="Calendar" size={14} /> {d.date}
+                <span className={cls("ml-1 inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-semibold ring-1", theme.soft)}>
+                  {theme.flag} {d.city}
+                </span>
+              </div>
+              <h3 className="truncate text-base sm:text-lg font-bold text-slate-800">{d.title}</h3>
+            </div>
+            {d.transfer && (
+              <span className="hidden sm:inline-flex items-center gap-1 rounded-full bg-sky-100 px-2.5 py-1 text-xs font-semibold text-sky-700">
+                <Icon name={d.transfer.icon} size={13} /> Traslado
+              </span>
+            )}
+            <Icon name="ChevronDown" size={22}
+              className={cls("shrink-0 text-slate-400 transition-transform", open && "rotate-180")} />
+          </button>
+
+          {/* Contenido */}
+          {open && (
+            <div className="border-t border-slate-100 p-4 animate-fadeUp">
+              {d.transfer && <div className="mb-4"><TransferBanner t={d.transfer} /></div>}
+              <div className="grid gap-5 lg:grid-cols-3">
+                {/* Bloques del día */}
+                <div className="space-y-4 lg:col-span-2">
+                  {d.blocks.map((b, i) => {
+                    const p = PERIODS[b.period];
+                    return (
+                      <div key={i}>
+                        <div className="mb-2 flex items-center gap-2">
+                          <Icon name={p.icon} size={18} className={p.cls} />
+                          <h5 className="text-sm font-bold uppercase tracking-wide text-slate-600">{b.period}</h5>
+                        </div>
+                        <div className="grid gap-2.5 sm:grid-cols-2">
+                          {b.items.map((it, j) => <ActivityCard key={j} item={it} />)}
+                        </div>
+                      </div>
+                    );
+                  })}
+
+                  {/* Recomendaciones */}
+                  <div className="grid gap-3 sm:grid-cols-2 pt-1">
+                    <div className="rounded-xl bg-amber-50 ring-1 ring-amber-200 p-3.5">
+                      <div className="mb-2 flex items-center gap-2 font-bold text-amber-800">
+                        <Icon name="Utensils" size={16} /> Dónde comer
+                      </div>
+                      <ul className="space-y-2">
+                        {d.food.map((f, i) => (
+                          <li key={i} className="text-sm">
+                            <span className="font-semibold text-slate-800">{f.n}</span>
+                            <span className="ml-1 rounded bg-amber-200/60 px-1.5 py-0.5 text-[11px] font-semibold text-amber-800">{f.p}</span>
+                            <p className="text-slate-500 leading-snug">{f.d}</p>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                    <div className="rounded-xl bg-rose-50 ring-1 ring-rose-200 p-3.5">
+                      <div className="mb-2 flex items-center gap-2 font-bold text-rose-800">
+                        <Icon name="ShoppingBag" size={16} /> Compras & souvenirs
+                      </div>
+                      <ul className="space-y-2">
+                        {d.shopping.map((s, i) => (
+                          <li key={i} className="text-sm">
+                            <span className="font-semibold text-slate-800">{s.n}</span>
+                            <p className="text-slate-500 leading-snug">{s.d}</p>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Mapa */}
+                <div className="lg:col-span-1">
+                  <MapPanel map={d.map} city={d.city} />
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      );
+    };
+
+    /* ---------------------------- VISTAS ------------------------------ */
+    const ItineraryView = () => {
+      const [open, setOpen] = useState(1);
+      const [filter, setFilter] = useState("Todas");
+      const cities = ["Todas", "Barcelona", "Roma", "París", "Londres"];
+      const days = useMemo(
+        () => filter === "Todas" ? ITINERARY : ITINERARY.filter(d => d.city === filter),
+        [filter]
+      );
+      return (
+        <div className="space-y-4">
+          {/* Filtros por ciudad */}
+          <div className="flex flex-wrap gap-2">
+            {cities.map(c => (
+              <button key={c} onClick={() => setFilter(c)}
+                className={cls("inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-sm font-semibold ring-1 transition",
+                  filter === c ? "bg-slate-800 text-white ring-slate-800" : "bg-white text-slate-600 ring-slate-200 hover:bg-slate-100")}>
+                {c !== "Todas" && CITY[c]?.flag} {c}
+              </button>
+            ))}
+          </div>
+          <div className="flex items-center justify-between text-sm text-slate-500">
+            <span>{days.length} día{days.length !== 1 && "s"}</span>
+            <div className="flex gap-3">
+              <button onClick={() => setOpen("all")} className="font-semibold text-sky-600 hover:text-sky-700">Expandir todo</button>
+              <button onClick={() => setOpen(null)} className="font-semibold text-slate-500 hover:text-slate-700">Colapsar</button>
+            </div>
+          </div>
+          <div className="space-y-3">
+            {days.map(d => (
+              <DayCard key={d.day} d={d}
+                open={open === "all" || open === d.day}
+                onToggle={() => setOpen(open === d.day ? null : d.day)} />
+            ))}
+          </div>
+        </div>
+      );
+    };
+
+    const MapView = () => (
+      <div className="space-y-5">
+        <div className="rounded-2xl bg-white border border-slate-200 p-5">
+          <h3 className="mb-1 flex items-center gap-2 text-lg font-bold text-slate-800">
+            <Icon name="Map" size={20} className="text-sky-600" /> Ruta del viaje
+          </h3>
+          <p className="text-sm text-slate-500">4 ciudades · 16 días · 3 vuelos + 1 tren entre destinos.</p>
+          {/* Ruta visual */}
+          <div className="mt-4 flex flex-wrap items-center gap-2">
+            {["Barcelona", "Roma", "París", "Londres", "Barcelona", "Chile"].map((c, i, arr) => (
+              <React.Fragment key={i}>
+                <span className={cls("inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-sm font-semibold ring-1", CITY[c].soft)}>
+                  {CITY[c].flag} {c}
+                </span>
+                {i < arr.length - 1 && <Icon name={i === 2 ? "Train" : "Plane"} size={16} className="text-slate-400" />}
+              </React.Fragment>
+            ))}
+          </div>
+        </div>
+
+        <div className="grid gap-4 md:grid-cols-2">
+          {ITINERARY.map(d => (
+            <div key={d.day} className="rounded-2xl border border-slate-200 bg-white overflow-hidden">
+              <div className="flex items-center gap-2 px-4 py-2.5 border-b border-slate-100">
+                <span className="text-sm font-bold text-slate-700">Día {d.day}</span>
+                <span className={cls("inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-semibold ring-1", CITY[d.city].soft)}>
+                  {CITY[d.city].flag} {d.city}
+                </span>
+                <span className="ml-auto text-xs text-slate-400">{d.date}</span>
+              </div>
+              <div className="p-3">
+                <MapPanel map={d.map} city={d.city} />
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+
+    const BudgetView = () => {
+      const [cur, setCur] = useState("EUR"); // EUR | GBP
+      const fx = cur === "GBP" ? GBP_PER_EUR : 1;
+      const sym = cur === "GBP" ? "£" : "€";
+      const fmt = n => sym + Math.round(n * fx).toLocaleString("es-ES");
+
+      const cityTotals = BUDGET.cities.map(c => {
+        const perDay = c.lodging / 2 + c.food + c.transport + c.attractions;
+        return { ...c, perDay, total: perDay * c.nights };
+      });
+      const transfersTotal = BUDGET.flights.reduce((a, f) => a + f.eur, 0);
+      const stayTotal = cityTotals.reduce((a, c) => a + c.total, 0);
+      const grand = transfersTotal + stayTotal;
+
+      return (
+        <div className="space-y-5">
+          <div className="flex items-center justify-between">
+            <h3 className="flex items-center gap-2 text-lg font-bold text-slate-800">
+              <Icon name="Wallet" size={20} className="text-emerald-600" /> Presupuesto estimado
+            </h3>
+            <div className="inline-flex rounded-lg bg-slate-100 p-1 text-sm font-semibold">
+              {["EUR", "GBP"].map(c => (
+                <button key={c} onClick={() => setCur(c)}
+                  className={cls("rounded-md px-3 py-1 transition", cur === c ? "bg-white shadow text-slate-800" : "text-slate-500")}>
+                  {c === "EUR" ? "€ EUR" : "£ GBP"}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Resumen */}
+          <div className="grid gap-3 sm:grid-cols-3">
+            {[
+              { l: "Transporte entre ciudades", v: transfersTotal, i: "Plane", c: "text-sky-600 bg-sky-50" },
+              { l: "Estancia (16 días)", v: stayTotal, i: "Hotel", c: "text-violet-600 bg-violet-50" },
+              { l: "Total aproximado / persona", v: grand, i: "Wallet", c: "text-emerald-600 bg-emerald-50" },
+            ].map((k, i) => (
+              <div key={i} className="rounded-2xl border border-slate-200 bg-white p-4">
+                <div className={cls("mb-2 inline-flex h-9 w-9 items-center justify-center rounded-lg", k.c)}>
+                  <Icon name={k.i} size={18} />
+                </div>
+                <p className="text-sm text-slate-500">{k.l}</p>
+                <p className="text-2xl font-extrabold text-slate-800">{fmt(k.v)}</p>
+              </div>
+            ))}
+          </div>
+
+          {/* Transporte */}
+          <div className="rounded-2xl border border-slate-200 bg-white overflow-hidden">
+            <div className="px-4 py-3 border-b border-slate-100 font-bold text-slate-700 flex items-center gap-2">
+              <Icon name="Plane" size={18} className="text-sky-600" /> Vuelos y tren
+            </div>
+            <div className="divide-y divide-slate-100">
+              {BUDGET.flights.map((f, i) => (
+                <div key={i} className="flex items-center justify-between px-4 py-2.5 text-sm">
+                  <div>
+                    <p className="font-semibold text-slate-800">{f.route}</p>
+                    <p className="text-slate-400">{f.mode}</p>
+                  </div>
+                  <span className="font-bold text-slate-700">{fmt(f.eur)}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Por ciudad */}
+          <div className="rounded-2xl border border-slate-200 bg-white overflow-hidden">
+            <div className="px-4 py-3 border-b border-slate-100 font-bold text-slate-700 flex items-center gap-2">
+              <Icon name="Building2" size={18} className="text-violet-600" /> Gasto diario por ciudad
+            </div>
+            <div className="overflow-x-auto no-scrollbar">
+              <table className="w-full text-sm">
+                <thead className="bg-slate-50 text-slate-500">
+                  <tr className="text-left">
+                    <th className="px-4 py-2 font-semibold">Ciudad</th>
+                    <th className="px-3 py-2 font-semibold">Aloj.*</th>
+                    <th className="px-3 py-2 font-semibold">Comida</th>
+                    <th className="px-3 py-2 font-semibold">Transp.</th>
+                    <th className="px-3 py-2 font-semibold">Atracc.</th>
+                    <th className="px-3 py-2 font-semibold">€/día</th>
+                    <th className="px-4 py-2 font-semibold text-right">Total</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-100">
+                  {cityTotals.map((c, i) => (
+                    <tr key={i} className="text-slate-700">
+                      <td className="px-4 py-2.5 font-semibold whitespace-nowrap">{CITY[c.city].flag} {c.city} <span className="text-slate-400 font-normal">· {c.nights}n</span></td>
+                      <td className="px-3 py-2.5">{fmt(c.lodging / 2)}</td>
+                      <td className="px-3 py-2.5">{fmt(c.food)}</td>
+                      <td className="px-3 py-2.5">{fmt(c.transport)}</td>
+                      <td className="px-3 py-2.5">{fmt(c.attractions)}</td>
+                      <td className="px-3 py-2.5 font-semibold">{fmt(c.perDay)}</td>
+                      <td className="px-4 py-2.5 text-right font-bold">{fmt(c.total)}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            <p className="px-4 py-2 text-[11px] text-slate-400">*Alojamiento por persona (habitación doble / 2).</p>
+          </div>
+
+          <div className="rounded-2xl bg-emerald-50 ring-1 ring-emerald-200 p-4">
+            <div className="mb-2 flex items-center gap-2 font-bold text-emerald-800">
+              <Icon name="Info" size={16} /> Notas de presupuesto
+            </div>
+            <ul className="space-y-1.5 text-sm text-emerald-900/80">
+              {BUDGET.notes.map((n, i) => (
+                <li key={i} className="flex gap-2"><span className="text-emerald-500">•</span>{n}</li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      );
+    };
+
+    const TipsView = () => (
+      <div className="space-y-6">
+        <div>
+          <h3 className="mb-3 flex items-center gap-2 text-lg font-bold text-slate-800">
+            <Icon name="Lightbulb" size={20} className="text-amber-500" /> Recomendaciones inteligentes
+          </h3>
+          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            {SMART_TIPS.map((t, i) => (
+              <div key={i} className="rounded-2xl border border-slate-200 bg-white p-4">
+                <div className="mb-2 inline-flex h-9 w-9 items-center justify-center rounded-lg bg-amber-50 text-amber-600">
+                  <Icon name={t.icon} size={18} />
+                </div>
+                <p className="font-bold text-slate-800">{t.t}</p>
+                <p className="text-sm text-slate-500 leading-snug">{t.d}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="grid gap-4 lg:grid-cols-2">
+          {TIPS.map((c, i) => (
+            <div key={i} className="rounded-2xl border border-slate-200 bg-white overflow-hidden">
+              <div className={cls("bg-gradient-to-r px-4 py-3 text-white font-bold text-lg", c.color)}>{c.country}</div>
+              <div className="grid gap-4 p-4 sm:grid-cols-2">
+                <div>
+                  <div className="mb-2 flex items-center gap-2 text-sm font-bold text-amber-700">
+                    <Icon name="Utensils" size={15} /> Gastronomía
+                  </div>
+                  <ul className="space-y-1.5 text-sm text-slate-600">
+                    {c.food.map((f, j) => <li key={j} className="flex gap-2"><span className="text-amber-400">›</span>{f}</li>)}
+                  </ul>
+                </div>
+                <div>
+                  <div className="mb-2 flex items-center gap-2 text-sm font-bold text-rose-700">
+                    <Icon name="ShoppingBag" size={15} /> Souvenirs
+                  </div>
+                  <ul className="space-y-1.5 text-sm text-slate-600">
+                    {c.souvenirs.map((s, j) => <li key={j} className="flex gap-2"><span className="text-rose-400">›</span>{s}</li>)}
+                  </ul>
+                </div>
+              </div>
+              <p className="px-4 pb-3 text-xs text-slate-400 flex items-center gap-1.5">
+                <Icon name="MapPin" size={13} /> {c.where}
+              </p>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+
+    const ChecklistView = () => {
+      const STORAGE = "eurotrip-checklist-v1";
+      const [done, setDone] = useState(() => {
+        try { return JSON.parse(localStorage.getItem(STORAGE)) || {}; } catch { return {}; }
+      });
+      useEffect(() => {
+        try { localStorage.setItem(STORAGE, JSON.stringify(done)); } catch {}
+      }, [done]);
+
+      const all = Object.values(CHECKLIST).flat();
+      const total = all.length;
+      const completed = all.filter(i => done[i]).length;
+      const pct = Math.round((completed / total) * 100);
+
+      return (
+        <div className="space-y-5">
+          <div className="rounded-2xl border border-slate-200 bg-white p-5">
+            <div className="flex items-center justify-between mb-3">
+              <h3 className="flex items-center gap-2 text-lg font-bold text-slate-800">
+                <Icon name="ListChecks" size={20} className="text-emerald-600" /> Checklist de viaje
+              </h3>
+              <span className="text-sm font-bold text-slate-600">{completed}/{total}</span>
+            </div>
+            <div className="h-3 w-full overflow-hidden rounded-full bg-slate-100">
+              <div className="h-full rounded-full bg-gradient-to-r from-emerald-400 to-emerald-600 transition-all" style={{ width: pct + "%" }} />
+            </div>
+            <p className="mt-2 text-sm text-slate-500">{pct}% listo para viajar {pct === 100 ? "🎉" : ""}</p>
+            {completed > 0 && (
+              <button onClick={() => setDone({})} className="mt-2 text-xs font-semibold text-rose-500 hover:text-rose-600">Reiniciar checklist</button>
+            )}
+          </div>
+
+          <div className="grid gap-4 md:grid-cols-2">
+            {Object.entries(CHECKLIST).map(([cat, items]) => (
+              <div key={cat} className="rounded-2xl border border-slate-200 bg-white overflow-hidden">
+                <div className="px-4 py-3 border-b border-slate-100 font-bold text-slate-700">{cat}</div>
+                <ul className="divide-y divide-slate-100">
+                  {items.map((it, i) => (
+                    <li key={i}>
+                      <button onClick={() => setDone(d => ({ ...d, [it]: !d[it] }))}
+                        className="flex w-full items-center gap-3 px-4 py-2.5 text-left text-sm transition hover:bg-slate-50">
+                        <Icon name={done[it] ? "CheckSquare" : "Square"} size={20}
+                          className={done[it] ? "text-emerald-500" : "text-slate-300"} />
+                        <span className={cls(done[it] ? "text-slate-400 line-through" : "text-slate-700")}>{it}</span>
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
+        </div>
+      );
+    };
+
+    /* ------------------------------------------------------------------ */
+    /*  APP                                                                */
+    /* ------------------------------------------------------------------ */
+    const TABS = [
+      { id: "itinerario", label: "Itinerario", icon: "CalendarDays" },
+      { id: "mapa", label: "Mapas", icon: "Map" },
+      { id: "presupuesto", label: "Presupuesto", icon: "Wallet" },
+      { id: "tips", label: "Recomendaciones", icon: "Lightbulb" },
+      { id: "checklist", label: "Checklist", icon: "ListChecks" },
+    ];
+
+    function App() {
+      const [tab, setTab] = useState("itinerario");
+      const [menu, setMenu] = useState(false);
+
+      const render = () => {
+        switch (tab) {
+          case "mapa": return <MapView />;
+          case "presupuesto": return <BudgetView />;
+          case "tips": return <TipsView />;
+          case "checklist": return <ChecklistView />;
+          default: return <ItineraryView />;
+        }
+      };
+
+      return (
+        <div className="min-h-screen">
+          {/* HEADER */}
+          <header className="sticky top-0 z-40 border-b border-slate-200 bg-white/85 backdrop-blur">
+            <div className="mx-auto flex max-w-6xl items-center gap-3 px-4 py-3">
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-sky-500 to-indigo-600 text-white shadow">
+                <Icon name="Plane" size={20} />
+              </div>
+              <div className="min-w-0">
+                <h1 className="truncate text-base sm:text-lg font-extrabold text-slate-800 leading-tight">Eurotrip · 16 Días</h1>
+                <p className="hidden sm:block text-xs text-slate-500">Barcelona · Roma · París · Londres · 18 Ene – 2 Feb</p>
+              </div>
+
+              {/* Nav desktop */}
+              <nav className="ml-auto hidden md:flex items-center gap-1">
+                {TABS.map(t => (
+                  <button key={t.id} onClick={() => setTab(t.id)}
+                    className={cls("inline-flex items-center gap-1.5 rounded-lg px-3 py-2 text-sm font-semibold transition",
+                      tab === t.id ? "bg-slate-800 text-white" : "text-slate-600 hover:bg-slate-100")}>
+                    <Icon name={t.icon} size={16} /> {t.label}
+                  </button>
+                ))}
+              </nav>
+
+              {/* Botón menú móvil */}
+              <button onClick={() => setMenu(m => !m)}
+                className="ml-auto md:hidden inline-flex h-10 w-10 items-center justify-center rounded-lg text-slate-700 hover:bg-slate-100">
+                <Icon name={menu ? "X" : "Menu"} size={24} />
+              </button>
+            </div>
+
+            {/* Menú móvil */}
+            {menu && (
+              <nav className="md:hidden border-t border-slate-100 bg-white px-3 py-2 animate-fadeUp">
+                {TABS.map(t => (
+                  <button key={t.id} onClick={() => { setTab(t.id); setMenu(false); }}
+                    className={cls("flex w-full items-center gap-2.5 rounded-lg px-3 py-2.5 text-sm font-semibold transition",
+                      tab === t.id ? "bg-slate-800 text-white" : "text-slate-600 hover:bg-slate-100")}>
+                    <Icon name={t.icon} size={18} /> {t.label}
+                  </button>
+                ))}
+              </nav>
+            )}
+          </header>
+
+          {/* HERO */}
+          {tab === "itinerario" && (
+            <section className="bg-gradient-to-br from-slate-900 via-indigo-900 to-sky-900 text-white">
+              <div className="mx-auto max-w-6xl px-4 py-8 sm:py-10">
+                <p className="text-sm font-semibold uppercase tracking-widest text-sky-300">Invierno en Europa</p>
+                <h2 className="mt-1 text-3xl sm:text-4xl font-extrabold leading-tight">Tu aventura de 16 días</h2>
+                <p className="mt-2 max-w-2xl text-slate-300">4 capitales, 3 vuelos y un viaje en Eurostar. Itinerario detallado mañana, mediodía, tarde y noche — con mapas, costos y dónde comer y comprar.</p>
+                <div className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-4">
+                  {[
+                    { i: "CalendarDays", l: "16 días", s: "18 Ene – 2 Feb" },
+                    { i: "MapPin", l: "4 ciudades", s: "BCN · ROM · PAR · LON" },
+                    { i: "Plane", l: "3 vuelos + 1 tren", s: "Eurostar incluido" },
+                    { i: "Wallet", l: "Presupuesto", s: "Estimado por persona" },
+                  ].map((k, i) => (
+                    <div key={i} className="rounded-2xl bg-white/10 p-3.5 ring-1 ring-white/15 backdrop-blur">
+                      <Icon name={k.i} size={20} className="text-sky-300" />
+                      <p className="mt-1.5 font-bold">{k.l}</p>
+                      <p className="text-xs text-slate-300">{k.s}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </section>
+          )}
+
+          {/* CONTENIDO */}
+          <main className="mx-auto max-w-6xl px-4 py-6 sm:py-8">
+            {render()}
+          </main>
+
+          {/* FOOTER */}
+          <footer className="border-t border-slate-200 bg-white">
+            <div className="mx-auto max-w-6xl px-4 py-6 text-center text-sm text-slate-400">
+              <p className="flex items-center justify-center gap-1.5">
+                <Icon name="Plane" size={15} /> Eurotrip Planner · Hecho para disfrutar el viaje
+              </p>
+              <p className="mt-1 text-xs">Costos y recomendaciones son estimaciones referenciales; verifica precios y horarios antes de viajar.</p>
+            </div>
+          </footer>
+        </div>
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+  </script>
+
+  <!-- Bootstrap: compila el JSX anterior y lo ejecuta -->
+  <script>
+    (function () {
+      function boot() {
+        try {
+          var src = document.getElementById("app-source").textContent;
+          var out = Babel.transform(src, { presets: [["react", { runtime: "classic" }]] }).code;
+          (0, eval)(out); // eval indirecto => ámbito global (React, ReactDOM, lucide UMD)
+        } catch (e) {
+          document.getElementById("root").innerHTML =
+            '<div style="max-width:640px;margin:60px auto;padding:24px;font-family:sans-serif;color:#b91c1c;background:#fef2f2;border:1px solid #fecaca;border-radius:16px">' +
+            '<strong>No se pudo cargar la aplicación.</strong><br/>Revisa tu conexión (se cargan React, Tailwind, Babel y lucide desde CDN).<br/><br/><code style="font-size:12px;color:#7f1d1d">' +
+            (e && e.message ? e.message : e) + '</code></div>';
+          console.error(e);
+        }
+      }
+      // Asegura que React, ReactDOM, Babel y lucide ya estén disponibles.
+      if (window.Babel && window.React && window.ReactDOM) boot();
+      else window.addEventListener("load", boot);
+    })();
+  </script>
+</body>
+</html>
