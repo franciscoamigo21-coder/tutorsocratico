@@ -757,11 +757,14 @@
                 position: static !important;   /* fluye en varias páginas: ya no se corta */
                 width: 100%;
             }
-            /* Evita que estos bloques se partan a la mitad entre páginas */
-            .pgi-q-block, .pgi-sign-row, .pgi-eval-grid, .pgi-verdict-box,
-            .pgi-obs-area, .pgi-student-row { page-break-inside: avoid; break-inside: avoid; }
-            .pgi-section-title { page-break-after: avoid; }
-            .pgi-page { padding: 1.3cm 1.5cm !important; max-width: none !important; margin: 0 !important; }
+            /* Nada se parte a la mitad entre páginas (evita cortes) */
+            .pgi-header, .pgi-student-row, .pgi-verdict-box, .pgi-analysis-text,
+            .pgi-q-block, .pgi-eval-grid, .pgi-obs-area, .pgi-sign-row,
+            .pgi-footer, .pgi-q-text, .pgi-response-area, .pgi-lines,
+            li, p { page-break-inside: avoid; break-inside: avoid; }
+            .pgi-section-title { page-break-after: avoid; break-after: avoid; }
+            /* Márgenes superior e inferior amplios para que no se vea cortado */
+            .pgi-page { padding: 1.9cm 1.6cm !important; max-width: none !important; margin: 0 !important; }
         }
         #print-guide-area {
             display: none;
@@ -2044,7 +2047,7 @@
         <div class="pgi-q-text">${q}</div>
         <div class="pgi-response-area">
             <div class="pgi-response-label">Respuesta del estudiante:</div>
-            <div class="pgi-lines"><div class="pgi-write-line"></div><div class="pgi-write-line"></div><div class="pgi-write-line"></div></div>
+            <div class="pgi-lines"><div class="pgi-write-line"></div><div class="pgi-write-line"></div></div>
         </div>
     </div>`).join('')}
 
