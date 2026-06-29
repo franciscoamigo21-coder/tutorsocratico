@@ -789,6 +789,131 @@
     ];
 
     /* ------------------------------------------------------------------ */
+    /*  GUÍA DE TURISTA POR DESTINO (datos, gratis, comer, hospedaje…)     */
+    /* ------------------------------------------------------------------ */
+    const GUIDE = {
+      Barcelona: {
+        intro: "Capital catalana del modernismo: Gaudí en cada esquina, mar Mediterráneo y una vida de calle vibrante. Es compacta, muy caminable y con un metro excelente para moverse.",
+        must: [
+          { n: "Cascada Monumental de la Ciutadella", d: "Visita fija y gratis: una cascada monumental de aire barroco (en la que colaboró un joven Gaudí) dentro del parque más bonito de la ciudad.", free: true },
+        ],
+        souvenirs: [
+          { n: "Mercat de la Boqueria / Las Ramblas", d: "Turrón, frutos secos, especias y dulces a buen precio." },
+          { n: "Qué comprar", d: "Turrón, aceite de oliva, abanicos pintados, cerámica y la camiseta del Barça." },
+        ],
+        tips: [
+          { icon: "TrainFront", n: "Transporte", d: "La tarjeta T-casual (10 viajes) sale mucho mejor que comprar billetes sueltos de metro/bus." },
+        ],
+      },
+
+      Roma: {
+        intro: "La ciudad eterna: 3.000 años de historia a cielo abierto. Camina mucho, valida siempre tu billete y combina los grandes monumentos con barrios auténticos como Trastevere y Testaccio.",
+        entradas: [
+          { n: "Coliseo Romano", price: "18 € (2026)", url: "https://ticketing.colosseo.it", d: "Cómpralo en la web oficial. La entrada incluye Foro Romano y Palatino." },
+          { n: "Museos Vaticanos", price: "desde 20 €", url: "https://www.museivaticani.va", d: "Compra con antelación en la web oficial para evitar colas enormes (incluye Capilla Sixtina)." },
+          { n: "Basílica de San Pedro", price: "Gratis · o 7 € con hora", url: "https://www.basilicasanpietro.va", d: "La entrada es gratis pero las filas son largas: mejor reservar ingreso con horario (~7 €)." },
+          { n: "Panteón de Agripa", price: "5 €", url: "https://museitaliani.cultura.gov.it", d: "Compra la entrada online (5 €) para hacer menos fila." },
+          { n: "Fontana di Trevi", price: "~2 € (nueva tasa)", url: "", d: "Se estudia/aplica una tasa simbólica (~2 €) para acercarse a la fuente por turnos." },
+        ],
+        gratis: [
+          { n: "Iglesia de San Ignacio de Loyola", d: "Entrada gratis. Hazte la foto en el gran espejo que refleja el techo (la 'cúpula' pintada es un trampantojo) por 1 €." },
+          { n: "San Luigi dei Francesi", d: "Gratis: alberga 3 obras originales de Caravaggio sobre San Mateo. Lleva monedas para iluminarlas." },
+          { n: "Mirador de Gianicolo (Janiculum Hill)", d: "La mejor panorámica de Roma sobre las cúpulas, totalmente gratis." },
+          { n: "Giardino degli Aranci", d: "El jardín de los naranjos en el Aventino, con vista al Tíber y a la cúpula de San Pedro." },
+          { n: "La Cerradura de Aventino", d: "El secreto mejor guardado de Roma: asómate al ojo de la cerradura de la Orden de Malta y verás la cúpula de San Pedro perfectamente enmarcada por un seto. Mágico y gratis." },
+          { n: "Terrazza delle Quadrighe (Vittoriano)", d: "Terraza panorámica sobre los foros y Via del Corso." },
+          { n: "Temple of Aesculapius (Villa Borghese)", d: "Romántico templo sobre un lago; puedes remar en bote por ~5 €." },
+        ],
+        barrios: [
+          { n: "Trastevere", d: "Callejones empedrados, hiedra y la Roma más bohemia y nocturna." },
+          { n: "Testaccio", d: "El barrio más auténtico y popular: aquí se come la cocina romana de verdad." },
+        ],
+        comer: [
+          { n: "Pippo Tortellino", addr: "Via Baccina 36", price: "económico", d: "Pasta fresca casera y económica cerca de los foros (Monti)." },
+          { n: "Carlo Menta", addr: "Trastevere", price: "5–12 €", d: "Enorme y barato, clásico de Trastevere." },
+          { n: "Pastasciutta", addr: "Roma", price: "6–8 €", d: "Pasta para llevar, rápida y rica." },
+          { n: "Pastificio Guerra", addr: "Roma", price: "4–6 €", d: "Pasta del día baratísima, de pie." },
+          { n: "Al42 by Pastachef", addr: "Roma", price: "8–12 €", d: "Pasta fresca con salsas a elegir." },
+          { n: "Il Pastaio di Roma", addr: "Roma", price: "6–10 €", d: "Pasta fresca para llevar." },
+          { n: "La Bottega Pastificio con Cucina", addr: "Roma", price: "8–12 €", d: "Pasta artesanal y platos del día." },
+          { n: "Grano Trattoria", addr: "Roma", price: "10–15 €", d: "Trattoria de pasta con buena relación calidad-precio." },
+          { n: "Pastevere", addr: "Trastevere", price: "8–13 €", d: "Pasta fresca en cono, en pleno Trastevere." },
+        ],
+        pizzas: [
+          { n: "Antico Forno Roscioli", addr: "Roma" },
+          { n: "Forno da Milvio", addr: "Roma" },
+          { n: "Antico Forno Serpenti", addr: "Roma" },
+          { n: "Forno Monteforte", addr: "Roma" },
+          { n: "Pizza Rustica", addr: "Via Flaminia 24" },
+        ],
+        tips: [
+          { icon: "Ticket", n: "Valida tu billete SIEMPRE", d: "Pica el billete de metro/bus en las máquinas (las amarillas en el bus). Los controles multan fuerte a quien no lo valide." },
+        ],
+      },
+
+      "París": {
+        intro: "La ciudad de la luz: museos de talla mundial, bulevares elegantes y rincones de postal. Muchísimo se disfruta gratis solo paseando por sus barrios y orillas del Sena.",
+        gratis: [
+          { n: "Jardines de Luxemburgo", d: "El jardín más elegante de París, perfecto para pasear." },
+          { n: "Catedral de Notre Dame", d: "Joya gótica de la Île de la Cité (exterior y, según reapertura, interior)." },
+          { n: "Petit Palais", d: "Museo de Bellas Artes con colección permanente gratuita y patio precioso." },
+          { n: "Librería Shakespeare and Company", d: "La librería anglosajona más famosa del mundo, frente a Notre Dame." },
+          { n: "Basílica del Sacré-Cœur", d: "Entrada gratis y la mejor vista panorámica de París." },
+          { n: "Calles de Montmartre", d: "Place du Tertre, viñedo y callejones de artistas." },
+          { n: "Jardín de las Tullerías", d: "Entre el Louvre y la Concordia, ideal al atardecer." },
+          { n: "Trocadéro", d: "La mejor postal de la Torre Eiffel." },
+          { n: "Galerías Lafayette", d: "Entra gratis a ver su cúpula art nouveau y sube a la terraza con vistas." },
+        ],
+        souvenirs: [
+          { n: "Montmartre", d: "Souvenirs baratos, imanes, cuadros de artistas y recuerdos en las callejuelas de la colina." },
+        ],
+        comer: [
+          { n: "La Petite Hostellerie", addr: "35 Rue de la Harpe, París", price: "menú ~15 €", d: "Menú completo (entrante + principal + postre) a muy buen precio en el Barrio Latino." },
+          { n: "Glacier Berthillon", addr: "Île Saint-Louis, París", price: "~4 €", d: "Considerado el mejor helado de París." },
+          { n: "Starbucks histórico", addr: "París", price: "café", d: "Más que un café: varios locales son punto turístico por su decoración de palacio." },
+          { n: "Port Debilly", addr: "París", price: "gratis", d: "Paseo junto al Sena con una vista preciosa de la Torre Eiffel; merece la pena." },
+        ],
+      },
+
+      Londres: {
+        intro: "Cosmopolita, multicultural y con muchísimos museos gratis. La clave es moverse bien con tarjeta contactless/Oyster y aprovechar mercados y barrios con personalidad propia.",
+        tips: [
+          { icon: "CreditCard", n: "No compres billetes sueltos", d: "Usa una tarjeta contactless o la Oyster: tienen tope diario (daily cap) y salen mucho más baratas que los billetes individuales." },
+          { icon: "Bus", n: "Del aeropuerto al centro", d: "Puedes usar el bus National Express, o la Piccadilly line del metro (Tube) directa desde Heathrow." },
+          { icon: "Plug", n: "Adaptador tipo G", d: "Reino Unido usa enchufe tipo G (distinto al europeo): lleva un adaptador sí o sí." },
+          { icon: "ShoppingBag", n: "Poundland (visita fija)", d: "Cadena donde casi todo cuesta ~£1: ideal para souvenirs y snacks baratísimos." },
+        ],
+        entradas: [
+          { n: "Museo de Historia Natural", price: "Gratis (reserva)", url: "https://www.nhm.ac.uk", d: "Entrada gratuita, pero reserva tu ticket con antelación en la web oficial nhm.ac.uk para asegurar el acceso." },
+        ],
+        souvenirs: [
+          { n: "Notting Hill / Portobello Market", d: "Mercadillo icónico: antigüedades, vintage y recuerdos baratos." },
+          { n: "Poundland (£1)", d: "Todo a una libra: el lugar más barato para souvenirs y básicos." },
+          { n: "Camden Market", d: "Moda alternativa, parches, vinilos y recuerdos originales." },
+        ],
+        hospedaje: [
+          { n: "Covent Garden", d: "El corazón de Londres: lo tienes todo a mano y a pocos pasos." },
+          { n: "South Bank", d: "A pasos del Big Ben, el London Eye y el Támesis." },
+          { n: "Soho", d: "Para vivir la ciudad de verdad: vida nocturna, teatros y restaurantes." },
+          { n: "Kensington", d: "Más tranquilo y seguro, elegante y muy bien conectado." },
+        ],
+        comer: [
+          { n: "Market Place (Leicester Square)", addr: "Leicester Square, Londres", price: "£", d: "Patio de street food en pleno centro para comer bueno y barato." },
+        ],
+        apps: [
+          { icon: "Car", n: "Bolt", d: "App de viajes (tipo taxi/Uber), suele salir más barata." },
+          { icon: "Smartphone", n: "Holafly", d: "eSIM con datos para tener internet apenas aterrizas." },
+          { icon: "Bike", n: "Santander Cycles", d: "Las bicis públicas de Londres para moverte por el centro." },
+        ],
+        musica: [
+          { n: "Battersea Power Station", d: "La central eléctrica de la portada de Pink Floyd (Animals), hoy centro comercial." },
+          { n: "Abbey Road", d: "El mítico cruce peatonal de The Beatles frente a los estudios." },
+          { n: "23 Berwick Street (Soho)", d: "La calle de la portada de Oasis, (What's the Story) Morning Glory?" },
+        ],
+      },
+    };
+
+    /* ------------------------------------------------------------------ */
     /*  CHECKLIST                                                          */
     /* ------------------------------------------------------------------ */
     const CHECKLIST = {
@@ -1279,6 +1404,171 @@
       );
     };
 
+    /* ---- GUÍA DE TURISTA POR DESTINO ---- */
+
+    /* Bloque con encabezado e icono */
+    const GuideBlock = ({ icon, title, tint = "text-wine", children }) => (
+      <div className="rounded-2xl border border-stone-200 bg-white p-4">
+        <div className={cls("mb-3 flex items-center gap-2 font-bold", tint)}>
+          <Icon name={icon} size={17} /> <span className="font-display text-lg">{title}</span>
+        </div>
+        {children}
+      </div>
+    );
+
+    /* Fila de lugar con enlace a Google Maps */
+    const PlaceRow = ({ name, city, desc, addr, price, free, dot = "bg-wine" }) => (
+      <li className="flex gap-2.5 py-1.5">
+        <span className={cls("mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full", dot)} />
+        <div className="min-w-0 flex-1">
+          <div className="flex flex-wrap items-center gap-1.5">
+            <a href={gmaps(name + (addr ? " " + addr : ""), city)} target="_blank" rel="noreferrer"
+               className="font-semibold text-ink hover:text-wine">{name}</a>
+            {free && <span className="inline-flex items-center gap-0.5 rounded-full bg-emerald-100 px-1.5 py-0.5 text-[10px] font-bold text-emerald-700"><Icon name="Gift" size={10} /> Gratis</span>}
+            {price && <span className="inline-flex items-center gap-0.5 rounded-full bg-amber-100 px-1.5 py-0.5 text-[10px] font-bold text-amber-700"><Icon name="Coins" size={10} /> {price}</span>}
+            {addr && <span className="inline-flex items-center gap-0.5 text-[11px] text-stone-400"><Icon name="MapPin" size={10} /> {addr}</span>}
+          </div>
+          {desc && <p className="text-[13px] text-stone-500 leading-snug">{desc}</p>}
+        </div>
+      </li>
+    );
+
+    const GuideCity = ({ name }) => {
+      const g = GUIDE[name];
+      const theme = CITY[name];
+      return (
+        <div className="overflow-hidden rounded-3xl border border-stone-200 bg-white shadow-sm">
+          {/* Portada */}
+          <Photo src={IMG.cityCover[name]} gradient={theme.grad} icon="Landmark" kenburns className="h-44 sm:h-52">
+            <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent" />
+            <div className="absolute inset-0 flex flex-col justify-end p-5 text-white">
+              <span className="text-3xl">{theme.flag}</span>
+              <h3 className="font-display text-3xl font-bold leading-tight text-shadow-lg">{name}</h3>
+              <p className="max-w-2xl text-sm text-white/90">{g.intro}</p>
+            </div>
+          </Photo>
+
+          <div className="grid gap-4 p-4 sm:grid-cols-2">
+            {g.tips && (
+              <GuideBlock icon="Info" title="Datos importantes" tint="text-sky-700">
+                <ul className="space-y-2.5">
+                  {g.tips.map((t, i) => (
+                    <li key={i} className="flex gap-2.5">
+                      <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-sky-50 text-sky-600"><Icon name={t.icon} size={16} /></span>
+                      <div><p className="text-sm font-semibold text-ink">{t.n}</p><p className="text-[13px] text-stone-500 leading-snug">{t.d}</p></div>
+                    </li>
+                  ))}
+                </ul>
+              </GuideBlock>
+            )}
+
+            {g.entradas && (
+              <GuideBlock icon="Ticket" title="Entradas y reservas" tint="text-indigo-700">
+                <ul className="space-y-2.5">
+                  {g.entradas.map((e, i) => (
+                    <li key={i} className="border-b border-stone-100 pb-2 last:border-0 last:pb-0">
+                      <div className="flex flex-wrap items-center gap-1.5">
+                        <span className="font-semibold text-ink">{e.n}</span>
+                        {e.price && <span className="inline-flex items-center gap-0.5 rounded-full bg-amber-100 px-1.5 py-0.5 text-[10px] font-bold text-amber-700"><Icon name="Coins" size={10} /> {e.price}</span>}
+                      </div>
+                      <p className="text-[13px] text-stone-500 leading-snug">{e.d}</p>
+                      {e.url && (
+                        <a href={e.url} target="_blank" rel="noreferrer" className="mt-0.5 inline-flex items-center gap-1 text-[12px] font-semibold text-sky-600 hover:text-sky-700">
+                          <Icon name="Globe" size={12} /> {e.url.replace(/^https?:\/\//, "")}
+                        </a>
+                      )}
+                    </li>
+                  ))}
+                </ul>
+              </GuideBlock>
+            )}
+
+            {g.must && (
+              <GuideBlock icon="Star" title="Imperdibles" tint="text-amber-600">
+                <ul>{g.must.map((m, i) => <PlaceRow key={i} {...m} name={m.n} desc={m.d} city={name} free={m.free} dot="bg-amber-500" />)}</ul>
+              </GuideBlock>
+            )}
+
+            {g.gratis && (
+              <GuideBlock icon="Gift" title="Gratis y casi gratis" tint="text-emerald-700">
+                <ul>{g.gratis.map((m, i) => <PlaceRow key={i} name={m.n} desc={m.d} city={name} dot="bg-emerald-500" />)}</ul>
+              </GuideBlock>
+            )}
+
+            {g.barrios && (
+              <GuideBlock icon="MapPinned" title="Barrios con alma" tint="text-rose-700">
+                <ul>{g.barrios.map((m, i) => <PlaceRow key={i} name={m.n} desc={m.d} city={name} dot="bg-rose-500" />)}</ul>
+              </GuideBlock>
+            )}
+
+            {g.hospedaje && (
+              <GuideBlock icon="BedDouble" title="Dónde hospedarse" tint="text-violet-700">
+                <ul>{g.hospedaje.map((m, i) => <PlaceRow key={i} name={m.n} desc={m.d} city={name} dot="bg-violet-500" />)}</ul>
+              </GuideBlock>
+            )}
+
+            {g.comer && (
+              <GuideBlock icon="Utensils" title="Comer rico y barato" tint="text-amber-700">
+                <ul>{g.comer.map((m, i) => <PlaceRow key={i} name={m.n} desc={m.d} addr={m.addr} price={m.price} city={name} dot="bg-amber-500" />)}</ul>
+              </GuideBlock>
+            )}
+
+            {g.pizzas && (
+              <GuideBlock icon="Pizza" title="Pizza al taglio barata" tint="text-orange-700">
+                <ul>{g.pizzas.map((m, i) => <PlaceRow key={i} name={m.n} addr={m.addr} city={name} dot="bg-orange-500" />)}</ul>
+              </GuideBlock>
+            )}
+
+            {g.souvenirs && (
+              <GuideBlock icon="ShoppingBag" title="Souvenirs baratos" tint="text-pink-700">
+                <ul>{g.souvenirs.map((m, i) => <PlaceRow key={i} name={m.n} desc={m.d} city={name} dot="bg-pink-500" />)}</ul>
+              </GuideBlock>
+            )}
+
+            {g.apps && (
+              <GuideBlock icon="Smartphone" title="Apps útiles" tint="text-teal-700">
+                <ul className="space-y-2.5">
+                  {g.apps.map((a, i) => (
+                    <li key={i} className="flex gap-2.5">
+                      <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-teal-50 text-teal-600"><Icon name={a.icon} size={16} /></span>
+                      <div><p className="text-sm font-semibold text-ink">{a.n}</p><p className="text-[13px] text-stone-500 leading-snug">{a.d}</p></div>
+                    </li>
+                  ))}
+                </ul>
+              </GuideBlock>
+            )}
+
+            {g.musica && (
+              <GuideBlock icon="Music" title="Para fans de la música" tint="text-fuchsia-700">
+                <ul>{g.musica.map((m, i) => <PlaceRow key={i} name={m.n} desc={m.d} city={name} dot="bg-fuchsia-500" />)}</ul>
+              </GuideBlock>
+            )}
+          </div>
+        </div>
+      );
+    };
+
+    const GuideView = () => {
+      const [city, setCity] = useState("Roma");
+      return (
+        <div className="space-y-5">
+          <SectionTitle icon="BookOpenText" kicker="Guía de viajero" title="Guía por destino"
+            sub="Datos clave, entradas, lugares gratis, dónde comer barato, dónde dormir y trucos locales." />
+          {/* Selector de ciudad */}
+          <div className="flex flex-wrap gap-2">
+            {["Barcelona", "Roma", "París", "Londres"].map(c => (
+              <button key={c} onClick={() => setCity(c)}
+                className={cls("inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-sm font-semibold ring-1 transition",
+                  city === c ? "bg-ink text-white ring-ink shadow" : "bg-white text-stone-600 ring-stone-200 hover:bg-stone-100")}>
+                {CITY[c].flag} {c}
+              </button>
+            ))}
+          </div>
+          <GuideCity name={city} />
+        </div>
+      );
+    };
+
     const TipsView = () => (
       <div className="space-y-6">
         <div>
@@ -1390,6 +1680,7 @@
     const TABS = [
       { id: "itinerario", label: "Itinerario", icon: "CalendarDays" },
       { id: "mapa", label: "Ciudades", icon: "Map" },
+      { id: "guia", label: "Guía", icon: "BookOpenText" },
       { id: "presupuesto", label: "Presupuesto", icon: "Wallet" },
       { id: "tips", label: "Tips", icon: "Lightbulb" },
       { id: "checklist", label: "Checklist", icon: "ListChecks" },
@@ -1448,6 +1739,7 @@
       const render = () => {
         switch (tab) {
           case "mapa": return <MapView />;
+          case "guia": return <GuideView />;
           case "presupuesto": return <BudgetView />;
           case "tips": return <TipsView />;
           case "checklist": return <ChecklistView />;
