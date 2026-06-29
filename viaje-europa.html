@@ -57,10 +57,16 @@
     .no-scrollbar::-webkit-scrollbar { display: none; }
     .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
     /* Texturas y detalles editoriales */
-    .paper { background-color: #f7f3ec; background-image:
-      radial-gradient(rgba(124,45,18,0.035) 1px, transparent 1px),
-      radial-gradient(rgba(30,58,138,0.03) 1px, transparent 1px);
-      background-size: 22px 22px, 22px 22px; background-position: 0 0, 11px 11px; }
+    .paper {
+      background-color: #fbf8f2;
+      background-image:
+        radial-gradient(38rem 38rem at 0% 0%, rgba(56,189,248,0.12), transparent 60%),
+        radial-gradient(36rem 36rem at 100% 4%, rgba(244,114,182,0.12), transparent 60%),
+        radial-gradient(40rem 40rem at 50% 100%, rgba(251,191,36,0.12), transparent 60%),
+        radial-gradient(rgba(124,45,18,0.04) 1px, transparent 1px);
+      background-size: cover, cover, cover, 22px 22px;
+      background-attachment: fixed, fixed, fixed, scroll;
+    }
     .text-shadow-lg { text-shadow: 0 2px 24px rgba(0,0,0,0.45); }
     .gold-rule { background: linear-gradient(90deg, transparent, #c79a3a, transparent); }
     .glass { background: rgba(255,255,255,0.7); backdrop-filter: blur(14px) saturate(1.2); }
@@ -124,10 +130,10 @@
 
     /* Periodos del día */
     const PERIODS = {
-      "Mañana":   { icon: "Sunrise", cls: "text-amber-500" },
-      "Mediodía": { icon: "Sun",     cls: "text-orange-500" },
-      "Tarde":    { icon: "Sunset",  cls: "text-rose-500" },
-      "Noche":    { icon: "Moon",    cls: "text-indigo-500" },
+      "Mañana":   { icon: "Sunrise", cls: "text-amber-600",  bg: "bg-amber-100",  emoji: "🌅" },
+      "Mediodía": { icon: "Sun",     cls: "text-orange-600", bg: "bg-orange-100", emoji: "☀️" },
+      "Tarde":    { icon: "Sunset",  cls: "text-rose-600",   bg: "bg-rose-100",   emoji: "🌇" },
+      "Noche":    { icon: "Moon",    cls: "text-indigo-600", bg: "bg-indigo-100", emoji: "🌙" },
     };
 
     /* Tema por ciudad */
@@ -257,6 +263,9 @@
           { n: "Paseo de Gracia", d: "Flagship stores y diseño; ideal para mirar escaparates." },
           { n: "Qué comprar", d: "Turrón, aceite de oliva, abanicos pintados a mano." },
         ],
+        cerca: [
+          { n: "Cascada Monumental de la Ciutadella", d: "Visita fija y gratis: cascada monumental en la que colaboró un joven Gaudí, dentro del parque más bonito de la ciudad.", free: true },
+        ],
       },
       {
         day: 2, date: "19 Ene", city: "Barcelona", title: "Güell, Gótico y vuelo a Roma",
@@ -314,12 +323,19 @@
           ]},
         ],
         food: [
-          { n: "Trattoria Da Enzo al 29", d: "Carbonara y cacio e pepe auténticas (reserva).", p: "€25–35 p/p" },
+          { n: "Pippo Tortellino", addr: "Via Baccina 36", d: "Pasta fresca casera y económica en Monti, cerca del Coliseo.", p: "económico" },
+          { n: "Pastasciutta", d: "Pasta para llevar, rápida y rica.", p: "€6–8" },
           { n: "Giolitti", d: "Gelato histórico cerca del Panteón.", p: "€3–5" },
         ],
         shopping: [
           { n: "Via del Corso", d: "Calle comercial principal entre el Panteón y P. del Popolo." },
           { n: "Qué comprar", d: "Pasta artesanal, aceite, recuerdos del Vaticano." },
+        ],
+        cerca: [
+          { n: "Iglesia de San Ignacio de Loyola", d: "Gratis. Hazte la foto en el gran espejo que refleja el techo (la 'cúpula' es un trampantojo) por 1 €.", price: "espejo 1 €", free: true },
+          { n: "San Luigi dei Francesi", d: "Gratis: 3 obras originales de Caravaggio sobre San Mateo, a pasos de Piazza Navona.", free: true },
+          { n: "Terrazza delle Quadrighe (Vittoriano)", d: "Terraza panorámica sobre los foros y Via del Corso." },
+          { n: "Antico Forno Roscioli", d: "Pizza al taglio legendaria en el centro histórico.", price: "€" },
         ],
       },
       {
@@ -376,12 +392,19 @@
           ]},
         ],
         food: [
-          { n: "Tonnarello", d: "Clásico de Trastevere; pasta fresca y ambiente animado.", p: "€20–30 p/p" },
+          { n: "Carlo Menta", addr: "Trastevere", d: "Enorme y baratísimo, clásico de Trastevere.", p: "€5–12" },
+          { n: "Pastevere", addr: "Trastevere", d: "Pasta fresca en cono, en pleno barrio.", p: "€8–13" },
           { n: "Suppizza / I Supplì", d: "Supplì (croquetas de arroz) para llevar.", p: "€2–4" },
         ],
         shopping: [
           { n: "Mercatino di Trastevere", d: "Artesanía y vintage en puestos de barrio." },
           { n: "Qué comprar", d: "Cuadernos de cuero, jabones artesanales, limoncello." },
+        ],
+        cerca: [
+          { n: "Mirador de Gianicolo (Janiculum Hill)", d: "La mejor panorámica de Roma sobre las cúpulas, justo encima de Trastevere.", free: true },
+          { n: "Giardino degli Aranci", d: "El jardín de los naranjos en el Aventino, con vista al Tíber y a San Pedro.", free: true },
+          { n: "La Cerradura de Aventino", d: "El secreto mejor guardado de Roma: asómate al ojo de la cerradura de la Orden de Malta y verás la cúpula de San Pedro perfectamente enmarcada por un seto. ¡Mágico!", free: true },
+          { n: "Barrio Testaccio", d: "Cruzando el río: el barrio más auténtico y popular para comer cocina romana de verdad." },
         ],
       },
       {
@@ -414,6 +437,9 @@
           { n: "Via dei Condotti", d: "Lujo italiano desde la Plaza de España (mirar o comprar)." },
           { n: "Qué comprar", d: "Corbatas de seda, café italiano en grano, pañuelos." },
         ],
+        cerca: [
+          { n: "Temple of Aesculapius (Villa Borghese)", d: "Romántico templo sobre un lago dentro del parque; rema en bote por ~5 €.", price: "bote ~5 €" },
+        ],
       },
       {
         day: 7, date: "24 Ene", city: "París", title: "París clásico",
@@ -440,12 +466,20 @@
           ]},
         ],
         food: [
-          { n: "Café Marly", d: "Bajo las arcadas del Louvre, con vista a la pirámide.", p: "€25–40 p/p" },
+          { n: "La Petite Hostellerie", addr: "35 Rue de la Harpe", d: "Menú completo (entrante + principal + postre) a muy buen precio en el Barrio Latino, cerca de Notre Dame.", p: "menú ~€15" },
+          { n: "Glacier Berthillon", addr: "Île Saint-Louis", d: "Considerado el mejor helado de París, junto a Notre Dame.", p: "~€4" },
           { n: "Crêperie en Rue Cler", d: "Crêpes y galettes cerca de la Torre Eiffel.", p: "€10–18" },
         ],
         shopping: [
           { n: "Carrousel du Louvre", d: "Galería comercial bajo el museo." },
           { n: "Qué comprar", d: "Macarons (Ladurée), perfumes, papelería fina." },
+        ],
+        cerca: [
+          { n: "Jardín de las Tullerías", d: "Entre el Louvre y la Concordia, ideal al atardecer.", free: true },
+          { n: "Librería Shakespeare and Company", d: "La librería anglosajona más famosa del mundo, frente a Notre Dame.", free: true },
+          { n: "Petit Palais", d: "Museo de Bellas Artes con colección permanente gratuita y patio precioso.", free: true },
+          { n: "Galerías Lafayette", d: "Entra gratis a ver su cúpula art nouveau y sube a la terraza con vistas.", free: true },
+          { n: "Port Debilly", d: "Paseo junto al Sena con una vista preciosa de la Torre Eiffel; merece la pena.", free: true },
         ],
       },
       {
@@ -475,6 +509,7 @@
           { n: "La Maison Rose", d: "Icónico café rosado de las callejuelas.", p: "€18–30 p/p" },
         ],
         shopping: [
+          { n: "Souvenirs baratos en Montmartre", d: "Imanes, cuadros de artistas y recuerdos económicos por las callejuelas de la colina." },
           { n: "Marché Saint-Pierre", d: "Telas y recuerdos al pie de Montmartre." },
           { n: "Qué comprar", d: "Cuadros de artistas locales, imanes de la Torre Eiffel, té." },
         ],
@@ -534,12 +569,16 @@
           ]},
         ],
         food: [
+          { n: "Market Place (Leicester Square)", addr: "Leicester Square", d: "Patio de street food en pleno centro: comer bueno y barato en el West End.", p: "£" },
           { n: "The Churchill Arms", d: "Pub cubierto de flores con cocina tailandesa dentro.", p: "£12–20 p/p" },
           { n: "Farm Girl Café", d: "Brunch fotogénico en Notting Hill.", p: "£12–18" },
         ],
         shopping: [
-          { n: "Portobello Market", d: "El mercadillo más famoso de Londres: vintage y antigüedades." },
-          { n: "Poundland", d: "Todo a ~£1; ideal para souvenirs y snacks baratos." },
+          { n: "Notting Hill / Portobello Market", d: "El mercadillo más famoso de Londres: vintage, antigüedades y souvenirs baratos." },
+          { n: "Poundland (£1)", d: "Todo a ~£1; el lugar más barato para souvenirs y snacks." },
+        ],
+        cerca: [
+          { n: "23 Berwick Street", d: "En el Soho: la calle de la portada de Oasis, (What's the Story) Morning Glory? Imperdible para fans.", free: true },
         ],
       },
       {
@@ -571,6 +610,9 @@
         shopping: [
           { n: "Covent Garden", d: "Boutiques, Apple Market y artesanos." },
           { n: "Qué comprar", d: "Mermeladas, recuerdos reales, perfumes ingleses." },
+        ],
+        cerca: [
+          { n: "Museo de Historia Natural", d: "Entrada gratis, pero reserva tu ticket con antelación en la web oficial para asegurar el acceso.", url: "https://www.nhm.ac.uk", price: "Gratis (reserva)", free: true },
         ],
       },
       {
@@ -960,6 +1002,45 @@
     const gmaps = (name, city) =>
       `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(name + (city && city !== "Chile" ? ", " + city : ""))}`;
 
+    /* Botón "Maps" reutilizable */
+    const MapsBtn = ({ q, city, sm }) => (
+      <a href={gmaps(q, city)} target="_blank" rel="noreferrer"
+         onClick={(e) => e.stopPropagation()}
+         className={cls("inline-flex shrink-0 items-center gap-1 rounded-full bg-sky-500 font-bold text-white shadow-sm transition hover:bg-sky-600",
+           sm ? "px-2 py-0.5 text-[10px]" : "px-2.5 py-1 text-[11px]")}>
+        <Icon name="MapPin" size={sm ? 10 : 12} /> Maps
+      </a>
+    );
+
+    /* Banderita de país */
+    const Flag = ({ city, className = "" }) => (
+      <span className={cls("select-none", className)} title={city}>{(CITY[city] || {}).flag}</span>
+    );
+
+    /* Item de recomendación (comer / souvenir / cerca) con botón de Maps */
+    const ZonaItem = ({ item, city }) => (
+      <li className="text-sm">
+        <div className="flex items-start justify-between gap-2">
+          <span className="font-semibold text-ink leading-tight">{item.n}</span>
+          <MapsBtn q={item.n + (item.addr ? " " + item.addr : "")} city={city} sm />
+        </div>
+        {(item.free || item.p || item.price || item.addr) && (
+          <div className="mt-0.5 flex flex-wrap items-center gap-1.5">
+            {item.free && <span className="inline-flex items-center gap-0.5 rounded-full bg-emerald-100 px-1.5 py-0.5 text-[10px] font-bold text-emerald-700"><Icon name="Gift" size={10} /> Gratis</span>}
+            {(item.p || item.price) && <span className="inline-flex items-center gap-0.5 rounded-full bg-amber-100 px-1.5 py-0.5 text-[10px] font-bold text-amber-700"><Icon name="Coins" size={10} /> {item.p || item.price}</span>}
+            {item.addr && <span className="inline-flex items-center gap-0.5 text-[10px] text-stone-400"><Icon name="MapPin" size={9} /> {item.addr}</span>}
+          </div>
+        )}
+        {item.d && <p className="mt-0.5 text-stone-500 leading-snug">{item.d}</p>}
+        {item.url && (
+          <a href={item.url} target="_blank" rel="noreferrer" onClick={(e) => e.stopPropagation()}
+             className="mt-0.5 inline-flex items-center gap-1 text-[12px] font-semibold text-sky-600 hover:text-sky-700">
+            <Icon name="Globe" size={11} /> {item.url.replace(/^https?:\/\//, "")}
+          </a>
+        )}
+      </li>
+    );
+
     const MapPanel = ({ map, city }) => {
       const theme = CITY[city] || CITY.Barcelona;
       return (
@@ -1108,10 +1189,10 @@
                     return (
                       <div key={i}>
                         <div className="mb-2 flex items-center gap-2">
-                          <span className={cls("flex h-7 w-7 items-center justify-center rounded-full bg-white ring-1 ring-stone-200", p.cls)}>
+                          <span className={cls("flex h-8 w-8 items-center justify-center rounded-full", p.bg, p.cls)}>
                             <Icon name={p.icon} size={16} />
                           </span>
-                          <h5 className="text-sm font-bold uppercase tracking-wide text-stone-600">{b.period}</h5>
+                          <h5 className={cls("text-sm font-extrabold uppercase tracking-wide", p.cls)}>{b.period} <span className="ml-0.5">{p.emoji}</span></h5>
                         </div>
                         <div className="grid gap-2.5 sm:grid-cols-2">
                           {b.items.map((it, j) => <ActivityCard key={j} item={it} />)}
@@ -1120,42 +1201,45 @@
                     );
                   })}
 
-                  {/* Recomendaciones */}
-                  <div className="grid gap-3 sm:grid-cols-2 pt-1">
-                    <div className="rounded-xl bg-amber-50 ring-1 ring-amber-200 p-3.5">
-                      <div className="mb-2 flex items-center gap-2 font-bold text-amber-800">
-                        <Icon name="Utensils" size={16} /> Dónde comer
-                      </div>
-                      <ul className="space-y-2">
-                        {d.food.map((f, i) => (
-                          <li key={i} className="flex gap-2 text-sm">
-                            <Icon name="UtensilsCrossed" size={14} className="mt-0.5 shrink-0 text-amber-600" />
-                            <div>
-                              <span className="font-semibold text-ink">{f.n}</span>
-                              <span className="ml-1 inline-flex items-center gap-0.5 rounded bg-amber-200/60 px-1.5 py-0.5 text-[11px] font-semibold text-amber-800">
-                                <Icon name="Coins" size={10} /> {f.p}
-                              </span>
-                              <p className="text-stone-500 leading-snug">{f.d}</p>
-                            </div>
-                          </li>
-                        ))}
-                      </ul>
+                  {/* Recomendaciones de la zona (comida + souvenirs + cerca, todo junto) */}
+                  <div className="rounded-2xl bg-gradient-to-br from-amber-50 via-rose-50 to-sky-50 ring-1 ring-stone-200 p-4">
+                    <div className="mb-3 flex flex-wrap items-center gap-2">
+                      <span className="text-2xl">{theme.flag}</span>
+                      <h5 className="font-display text-xl font-bold text-ink">Recomendaciones de la zona</h5>
+                      <span className="inline-flex items-center gap-1 rounded-full bg-white px-2.5 py-0.5 text-[11px] font-semibold text-stone-600 ring-1 ring-stone-200">
+                        <Icon name="MapPin" size={11} className="text-wine" /> {d.map.area}
+                      </span>
                     </div>
-                    <div className="rounded-xl bg-rose-50 ring-1 ring-rose-200 p-3.5">
-                      <div className="mb-2 flex items-center gap-2 font-bold text-rose-800">
-                        <Icon name="ShoppingBag" size={16} /> Compras & souvenirs
+                    <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                      <div className="rounded-xl bg-white/80 ring-1 ring-amber-200 p-3">
+                        <div className="mb-2 flex items-center gap-1.5 font-bold text-amber-700">
+                          <span className="flex h-7 w-7 items-center justify-center rounded-full bg-amber-100"><Icon name="Utensils" size={15} /></span>
+                          Comer rico 🍽️
+                        </div>
+                        <ul className="space-y-2.5">
+                          {d.food.map((f, i) => <ZonaItem key={i} item={f} city={d.city} />)}
+                        </ul>
                       </div>
-                      <ul className="space-y-2">
-                        {d.shopping.map((s, i) => (
-                          <li key={i} className="flex gap-2 text-sm">
-                            <Icon name={/qué comprar/i.test(s.n) ? "Gift" : "Tag"} size={14} className="mt-0.5 shrink-0 text-rose-500" />
-                            <div>
-                              <span className="font-semibold text-ink">{s.n}</span>
-                              <p className="text-stone-500 leading-snug">{s.d}</p>
-                            </div>
-                          </li>
-                        ))}
-                      </ul>
+                      <div className="rounded-xl bg-white/80 ring-1 ring-rose-200 p-3">
+                        <div className="mb-2 flex items-center gap-1.5 font-bold text-rose-600">
+                          <span className="flex h-7 w-7 items-center justify-center rounded-full bg-rose-100"><Icon name="ShoppingBag" size={15} /></span>
+                          Souvenirs 🛍️
+                        </div>
+                        <ul className="space-y-2.5">
+                          {d.shopping.map((s, i) => <ZonaItem key={i} item={s} city={d.city} />)}
+                        </ul>
+                      </div>
+                      {d.cerca && (
+                        <div className="rounded-xl bg-white/80 ring-1 ring-emerald-200 p-3 sm:col-span-2 lg:col-span-1">
+                          <div className="mb-2 flex items-center gap-1.5 font-bold text-emerald-700">
+                            <span className="flex h-7 w-7 items-center justify-center rounded-full bg-emerald-100"><Icon name="Sparkles" size={15} /></span>
+                            Imperdibles cerca ✨
+                          </div>
+                          <ul className="space-y-2.5">
+                            {d.cerca.map((c, i) => <ZonaItem key={i} item={c} city={d.city} />)}
+                          </ul>
+                        </div>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -1416,19 +1500,23 @@
       </div>
     );
 
-    /* Fila de lugar con enlace a Google Maps */
+    /* Fila de lugar con botón de Google Maps */
     const PlaceRow = ({ name, city, desc, addr, price, free, dot = "bg-wine" }) => (
       <li className="flex gap-2.5 py-1.5">
         <span className={cls("mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full", dot)} />
         <div className="min-w-0 flex-1">
-          <div className="flex flex-wrap items-center gap-1.5">
-            <a href={gmaps(name + (addr ? " " + addr : ""), city)} target="_blank" rel="noreferrer"
-               className="font-semibold text-ink hover:text-wine">{name}</a>
-            {free && <span className="inline-flex items-center gap-0.5 rounded-full bg-emerald-100 px-1.5 py-0.5 text-[10px] font-bold text-emerald-700"><Icon name="Gift" size={10} /> Gratis</span>}
-            {price && <span className="inline-flex items-center gap-0.5 rounded-full bg-amber-100 px-1.5 py-0.5 text-[10px] font-bold text-amber-700"><Icon name="Coins" size={10} /> {price}</span>}
-            {addr && <span className="inline-flex items-center gap-0.5 text-[11px] text-stone-400"><Icon name="MapPin" size={10} /> {addr}</span>}
+          <div className="flex items-start justify-between gap-2">
+            <span className="font-semibold text-ink">{name}</span>
+            <MapsBtn q={name + (addr ? " " + addr : "")} city={city} sm />
           </div>
-          {desc && <p className="text-[13px] text-stone-500 leading-snug">{desc}</p>}
+          {(free || price || addr) && (
+            <div className="mt-0.5 flex flex-wrap items-center gap-1.5">
+              {free && <span className="inline-flex items-center gap-0.5 rounded-full bg-emerald-100 px-1.5 py-0.5 text-[10px] font-bold text-emerald-700"><Icon name="Gift" size={10} /> Gratis</span>}
+              {price && <span className="inline-flex items-center gap-0.5 rounded-full bg-amber-100 px-1.5 py-0.5 text-[10px] font-bold text-amber-700"><Icon name="Coins" size={10} /> {price}</span>}
+              {addr && <span className="inline-flex items-center gap-0.5 text-[10px] text-stone-400"><Icon name="MapPin" size={9} /> {addr}</span>}
+            </div>
+          )}
+          {desc && <p className="mt-0.5 text-[13px] text-stone-500 leading-snug">{desc}</p>}
         </div>
       </li>
     );
