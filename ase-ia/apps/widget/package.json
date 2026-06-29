@@ -1,0 +1,13 @@
+{
+  "name": "@ase-ia/widget",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Widget embebible de ASE-IA (botón flotante + iframe).",
+  "scripts": {
+    "dev": "echo \"Sirve src/ con cualquier servidor estático (M2 añade bundling)\"",
+    "build": "echo \"(bundling pendiente · M2)\"",
+    "typecheck": "echo \"(sin TS aún)\"",
+    "lint": "echo \"(lint pendiente)\"",
+    "test": "echo \"(tests pendientes)\""
+  }
+}

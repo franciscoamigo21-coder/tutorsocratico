@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ASE-IA</title>
+  <style>
+    :root { --blue:#1b3a66; --blue-bright:#4fc3f7; --gray:#f1f4f9; --border:#d9e1ec; }
+    * { box-sizing:border-box; }
+    body { margin:0; font-family:system-ui,Segoe UI,Roboto,sans-serif; color:#16243a;
+           display:flex; flex-direction:column; height:100vh; background:#fff; }
+    header { background:var(--blue); color:#fff; padding:12px 14px; font-weight:700;
+             display:flex; align-items:center; gap:8px; }
+    .avatar { width:28px; height:28px; border-radius:50%; background:var(--blue-bright);
+              display:flex; align-items:center; justify-content:center; font-size:13px; color:var(--blue); font-weight:800; }
+    #log { flex:1; overflow-y:auto; padding:12px; background:var(--gray); display:flex; flex-direction:column; gap:8px; }
+    .msg { max-width:85%; padding:8px 11px; border-radius:12px; font-size:14px; line-height:1.4; white-space:pre-wrap; }
+    .user { align-self:flex-end; background:var(--blue); color:#fff; border-bottom-right-radius:3px; }
+    .bot { align-self:flex-start; background:#fff; border:1px solid var(--border); border-bottom-left-radius:3px; }
+    .cite { font-size:11px; color:#5b6b85; margin-top:4px; }
+    form { display:flex; gap:6px; padding:10px; border-top:1px solid var(--border); }
+    input { flex:1; padding:10px; border:1px solid var(--border); border-radius:10px; font-size:14px; }
+    button { background:var(--blue); color:#fff; border:none; border-radius:10px; padding:0 14px; font-weight:700; cursor:pointer; }
+  </style>
+</head>
+<body>
+  <header><span class="avatar">AI</span> ASE-IA · Asistente Escolar</header>
+  <div id="log">
+    <div class="msg bot">¡Hola! Soy ASE-IA. Pregúntame por tareas, fechas, reglamentos o documentos del colegio.</div>
+  </div>
+  <form id="f" autocomplete="off">
+    <input id="q" placeholder="Escribe tu pregunta…" />
+    <button type="submit">Enviar</button>
+  </form>
+
+  <script>
+    var API = new URLSearchParams(location.search).get("api") || "http://localhost:4000";
+    var log = document.getElementById("log");
+
+    function add(text, who, citations) {
+      var d = document.createElement("div");
+      d.className = "msg " + who;
+      d.textContent = text;
+      if (citations && citations.length) {
+        var c = document.createElement("div");
+        c.className = "cite";
+        c.textContent = "Fuentes: " + citations.map(function (x) { return x.titulo; }).join(" · ");
+        d.appendChild(c);
+      }
+      log.appendChild(d);
+      log.scrollTop = log.scrollHeight;
+    }
+
+    document.getElementById("f").addEventListener("submit", async function (e) {
+      e.preventDefault();
+      var input = document.getElementById("q");
+      var text = input.value.trim();
+      if (!text) return;
+      add(text, "user");
+      input.value = "";
+      try {
+        var r = await fetch(API + "/api/chat", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ message: text }),
+        });
+        var data = await r.json();
+        add(data.reply || data.error || "Sin respuesta.", "bot", data.citations);
+      } catch (err) {
+        add("No pude conectar con el asistente. Intenta más tarde.", "bot");
+      }
+    });
+  </script>
+</body>
+</html>

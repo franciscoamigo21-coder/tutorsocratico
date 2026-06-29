@@ -1,0 +1,35 @@
+rules_version = '2';
+
+// Reglas base de ASE-IA. Se endurecen en M1 (roles) y M7 (admin).
+// Principio: cada usuario solo accede a datos de su establecimiento y a
+// documentos visibles para su rol.
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function signedIn() {
+      return request.auth != null;
+    }
+    function role() {
+      return request.auth.token.role;
+    }
+    function sameSchool(schoolId) {
+      return request.auth.token.schoolId == schoolId;
+    }
+
+    match /schools/{schoolId}/users/{uid} {
+      allow read: if signedIn() && request.auth.uid == uid;
+      allow write: if false; // solo backend con credenciales de servicio
+    }
+
+    match /schools/{schoolId}/documents/{docId} {
+      allow read: if signedIn()
+                  && sameSchool(schoolId)
+                  && role() in resource.data.visibleParaRoles;
+      allow write: if false; // gestionado por la API (M4/M7)
+    }
+
+    match /schools/{schoolId}/audit_logs/{logId} {
+      allow read, write: if false; // solo backend
+    }
+  }
+}

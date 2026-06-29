@@ -1,0 +1,27 @@
+# Dependencias
+node_modules/
+.pnpm-store/
+
+# Builds
+dist/
+build/
+.next/
+out/
+
+# Entorno y secretos
+.env
+.env.local
+.env.*.local
+*.key
+serviceAccount*.json
+
+# Logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+
+# Sistema / editor
+.DS_Store
+.vscode/
+.idea/
+coverage/
