@@ -21,8 +21,8 @@ declara.
 | **M2** | UI Chat + avatar + botón flotante + widget empaquetado | ✅ |
 | **M3** | Orquestador IA: historial + citas inline + verificador estricto | ✅ |
 | **M4** | Carga de documentos (TXT/MD/PDF/DOCX) + base de conocimiento | ✅ |
-| **M5** | RAG: embeddings por chunk + búsqueda vectorial (coseno) | ✅ Actual |
-| M6 | Google Workspace (real) | 🟡 mock listo |
+| **M5** | RAG: embeddings por chunk + búsqueda vectorial (coseno) | ✅ |
+| **M6** | Google Workspace integrado al chat (Classroom/Calendar/Drive) | ✅ Actual |
 | M7 | Panel admin | ⏳ |
 | M8 | Observabilidad + deploy | ⏳ |
 

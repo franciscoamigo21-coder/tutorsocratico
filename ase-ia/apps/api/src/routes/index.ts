@@ -11,7 +11,7 @@ import {
 } from "../controllers/documentsController.js";
 import { authenticate, requireRole } from "../middleware/auth.js";
 import { isAuthConfigured } from "../services/auth/firebaseAdmin.js";
-import { classroom, calendar } from "../services/workspace/index.js";
+import { classroom, calendar, drive } from "../services/workspace/index.js";
 import { recentLogs } from "../services/audit/index.js";
 
 const router = Router();
@@ -66,6 +66,10 @@ router.get("/workspace/assignments", authenticate, async (req, res) => {
 });
 router.get("/workspace/calendar", authenticate, async (req, res) => {
   res.json(await calendar.upcomingEvents(req.user!.uid));
+});
+router.get("/workspace/drive", authenticate, async (req, res) => {
+  const q = (req.query.q ?? "").toString();
+  res.json(await drive.searchFiles(req.user!.uid, q));
 });
 
 /** Auditoría: solo docentes (en M7 pasará a rol admin). */

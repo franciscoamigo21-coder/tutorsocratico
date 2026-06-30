@@ -33,6 +33,11 @@ export const config = {
     privateKey: (process.env.FIREBASE_PRIVATE_KEY ?? "").replace(/\\n/g, "\n"),
   },
 
+  workspace: {
+    // mock | google
+    provider: (process.env.WORKSPACE_PROVIDER ?? "mock") as "mock" | "google",
+  },
+
   /**
    * En desarrollo, si Firebase no está configurado, se permite un fallback que
    * confía en cabeceras x-ase-* para poder probar roles sin credenciales.

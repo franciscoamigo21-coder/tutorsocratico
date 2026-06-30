@@ -9,6 +9,7 @@ import {
 import { createAIProvider } from "../services/ai/AIProviderFactory.js";
 import type { ChatTurn } from "../services/ai/AIProvider.js";
 import { retrieve } from "../services/rag/retriever.js";
+import { gatherWorkspaceCitations } from "../services/workspace/intent.js";
 import {
   buildSystemPrompt,
   isOutOfScope,
@@ -81,8 +82,13 @@ export async function handleChat(req: Request, res: Response): Promise<void> {
     return;
   }
 
-  // Recuperación de fuentes autorizadas para el rol y establecimiento.
-  const citations = await retrieve(message, role, schoolId);
+  // Recuperación de fuentes: documentos (RAG) + Google Workspace (tareas,
+  // calendario, material). Se combinan y re-indexan para el grounding.
+  const docCitations = await retrieve(message, role, schoolId);
+  const wsCitations = await gatherWorkspaceCitations(message, role, uid);
+  const citations = [...docCitations.map((c) => ({ ...c })), ...wsCitations].map(
+    (c, i) => ({ ...c, index: i + 1 }),
+  );
 
   // Guardrail 2: sin fuentes → NO se llama a la IA, se responde "no info".
   if (citations.length === 0) {

@@ -65,9 +65,17 @@ Cada módulo se entrega **funcional y probado** antes de pasar al siguiente.
 - Verificado: ranking vectorial correcto (la consulta de calendario rankea el
   Calendario por encima del reglamento).
 
-## M6 — Google Workspace (real)
-- `GoogleApiAdapter` para Classroom, Drive, Calendar, Gmail, Docs, Sheets, Slides.
-- Tareas, fechas y materiales reales.
+## ✅ M6 — Google Workspace (integrado al chat)
+- Servicios Classroom / Calendar / Drive con interfaces + `MockAdapter` (activo)
+  y scaffolds `GoogleApiAdapter` (token OAuth), seleccionables por
+  `WORKSPACE_PROVIDER`.
+- `gatherWorkspaceCitations`: detecta intención (tareas, fechas/evaluaciones,
+  material) y aporta fuentes citables; el orquestador las combina con los
+  documentos para un grounding uniforme.
+- Role-gating (p. ej. Classroom solo estudiante/docente). Endpoints
+  `/workspace/{assignments,calendar,drive}`.
+- Pendiente para producción: plomería del access token OAuth (con scopes) desde
+  el front a los `GoogleApiAdapter`; ampliar a Gmail/Docs/Sheets/Slides.
 
 ## M7 — Panel admin
 - Gestión de documentos, roles y visibilidad.
