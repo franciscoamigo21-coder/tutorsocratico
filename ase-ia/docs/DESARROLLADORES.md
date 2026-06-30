@@ -45,6 +45,18 @@ La interfaz `generate(input)` no cambia: recibe `system`, `prompt` y `context`
 - El rol vive en los **custom claims** del token; se asigna con el script
   `set-role`. Nunca confíes en un rol enviado por el cliente: solo el del token.
 
+## Grounding e historial (M3)
+- El prompt de sistema exige citar `[n]` por fuente. Las fuentes se entregan
+  numeradas al proveedor.
+- `verifyGrounding(reply, sourceCount)` valida que la respuesta cite al menos
+  una fuente dentro de rango; si no, el controlador devuelve `NO_INFO_MESSAGE`.
+  Esto evita "respuestas inventadas" aunque el modelo se desvíe.
+- El historial llega en `ChatRequest.history`; se sanea en el controlador
+  (`sanitizeHistory`) antes de pasarlo al proveedor. No confíes en su contenido
+  para autorizar nada: es solo contexto conversacional.
+- Para añadir un proveedor nuevo, recuerda incluir `input.history` en su formato
+  de mensajes y numerar `input.context` como `[n]`.
+
 ## Cómo agregar fuentes a la base de conocimiento (M0)
 Edita `apps/api/src/services/rag/retriever.ts` (array `SEED`). En M4/M5 esto se
 reemplaza por documentos reales indexados en Firestore + embeddings.

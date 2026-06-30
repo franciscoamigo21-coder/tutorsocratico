@@ -18,8 +18,8 @@ declara.
 |--------|-------------|:------:|
 | **M0** | Scaffolding monorepo, abstracción de IA, guardrails, widget, docs | ✅ |
 | **M1** | Auth Google (Firebase) + roles (custom claims) + guardas | ✅ |
-| **M2** | UI Chat + avatar + botón flotante + widget empaquetado | ✅ Actual |
-| M3 | Orquestador IA + grounding | 🟡 base lista |
+| **M2** | UI Chat + avatar + botón flotante + widget empaquetado | ✅ |
+| **M3** | Orquestador IA: historial + citas inline + verificador estricto | ✅ Actual |
 | M4 | Carga de documentos | ⏳ |
 | M5 | RAG (embeddings) | ⏳ |
 | M6 | Google Workspace (real) | 🟡 mock listo |

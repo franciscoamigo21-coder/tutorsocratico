@@ -69,6 +69,7 @@
     var API = new URLSearchParams(location.search).get("api") || "http://localhost:4000";
     var log = document.getElementById("log");
     var sugs = ["¿Qué dice el reglamento sobre atrasos?", "¿Cuándo termina el semestre?", "¿Cómo justifico una ausencia?"];
+    var convo = [];  // turnos {role, content} para dar continuidad (no usar "history": colisiona con window.history)
 
     function el(tag, cls, txt) { var e = document.createElement(tag); if (cls) e.className = cls; if (txt != null) e.textContent = txt; return e; }
 
@@ -77,7 +78,7 @@
       var msg = el("div", "msg", text);
       if (citations && citations.length) {
         var box = el("div", "cites");
-        citations.forEach(function (c) { box.appendChild(el("span", "cite", "📄 " + c.titulo)); });
+        citations.forEach(function (c) { box.appendChild(el("span", "cite", "[" + c.index + "] " + c.titulo)); });
         msg.appendChild(box);
       }
       row.appendChild(msg);
@@ -116,11 +117,14 @@
       try {
         var r = await fetch(API + "/api/chat", {
           method: "POST", headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ message: text }),
+          body: JSON.stringify({ message: text, history: convo.slice(-6) }),
         });
         var data = await r.json();
         setTyping(false);
-        add(data.reply || data.error || "Sin respuesta.", "bot", data.citations);
+        var reply = data.reply || data.error || "Sin respuesta.";
+        add(reply, "bot", data.citations);
+        convo.push({ role: "user", content: text });
+        convo.push({ role: "assistant", content: reply });
       } catch (err) {
         setTyping(false);
         add("No pude conectar con el asistente. Intenta más tarde.", "bot");

@@ -74,7 +74,8 @@ export async function retrieve(
     .filter((r) => r.s > 0)
     .sort((a, b) => b.s - a.s)
     .slice(0, limit)
-    .map((r) => ({
+    .map((r, i) => ({
+      index: i + 1,
       docId: r.doc.docId,
       titulo: r.doc.titulo,
       fragmento: r.doc.texto,

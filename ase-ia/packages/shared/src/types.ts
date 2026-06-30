@@ -57,6 +57,8 @@ export interface DocumentChunk {
 
 /** Una fuente citada que respalda una respuesta (grounding). */
 export interface Citation {
+  /** Número de cita (1-based) referenciado inline en la respuesta como [n]. */
+  index: number;
   docId: string;
   titulo: string;
   fragmento: string;

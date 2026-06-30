@@ -30,9 +30,15 @@ Cada módulo se entrega **funcional y probado** antes de pasar al siguiente.
 - Retriever: normalización de acentos/puntuación (mejor recuperación).
 - Verificado visualmente con Playwright (web y widget, escritorio y móvil).
 
-## M3 — Orquestador IA + grounding (consolidar)
-- Verificador de anclaje más estricto; citas inline.
-- Manejo de conversación con historial.
+## ✅ M3 — Orquestador IA + grounding (consolidado)
+- Historial conversacional: el cliente envía los últimos turnos; la API los
+  sanea (roles válidos, longitud acotada, máx. 6) y los pasa al proveedor.
+- Citas inline: el modelo cita `[n]` por fuente; la respuesta solo devuelve las
+  fuentes efectivamente citadas (con su `index`).
+- Verificador de anclaje ESTRICTO (`verifyGrounding`): una respuesta con
+  contenido pero sin un marcador `[n]` válido se descarta y se entrega el
+  mensaje canónico de "sin información". Campo `confidence` en la respuesta.
+- Historial soportado en los 4 proveedores (Gemini usa role `model`).
 
 ## M4 — Carga de documentos
 - Subida de PDF/Word/Google Docs; extracción de texto; estado de indexado.

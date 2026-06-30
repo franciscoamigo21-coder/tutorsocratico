@@ -24,7 +24,8 @@ export class AnthropicProvider implements AIProvider {
     const userText =
       `${input.prompt}\n\n` +
       (input.context.length
-        ? `FUENTES AUTORIZADAS:\n${input.context.join("\n---\n")}`
+        ? `FUENTES AUTORIZADAS (cita cada una inline como [n]):\n` +
+          input.context.map((c, i) => `[${i + 1}] ${c}`).join("\n")
         : "No hay fuentes disponibles.");
 
     const res = await fetch("https://api.anthropic.com/v1/messages", {
@@ -38,7 +39,10 @@ export class AnthropicProvider implements AIProvider {
         model: this.model,
         max_tokens: input.maxTokens ?? 1024,
         system: input.system,
-        messages: [{ role: "user", content: userText }],
+        messages: [
+          ...(input.history ?? []),
+          { role: "user", content: userText },
+        ],
       }),
     });
 

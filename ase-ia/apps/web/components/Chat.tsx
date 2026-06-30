@@ -36,11 +36,12 @@ export default function Chat() {
   async function ask(text: string) {
     const q = text.trim();
     if (!q || loading) return;
+    const history = messages.map((m) => ({ role: m.role, content: m.content }));
     setMessages((m) => [...m, { role: "user", content: q }]);
     setInput("");
     setLoading(true);
     try {
-      const res = await sendChat({ message: q });
+      const res = await sendChat({ message: q, history });
       setMessages((m) => [
         ...m,
         { role: "assistant", content: res.reply, citations: res.citations },
@@ -97,7 +98,7 @@ export default function Chat() {
                       className="rounded-full bg-brand-gray px-2 py-0.5 text-[11px] font-medium text-brand-blue"
                       title={c.fragmento}
                     >
-                      📄 {c.titulo}
+                      [{c.index}] {c.titulo}
                     </span>
                   ))}
                 </div>

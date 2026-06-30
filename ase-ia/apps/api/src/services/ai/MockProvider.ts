@@ -13,15 +13,25 @@ export class MockProvider implements AIProvider {
   }
 
   async generate(input: GenerateInput): Promise<GenerateResult> {
-    const fuentes = input.context.length
-      ? input.context.map((c, i) => `(${i + 1}) ${c}`).join("\n")
+    if (input.context.length === 0) {
+      // Sin fuentes no se redacta nada: el verificador lo convertirá en NO_INFO.
+      return { text: "", provider: this.name };
+    }
+
+    // Cita inline cada fuente con su marcador [n], como se exige a los
+    // proveedores reales, para poder verificar el anclaje.
+    const fuentes = input.context
+      .map((c, i) => `[${i + 1}] ${c}`)
+      .join("\n");
+
+    const continuidad = input.history?.length
+      ? `(Continuando la conversación.) `
       : "";
 
-    const text = fuentes
-      ? `Según la información del establecimiento:\n\n${fuentes}\n\n` +
-        `(Respuesta simulada por el proveedor "mock". Conecta Gemini, ` +
-        `OpenAI o Anthropic para respuestas reales.)`
-      : "";
+    const text =
+      `${continuidad}Según la información del establecimiento:\n\n${fuentes}\n\n` +
+      `(Respuesta simulada por el proveedor "mock". Conecta Gemini, ` +
+      `OpenAI o Anthropic para respuestas reales.)`;
 
     return { text, provider: this.name };
   }

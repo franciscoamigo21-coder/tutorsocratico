@@ -4,6 +4,11 @@
  * proveedor concreto. Cambiar de Gemini a OpenAI = cambiar una env var.
  */
 
+export interface ChatTurn {
+  role: "user" | "assistant";
+  content: string;
+}
+
 export interface GenerateInput {
   /** Instrucciones de sistema (rol, reglas, "nunca inventar"). */
   system: string;
@@ -11,6 +16,8 @@ export interface GenerateInput {
   prompt: string;
   /** Fragmentos recuperados de la base de conocimiento (grounding). */
   context: string[];
+  /** Historial conversacional reciente (para dar continuidad). */
+  history?: ChatTurn[];
   maxTokens?: number;
 }
 

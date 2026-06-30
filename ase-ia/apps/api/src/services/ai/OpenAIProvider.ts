@@ -21,7 +21,8 @@ export class OpenAIProvider implements AIProvider {
     const userText =
       `${input.prompt}\n\n` +
       (input.context.length
-        ? `FUENTES AUTORIZADAS:\n${input.context.join("\n---\n")}`
+        ? `FUENTES AUTORIZADAS (cita cada una inline como [n]):\n` +
+          input.context.map((c, i) => `[${i + 1}] ${c}`).join("\n")
         : "No hay fuentes disponibles.");
 
     const res = await fetch("https://api.openai.com/v1/chat/completions", {
@@ -35,6 +36,7 @@ export class OpenAIProvider implements AIProvider {
         max_tokens: input.maxTokens ?? 1024,
         messages: [
           { role: "system", content: input.system },
+          ...(input.history ?? []),
           { role: "user", content: userText },
         ],
       }),

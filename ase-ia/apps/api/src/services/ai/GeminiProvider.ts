@@ -29,15 +29,22 @@ export class GeminiProvider implements AIProvider {
     const userText =
       `${input.prompt}\n\n` +
       (input.context.length
-        ? `FUENTES AUTORIZADAS:\n${input.context.join("\n---\n")}`
+        ? `FUENTES AUTORIZADAS (cita cada una inline como [n]):\n` +
+          input.context.map((c, i) => `[${i + 1}] ${c}`).join("\n")
         : "No hay fuentes disponibles.");
+
+    // Gemini usa role "model" para el asistente.
+    const history = (input.history ?? []).map((t) => ({
+      role: t.role === "assistant" ? "model" : "user",
+      parts: [{ text: t.content }],
+    }));
 
     const res = await fetch(url, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         systemInstruction: { parts: [{ text: input.system }] },
-        contents: [{ role: "user", parts: [{ text: userText }] }],
+        contents: [...history, { role: "user", parts: [{ text: userText }] }],
         generationConfig: { maxOutputTokens: input.maxTokens ?? 1024 },
       }),
     });

@@ -16,6 +16,8 @@ export interface ChatResponse {
   citations: Citation[];
   resultado: "answered" | "no_info" | "out_of_scope" | "error";
   proveedorIA: string;
+  /** Confianza del anclaje: "high" si la respuesta cita fuentes válidas. */
+  confidence: "high" | "low";
 }
 
 /** GET /api/health */
