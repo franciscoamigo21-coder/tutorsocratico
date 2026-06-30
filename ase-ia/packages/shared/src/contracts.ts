@@ -25,6 +25,7 @@ export interface HealthResponse {
   version: string;
   aiProvider: string;
   aiConfigured: boolean;
+  authConfigured: boolean;
 }
 
 /** Forma estándar de error de la API. */

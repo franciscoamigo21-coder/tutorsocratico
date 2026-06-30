@@ -1,16 +1,20 @@
 import Chat from "../components/Chat";
+import AuthBar from "../components/AuthBar";
 
 export default function Home() {
   return (
     <main className="mx-auto max-w-3xl px-4 py-10">
-      <header className="mb-8 text-center">
-        <h1 className="text-3xl font-extrabold tracking-tight text-brand-blue">
-          ASE-IA
-        </h1>
-        <p className="mt-1 text-sm text-slate-500">
-          Asistente Escolar de Inteligencia Artificial · Colegio Presidente
-          José Joaquín Prieto · SIP Red de Colegios
-        </p>
+      <header className="mb-8 flex items-start justify-between gap-4">
+        <div>
+          <h1 className="text-3xl font-extrabold tracking-tight text-brand-blue">
+            ASE-IA
+          </h1>
+          <p className="mt-1 text-sm text-slate-500">
+            Asistente Escolar de Inteligencia Artificial · Colegio Presidente
+            José Joaquín Prieto · SIP Red de Colegios
+          </p>
+        </div>
+        <AuthBar />
       </header>
       <Chat />
       <p className="mt-6 text-center text-xs text-slate-400">

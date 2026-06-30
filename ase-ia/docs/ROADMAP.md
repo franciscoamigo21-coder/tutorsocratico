@@ -10,10 +10,15 @@ Cada módulo se entrega **funcional y probado** antes de pasar al siguiente.
 - Web Next.js con chat conectado a la API.
 - Documentación, CI y reglas de Firestore base.
 
-## M1 — Autenticación y roles
-- Google OAuth vía Firebase Auth.
-- Custom claims (`role`, `schoolId`); middleware real (reemplaza `authStub`).
-- Guardas por rol en API y web.
+## ✅ M1 — Autenticación y roles
+- Google OAuth vía Firebase Auth (cliente web) + verificación de ID token con
+  Firebase Admin (API).
+- Custom claims (`role`, `schoolId`); middleware `authenticate` reemplaza al
+  stub; guarda `requireRole(...)` aplicada (p. ej. `/audit` solo docentes).
+- Fallback de desarrollo (cabeceras `x-ase-*`) cuando Firebase no está
+  configurado, para probar roles sin credenciales.
+- Script `pnpm --filter @ase-ia/api set-role -- <uid> <role> [schoolId]`.
+- `useAuth` (web): login/logout con Google y token adjuntado a la API.
 
 ## M2 — UI y widget
 - Avatar ASE-IA, botón flotante pulido, responsive (PC/Chromebook/tablet/móvil).

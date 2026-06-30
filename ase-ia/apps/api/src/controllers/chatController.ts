@@ -23,10 +23,16 @@ const provider = createAIProvider();
  * auditar.
  */
 export async function handleChat(req: Request, res: Response): Promise<void> {
-  // M1 reemplazará esto por el rol real del token verificado.
-  const role: Role = (req.header("x-ase-role") as Role) || "student";
-  const uid = req.header("x-ase-uid") || "anon";
-  const schoolId = req.header("x-ase-school") || "jjp";
+  // El usuario lo establece el middleware `authenticate` (token verificado o
+  // fallback de desarrollo).
+  const user = req.user;
+  if (!user) {
+    res.status(401).json({ error: "No autenticado" });
+    return;
+  }
+  const role: Role = user.role;
+  const uid = user.uid;
+  const schoolId = user.schoolId;
 
   const body = req.body as ChatRequest;
   const message = (body?.message ?? "").toString().trim();

@@ -17,11 +17,13 @@ apps/api/src/
   controllers/       chatController: orquesta el flujo
   services/
     ai/              AIProvider (interfaz) + adapters + factory
+    auth/            firebaseAdmin: verificación de token + custom claims
     rag/             retriever (palabras clave → vectorial en M5)
     guardrails/      scope, system prompt por rol, verificación de anclaje
     workspace/       interfaces + MockAdapter (GoogleApiAdapter en M6)
     audit/           registro de auditoría
-  middleware/        auth (stub→Firebase en M1), errores
+  middleware/        authenticate + requireRole, errores
+  scripts/           setRole (asignar roles vía custom claims)
 apps/web/            Next.js (App Router) + Tailwind
 apps/widget/         loader.js + embed.html
 packages/shared/     types, contracts, constants
@@ -33,6 +35,15 @@ packages/shared/     types, contracts, constants
 3. Añade su clave a `.env.example` y `config/index.ts`.
 La interfaz `generate(input)` no cambia: recibe `system`, `prompt` y `context`
 (fuentes recuperadas) y devuelve `{ text, provider }`.
+
+## Autenticación y roles (M1)
+- `authenticate` (middleware) verifica el ID token de Firebase y pone el usuario
+  en `req.user` (`uid`, `email`, `role`, `schoolId`). Sin Firebase configurado y
+  en desarrollo, usa cabeceras `x-ase-*` (inseguro, solo local).
+- `requireRole("teacher", ...)` restringe rutas por rol; va después de
+  `authenticate`.
+- El rol vive en los **custom claims** del token; se asigna con el script
+  `set-role`. Nunca confíes en un rol enviado por el cliente: solo el del token.
 
 ## Cómo agregar fuentes a la base de conocimiento (M0)
 Edita `apps/api/src/services/rag/retriever.ts` (array `SEED`). En M4/M5 esto se

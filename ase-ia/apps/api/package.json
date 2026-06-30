@@ -8,6 +8,7 @@
     "dev": "tsx watch src/index.ts",
     "build": "tsc",
     "start": "node dist/index.js",
+    "set-role": "tsx src/scripts/setRole.ts",
     "typecheck": "tsc --noEmit",
     "lint": "echo \"(lint pendiente)\"",
     "test": "echo \"(tests pendientes)\""
@@ -16,7 +17,8 @@
     "@ase-ia/shared": "workspace:*",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
-    "express": "^4.19.2"
+    "express": "^4.19.2",
+    "firebase-admin": "^12.3.0"
   },
   "devDependencies": {
     "@types/cors": "^2.8.17",
