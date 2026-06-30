@@ -47,9 +47,14 @@ ase-ia/
 ```bash
 cd ase-ia
 pnpm install
-cp .env.example .env        # AI_PROVIDER=mock funciona sin claves
+cp .env.example .env        # AI_PROVIDER=local funciona sin claves
 pnpm dev                    # levanta API (:4000) y web (:3000)
 ```
+
+> **Conector de IA `local`** (por defecto): redacta respuestas naturales de
+> forma extractiva desde las fuentes, sin clave ni costo y sin inventar. Para
+> respuestas generativas más ricas, cambia `AI_PROVIDER` a `gemini`, `openai` o
+> `anthropic` con su clave — la arquitectura desacoplada no requiere otro cambio.
 
 Probar la API sin la web:
 

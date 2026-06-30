@@ -1,4 +1,5 @@
 import type { AIProvider, GenerateInput, GenerateResult } from "./AIProvider.js";
+import { localEmbedding } from "./localEmbedding.js";
 
 /**
  * Proveedor de desarrollo. No llama a ninguna API externa: redacta una
@@ -42,22 +43,6 @@ export class MockProvider implements AIProvider {
    * suficientes para validar el pipeline de RAG sin claves ni costo.
    */
   async embed(text: string): Promise<number[]> {
-    // Dimensión amplia para reducir colisiones de hashing (matches espurios).
-    const D = 256;
-    const v = new Array<number>(D).fill(0);
-    const tokens = text
-      .toLowerCase()
-      .normalize("NFD")
-      .replace(/[̀-ͯ]/g, "")
-      .replace(/[^a-z0-9\s]/g, " ")
-      .split(/\s+/)
-      .filter((w) => w.length > 2);
-    for (const tok of tokens) {
-      let h = 0;
-      for (let i = 0; i < tok.length; i++) h = (h * 31 + tok.charCodeAt(i)) >>> 0;
-      v[h % D] += 1;
-    }
-    const norm = Math.sqrt(v.reduce((s, x) => s + x * x, 0)) || 1;
-    return v.map((x) => x / norm);
+    return localEmbedding(text);
   }
 }

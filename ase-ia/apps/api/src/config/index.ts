@@ -1,7 +1,12 @@
 /** Configuración central del servidor, leída desde variables de entorno. */
 import "dotenv/config";
 
-export type AiProviderName = "gemini" | "openai" | "anthropic" | "mock";
+export type AiProviderName =
+  | "gemini"
+  | "openai"
+  | "anthropic"
+  | "local"
+  | "mock";
 
 function parseOrigins(value: string | undefined): string[] {
   if (!value) return ["http://localhost:3000"];

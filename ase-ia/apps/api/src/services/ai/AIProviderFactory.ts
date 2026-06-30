@@ -1,6 +1,7 @@
 import { config } from "../../config/index.js";
 import type { AIProvider } from "./AIProvider.js";
 import { MockProvider } from "./MockProvider.js";
+import { LocalProvider } from "./LocalProvider.js";
 import { GeminiProvider } from "./GeminiProvider.js";
 import { OpenAIProvider } from "./OpenAIProvider.js";
 import { AnthropicProvider } from "./AnthropicProvider.js";
@@ -23,6 +24,8 @@ export function createAIProvider(): AIProvider {
     case "anthropic":
       candidate = new AnthropicProvider(anthropicKey, model);
       break;
+    case "local":
+      return new LocalProvider();
     case "mock":
     default:
       return new MockProvider();
