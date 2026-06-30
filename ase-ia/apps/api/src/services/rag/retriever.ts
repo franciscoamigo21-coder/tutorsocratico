@@ -44,13 +44,23 @@ const SEED: SeedDoc[] = [
   },
 ];
 
+/** Normaliza: minúsculas, sin acentos ni signos de puntuación. */
+function normalize(s: string): string {
+  return s
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[̀-ͯ]/g, "")
+    .replace(/[^a-z0-9\s]/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
 function score(query: string, texto: string): number {
-  const q = query.toLowerCase();
-  const palabras = q.split(/\s+/).filter((w) => w.length > 3);
-  return palabras.reduce(
-    (acc, w) => acc + (texto.toLowerCase().includes(w) ? 1 : 0),
-    0,
-  );
+  const text = normalize(texto);
+  const palabras = normalize(query)
+    .split(" ")
+    .filter((w) => w.length > 3);
+  return palabras.reduce((acc, w) => acc + (text.includes(w) ? 1 : 0), 0);
 }
 
 /** Devuelve los fragmentos más relevantes visibles para el rol del usuario. */

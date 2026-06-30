@@ -42,10 +42,17 @@ curl -X POST http://localhost:4000/api/chat \
 ```
 
 ## 5. Probar el widget embebible
-Sirve `apps/widget/src/` con cualquier servidor estático y abre una página con:
-```html
-<script src="loader.js" data-api="http://localhost:4000"></script>
+```bash
+pnpm --filter @ase-ia/widget build   # genera dist/ (loader.js minificado + HTML)
+pnpm --filter @ase-ia/widget dev      # sirve src/ en http://localhost:5050
 ```
+Abre `http://localhost:5050/demo.html` (página de ejemplo de un sitio
+institucional con el widget incrustado). Para incrustarlo en producción basta
+una línea:
+```html
+<script src="loader.js" data-api="https://api.ase-ia" data-embed="embed.html"></script>
+```
+> El dominio donde se incrusta debe estar en `ALLOWED_ORIGINS` de la API (CORS).
 
 ## 6. Build de producción
 ```bash

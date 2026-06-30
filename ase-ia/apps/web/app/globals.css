@@ -9,3 +9,26 @@
 body {
   background: #ffffff;
 }
+
+/* Indicador de "escribiendo…" */
+.dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 9999px;
+  background: #9fb0c8;
+  display: inline-block;
+  animation: ase-bounce 1s infinite ease-in-out;
+}
+
+@keyframes ase-bounce {
+  0%,
+  80%,
+  100% {
+    transform: translateY(0);
+    opacity: 0.5;
+  }
+  40% {
+    transform: translateY(-4px);
+    opacity: 1;
+  }
+}

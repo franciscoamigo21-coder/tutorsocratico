@@ -17,8 +17,8 @@ declara.
 | Módulo | Descripción | Estado |
 |--------|-------------|:------:|
 | **M0** | Scaffolding monorepo, abstracción de IA, guardrails, widget, docs | ✅ |
-| **M1** | Auth Google (Firebase) + roles (custom claims) + guardas | ✅ Actual |
-| M2 | UI Chat + widget pulido | ⏳ |
+| **M1** | Auth Google (Firebase) + roles (custom claims) + guardas | ✅ |
+| **M2** | UI Chat + avatar + botón flotante + widget empaquetado | ✅ Actual |
 | M3 | Orquestador IA + grounding | 🟡 base lista |
 | M4 | Carga de documentos | ⏳ |
 | M5 | RAG (embeddings) | ⏳ |

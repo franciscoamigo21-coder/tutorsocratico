@@ -20,9 +20,15 @@ Cada módulo se entrega **funcional y probado** antes de pasar al siguiente.
 - Script `pnpm --filter @ase-ia/api set-role -- <uid> <role> [schoolId]`.
 - `useAuth` (web): login/logout con Google y token adjuntado a la API.
 
-## M2 — UI y widget
-- Avatar ASE-IA, botón flotante pulido, responsive (PC/Chromebook/tablet/móvil).
-- Bundling del widget; snippet de incrustación de una línea.
+## ✅ M2 — UI y widget
+- Avatar ASE-IA (SVG), botón flotante tipo chatbot, panel responsive (tarjeta
+  en escritorio, pantalla completa en móvil), indicador de "escribiendo…",
+  citas como chips.
+- Landing institucional con tarjetas de capacidades.
+- Widget empaquetado con esbuild (`loader.js` minificado + `embed.html` +
+  `demo.html`); incrustación de una línea.
+- Retriever: normalización de acentos/puntuación (mejor recuperación).
+- Verificado visualmente con Playwright (web y widget, escritorio y móvil).
 
 ## M3 — Orquestador IA + grounding (consolidar)
 - Verificador de anclaje más estricto; citas inline.
