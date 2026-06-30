@@ -40,9 +40,18 @@ Cada módulo se entrega **funcional y probado** antes de pasar al siguiente.
   mensaje canónico de "sin información". Campo `confidence` en la respuesta.
 - Historial soportado en los 4 proveedores (Gemini usa role `model`).
 
-## M4 — Carga de documentos
-- Subida de PDF/Word/Google Docs; extracción de texto; estado de indexado.
-- Colección `documents` + visibilidad por rol.
+## ✅ M4 — Carga de documentos
+- Subida de archivos (TXT, MD, PDF, DOCX) o texto pegado; extracción de texto
+  (pdf-parse, mammoth) y troceado (chunking) por párrafos.
+- `DocumentStore` con dos implementaciones: `InMemory` (dev, sembrado) y
+  `Firestore` (`schools/{id}/documents` + `chunks`), elegidas según config.
+- El retriever consume los chunks del almacén (ya no una base en memoria fija),
+  filtrados por establecimiento y rol.
+- Endpoints: `GET /documents`, `POST /documents` (docente), `DELETE` (docente).
+  Página web `/admin/documents` para cargar/listar/eliminar.
+- Google Docs reales se integran en M6 (por ahora: exportar a PDF/DOCX o pegar).
+- Verificado: TXT, texto pegado, PDF (real, vía Chromium) y DOCX (real, vía
+  jszip) extraen correctamente; visibilidad por rol y borrado probados.
 
 ## M5 — RAG
 - Embeddings vía `AIProvider.embed`; vector store (Firestore/Vertex/pgvector).

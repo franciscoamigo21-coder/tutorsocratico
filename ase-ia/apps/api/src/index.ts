@@ -3,6 +3,7 @@ import cors from "cors";
 import { config, VERSION } from "./config/index.js";
 import { router } from "./routes/index.js";
 import { errorHandler, notFound } from "./middleware/errorHandler.js";
+import { seedDefaultDocuments } from "./services/documents/index.js";
 
 const app = express();
 
@@ -22,7 +23,8 @@ app.use("/api", router);
 app.use(notFound);
 app.use(errorHandler);
 
-app.listen(config.port, () => {
+app.listen(config.port, async () => {
+  await seedDefaultDocuments();
   console.log(
     `\n  ASE-IA API v${VERSION}\n` +
       `  → http://localhost:${config.port}/api/health\n` +

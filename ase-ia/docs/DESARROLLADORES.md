@@ -57,9 +57,16 @@ La interfaz `generate(input)` no cambia: recibe `system`, `prompt` y `context`
 - Para añadir un proveedor nuevo, recuerda incluir `input.history` en su formato
   de mensajes y numerar `input.context` como `[n]`.
 
-## Cómo agregar fuentes a la base de conocimiento (M0)
-Edita `apps/api/src/services/rag/retriever.ts` (array `SEED`). En M4/M5 esto se
-reemplaza por documentos reales indexados en Firestore + embeddings.
+## Base de conocimiento (M4)
+- Subida: `POST /api/documents` (multipart `file` o campo `texto`) — solo
+  docentes. La extracción (`services/documents/extract.ts`) soporta TXT, MD, PDF
+  y DOCX; el troceado vive en `chunk.ts`.
+- Almacenamiento: `DocumentStore` (interfaz) con `InMemoryDocumentStore` (dev,
+  sembrado en `services/documents/index.ts`) y `FirestoreDocumentStore`. El
+  retriever lee `getChunks(schoolId, role)`, así que respeta visibilidad por rol.
+- Documentos base: edita el array `SEED` en `services/documents/index.ts`. En
+  producción se cargan vía la API / página `/admin/documents`.
+- M5 añadirá embeddings por chunk sin cambiar la interfaz del `DocumentStore`.
 
 ## Convenciones
 - TypeScript estricto. Tipos compartidos siempre desde `@ase-ia/shared`.

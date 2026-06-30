@@ -81,8 +81,8 @@ export async function handleChat(req: Request, res: Response): Promise<void> {
     return;
   }
 
-  // Recuperación de fuentes autorizadas para el rol.
-  const citations = await retrieve(message, role);
+  // Recuperación de fuentes autorizadas para el rol y establecimiento.
+  const citations = await retrieve(message, role, schoolId);
 
   // Guardrail 2: sin fuentes → NO se llama a la IA, se responde "no info".
   if (citations.length === 0) {

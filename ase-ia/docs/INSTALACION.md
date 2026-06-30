@@ -39,7 +39,15 @@ curl http://localhost:4000/api/health
 curl -X POST http://localhost:4000/api/chat \
   -H "Content-Type: application/json" \
   -d '{"message":"¿Cuándo termina el semestre?"}'
+
+# Subir un documento a la base de conocimiento (rol docente)
+curl -X POST http://localhost:4000/api/documents \
+  -H "x-ase-role: teacher" \
+  -F "titulo=Reglamento · Uniforme" -F "tipo=reglamento_interno" \
+  -F "visibleParaRoles=student,teacher,guardian" \
+  -F "file=@/ruta/al/documento.pdf"
 ```
+> En la web, los docentes gestionan documentos en `/admin/documents`.
 
 ## 5. Probar el widget embebible
 ```bash

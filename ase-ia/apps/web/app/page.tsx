@@ -22,7 +22,15 @@ export default function Home() {
               <div className="text-[11px] text-slate-500">SIP Red de Colegios</div>
             </div>
           </div>
-          <AuthBar />
+          <div className="flex items-center gap-4">
+            <a
+              href="/admin/documents"
+              className="hidden text-sm font-medium text-brand-blue hover:underline sm:inline"
+            >
+              Documentos
+            </a>
+            <AuthBar />
+          </div>
         </div>
       </header>
 

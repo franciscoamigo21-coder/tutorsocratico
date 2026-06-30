@@ -1,8 +1,14 @@
 import { Router } from "express";
+import multer from "multer";
 import type { HealthResponse } from "@ase-ia/shared";
 import { config, VERSION } from "../config/index.js";
 import { createAIProvider } from "../services/ai/AIProviderFactory.js";
 import { handleChat } from "../controllers/chatController.js";
+import {
+  listDocuments,
+  uploadDocument,
+  deleteDocument,
+} from "../controllers/documentsController.js";
 import { authenticate, requireRole } from "../middleware/auth.js";
 import { isAuthConfigured } from "../services/auth/firebaseAdmin.js";
 import { classroom, calendar } from "../services/workspace/index.js";
@@ -10,6 +16,12 @@ import { recentLogs } from "../services/audit/index.js";
 
 const router = Router();
 const provider = createAIProvider();
+
+// Subida en memoria, límite 10 MB.
+const upload = multer({
+  storage: multer.memoryStorage(),
+  limits: { fileSize: 10 * 1024 * 1024 },
+});
 
 /** GET /api/health — estado del servicio, proveedor de IA y autenticación. */
 router.get("/health", (_req, res) => {
@@ -31,6 +43,22 @@ router.get("/auth/session", authenticate, (req, res) => {
 
 /** POST /api/chat — consulta principal con grounding (requiere sesión). */
 router.post("/chat", authenticate, handleChat);
+
+/** Base de conocimiento. */
+router.get("/documents", authenticate, listDocuments);
+router.post(
+  "/documents",
+  authenticate,
+  requireRole("teacher"),
+  upload.single("file"),
+  uploadDocument,
+);
+router.delete(
+  "/documents/:id",
+  authenticate,
+  requireRole("teacher"),
+  deleteDocument,
+);
 
 /** Workspace (simulado en M0/M1). */
 router.get("/workspace/assignments", authenticate, async (req, res) => {
