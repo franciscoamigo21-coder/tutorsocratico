@@ -87,6 +87,19 @@ Cada módulo se entrega **funcional y probado** antes de pasar al siguiente.
   positivos; se subió la dimensión a 256 y el umbral de coseno a 0.2, así
   consultas ajenas ("capital de Francia") devuelven "sin información".
 
-## M8 — Observabilidad y despliegue
-- Métricas, alertas, rate limiting productivo.
-- Deploy en Firebase Hosting + Cloud Run/Functions.
+## ✅ M8 — Observabilidad y despliegue
+- Hardening: `helmet` (cabeceras), `express-rate-limit` (120/min general,
+  20/min en `/api/chat`), `trust proxy`. En producción se desactiva el fallback
+  de autenticación por cabeceras (exige Firebase real).
+- Observabilidad: logger de peticiones en JSON, `GET /api/metrics` (uptime,
+  requests por clase de estado, resultados de chat).
+- Despliegue: `Dockerfile` de la API (Cloud Run), export estático de la web
+  (`output: export` → `out/`), `firebase.json` ajustado y `docs/DESPLIEGUE.md`.
+- Verificado: build de producción de la API corre desde `dist`; export estático
+  genera las 8 rutas; métricas y rate-limit headers correctos.
+
+---
+
+**v1 completo (M0–M8).** Próximos pasos sugeridos: plomería de tokens OAuth para
+Workspace real (Gmail/Docs/Sheets/Slides), rol "admin" dedicado, vector store
+gestionado (Vertex/pgvector) y tests automatizados en CI.

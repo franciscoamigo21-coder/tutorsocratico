@@ -1,11 +1,20 @@
 import express from "express";
 import cors from "cors";
+import helmet from "helmet";
+import rateLimit from "express-rate-limit";
 import { config, VERSION } from "./config/index.js";
 import { router } from "./routes/index.js";
 import { errorHandler, notFound } from "./middleware/errorHandler.js";
+import { requestLogger } from "./middleware/observability.js";
 import { seedDefaultDocuments } from "./services/documents/index.js";
 
 const app = express();
+
+// Detrás de un proxy (Cloud Run / Firebase) para rate-limit por IP real.
+app.set("trust proxy", 1);
+
+// Hardening de cabeceras HTTP.
+app.use(helmet());
 
 app.use(
   cors({
@@ -17,6 +26,14 @@ app.use(
   }),
 );
 app.use(express.json({ limit: "1mb" }));
+app.use(requestLogger);
+
+// Límite general y límite específico (más estricto) para el chat.
+app.use("/api", rateLimit({ windowMs: 60_000, limit: 120, standardHeaders: true, legacyHeaders: false }));
+app.use(
+  "/api/chat",
+  rateLimit({ windowMs: 60_000, limit: 20, standardHeaders: true, legacyHeaders: false }),
+);
 
 app.use("/api", router);
 

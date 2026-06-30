@@ -15,7 +15,8 @@ const env = process.env.NODE_ENV ?? "development";
 
 export const config = {
   env,
-  port: Number(process.env.API_PORT ?? 4000),
+  // Cloud Run inyecta PORT; en local usamos API_PORT.
+  port: Number(process.env.PORT ?? process.env.API_PORT ?? 4000),
   allowedOrigins: parseOrigins(process.env.ALLOWED_ORIGINS),
 
   ai: {

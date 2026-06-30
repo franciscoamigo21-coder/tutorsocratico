@@ -14,6 +14,7 @@ import { authenticate, requireRole } from "../middleware/auth.js";
 import { isAuthConfigured } from "../services/auth/firebaseAdmin.js";
 import { classroom, calendar, drive } from "../services/workspace/index.js";
 import { recentLogs } from "../services/audit/index.js";
+import { snapshot } from "../services/metrics/index.js";
 
 const router = Router();
 const provider = createAIProvider();
@@ -35,6 +36,11 @@ router.get("/health", (_req, res) => {
     authConfigured: isAuthConfigured(),
   };
   res.json(body);
+});
+
+/** GET /api/metrics — métricas operacionales (uptime, requests, resultados). */
+router.get("/metrics", (_req, res) => {
+  res.json(snapshot());
 });
 
 /** GET /api/auth/session — devuelve el usuario autenticado (rol incluido). */

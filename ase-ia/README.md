@@ -23,10 +23,11 @@ declara.
 | **M4** | Carga de documentos (TXT/MD/PDF/DOCX) + base de conocimiento | ✅ |
 | **M5** | RAG: embeddings por chunk + búsqueda vectorial (coseno) | ✅ |
 | **M6** | Google Workspace integrado al chat (Classroom/Calendar/Drive) | ✅ |
-| **M7** | Panel admin: documentos + roles + auditoría | ✅ Actual |
-| M8 | Observabilidad + deploy | ⏳ |
+| **M7** | Panel admin: documentos + roles + auditoría | ✅ |
+| **M8** | Observabilidad (métricas/logs) + hardening + deploy | ✅ |
 
-Detalle en [`docs/ROADMAP.md`](docs/ROADMAP.md).
+**v1 completo (M0–M8).** Detalle en [`docs/ROADMAP.md`](docs/ROADMAP.md) ·
+despliegue en [`docs/DESPLIEGUE.md`](docs/DESPLIEGUE.md).
 
 ## Estructura
 
