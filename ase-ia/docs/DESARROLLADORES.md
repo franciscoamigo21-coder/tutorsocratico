@@ -66,7 +66,9 @@ La interfaz `generate(input)` no cambia: recibe `system`, `prompt` y `context`
   retriever lee `getChunks(schoolId, role)`, así que respeta visibilidad por rol.
 - Documentos base: edita el array `SEED` en `services/documents/index.ts`. En
   producción se cargan vía la API / página `/admin/documents`.
-- M5 añadirá embeddings por chunk sin cambiar la interfaz del `DocumentStore`.
+- Embeddings (M5): se calculan en la ingesta (`services/rag/embeddings.ts`,
+  best-effort) y se guardan en el chunk. El retriever usa coseno y, si no hay
+  embeddings, cae a léxico — sin cambiar la interfaz del `DocumentStore`.
 
 ## Convenciones
 - TypeScript estricto. Tipos compartidos siempre desde `@ase-ia/shared`.

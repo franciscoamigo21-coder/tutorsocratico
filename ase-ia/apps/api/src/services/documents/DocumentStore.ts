@@ -5,6 +5,7 @@ import type {
   Role,
 } from "@ase-ia/shared";
 import { chunkText } from "./chunk.js";
+import { embedMany } from "../rag/embeddings.js";
 
 export interface AddDocumentInput {
   schoolId: string;
@@ -31,11 +32,11 @@ function makeId(prefix: string): string {
   return `${prefix}_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
 }
 
-/** Construye documento + chunks a partir del texto. */
-function buildDoc(input: AddDocumentInput): {
+/** Construye documento + chunks (con embeddings, best-effort) a partir del texto. */
+async function buildDoc(input: AddDocumentInput): Promise<{
   doc: KnowledgeDocument;
   chunks: DocumentChunk[];
-} {
+}> {
   const docId = makeId("doc");
   const doc: KnowledgeDocument = {
     id: docId,
@@ -47,10 +48,14 @@ function buildDoc(input: AddDocumentInput): {
     status: "indexed",
     createdAt: new Date().toISOString(),
   };
-  const chunks: DocumentChunk[] = chunkText(input.texto).map((texto, i) => ({
+  const textos = chunkText(input.texto);
+  // Se embebe el título junto al fragmento para reforzar las palabras clave.
+  const vectores = await embedMany(textos.map((t) => `${input.titulo}. ${t}`));
+  const chunks: DocumentChunk[] = textos.map((texto, i) => ({
     id: makeId("chunk"),
     docId,
     texto,
+    embedding: vectores[i] ?? undefined,
     metadata: { titulo: input.titulo, tipo: input.tipo, posicion: i },
   }));
   return { doc, chunks };
@@ -63,7 +68,7 @@ export class InMemoryDocumentStore implements DocumentStore {
   private visibility = new Map<string, Role[]>();
 
   async addDocument(input: AddDocumentInput): Promise<KnowledgeDocument> {
-    const { doc, chunks } = buildDoc(input);
+    const { doc, chunks } = await buildDoc(input);
     this.docs.set(doc.id, doc);
     this.chunks.push(...chunks);
     this.visibility.set(doc.id, input.visibleParaRoles);

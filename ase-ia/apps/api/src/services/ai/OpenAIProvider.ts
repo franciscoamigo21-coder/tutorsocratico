@@ -51,4 +51,19 @@ export class OpenAIProvider implements AIProvider {
     const text = data?.choices?.[0]?.message?.content?.trim() ?? "";
     return { text, provider: this.name };
   }
+
+  async embed(text: string): Promise<number[]> {
+    if (!this.isConfigured()) throw new Error("OpenAIProvider: falta OPENAI_API_KEY");
+    const res = await fetch("https://api.openai.com/v1/embeddings", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${this.apiKey}`,
+      },
+      body: JSON.stringify({ model: "text-embedding-3-small", input: text }),
+    });
+    if (!res.ok) throw new Error(`OpenAI embed ${res.status}`);
+    const data = (await res.json()) as any;
+    return (data?.data?.[0]?.embedding ?? []) as number[];
+  }
 }

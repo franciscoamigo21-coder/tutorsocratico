@@ -53,9 +53,17 @@ Cada módulo se entrega **funcional y probado** antes de pasar al siguiente.
 - Verificado: TXT, texto pegado, PDF (real, vía Chromium) y DOCX (real, vía
   jszip) extraen correctamente; visibilidad por rol y borrado probados.
 
-## M5 — RAG
-- Embeddings vía `AIProvider.embed`; vector store (Firestore/Vertex/pgvector).
-- Retriever vectorial reemplaza el de palabras clave sin cambiar la interfaz.
+## ✅ M5 — RAG
+- `AIProvider.embed` implementado: Mock (embedding determinista offline),
+  Gemini (text-embedding-004), OpenAI (text-embedding-3-small). Anthropic no
+  ofrece embeddings → cae a léxico.
+- Embeddings calculados por chunk en la ingesta (best-effort) y guardados en el
+  chunk (memoria y Firestore).
+- Retriever VECTORIAL por similitud coseno con umbral; respaldo LÉXICO
+  automático si no hay embeddings o el proveedor no los soporta. La interfaz
+  `retrieve()` no cambió.
+- Verificado: ranking vectorial correcto (la consulta de calendario rankea el
+  Calendario por encima del reglamento).
 
 ## M6 — Google Workspace (real)
 - `GoogleApiAdapter` para Classroom, Drive, Calendar, Gmail, Docs, Sheets, Slides.

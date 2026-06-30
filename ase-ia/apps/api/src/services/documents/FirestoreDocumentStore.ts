@@ -6,6 +6,7 @@ import type {
 import { chunkText } from "./chunk.js";
 import type { AddDocumentInput, DocumentStore } from "./DocumentStore.js";
 import { config } from "../../config/index.js";
+import { embedMany } from "../rag/embeddings.js";
 
 /**
  * Almacén en Firestore. Estructura:
@@ -49,9 +50,13 @@ export class FirestoreDocumentStore implements DocumentStore {
       status: "indexed",
       createdAt: new Date().toISOString(),
     };
+    const textos = chunkText(input.texto);
+    const vectores = await embedMany(
+      textos.map((t) => `${input.titulo}. ${t}`),
+    );
     const batch = db.batch();
     batch.set(docRef, doc);
-    chunkText(input.texto).forEach((texto, i) => {
+    textos.forEach((texto, i) => {
       const cRef = db.collection(`schools/${input.schoolId}/chunks`).doc();
       const chunk: DocumentChunk = {
         id: cRef.id,
@@ -59,6 +64,8 @@ export class FirestoreDocumentStore implements DocumentStore {
         texto,
         metadata: { titulo: input.titulo, tipo: input.tipo, posicion: i },
       };
+      // Firestore no acepta campos undefined: solo se incluye si hay vector.
+      if (vectores[i]) chunk.embedding = vectores[i]!;
       batch.set(cRef, chunk);
     });
     await batch.commit();

@@ -59,4 +59,22 @@ export class GeminiProvider implements AIProvider {
       data?.candidates?.[0]?.content?.parts?.[0]?.text?.trim() ?? "";
     return { text, provider: this.name };
   }
+
+  async embed(text: string): Promise<number[]> {
+    if (!this.isConfigured()) throw new Error("GeminiProvider: falta GEMINI_API_KEY");
+    const url =
+      `https://generativelanguage.googleapis.com/v1beta/models/` +
+      `text-embedding-004:embedContent?key=${this.apiKey}`;
+    const res = await fetch(url, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        model: "models/text-embedding-004",
+        content: { parts: [{ text }] },
+      }),
+    });
+    if (!res.ok) throw new Error(`Gemini embed ${res.status}`);
+    const data = (await res.json()) as any;
+    return (data?.embedding?.values ?? []) as number[];
+  }
 }

@@ -20,8 +20,8 @@ declara.
 | **M1** | Auth Google (Firebase) + roles (custom claims) + guardas | ✅ |
 | **M2** | UI Chat + avatar + botón flotante + widget empaquetado | ✅ |
 | **M3** | Orquestador IA: historial + citas inline + verificador estricto | ✅ |
-| **M4** | Carga de documentos (TXT/MD/PDF/DOCX) + base de conocimiento | ✅ Actual |
-| M5 | RAG (embeddings) | ⏳ |
+| **M4** | Carga de documentos (TXT/MD/PDF/DOCX) + base de conocimiento | ✅ |
+| **M5** | RAG: embeddings por chunk + búsqueda vectorial (coseno) | ✅ Actual |
 | M6 | Google Workspace (real) | 🟡 mock listo |
 | M7 | Panel admin | ⏳ |
 | M8 | Observabilidad + deploy | ⏳ |

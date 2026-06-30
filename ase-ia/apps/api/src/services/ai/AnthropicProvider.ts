@@ -55,4 +55,12 @@ export class AnthropicProvider implements AIProvider {
     const block = (data?.content ?? []).find((b: any) => b.type === "text");
     return { text: (block?.text ?? "").trim(), provider: this.name };
   }
+
+  /**
+   * Anthropic no ofrece un endpoint de embeddings nativo. Se lanza error a
+   * propósito: el servicio de RAG lo detecta y cae a recuperación léxica.
+   */
+  async embed(_text: string): Promise<number[]> {
+    throw new Error("AnthropicProvider: embeddings no soportados");
+  }
 }

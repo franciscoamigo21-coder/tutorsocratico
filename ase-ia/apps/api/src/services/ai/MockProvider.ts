@@ -35,4 +35,28 @@ export class MockProvider implements AIProvider {
 
     return { text, provider: this.name };
   }
+
+  /**
+   * Embedding determinista (bolsa de palabras con hashing) para desarrollo: no
+   * llama a ninguna API y produce vectores comparables por similitud coseno,
+   * suficientes para validar el pipeline de RAG sin claves ni costo.
+   */
+  async embed(text: string): Promise<number[]> {
+    const D = 64;
+    const v = new Array<number>(D).fill(0);
+    const tokens = text
+      .toLowerCase()
+      .normalize("NFD")
+      .replace(/[̀-ͯ]/g, "")
+      .replace(/[^a-z0-9\s]/g, " ")
+      .split(/\s+/)
+      .filter((w) => w.length > 2);
+    for (const tok of tokens) {
+      let h = 0;
+      for (let i = 0; i < tok.length; i++) h = (h * 31 + tok.charCodeAt(i)) >>> 0;
+      v[h % D] += 1;
+    }
+    const norm = Math.sqrt(v.reduce((s, x) => s + x * x, 0)) || 1;
+    return v.map((x) => x / norm);
+  }
 }
