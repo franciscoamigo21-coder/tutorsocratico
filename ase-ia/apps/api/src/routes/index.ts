@@ -9,6 +9,7 @@ import {
   uploadDocument,
   deleteDocument,
 } from "../controllers/documentsController.js";
+import { getLogs, assignRole } from "../controllers/adminController.js";
 import { authenticate, requireRole } from "../middleware/auth.js";
 import { isAuthConfigured } from "../services/auth/firebaseAdmin.js";
 import { classroom, calendar, drive } from "../services/workspace/index.js";
@@ -72,9 +73,13 @@ router.get("/workspace/drive", authenticate, async (req, res) => {
   res.json(await drive.searchFiles(req.user!.uid, q));
 });
 
-/** Auditoría: solo docentes (en M7 pasará a rol admin). */
+/** Auditoría: solo docentes. */
 router.get("/audit", authenticate, requireRole("teacher"), (_req, res) => {
   res.json(recentLogs());
 });
+
+/** Panel de administración (solo docentes). */
+router.get("/admin/logs", authenticate, requireRole("teacher"), getLogs);
+router.post("/admin/roles", authenticate, requireRole("teacher"), assignRole);
 
 export { router, config };

@@ -22,8 +22,8 @@ declara.
 | **M3** | Orquestador IA: historial + citas inline + verificador estricto | ✅ |
 | **M4** | Carga de documentos (TXT/MD/PDF/DOCX) + base de conocimiento | ✅ |
 | **M5** | RAG: embeddings por chunk + búsqueda vectorial (coseno) | ✅ |
-| **M6** | Google Workspace integrado al chat (Classroom/Calendar/Drive) | ✅ Actual |
-| M7 | Panel admin | ⏳ |
+| **M6** | Google Workspace integrado al chat (Classroom/Calendar/Drive) | ✅ |
+| **M7** | Panel admin: documentos + roles + auditoría | ✅ Actual |
 | M8 | Observabilidad + deploy | ⏳ |
 
 Detalle en [`docs/ROADMAP.md`](docs/ROADMAP.md).

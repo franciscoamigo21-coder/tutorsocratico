@@ -11,6 +11,13 @@ import { embed, cosineSimilarity } from "./embeddings.js";
  * cambia respecto de M4.
  */
 
+/**
+ * Umbral mínimo de similitud coseno para considerar un fragmento relevante.
+ * Evita falsos positivos (consultas ajenas que "matchean" por ruido) y así
+ * preserva el principio de no inventar.
+ */
+const RELEVANCE_THRESHOLD = 0.2;
+
 /** Normaliza: minúsculas, sin acentos ni signos de puntuación. */
 function normalize(s: string): string {
   return s
@@ -59,7 +66,7 @@ export async function retrieve(
     if (qVec) {
       const ranked = conEmbedding
         .map((c) => ({ c, s: cosineSimilarity(qVec, c.embedding!) }))
-        .filter((r) => r.s > 0.1) // umbral mínimo de relevancia
+        .filter((r) => r.s >= RELEVANCE_THRESHOLD)
         .sort((a, b) => b.s - a.s)
         .slice(0, limit)
         .map((r) => r.c);

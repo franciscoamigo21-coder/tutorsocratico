@@ -1,7 +1,9 @@
 import type {
+  AuditLog,
   ChatRequest,
   ChatResponse,
   KnowledgeDocument,
+  Role,
   SessionInfo,
 } from "@ase-ia/shared";
 
@@ -70,6 +72,26 @@ export async function deleteDocument(id: string): Promise<void> {
   const res = await fetch(`${API_URL}/api/documents/${id}`, {
     method: "DELETE",
     headers: headers(),
+  });
+  await parse<{ ok: boolean }>(res);
+}
+
+/** Registros de auditoría (solo docentes). */
+export async function fetchAuditLogs(): Promise<AuditLog[]> {
+  const res = await fetch(`${API_URL}/api/admin/logs`, { headers: headers() });
+  return parse<AuditLog[]>(res);
+}
+
+/** Asigna un rol a un usuario por correo (solo docentes). */
+export async function assignRole(
+  email: string,
+  role: Role,
+  schoolId?: string,
+): Promise<void> {
+  const res = await fetch(`${API_URL}/api/admin/roles`, {
+    method: "POST",
+    headers: headers(),
+    body: JSON.stringify({ email, role, schoolId }),
   });
   await parse<{ ok: boolean }>(res);
 }

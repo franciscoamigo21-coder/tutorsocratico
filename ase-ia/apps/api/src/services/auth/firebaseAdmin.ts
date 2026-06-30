@@ -74,3 +74,15 @@ export async function setUserRole(
   if (!auth) throw new Error("Firebase Auth no está configurado.");
   await auth.setCustomUserClaims(uid, { role, schoolId });
 }
+
+/** Asigna rol buscando al usuario por su correo (panel admin). */
+export async function setRoleByEmail(
+  email: string,
+  role: Role,
+  schoolId: string,
+): Promise<void> {
+  const auth = await getAuth();
+  if (!auth) throw new Error("Firebase Auth no está configurado.");
+  const user = await auth.getUserByEmail(email);
+  await auth.setCustomUserClaims(user.uid, { role, schoolId });
+}

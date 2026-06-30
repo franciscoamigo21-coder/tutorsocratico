@@ -77,9 +77,15 @@ Cada módulo se entrega **funcional y probado** antes de pasar al siguiente.
 - Pendiente para producción: plomería del access token OAuth (con scopes) desde
   el front a los `GoogleApiAdapter`; ampliar a Gmail/Docs/Sheets/Slides.
 
-## M7 — Panel admin
-- Gestión de documentos, roles y visibilidad.
-- Visor de `audit_logs`.
+## ✅ M7 — Panel admin
+- Dashboard `/admin` con accesos a Documentos, Roles y Auditoría.
+- Documentos: cargar/listar/eliminar (M4).
+- Roles: asignar perfil por correo (`POST /admin/roles`, custom claims). En dev
+  sin Firebase devuelve 501 con explicación; en prod usa Firebase Admin.
+- Auditoría: `GET /admin/logs` + tabla web con resultado por consulta.
+- Bug corregido (gracias a la auditoría): el embedding mock generaba falsos
+  positivos; se subió la dimensión a 256 y el umbral de coseno a 0.2, así
+  consultas ajenas ("capital de Francia") devuelven "sin información".
 
 ## M8 — Observabilidad y despliegue
 - Métricas, alertas, rate limiting productivo.

@@ -24,10 +24,10 @@ export default function Home() {
           </div>
           <div className="flex items-center gap-4">
             <a
-              href="/admin/documents"
+              href="/admin"
               className="hidden text-sm font-medium text-brand-blue hover:underline sm:inline"
             >
-              Documentos
+              Administración
             </a>
             <AuthBar />
           </div>

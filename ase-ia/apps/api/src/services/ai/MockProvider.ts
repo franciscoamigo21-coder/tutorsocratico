@@ -42,7 +42,8 @@ export class MockProvider implements AIProvider {
    * suficientes para validar el pipeline de RAG sin claves ni costo.
    */
   async embed(text: string): Promise<number[]> {
-    const D = 64;
+    // Dimensión amplia para reducir colisiones de hashing (matches espurios).
+    const D = 256;
     const v = new Array<number>(D).fill(0);
     const tokens = text
       .toLowerCase()
