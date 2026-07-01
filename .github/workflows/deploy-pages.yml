@@ -7,7 +7,6 @@ on:
   push:
     branches:
       - claude/awesome-ride-3y1cxw
-      - claude/ase-ia-school-assistant-yn4c88
   workflow_dispatch:
 
 permissions:
