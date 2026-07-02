@@ -131,6 +131,22 @@
   footer{max-width:1080px;margin:0 auto;padding:0 18px 48px;color:var(--muted);font-size:12px;text-align:center;line-height:1.7;}
   footer a{color:var(--azul);font-weight:600;}
 
+  /* Indicador "trabajando" */
+  .typing{align-items:center;gap:9px;}
+  .tlabel{font-size:12.5px;color:var(--azul);font-weight:700;}
+  /* Chips de fuente (clicables) */
+  .cite{cursor:pointer;transition:.12s;}
+  .cite:hover{background:#dbe7ff;border-color:#b9d1ff;transform:translateY(-1px);}
+  /* Modal de fuente */
+  #srcModal{position:fixed;inset:0;z-index:200;display:none;align-items:center;justify-content:center;padding:20px;background:rgba(8,22,52,.55);backdrop-filter:blur(3px);}
+  #srcModal.open{display:flex;animation:fadeUp .2s ease both;}
+  #srcModal .card{background:#fff;border-radius:22px;max-width:520px;width:100%;padding:24px;box-shadow:0 34px 70px -22px rgba(0,0,0,.55);}
+  #srcModal .tag{font-size:11px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.7px;}
+  #srcModal h4{margin:5px 0 0;color:var(--azul);font-family:'Montserrat',sans-serif;font-size:17px;}
+  #srcModal p{margin:13px 0 0;color:var(--text);font-size:14.5px;line-height:1.65;}
+  #srcModal .x{margin-top:20px;display:flex;justify-content:flex-end;}
+  #srcModal .x button{background:var(--grad-azul);color:#fff;border:none;border-radius:12px;padding:10px 20px;font-weight:700;font-family:inherit;cursor:pointer;}
+
   /* ============ MÓVIL ============ */
   @media(max-width:640px){
     #gate{justify-content:flex-start;padding:24px 18px 36px;}
@@ -246,6 +262,16 @@
   </footer>
 </div>
 
+<!-- Modal para ver el contenido de una fuente citada -->
+<div id="srcModal" onclick="if(event.target===this)closeSource()">
+  <div class="card">
+    <div class="tag" id="srcTag">Fuente institucional</div>
+    <h4 id="srcTitle"></h4>
+    <p id="srcBody"></p>
+    <div class="x"><button onclick="closeSource()">Cerrar</button></div>
+  </div>
+</div>
+
 <script>
 /* ============================================================================
  *  CONEXIÓN A UNA API DE IA (modo online, opcional)
@@ -269,6 +295,9 @@ const ICONS={
  alexia:'<svg viewBox="0 0 48 48"><defs><linearGradient id="al" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#00b4d8"/><stop offset="1" stop-color="#0077b6"/></linearGradient></defs><rect x="5" y="5" width="38" height="38" rx="12" fill="url(#al)"/><text x="24" y="33" text-anchor="middle" font-family="Arial,sans-serif" font-weight="800" font-size="23" fill="#fff">a</text></svg>',
  tips:'<svg viewBox="0 0 48 48"><path fill="#fbbc04" d="M24 6a12 12 0 0 0-7 21.7c1 .8 1.6 1.9 1.7 3.1l.3 2.2h10l.3-2.2c.1-1.2.7-2.3 1.7-3.1A12 12 0 0 0 24 6z"/><rect x="19" y="35" width="10" height="4" rx="2" fill="#f9a825"/><rect x="20.5" y="40" width="7" height="3" rx="1.5" fill="#f9a825"/></svg>',
  family:'<svg viewBox="0 0 48 48"><circle cx="17" cy="15" r="5" fill="#0b8a7a"/><circle cx="31" cy="15" r="5" fill="#12b39c"/><path fill="#0b8a7a" d="M7 39c0-6 4.5-11 10-11s10 5 10 11z"/><path fill="#12b39c" d="M21 39c0-6 4.5-11 10-11s10 5 10 11z"/></svg>',
+ scholar:'<svg viewBox="0 0 48 48"><path fill="#4285F4" d="M24 8 3 18l21 10 21-10z"/><path fill="#1a56c4" d="M12 24.5V33c0 3.3 5.4 6 12 6s12-2.7 12-6v-8.5L24 30z"/><rect x="42" y="18" width="2.2" height="12" fill="#4285F4"/><circle cx="43.1" cy="31" r="2.6" fill="#fbbc04"/></svg>',
+ scielo:'<svg viewBox="0 0 48 48"><rect x="5" y="5" width="38" height="38" rx="11" fill="#f68a1e"/><path fill="#fff" d="M24 14.5c-3.4-2.6-8-2.6-11-1.6v19c3-1 7.6-1 11 1.6 3.4-2.6 8-2.6 11-1.6v-19c-3-1-7.6-1-11 1.6z"/><path stroke="#f68a1e" stroke-width="1.6" d="M24 15v18"/></svg>',
+ participacion:'<svg viewBox="0 0 48 48"><rect x="5" y="5" width="38" height="38" rx="11" fill="#1565c0"/><circle cx="18" cy="19" r="4.2" fill="#fff"/><circle cx="30" cy="19" r="4.2" fill="#bbdefb"/><path fill="#fff" d="M9 35c0-4.6 3.6-7.5 9-7.5S27 30.4 27 35z"/><path fill="#bbdefb" d="M21 35c0-4.6 3.6-7.5 9-7.5S39 30.4 39 35z"/></svg>',
 };
 const B = {
   classroom:{lb:"Classroom",sub:"Tareas y clases",url:"https://classroom.google.com",icon:"classroom"},
@@ -284,13 +313,14 @@ const B = {
   tutor:{lb:"Tutor Socrático",sub:"Reflexión y defensa",url:"index.html",icon:"tutor"},
   colegio:{lb:"Colegio",sub:"Sitio oficial",url:"https://www.josejoaquinprieto.cl",icon:"crest"},
   sip:{lb:"SIP",sub:"Red de Colegios",url:"https://www.sip.cl",icon:"crest"},
-  tipsEst:{lb:"Tips de estudio",sub:"Aprende mejor",url:"https://www.educarchile.cl",icon:"tips"},
-  tipsApo:{lb:"Ser buen apoderado",sub:"Consejos y guías",url:"https://www.educarchile.cl/familias",icon:"family"},
+  scholar:{lb:"Google Scholar",sub:"Artículos académicos",url:"https://scholar.google.com",icon:"scholar"},
+  scielo:{lb:"SciELO Chile",sub:"Revistas científicas",url:"https://scielo.cl",icon:"scielo"},
+  participacion:{lb:"Participación",sub:"Ayuda Mineduc",url:"https://www.ayudamineduc.cl/ficha/participacion-de-los-apoderados-en-el-establecimiento-educacional",icon:"participacion"},
 };
 const LINKS = {
-  student:[B.classroom,B.drive,B.calendar,B.correo,B.alexia,B.tipsEst,B.tutor,B.colegio],
+  student:[B.classroom,B.drive,B.calendar,B.correo,B.alexia,B.scholar,B.scielo,B.colegio],
   teacher:[B.classroom,B.drive,B.calendar,B.correo,B.notebook,B.gemini,B.chatgpt,B.alexia,B.tutor],
-  guardian:[B.alexia,B.correo,B.whatsapp,B.instagram,B.tipsApo,B.colegio,B.sip],
+  guardian:[B.alexia,B.correo,B.whatsapp,B.instagram,B.participacion,B.colegio,B.sip],
 };
 const ROLE_LABEL={student:"Estudiante",teacher:"Docente",guardian:"Apoderado"};
 
@@ -490,17 +520,32 @@ const SUGS={
 const log=document.getElementById("log");
 function el(t,c,x){const e=document.createElement(t);if(c)e.className=c;if(x!=null)e.textContent=x;return e;}
 function avatarEl(){const w=el("span");w.innerHTML=badgeMarkup(30);const n=w.firstElementChild;if(n)n.setAttribute("class","av");return n||w;}
+/* Quita marcadores markdown (**negrita**) y de cita [n] para un texto natural. */
+function clean(t){return (t||"").replace(/\*\*(.*?)\*\*/g,"$1").replace(/\*(.*?)\*/g,"$1").replace(/\s*\[\d{1,2}\]/g,"").replace(/[ \t]{2,}/g," ").replace(/\s+([.,;:])/g,"$1").trim();}
+/* Modal de fuente. */
+function openSource(titulo,fragmento){
+  document.getElementById("srcTitle").textContent=titulo;
+  document.getElementById("srcBody").textContent=fragmento||"(Sin detalle disponible.)";
+  document.getElementById("srcModal").classList.add("open");
+}
+function closeSource(){document.getElementById("srcModal").classList.remove("open");}
+document.addEventListener("keydown",e=>{if(e.key==="Escape")closeSource();});
+
 function add(text,who,cites){
   const row=el("div","row "+who);
   if(who==="bot")row.appendChild(avatarEl());
   const msg=el("div","msg",text);
-  if(cites&&cites.length){const box=el("div","cites");cites.forEach(c=>box.appendChild(el("span","cite","["+c.index+"] "+c.titulo)));msg.appendChild(box);}
+  if(cites&&cites.length){const box=el("div","cites");
+    cites.forEach(c=>{const chip=el("span","cite","["+c.index+"] "+c.titulo);chip.title="Ver fuente";
+      chip.onclick=()=>openSource(c.titulo,c.fragmento);box.appendChild(chip);});
+    msg.appendChild(box);}
   row.appendChild(msg);log.appendChild(row);log.scrollTop=log.scrollHeight;
 }
 let typingRow=null;
 function typing(on){
   if(on&&!typingRow){typingRow=el("div","row bot");typingRow.appendChild(avatarEl());
-    const t=el("div","typing");t.appendChild(el("span","tdot"));t.appendChild(el("span","tdot"));t.appendChild(el("span","tdot"));
+    const t=el("div","typing");t.appendChild(el("span","tlabel","ASE-IA está trabajando"));
+    t.appendChild(el("span","tdot"));t.appendChild(el("span","tdot"));t.appendChild(el("span","tdot"));
     typingRow.appendChild(t);log.appendChild(typingRow);log.scrollTop=log.scrollHeight;}
   else if(!on&&typingRow){typingRow.remove();typingRow=null;}
 }
@@ -522,6 +567,7 @@ async function ask(text){
   } else {
     await new Promise(r=>setTimeout(r,420));
   }
+  reply=clean(reply);
   typing(false);add(reply,"bot",local.citations);
   convo.push({role:"user",content:text});convo.push({role:"assistant",content:reply});
 }
