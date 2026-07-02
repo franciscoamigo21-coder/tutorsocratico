@@ -765,6 +765,9 @@
             .pgi-section-title { page-break-after: avoid; break-after: avoid; }
             /* Márgenes superior e inferior amplios para que no se vea cortado */
             .pgi-page { padding: 1.9cm 1.6cm !important; max-width: none !important; margin: 0 !important; }
+            /* Página 2 (evaluación y firmas): salto de página con margen superior amplio.
+               Se usa padding (no margin) porque el navegador descarta el margin al saltar de página. */
+            .pgi-p2 { page-break-before: always; break-before: page; padding-top: 2.2cm; }
         }
         #print-guide-area {
             display: none;
@@ -2051,8 +2054,8 @@
         </div>
     </div>`).join('')}
 
-    <div class="pgi-divider"></div>
-
+    <!-- ===== PÁGINA 2: evaluación y firmas (margen superior amplio) ===== -->
+    <div class="pgi-p2">
     <!-- RETROALIMENTACIÓN DEL DOCENTE -->
     <div class="pgi-section-title">📋 Retroalimentación del Docente</div>
     <div class="pgi-eval-grid">
@@ -2086,6 +2089,7 @@
     <div class="pgi-footer">
         Guía de Reflexión Académica · Tutor Socrático · Colegio Presidente José Joaquín Prieto · SIP Red de Colegios · www.josejoaquinprieto.cl · ${now}
     </div>
+    </div><!-- /pgi-p2 -->
 </div>`;
         }
 
