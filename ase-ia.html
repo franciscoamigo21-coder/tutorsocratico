@@ -7,186 +7,190 @@
 <meta name="description" content="ASE-IA · Asistente Escolar de Inteligencia Artificial del Colegio Presidente José Joaquín Prieto (SIP Red de Colegios). Responde solo con información institucional autorizada." />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Montserrat:wght@600;700;800&display=swap" rel="stylesheet">
 <style>
   :root{
-    --azul:#0b3d91;--azul2:#0a337a;--azul-dark:#072a63;
-    --oro:#f2b705;--oro2:#d99e00;--cyan:#37b6e6;
-    --gray:#eef2f8;--border:#dbe3f0;--muted:#5a6b86;--text:#15233d;
+    --azul:#0b3d91;--azul2:#1157c9;--azul-dark:#06214f;--azul-ink:#0a2a63;
+    --oro:#f5b301;--oro2:#d99e00;--cyan:#22c3e6;--verde:#16b981;
+    --bg:#eef2fb;--card:#ffffff;--border:#e4e9f3;--muted:#657390;--text:#132441;
+    --grad-azul:linear-gradient(135deg,#1157c9,#0b3d91 60%,#0a2f7a);
+    --shadow:0 14px 40px -18px rgba(11,61,145,.35);
+    --shadow-sm:0 6px 18px -10px rgba(11,61,145,.30);
   }
   *{box-sizing:border-box;}
-  body{margin:0;font-family:'Montserrat',system-ui,Segoe UI,Roboto,sans-serif;color:var(--text);background:var(--gray);-webkit-font-smoothing:antialiased;}
-  a{color:inherit;}
+  html{scroll-behavior:smooth;}
+  body{margin:0;font-family:'Inter',system-ui,Segoe UI,Roboto,sans-serif;color:var(--text);
+    background:
+      radial-gradient(1100px 520px at 108% -8%, #dbe7ff 0%, transparent 55%),
+      radial-gradient(900px 480px at -8% 4%, #fff2d6 0%, transparent 50%),
+      var(--bg);
+    background-attachment:fixed;-webkit-font-smoothing:antialiased;}
+  h1,h2,h3,.font-head{font-family:'Montserrat',sans-serif;}
+  a{color:inherit;text-decoration:none;}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:none;}}
+  @keyframes floaty{0%,100%{transform:translateY(0);}50%{transform:translateY(-9px);}}
+  @keyframes glowPulse{0%,100%{filter:drop-shadow(0 12px 26px rgba(34,195,230,.35));}50%{filter:drop-shadow(0 16px 34px rgba(245,179,1,.4));}}
 
-  /* ============ PANTALLA DE INICIO (selección de perfil) ============ */
+  /* ============ PANTALLA DE INICIO ============ */
   #gate{position:fixed;inset:0;z-index:100;display:flex;flex-direction:column;align-items:center;justify-content:center;
-    background:radial-gradient(1200px 600px at 50% -10%,#12459f, var(--azul-dark) 60%);color:#fff;padding:24px;text-align:center;}
-  #gate .crest{width:92px;height:92px;filter:drop-shadow(0 10px 26px rgba(0,0,0,.4));}
-  #gate h1{margin:16px 0 2px;font-size:26px;font-weight:800;}
-  #gate .lema{color:#ffd97a;font-weight:700;font-size:13px;letter-spacing:.5px;}
-  #gate p{color:#cbd9f5;margin:12px 0 26px;font-size:14.5px;max-width:520px;line-height:1.55;}
-  #gate .mascot{margin-top:6px;}
-  .picker{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;width:100%;max-width:620px;}
-  @media(max-width:560px){.picker{grid-template-columns:1fr;}}
-  .pick{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.22);border-radius:18px;padding:22px 14px;cursor:pointer;color:#fff;transition:.15s;display:flex;flex-direction:column;align-items:center;gap:8px;font-family:inherit;}
-  .pick:hover{background:#fff;color:var(--azul);transform:translateY(-3px);box-shadow:0 12px 30px rgba(0,0,0,.28);border-color:#fff;}
-  .pick .emo{font-size:34px;}
-  .pick .t{font-weight:800;font-size:16px;}
-  .pick .d{font-size:12px;opacity:.85;font-weight:500;}
-  #gate .foot{margin-top:24px;font-size:11.5px;color:#9fb6e6;}
+    text-align:center;padding:26px 22px;color:#fff;overflow-y:auto;
+    background:radial-gradient(1000px 700px at 50% -10%,#1a63e0,#0b3d91 55%,#06214f);}
+  #gate::before{content:"";position:absolute;inset:0;background:
+    radial-gradient(600px 300px at 15% 90%, rgba(34,195,230,.25), transparent 60%),
+    radial-gradient(600px 300px at 85% 15%, rgba(245,179,1,.18), transparent 60%);pointer-events:none;}
+  #gate .inner{position:relative;z-index:1;max-width:660px;width:100%;}
+  #gate .badge{width:132px;height:132px;object-fit:contain;animation:floaty 5s ease-in-out infinite, glowPulse 6s ease-in-out infinite;}
+  #gate .pill{display:inline-block;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.28);
+    border-radius:999px;padding:5px 14px;font-size:12px;font-weight:600;letter-spacing:.4px;margin-bottom:6px;backdrop-filter:blur(6px);}
+  #gate h1{margin:12px 0 4px;font-size:30px;font-weight:800;line-height:1.1;}
+  #gate .lema{color:#ffdd8a;font-weight:700;font-size:13.5px;letter-spacing:.4px;}
+  #gate p{color:#d3e0fb;margin:14px auto 24px;font-size:14.5px;line-height:1.6;max-width:520px;}
+  .picker{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
+  .pick{background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.22);border-radius:20px;padding:24px 16px;cursor:pointer;
+    color:#fff;transition:.18s cubic-bezier(.2,.7,.3,1);display:flex;flex-direction:column;align-items:center;gap:9px;font-family:inherit;backdrop-filter:blur(8px);}
+  .pick:hover{background:#fff;color:var(--azul);transform:translateY(-4px);box-shadow:0 20px 40px -14px rgba(0,0,0,.45);border-color:#fff;}
+  .pick .emo{font-size:36px;line-height:1;}
+  .pick .t{font-weight:800;font-size:16.5px;font-family:'Montserrat',sans-serif;}
+  .pick .d{font-size:12px;opacity:.9;font-weight:500;}
+  #gate .foot{margin-top:26px;font-size:11.5px;color:#9fb6e6;}
 
   /* ============ APP ============ */
-  #app{display:none;}
-  .instbar{background:linear-gradient(90deg,var(--azul-dark),var(--azul) 55%,var(--azul2));color:#fff;border-bottom:3px solid var(--oro);}
-  .instbar .in{max-width:1040px;margin:0 auto;padding:9px 16px;display:flex;align-items:center;gap:12px;justify-content:space-between;}
+  #app{display:none;animation:fadeUp .4s ease both;}
+  .instbar{background:var(--grad-azul);color:#fff;border-bottom:3px solid var(--oro);}
+  .instbar .in{max-width:1080px;margin:0 auto;padding:9px 18px;display:flex;align-items:center;gap:12px;justify-content:space-between;}
   .instbar .left{display:flex;align-items:center;gap:11px;}
-  .instbar .t1{font-weight:800;font-size:13.5px;letter-spacing:.3px;}
-  .instbar .t2{font-size:11px;color:#cddcff;font-weight:500;}
-  .instbar a.web{color:#ffe08a;text-decoration:none;font-size:12px;font-weight:600;white-space:nowrap;}
+  .instbar .t1{font-weight:800;font-size:13px;letter-spacing:.3px;font-family:'Montserrat',sans-serif;}
+  .instbar .t2{font-size:11px;color:#c9d9ff;font-weight:500;}
+  .instbar a.web{color:#ffe08a;font-size:12px;font-weight:600;white-space:nowrap;}
+  .instbar a.web:hover{text-decoration:underline;}
 
-  header.app-h{background:#fff;border-bottom:1px solid var(--border);position:sticky;top:0;z-index:20;}
-  .app-h .in{max-width:1040px;margin:0 auto;padding:11px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px;}
+  header.app-h{position:sticky;top:0;z-index:20;background:rgba(255,255,255,.82);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);}
+  .app-h .in{max-width:1080px;margin:0 auto;padding:11px 18px;display:flex;align-items:center;justify-content:space-between;gap:12px;}
   .brand{display:flex;align-items:center;gap:12px;}
-  .brand .name{font-weight:800;color:var(--azul);font-size:20px;line-height:1;}
+  .brand .name{font-weight:800;color:var(--azul);font-size:21px;line-height:1;font-family:'Montserrat',sans-serif;}
   .brand .name b{color:var(--oro2);}
   .brand .sub{font-size:11px;color:var(--muted);margin-top:2px;}
   .rolechip{display:flex;align-items:center;gap:9px;}
-  .rolechip .who{background:#eef4ff;color:var(--azul);border:1px solid #d6e3ff;border-radius:999px;padding:6px 12px;font-size:12.5px;font-weight:700;}
-  .rolechip button{background:none;border:1px solid var(--border);border-radius:9px;padding:6px 11px;font-size:12px;color:var(--muted);cursor:pointer;font-family:inherit;font-weight:600;}
+  .rolechip .who{background:linear-gradient(135deg,#eef4ff,#e2ecff);color:var(--azul);border:1px solid #d3e1ff;border-radius:999px;padding:6px 13px;font-size:12.5px;font-weight:700;}
+  .rolechip button{background:#fff;border:1px solid var(--border);border-radius:10px;padding:6px 12px;font-size:12px;color:var(--muted);cursor:pointer;font-family:inherit;font-weight:600;transition:.15s;}
   .rolechip button:hover{border-color:var(--azul);color:var(--azul);}
 
-  .hero{max-width:1040px;margin:0 auto;padding:20px 16px 4px;display:flex;align-items:center;gap:18px;}
-  .hero .mascot{flex-shrink:0;filter:drop-shadow(0 10px 22px rgba(11,61,145,.22));}
-  .hero h1{margin:0;color:var(--azul);font-size:24px;line-height:1.15;font-weight:800;}
-  .hero .lema{color:var(--oro2);font-weight:700;font-size:13px;letter-spacing:.4px;margin:4px 0 0;}
-  .hero p{margin:8px 0 0;color:var(--muted);font-size:14px;line-height:1.55;}
-  @media(max-width:600px){.hero .mascot{display:none;}}
+  .shell{max-width:1080px;margin:0 auto;padding:0 18px;}
+  .hero{display:flex;align-items:center;gap:22px;padding:26px 0 6px;animation:fadeUp .5s ease both;}
+  .hero .badge{width:118px;height:118px;object-fit:contain;flex-shrink:0;animation:floaty 5s ease-in-out infinite;}
+  .hero h1{margin:0;font-size:27px;line-height:1.14;font-weight:800;color:var(--azul-ink);}
+  .hero h1 .g{background:linear-gradient(90deg,#1157c9,#22c3e6);-webkit-background-clip:text;background-clip:text;color:transparent;}
+  .hero .lema{color:var(--oro2);font-weight:700;font-size:13px;letter-spacing:.4px;margin:5px 0 0;}
+  .hero p{margin:9px 0 0;color:var(--muted);font-size:14px;line-height:1.6;max-width:640px;}
+  @media(max-width:620px){.hero .badge{display:none;}}
 
-  .quick{max-width:1040px;margin:16px auto 0;padding:0 16px;}
-  .quick h3{font-size:12.5px;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin:0 0 10px;font-weight:700;}
-  .qgrid{display:grid;grid-template-columns:repeat(8,1fr);gap:10px;}
+  .quick{margin-top:18px;animation:fadeUp .6s ease both;}
+  .quick h3{font-size:12px;text-transform:uppercase;letter-spacing:1.2px;color:var(--muted);margin:0 0 12px;font-weight:700;}
+  .qgrid{display:grid;grid-template-columns:repeat(8,1fr);gap:12px;}
   @media(max-width:900px){.qgrid{grid-template-columns:repeat(4,1fr);}}
   @media(max-width:460px){.qgrid{grid-template-columns:repeat(3,1fr);}}
-  .qcard{display:flex;flex-direction:column;align-items:center;gap:7px;background:#fff;border:1px solid var(--border);border-radius:14px;padding:13px 6px;text-decoration:none;color:var(--text);transition:.15s;text-align:center;}
-  .qcard:hover{border-color:var(--azul);box-shadow:0 6px 18px rgba(11,61,145,.10);transform:translateY(-2px);}
-  .qcard .ic{width:40px;height:40px;display:flex;align-items:center;justify-content:center;border-radius:11px;background:#f4f7fc;overflow:hidden;}
-  .qcard .ic img{width:30px;height:30px;display:block;object-fit:contain;}
-  /* La imagen del robot (insignia con anillo) se recorta en círculo. */
-  img[alt="ASE-IA"]{border-radius:50%;object-fit:cover;background:#fff;}
-  .qcard .ic svg{width:28px;height:28px;display:block;}
-  .qcard .ic .emo{font-size:21px;}
-  .qcard .lb{font-size:11.5px;font-weight:700;line-height:1.15;}
-  .qcard .lb small{display:block;font-weight:500;color:var(--muted);font-size:10px;margin-top:1px;}
+  .qcard{position:relative;display:flex;flex-direction:column;align-items:center;gap:9px;background:var(--card);
+    border:1px solid var(--border);border-radius:18px;padding:15px 8px;transition:.18s cubic-bezier(.2,.7,.3,1);text-align:center;box-shadow:var(--shadow-sm);}
+  .qcard:hover{transform:translateY(-4px);box-shadow:0 18px 38px -16px rgba(11,61,145,.4);border-color:#cfe0ff;}
+  .qcard .ic{width:46px;height:46px;display:flex;align-items:center;justify-content:center;border-radius:14px;
+    background:linear-gradient(160deg,#f6f9ff,#eef3fc);overflow:hidden;}
+  .qcard .ic img{width:30px;height:30px;object-fit:contain;}
+  .qcard .ic svg{width:30px;height:30px;display:block;}
+  .qcard .lb{font-size:12px;font-weight:700;line-height:1.2;color:var(--text);}
+  .qcard .lb small{display:block;font-weight:500;color:var(--muted);font-size:10px;margin-top:2px;}
 
-  .wrap{max-width:1040px;margin:20px auto 60px;padding:0 16px;}
-  .chat{background:#fff;border:1px solid var(--border);border-radius:20px;overflow:hidden;box-shadow:0 6px 24px rgba(11,61,145,.08);display:flex;flex-direction:column;height:60vh;min-height:440px;}
-  .chead{background:linear-gradient(90deg,var(--azul),var(--azul2));color:#fff;padding:12px 16px;display:flex;align-items:center;gap:11px;}
-  .chead .h{font-weight:800;}.chead .s{font-size:11px;color:#cddcff;}
-  #log{flex:1;overflow-y:auto;padding:16px;background:var(--gray);display:flex;flex-direction:column;gap:12px;}
-  .row{display:flex;align-items:flex-end;gap:9px;}
+  .wrap{margin:22px 0 60px;animation:fadeUp .7s ease both;}
+  .chat{background:var(--card);border:1px solid var(--border);border-radius:26px;overflow:hidden;box-shadow:var(--shadow);display:flex;flex-direction:column;height:62vh;min-height:460px;}
+  .chead{background:var(--grad-azul);color:#fff;padding:14px 18px;display:flex;align-items:center;gap:12px;position:relative;}
+  .chead .badge{width:38px;height:38px;object-fit:contain;}
+  .chead .h{font-weight:800;font-family:'Montserrat',sans-serif;}
+  .chead .s{font-size:11px;color:#c9d9ff;display:flex;align-items:center;gap:5px;}
+  .chead .dot{width:7px;height:7px;border-radius:50%;background:#34e39b;box-shadow:0 0 0 3px rgba(52,227,155,.25);}
+  #log{flex:1;overflow-y:auto;padding:18px;display:flex;flex-direction:column;gap:13px;
+    background:radial-gradient(700px 300px at 100% 0%, #f2f7ff, transparent), #f7f9fe;}
+  .row{display:flex;align-items:flex-end;gap:9px;animation:fadeUp .28s ease both;}
   .row.user{flex-direction:row-reverse;}
-  .msg{max-width:82%;padding:11px 14px;border-radius:16px;font-size:14.5px;line-height:1.55;white-space:pre-wrap;box-shadow:0 1px 2px rgba(0,0,0,.05);}
-  .user .msg{background:var(--azul);color:#fff;border-bottom-right-radius:5px;}
-  .bot .msg{background:#fff;border:1px solid var(--border);border-bottom-left-radius:5px;}
-  .cites{margin-top:9px;display:flex;flex-wrap:wrap;gap:6px;}
-  .cite{background:#eef4ff;color:var(--azul);border:1px solid #d6e3ff;border-radius:999px;padding:3px 10px;font-size:11.5px;font-weight:700;}
-  .typing{display:flex;gap:4px;padding:13px 15px;background:#fff;border:1px solid var(--border);border-radius:16px;border-bottom-left-radius:5px;}
-  .dot{width:7px;height:7px;border-radius:50%;background:#9fb0c8;animation:b 1s infinite ease-in-out;}
-  .dot:nth-child(2){animation-delay:.15s;}.dot:nth-child(3){animation-delay:.3s;}
-  @keyframes b{0%,80%,100%{transform:translateY(0);opacity:.5;}40%{transform:translateY(-4px);opacity:1;}}
-  .sugs{display:flex;flex-wrap:wrap;gap:7px;padding:12px 16px 0;background:#fff;border-top:1px solid var(--border);}
-  .sug{border:1px solid var(--border);color:var(--azul);background:#fff;border-radius:999px;padding:7px 13px;font-size:12.5px;cursor:pointer;font-family:inherit;font-weight:600;}
-  .sug:hover{background:#eef4ff;}
-  form{display:flex;gap:9px;padding:13px 15px;}
-  input[type=text]{flex:1;padding:12px 14px;border:1px solid var(--border);border-radius:12px;font-size:14.5px;outline:none;font-family:inherit;}
-  input[type=text]:focus{border-color:var(--cyan);box-shadow:0 0 0 3px rgba(55,182,230,.15);}
-  button.send{background:var(--azul);color:#fff;border:none;border-radius:12px;padding:0 17px;font-weight:800;cursor:pointer;font-size:16px;}
-  button.send:disabled{opacity:.4;cursor:default;}
-  .avatar{flex-shrink:0;}
-  footer{max-width:1040px;margin:0 auto;padding:0 16px 46px;color:var(--muted);font-size:12px;text-align:center;line-height:1.7;}
-  footer a{color:var(--azul);font-weight:600;text-decoration:none;}
+  .row .av{width:30px;height:30px;object-fit:contain;flex-shrink:0;}
+  .msg{max-width:80%;padding:12px 15px;border-radius:18px;font-size:14.5px;line-height:1.58;white-space:pre-wrap;}
+  .user .msg{background:linear-gradient(135deg,#1157c9,#0b3d91);color:#fff;border-bottom-right-radius:6px;box-shadow:0 8px 20px -10px rgba(11,61,145,.6);}
+  .bot .msg{background:#fff;border:1px solid var(--border);border-bottom-left-radius:6px;box-shadow:0 4px 14px -10px rgba(11,61,145,.3);}
+  .cites{margin-top:10px;display:flex;flex-wrap:wrap;gap:6px;}
+  .cite{background:linear-gradient(135deg,#eef4ff,#e6efff);color:var(--azul);border:1px solid #d6e3ff;border-radius:999px;padding:3px 11px;font-size:11px;font-weight:700;}
+  .typing{display:flex;gap:5px;padding:14px 16px;background:#fff;border:1px solid var(--border);border-radius:18px;border-bottom-left-radius:6px;}
+  .tdot{width:7px;height:7px;border-radius:50%;background:#9fb0c8;animation:b 1s infinite ease-in-out;}
+  .tdot:nth-child(2){animation-delay:.15s;}.tdot:nth-child(3){animation-delay:.3s;}
+  @keyframes b{0%,80%,100%{transform:translateY(0);opacity:.5;}40%{transform:translateY(-5px);opacity:1;}}
+  .sugs{display:flex;flex-wrap:wrap;gap:8px;padding:13px 16px 2px;background:#fff;border-top:1px solid var(--border);}
+  .sug{border:1px solid #dfe7f5;color:var(--azul);background:linear-gradient(180deg,#fff,#f6f9ff);border-radius:999px;padding:8px 14px;font-size:12.5px;cursor:pointer;font-family:inherit;font-weight:600;transition:.15s;}
+  .sug:hover{background:#eef4ff;border-color:#bcd3ff;transform:translateY(-1px);}
+  form{display:flex;gap:10px;padding:14px 16px;background:#fff;}
+  input[type=text]{flex:1;padding:13px 16px;border:1px solid var(--border);border-radius:14px;font-size:14.5px;outline:none;font-family:inherit;background:#f8fafe;transition:.15s;}
+  input[type=text]:focus{border-color:var(--cyan);background:#fff;box-shadow:0 0 0 4px rgba(34,195,230,.14);}
+  button.send{background:linear-gradient(135deg,#1157c9,#0b3d91);color:#fff;border:none;border-radius:14px;padding:0 18px;font-weight:800;cursor:pointer;font-size:17px;transition:.15s;box-shadow:0 8px 20px -10px rgba(11,61,145,.7);}
+  button.send:hover{filter:brightness(1.08);} button.send:disabled{opacity:.45;cursor:default;box-shadow:none;}
+  footer{max-width:1080px;margin:0 auto;padding:0 18px 48px;color:var(--muted);font-size:12px;text-align:center;line-height:1.7;}
+  footer a{color:var(--azul);font-weight:600;}
 
-  /* ============ RESPONSIVE MÓVIL ============ */
+  /* ============ MÓVIL ============ */
   @media(max-width:640px){
-    #gate{justify-content:flex-start;overflow-y:auto;padding:22px 18px 34px;}
-    #gate .crest{width:74px;height:74px;}
-    #gate .mascot{width:96px;height:96px;margin-top:2px;}
-    #gate h1{font-size:21px;margin-top:12px;}
-    #gate .lema{font-size:11.5px;}
-    #gate p{font-size:13.5px;margin:10px 0 20px;}
-    .picker{grid-template-columns:1fr;gap:11px;}
-    .pick{flex-direction:row;justify-content:flex-start;gap:14px;padding:16px 18px;text-align:left;}
-    .pick .emo{font-size:28px;}
-    .instbar .in{padding:8px 14px;}
-    .instbar .t1{font-size:11px;line-height:1.2;}
-    .instbar .t2{font-size:9.5px;}
-    .instbar a.web{display:none;}
-    .app-h .in{padding:10px 14px;}
-    .brand .name{font-size:18px;}
-    .brand .sub{display:none;}
-    .rolechip .who{padding:5px 10px;font-size:12px;}
-    .hero{padding:16px 16px 2px;}
-    .hero h1{font-size:19px;}
-    .hero p{font-size:13px;}
-    .quick h3{font-size:11px;}
-    .qgrid{grid-template-columns:repeat(3,1fr);gap:8px;}
-    .qcard{padding:11px 5px;}
-    .qcard .lb{font-size:10.5px;}
-    .qcard .lb small{font-size:9px;}
-    .wrap{margin-top:14px;}
-    .chat{height:auto;min-height:0;}
-    #log{height:52vh;flex:none;}
-    .msg{max-width:88%;font-size:14px;}
+    #gate{justify-content:flex-start;padding:24px 18px 36px;}
+    #gate .badge{width:112px;height:112px;}
+    #gate h1{font-size:23px;}
+    #gate p{font-size:13.5px;margin:12px auto 18px;}
+    .picker{grid-template-columns:1fr;gap:12px;}
+    .pick{flex-direction:row;justify-content:flex-start;gap:15px;padding:16px 18px;text-align:left;}
+    .pick .emo{font-size:30px;}
+    .instbar .t1{font-size:11px;line-height:1.2;} .instbar .t2{font-size:9.5px;} .instbar a.web{display:none;}
+    .app-h .in{padding:10px 15px;} .brand .name{font-size:19px;} .brand .sub{display:none;}
+    .hero{padding:18px 0 2px;} .hero h1{font-size:21px;} .hero p{font-size:13px;}
+    .qgrid{grid-template-columns:repeat(3,1fr);gap:9px;}
+    .qcard{padding:12px 6px;border-radius:15px;} .qcard .ic{width:42px;height:42px;} .qcard .lb{font-size:11px;} .qcard .lb small{font-size:9px;}
+    .chat{height:auto;min-height:0;border-radius:20px;} #log{height:54vh;flex:none;} .msg{max-width:88%;}
   }
   @media(max-width:380px){ .qgrid{grid-template-columns:repeat(2,1fr);} }
 </style>
 </head>
 <body>
 
-<!-- Escudo SIP y Mascota (SVG de respaldo si no cargan los logos oficiales) -->
+<!-- Escudo y mascota de respaldo (SVG) -->
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
   <g id="crestSVG">
-    <circle cx="60" cy="60" r="58" fill="#0b3d91" stroke="#f2b705" stroke-width="4"/>
-    <circle cx="60" cy="60" r="46" fill="none" stroke="#f2b705" stroke-width="1.4"/>
+    <circle cx="60" cy="60" r="58" fill="#0b3d91" stroke="#f5b301" stroke-width="4"/>
+    <circle cx="60" cy="60" r="46" fill="none" stroke="#f5b301" stroke-width="1.4"/>
     <path id="arcT" d="M 20 60 A 40 40 0 0 1 100 60" fill="none"/><path id="arcB" d="M 22 60 A 38 38 0 0 0 98 60" fill="none"/>
-    <text fill="#f2b705" font-family="Montserrat,sans-serif" font-weight="700" font-size="8.4" letter-spacing="1.5"><textPath href="#arcT" startOffset="50%" text-anchor="middle">RED DE COLEGIOS</textPath></text>
-    <text fill="#f2b705" font-family="Montserrat,sans-serif" font-weight="600" font-size="6.4" letter-spacing="1"><textPath href="#arcB" startOffset="50%" text-anchor="middle">DESDE 1856 · EDUCANDO CON EXCELENCIA</textPath></text>
-    <text x="60" y="52" text-anchor="middle" fill="#f2b705" font-family="Montserrat,sans-serif" font-weight="800" font-size="25" letter-spacing="2">SIP</text>
+    <text fill="#f5b301" font-family="Montserrat,sans-serif" font-weight="700" font-size="8.4" letter-spacing="1.5"><textPath href="#arcT" startOffset="50%" text-anchor="middle">RED DE COLEGIOS</textPath></text>
+    <text fill="#f5b301" font-family="Montserrat,sans-serif" font-weight="600" font-size="6.4" letter-spacing="1"><textPath href="#arcB" startOffset="50%" text-anchor="middle">DESDE 1856 · EDUCANDO CON EXCELENCIA</textPath></text>
+    <text x="60" y="52" text-anchor="middle" fill="#f5b301" font-family="Montserrat,sans-serif" font-weight="800" font-size="25" letter-spacing="2">SIP</text>
     <text x="60" y="65" text-anchor="middle" fill="#fff" font-family="Montserrat,sans-serif" font-weight="700" font-size="7.2">Presidente</text>
     <text x="60" y="74" text-anchor="middle" fill="#fff" font-family="Montserrat,sans-serif" font-weight="700" font-size="7.2">José Joaquín</text>
     <text x="60" y="83" text-anchor="middle" fill="#fff" font-family="Montserrat,sans-serif" font-weight="700" font-size="7.2">Prieto</text>
   </g>
   <g id="mascot">
-    <ellipse cx="60" cy="112" rx="34" ry="6" fill="#0b3d91" opacity=".12"/>
-    <line x1="40" y1="26" x2="34" y2="12" stroke="#17423f" stroke-width="3"/><circle cx="33" cy="10" r="5" fill="#e8433a"/><circle cx="31.5" cy="8.5" r="1.6" fill="#ff9a90"/>
-    <line x1="80" y1="26" x2="86" y2="12" stroke="#17423f" stroke-width="3"/><circle cx="87" cy="10" r="5" fill="#f5a623"/><circle cx="85.5" cy="8.5" r="1.6" fill="#ffd7a0"/>
-    <rect x="22" y="42" width="12" height="26" rx="6" fill="#17423f"/><rect x="86" y="42" width="12" height="26" rx="6" fill="#17423f"/>
     <rect x="28" y="26" width="64" height="52" rx="24" fill="#17423f"/><rect x="34" y="32" width="52" height="40" rx="19" fill="#fff"/>
-    <circle cx="50" cy="50" r="6.5" fill="#37b6e6"/><circle cx="52" cy="48" r="2" fill="#eaffff"/><circle cx="70" cy="50" r="6.5" fill="#37b6e6"/><circle cx="72" cy="48" r="2" fill="#eaffff"/>
+    <circle cx="50" cy="50" r="6.5" fill="#22c3e6"/><circle cx="70" cy="50" r="6.5" fill="#22c3e6"/>
     <path d="M50 62 q10 7 20 0" stroke="#17423f" stroke-width="2.6" fill="none" stroke-linecap="round"/>
-    <rect x="38" y="78" width="44" height="34" rx="16" fill="#fff" stroke="#17423f" stroke-width="3"/><rect x="53" y="86" width="14" height="5" rx="2.5" fill="#37b6e6"/>
-    <rect x="80" y="74" width="9" height="22" rx="4.5" fill="#17423f" transform="rotate(28 84 85)"/><circle cx="96" cy="70" r="7" fill="#17423f"/>
-    <rect x="30" y="86" width="9" height="20" rx="4.5" fill="#17423f"/>
+    <rect x="38" y="78" width="44" height="30" rx="14" fill="#fff" stroke="#17423f" stroke-width="3"/><rect x="53" y="85" width="14" height="5" rx="2.5" fill="#22c3e6"/>
   </g>
 </defs></svg>
 
-<!-- ============ PANTALLA DE INICIO ============ -->
-<div id="gate">
-  <svg class="crest" data-crest viewBox="0 0 120 120" width="92" height="92"><use href="#crestSVG"/></svg>
-  <svg class="mascot" data-robot viewBox="0 0 120 120" width="120" height="120"><use href="#mascot"/></svg>
+<!-- PANTALLA DE INICIO -->
+<div id="gate"><div class="inner">
+  <img class="badge" data-badge alt="ASE-IA" src="assets/ase-ia-badge.png"
+       onerror="this.outerHTML='<svg class=\'badge\' viewBox=\'0 0 120 120\'><use href=\'#mascot\'/></svg>'">
+  <div><span class="pill">🔒 Información institucional verificada</span></div>
   <h1>ASE-IA · Asistente Escolar</h1>
   <div class="lema">Colegio Presidente José Joaquín Prieto · « Vocación y Pasión por la Excelencia »</div>
-  <p>Bienvenido/a. Selecciona tu perfil para comenzar. ASE-IA responde solo con
-     información autorizada por el establecimiento y nunca inventa.</p>
+  <p>Hola 👋 Selecciona tu perfil para comenzar. Responderé solo con información
+     autorizada del establecimiento; si no la tengo, te lo diré con honestidad.</p>
   <div class="picker">
     <button class="pick" onclick="enter('student')"><span class="emo">🎓</span><span class="t">Estudiante</span><span class="d">Tareas, evaluaciones y reglamentos</span></button>
     <button class="pick" onclick="enter('teacher')"><span class="emo">👩‍🏫</span><span class="t">Docente</span><span class="d">Recursos, IA y gestión de aula</span></button>
-    <button class="pick" onclick="enter('guardian')"><span class="emo">👪</span><span class="t">Apoderado</span><span class="d">Fechas, protocolos y comunicación</span></button>
+    <button class="pick" onclick="enter('guardian')"><span class="emo">👪</span><span class="t">Apoderado</span><span class="d">Protocolos, comunicación y consejos</span></button>
   </div>
   <div class="foot">SIP Red de Colegios · josejoaquinprieto.cl</div>
-</div>
+</div></div>
 
-<!-- ============ APP ============ -->
+<!-- APP -->
 <div id="app">
   <div class="instbar"><div class="in">
     <div class="left">
@@ -198,37 +202,41 @@
 
   <header class="app-h"><div class="in">
     <div class="brand">
-      <svg class="avatar" data-robot viewBox="0 0 120 120" width="42" height="42"><use href="#mascot"/></svg>
+      <img class="av-brand badge-src" alt="ASE-IA" width="42" height="42" style="object-fit:contain" src="assets/ase-ia-badge.png"
+           onerror="this.outerHTML='<svg viewBox=\'0 0 120 120\' width=\'42\' height=\'42\'><use href=\'#mascot\'/></svg>'">
       <div><div class="name">ASE<b>-IA</b></div><div class="sub">Asistente Escolar de Inteligencia Artificial</div></div>
     </div>
     <div class="rolechip"><span class="who" id="whoLabel">Estudiante</span><button onclick="showGate()">Cambiar perfil</button></div>
   </div></header>
 
-  <section class="hero">
-    <svg class="mascot" data-robot viewBox="0 0 120 120" width="96" height="96"><use href="#mascot"/></svg>
-    <div>
-      <h1>Tu asistente escolar con Inteligencia Artificial</h1>
-      <div class="lema">« Vocación y Pasión por la Excelencia »</div>
-      <p>Pregunta por el <b>reglamento de evaluación</b>, el <b>PEI</b>, los
-         <b>protocolos</b>, tus <b>tareas</b> y <b>fechas</b>. Información
-         institucional verificada; si no la tengo, te lo digo.</p>
-    </div>
-  </section>
+  <div class="shell">
+    <section class="hero">
+      <img class="badge" alt="ASE-IA" src="assets/ase-ia-badge.png"
+           onerror="this.outerHTML='<svg class=\'badge\' viewBox=\'0 0 120 120\'><use href=\'#mascot\'/></svg>'">
+      <div>
+        <h1>Tu asistente escolar con <span class="g">Inteligencia Artificial</span></h1>
+        <div class="lema">« Vocación y Pasión por la Excelencia »</div>
+        <p>Pregunta por el reglamento de evaluación, el PEI, los protocolos, tus
+           tareas y fechas. Información institucional verificada; si no la tengo, te lo digo.</p>
+      </div>
+    </section>
 
-  <section class="quick">
-    <h3 id="quickTitle">Accesos rápidos</h3>
-    <div class="qgrid" id="qgrid"></div>
-  </section>
+    <section class="quick">
+      <h3 id="quickTitle">Accesos rápidos</h3>
+      <div class="qgrid" id="qgrid"></div>
+    </section>
 
-  <div class="wrap"><div class="chat">
-    <div class="chead">
-      <svg class="avatar" data-robot viewBox="0 0 120 120" width="34" height="34"><use href="#mascot"/></svg>
-      <div><div class="h">ASE-IA</div><div class="s">Asistente Escolar · en línea</div></div>
-    </div>
-    <div id="log"></div>
-    <div class="sugs" id="sugs"></div>
-    <form id="f" autocomplete="off"><input id="q" type="text" placeholder="Escribe tu pregunta…" /><button class="send" type="submit" aria-label="Enviar">➤</button></form>
-  </div></div>
+    <div class="wrap"><div class="chat">
+      <div class="chead">
+        <img class="badge" alt="ASE-IA" src="assets/ase-ia-badge.png"
+             onerror="this.outerHTML='<svg class=\'badge\' viewBox=\'0 0 120 120\'><use href=\'#mascot\'/></svg>'">
+        <div><div class="h">ASE-IA</div><div class="s"><span class="dot"></span> Asistente Escolar · en línea</div></div>
+      </div>
+      <div id="log"></div>
+      <div class="sugs" id="sugs"></div>
+      <form id="f" autocomplete="off"><input id="q" type="text" placeholder="Escribe tu pregunta…" /><button class="send" type="submit" aria-label="Enviar">➤</button></form>
+    </div></div>
+  </div>
 
   <footer>
     <b>ASE-IA</b> · Colegio Presidente José Joaquín Prieto ·
@@ -239,18 +247,20 @@
 </div>
 
 <script>
-/* ============ ACCESOS RÁPIDOS POR ROL (logos oficiales de cada plataforma, en SVG) ============ */
+/* ============ LOGOS DE PLATAFORMAS (SVG oficiales por marca) ============ */
 const ICONS={
  gmail:'<svg viewBox="0 0 48 48"><path fill="#4caf50" d="M45 16.2l-5 2.75-5 4.75V40h7a3 3 0 0 0 3-3z"/><path fill="#1e88e5" d="M3 16.2l3.6 1.7L13 23.7V40H6a3 3 0 0 1-3-3z"/><path fill="#e53935" d="M35 11.2L24 19.45 13 11.2 12 17l1 6.7 11 8.25 11-8.25 1-6.7z"/><path fill="#c62828" d="M3 12.3V16.2l10 7.5V11.2L9.9 8.86A4.3 4.3 0 0 0 3 12.3z"/><path fill="#fbc02d" d="M45 12.3V16.2l-10 7.5V11.2l3.1-2.34A4.3 4.3 0 0 1 45 12.3z"/></svg>',
  drive:'<svg viewBox="0 0 87.3 78"><path fill="#0066da" d="M6.6 66.85l3.85 6.65c.8 1.4 1.95 2.5 3.3 3.3l13.75-23.8H0c0 1.55.4 3.1 1.2 4.5z"/><path fill="#00ac47" d="M43.65 25L29.9 1.2c-1.35.8-2.5 1.9-3.3 3.3l-25.4 44A9.06 9.06 0 0 0 0 53h27.5z"/><path fill="#ea4335" d="M73.55 76.8c1.35-.8 2.5-1.9 3.3-3.3l1.6-2.75 7.65-13.25c.8-1.4 1.2-2.95 1.2-4.5H59.8l5.85 11.5z"/><path fill="#00832d" d="M43.65 25L57.4 1.2c-1.35-.8-2.9-1.2-4.5-1.2H34.4c-1.6 0-3.15.45-4.5 1.2z"/><path fill="#2684fc" d="M59.8 53H27.5L13.75 76.8c1.35.8 2.9 1.2 4.5 1.2h50.8c1.6 0 3.15-.45 4.5-1.2z"/><path fill="#ffba00" d="M73.4 26.5l-12.7-22c-.8-1.4-1.95-2.5-3.3-3.3L43.65 25 59.8 53h27.45c0-1.55-.4-3.1-1.2-4.5z"/></svg>',
- calendar:'<svg viewBox="0 0 48 48"><rect x="9" y="10" width="30" height="29" rx="3" fill="#fff" stroke="#dadce0"/><rect x="9" y="10" width="30" height="8" rx="3" fill="#4285F4"/><text x="24" y="35" text-anchor="middle" font-family="Arial,sans-serif" font-weight="700" font-size="16" fill="#4285F4">31</text></svg>',
- classroom:'<svg viewBox="0 0 48 48"><rect x="5" y="10" width="38" height="28" rx="2" fill="#0f9d58"/><rect x="5" y="33" width="38" height="5" fill="#0a8043"/><circle cx="24" cy="21" r="4" fill="#fff"/><path d="M15 32c0-5 4-7 9-7s9 2 9 7z" fill="#fff"/><rect x="13" y="19" width="3" height="9" rx="1.5" fill="#57bb8a"/><rect x="32" y="19" width="3" height="9" rx="1.5" fill="#57bb8a"/></svg>',
+ calendar:'<svg viewBox="0 0 48 48"><rect x="9" y="10" width="30" height="29" rx="4" fill="#fff" stroke="#dadce0"/><rect x="9" y="10" width="30" height="8" rx="4" fill="#4285F4"/><text x="24" y="35" text-anchor="middle" font-family="Arial,sans-serif" font-weight="700" font-size="16" fill="#4285F4">31</text></svg>',
+ classroom:'<svg viewBox="0 0 48 48"><rect x="5" y="10" width="38" height="28" rx="3" fill="#0f9d58"/><rect x="5" y="33" width="38" height="5" fill="#0a8043"/><circle cx="24" cy="21" r="4" fill="#fff"/><path d="M15 32c0-5 4-7 9-7s9 2 9 7z" fill="#fff"/><rect x="13" y="19" width="3" height="9" rx="1.5" fill="#57bb8a"/><rect x="32" y="19" width="3" height="9" rx="1.5" fill="#57bb8a"/></svg>',
  gemini:'<svg viewBox="0 0 24 24"><defs><linearGradient id="gm" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#4285F4"/><stop offset=".5" stop-color="#9b72cb"/><stop offset="1" stop-color="#d96570"/></linearGradient></defs><path fill="url(#gm)" d="M12 0c0 6.63-5.37 12-12 12 6.63 0 12 5.37 12 12 0-6.63 5.37-12 12-12-6.63 0-12-5.37-12-12z"/></svg>',
- notebook:'<svg viewBox="0 0 48 48"><rect x="10" y="7" width="28" height="34" rx="3" fill="#fff" stroke="#dadce0"/><rect x="10" y="7" width="6" height="34" rx="3" fill="#1a73e8"/><path fill="#1a73e8" d="M29 15c0 3.3-2.7 6-6 6 3.3 0 6 2.7 6 6 0-3.3 2.7-6 6-6-3.3 0-6-2.7-6-6z"/><circle cx="22" cy="30" r="1.7" fill="#ea4335"/></svg>',
+ notebook:'<svg viewBox="0 0 48 48"><rect x="10" y="7" width="28" height="34" rx="4" fill="#fff" stroke="#dadce0"/><rect x="10" y="7" width="6" height="34" rx="3" fill="#1a73e8"/><path fill="#1a73e8" d="M29 15c0 3.3-2.7 6-6 6 3.3 0 6 2.7 6 6 0-3.3 2.7-6 6-6-3.3 0-6-2.7-6-6z"/><circle cx="22" cy="30" r="1.7" fill="#ea4335"/></svg>',
+ chatgpt:'<svg viewBox="0 0 48 48"><rect width="48" height="48" rx="12" fill="#0d0d0d"/><path fill="#fff" transform="translate(9 9) scale(1.25)" d="M21.55 10.05a5.4 5.4 0 0 0-.46-4.42 5.44 5.44 0 0 0-5.86-2.6A5.4 5.4 0 0 0 11.1 1.2 5.44 5.44 0 0 0 5.9 5.05a5.4 5.4 0 0 0-3.6 2.62 5.44 5.44 0 0 0 .67 6.37 5.4 5.4 0 0 0 .46 4.42 5.44 5.44 0 0 0 5.86 2.6 5.4 5.4 0 0 0 4.07 1.83 5.44 5.44 0 0 0 5.19-3.77 5.4 5.4 0 0 0 3.6-2.62 5.44 5.44 0 0 0-.67-6.37zM12.7 21.4a4 4 0 0 1-2.57-.93l.13-.07 4.27-2.46a.7.7 0 0 0 .35-.6v-6l2.53 1.46v4.98a4.05 4.05 0 0 1-4.05 4.05zM4.6 17.9a4 4 0 0 1-.48-2.7l.13.08 4.27 2.46a.7.7 0 0 0 .7 0l5.22-3v2.92l-4.33 2.5a4.05 4.05 0 0 1-5.5-1.47zM3 8.9a4 4 0 0 1 2.1-1.76v5.02a.7.7 0 0 0 .35.6l5.2 3-2.53 1.46-4.27-2.46A4.05 4.05 0 0 1 3 8.9zM18.4 12.2l-5.22-3 2.53-1.46 4.27 2.46a4.05 4.05 0 0 1-.63 7.3v-5.02a.7.7 0 0 0-.95-.28zM20.9 9.5l-.13-.08-4.27-2.46a.7.7 0 0 0-.7 0l-5.2 3V7.06l4.33-2.5a4.05 4.05 0 0 1 5.97 4.94zM8.9 13.2l-2.53-1.46V6.76a4.05 4.05 0 0 1 6.64-3.1l-.13.07-4.27 2.46a.7.7 0 0 0-.35.6zM9.9 11.1l2.32-1.34 2.32 1.34v2.68l-2.32 1.34-2.32-1.34z"/></svg>',
  whatsapp:'<svg viewBox="0 0 32 32"><path fill="#25d366" d="M16 0C7.2 0 0 7.2 0 16c0 2.8.7 5.5 2.1 7.9L0 32l8.3-2.2C10.6 31.2 13.3 32 16 32c8.8 0 16-7.2 16-16S24.8 0 16 0z"/><path fill="#fff" d="M24 22c-.3.9-1.7 1.7-2.4 1.8-.6.1-1.4.1-2.3-.1-.5-.2-1.2-.4-2.1-.8-3.7-1.6-6.1-5.3-6.3-5.6-.2-.2-1.5-2-1.5-3.8s.9-2.7 1.3-3.1c.3-.4.7-.4 1-.4h.7c.2 0 .5-.1.8.6l1.1 2.7c.1.2.2.5 0 .8l-.5.7c-.2.2-.4.5-.2.9.2.4 1 1.6 2.1 2.6 1.4 1.3 2.6 1.7 3 1.9.3.1.5.1.7-.1l1-1.2c.2-.3.5-.2.8-.1l2.5 1.2c.3.2.6.3.7.4.1.3.1 1-.2 1.9z"/></svg>',
- alexia:'<svg viewBox="0 0 48 48"><defs><linearGradient id="al" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#00b4d8"/><stop offset="1" stop-color="#0077b6"/></linearGradient></defs><rect x="5" y="5" width="38" height="38" rx="11" fill="url(#al)"/><text x="24" y="33" text-anchor="middle" font-family="Arial,sans-serif" font-weight="800" font-size="23" fill="#fff">a</text></svg>',
+ instagram:'<svg viewBox="0 0 48 48"><defs><radialGradient id="ig" cx="30%" cy="107%" r="140%"><stop offset="0" stop-color="#fdf497"/><stop offset=".08" stop-color="#fdf497"/><stop offset=".45" stop-color="#fd5949"/><stop offset=".6" stop-color="#d6249f"/><stop offset=".9" stop-color="#285AEB"/></radialGradient></defs><rect x="5" y="5" width="38" height="38" rx="11" fill="url(#ig)"/><rect x="14" y="14" width="20" height="20" rx="7" fill="none" stroke="#fff" stroke-width="3"/><circle cx="24" cy="24" r="5.2" fill="none" stroke="#fff" stroke-width="3"/><circle cx="32.2" cy="15.8" r="2.1" fill="#fff"/></svg>',
+ alexia:'<svg viewBox="0 0 48 48"><defs><linearGradient id="al" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#00b4d8"/><stop offset="1" stop-color="#0077b6"/></linearGradient></defs><rect x="5" y="5" width="38" height="38" rx="12" fill="url(#al)"/><text x="24" y="33" text-anchor="middle" font-family="Arial,sans-serif" font-weight="800" font-size="23" fill="#fff">a</text></svg>',
  tips:'<svg viewBox="0 0 48 48"><path fill="#fbbc04" d="M24 6a12 12 0 0 0-7 21.7c1 .8 1.6 1.9 1.7 3.1l.3 2.2h10l.3-2.2c.1-1.2.7-2.3 1.7-3.1A12 12 0 0 0 24 6z"/><rect x="19" y="35" width="10" height="4" rx="2" fill="#f9a825"/><rect x="20.5" y="40" width="7" height="3" rx="1.5" fill="#f9a825"/></svg>',
- family:'<svg viewBox="0 0 48 48"><circle cx="17" cy="15" r="5" fill="#00897b"/><circle cx="31" cy="15" r="5" fill="#26a69a"/><path fill="#00897b" d="M7 39c0-6 4.5-11 10-11s10 5 10 11z"/><path fill="#26a69a" d="M21 39c0-6 4.5-11 10-11s10 5 10 11z"/></svg>',
+ family:'<svg viewBox="0 0 48 48"><circle cx="17" cy="15" r="5" fill="#0b8a7a"/><circle cx="31" cy="15" r="5" fill="#12b39c"/><path fill="#0b8a7a" d="M7 39c0-6 4.5-11 10-11s10 5 10 11z"/><path fill="#12b39c" d="M21 39c0-6 4.5-11 10-11s10 5 10 11z"/></svg>',
 };
 const B = {
   classroom:{lb:"Classroom",sub:"Tareas y clases",url:"https://classroom.google.com",icon:"classroom"},
@@ -260,7 +270,9 @@ const B = {
   alexia:{lb:"Alexia",sub:"Notas y asistencia",url:"https://josejoaquinprieto.alexiaeducl.com/ACWeb/paginas/Home/HomeProgDidactica.aspx",icon:"alexia"},
   notebook:{lb:"NotebookLM",sub:"Cuaderno IA",url:"https://notebooklm.google.com",icon:"notebook"},
   gemini:{lb:"Gemini",sub:"IA de Google",url:"https://gemini.google.com",icon:"gemini"},
+  chatgpt:{lb:"ChatGPT",sub:"IA de OpenAI",url:"https://chatgpt.com",icon:"chatgpt"},
   whatsapp:{lb:"WhatsApp",sub:"Comunicación",url:"https://web.whatsapp.com",icon:"whatsapp"},
+  instagram:{lb:"Instagram",sub:"@colegiojjprieto",url:"https://www.instagram.com/colegiojjprieto/?hl=es",icon:"instagram"},
   tutor:{lb:"Tutor Socrático",sub:"Reflexión y defensa",url:"index.html",icon:"tutor"},
   colegio:{lb:"Colegio",sub:"Sitio oficial",url:"https://www.josejoaquinprieto.cl",icon:"crest"},
   sip:{lb:"SIP",sub:"Red de Colegios",url:"https://www.sip.cl",icon:"crest"},
@@ -269,13 +281,13 @@ const B = {
 };
 const LINKS = {
   student:[B.classroom,B.drive,B.calendar,B.correo,B.alexia,B.tipsEst,B.tutor,B.colegio],
-  teacher:[B.classroom,B.drive,B.calendar,B.correo,B.notebook,B.gemini,B.alexia,B.tutor],
-  guardian:[B.alexia,B.calendar,B.correo,B.whatsapp,B.tipsApo,B.tutor,B.colegio,B.sip],
+  teacher:[B.classroom,B.drive,B.calendar,B.correo,B.notebook,B.gemini,B.chatgpt,B.alexia,B.tutor],
+  guardian:[B.alexia,B.correo,B.whatsapp,B.instagram,B.tipsApo,B.colegio,B.sip],
 };
 const ROLE_LABEL={student:"Estudiante",teacher:"Docente",guardian:"Apoderado"};
 
 function iconMarkup(b){
-  if(b.icon==="tutor") return mascotSVG(28);
+  if(b.icon==="tutor") return badgeMarkup(30);
   if(b.icon==="crest") return '<svg viewBox="0 0 120 120"><use href="#crestSVG"/></svg>';
   return ICONS[b.icon]||"";
 }
@@ -293,117 +305,206 @@ function renderQuick(role){
 /* ============ BASE DE CONOCIMIENTO (documentos institucionales reales) ============ */
 const ALL=["student","teacher","guardian"];
 const DOCS=[
-  {titulo:"Reglamento de Evaluación 2026 · Escala de calificaciones",roles:ALL,
-   texto:"La calificación se expresa en una escala numérica de 1,0 a 7,0, siendo el 4,0 la calificación mínima de aprobación. En Religión, Orientación y los Cursos de Desarrollo Integral se usa una escala conceptual (MB, B, S, I) que no incide en la promoción escolar."},
-  {titulo:"Reglamento de Evaluación 2026 · Promoción",roles:ALL,
-   texto:"Serán promovidos los estudiantes que aprueben todas las asignaturas. Si reprueban una asignatura, se promueven cuando su promedio final anual es igual o superior a 4,5, incluyéndola. Si reprueban dos asignaturas o módulos, cuando su promedio final anual es igual o superior a 5,0, incluidas las no aprobadas."},
-  {titulo:"Reglamento de Evaluación 2026 · Asistencia",roles:ALL,
-   texto:"Para ser promovido se requiere una asistencia igual o superior al 85% de las clases del calendario escolar anual. El Director puede promover con menos del 85% por causas justificadas, como enfermedad acreditada con certificado médico, o viaje e intercambio con entrevista y aprobación de la Dirección."},
-  {titulo:"Reglamento de Evaluación 2026 · Eximición",roles:ALL,
-   texto:"Ningún estudiante puede ser eximido de una asignatura o módulo del plan de estudio. Sí se permite la eximición de evaluaciones puntuales, según el Artículo N° 41 del reglamento."},
-  {titulo:"Proyecto Educativo Institucional (PEI) · Misión",roles:ALL,
-   texto:"Misión: «Generamos impacto en la trayectoria educativa de nuestros estudiantes de diversos contextos, mediante equipos y profesionales de excelencia, desarrollando integralmente su potencial y habilidades en un ambiente de respeto y paz, para que puedan lograr sus metas y sean ciudadanos que aporten a la sociedad»."},
-  {titulo:"Proyecto Educativo Institucional (PEI) · Sello",roles:ALL,
-   texto:"El colegio es parte de la SIP Red de Colegios desde 1856 y su sello es la «Vocación y Pasión por la Excelencia». Forma personas libres, responsables y comprometidas con su comunidad, aspirando a la excelencia académica y humana."},
-  {titulo:"Protocolo DEC · Desregulación Emocional Conductual",roles:ALL,
-   texto:"El Protocolo de abordaje para la Desregulación Emocional Conductual busca ser una línea preventiva que favorece el desarrollo de competencias emocionales de toda la comunidad educativa. La desregulación emocional se entiende como una situación conductualmente desafiante o desajustada según su naturaleza, intensidad o frecuencia, y se categoriza en tres tipos según sus manifestaciones."},
-  {titulo:"Reglamento Interno · Educación Parvularia",roles:ALL,
-   texto:"El Reglamento de Educación Parvularia regula las relaciones entre el colegio y la comunidad escolar con políticas de prevención, medidas pedagógicas y protocolos. En este nivel, la alteración de la sana convivencia no da lugar a medidas disciplinarias contra el niño o niña, pues está en pleno proceso de formación; se privilegia el aprendizaje de la resolución pacífica de conflictos."},
-  {titulo:"Plan Integral de Seguridad Escolar (PISE)",roles:ALL,
-   texto:"El PISE proporciona a la comunidad educativa un ambiente de seguridad integral, fortaleciendo el autocuidado y la autoprotección para responder adecuadamente ante emergencias o catástrofes. El establecimiento se ubica en Rey Don Felipe 1990, La Pintana."},
-  {titulo:"Plan de Gestión de la Convivencia Escolar 2025",roles:ALL,
-   texto:"El Plan de Gestión de la Convivencia Escolar 2025 promueve un clima nutritivo y la sana convivencia, incorporando técnicas de gestión emocional para estudiantes de 1° Básico a IV° Medio y para los funcionarios del colegio."},
-  {titulo:"Pauta de Evaluación Docente (reservada)",roles:["teacher"],
-   texto:"Las pautas de corrección y rúbricas internas son de uso exclusivo del cuerpo docente y no se comparten con estudiantes ni apoderados. La escala de corrección de referencia considera un 60% de logro para el 4,0."},
+  {t:"Reglamento de Evaluación 2026 · Escala de calificaciones",r:ALL,
+   x:"La calificación se expresa en una escala numérica de 1,0 a 7,0, siendo el 4,0 la calificación mínima de aprobación. En Religión, Orientación y los Cursos de Desarrollo Integral se usa una escala conceptual (MB, B, S, I) que no incide en la promoción."},
+  {t:"Reglamento de Evaluación 2026 · Promoción",r:ALL,
+   x:"Para la promoción se considera el logro de los objetivos y la asistencia. Son promovidos quienes aprueban todas las asignaturas. Con una asignatura reprobada, se promueve si el promedio final anual es igual o superior a 4,5 incluyéndola. Con dos asignaturas o módulos reprobados, si el promedio final anual es igual o superior a 5,0."},
+  {t:"Reglamento de Evaluación 2026 · Asistencia",r:ALL,
+   x:"Para ser promovido se requiere una asistencia igual o superior al 85% de las clases del calendario escolar anual. El Director puede promover con menos del 85% por causas justificadas, como enfermedad con certificado médico, o viaje e intercambio con entrevista y aprobación de la Dirección."},
+  {t:"Reglamento de Evaluación 2026 · Cálculo de promedios",r:ALL,
+   x:"El promedio final de cada asignatura en un semestre es el promedio simple de sus calificaciones, con redondeo a la décima. El promedio final anual de la asignatura es el promedio simple del primer y segundo semestre. El promedio general anual es el promedio simple de todas las asignaturas."},
+  {t:"Reglamento de Evaluación 2026 · Eximición",r:ALL,
+   x:"Ningún estudiante puede ser eximido de una asignatura o módulo del plan de estudio. Sí se permite la eximición de evaluaciones puntuales, según el Artículo N° 41 del reglamento."},
+  {t:"Reglamento de Evaluación 2026 · Evaluación formativa y sumativa",r:ALL,
+   x:"La evaluación formativa acompaña el aprendizaje y retroalimenta al estudiante, y no siempre lleva calificación. La evaluación sumativa certifica los aprendizajes logrados y se comunica mediante una calificación. La retroalimentación es información precisa y oportuna para mejorar el aprendizaje."},
+  {t:"Reglamento de Evaluación 2026 · Inasistencia a evaluaciones",r:ALL,
+   x:"La inasistencia a una evaluación debe justificarse; las evaluaciones grupales o previamente programadas deben justificarse antes de la ausencia. El estudiante rendirá o recuperará la evaluación en la instancia que defina el establecimiento."},
+  {t:"Proyecto Educativo Institucional (PEI) · Misión",r:ALL,
+   x:"Misión: «Generamos impacto en la trayectoria educativa de nuestros estudiantes de diversos contextos, mediante equipos y profesionales de excelencia, desarrollando integralmente su potencial y habilidades en un ambiente de respeto y paz, para que puedan lograr sus metas y sean ciudadanos que aporten a la sociedad»."},
+  {t:"Proyecto Educativo Institucional (PEI) · Visión",r:ALL,
+   x:"Visión: «Ser una red de colegios en permanente mejora e innovación, que conforma una sólida comunidad educativa, entregando formación integral a nuestros estudiantes y siendo un actor relevante en la educación del país»."},
+  {t:"Proyecto Educativo Institucional (PEI) · Valores y sello",r:ALL,
+   x:"Los valores que promueve el colegio son: justicia, respeto, prudencia, fortaleza, orden, honestidad, lealtad, autodominio, responsabilidad, disciplina, solidaridad, amistad, proactividad y laboriosidad. Su sello, parte de la SIP Red de Colegios desde 1856, es la «Vocación y Pasión por la Excelencia»."},
+  {t:"Protocolo DEC · Desregulación Emocional Conductual",r:ALL,
+   x:"El Protocolo de abordaje para la Desregulación Emocional Conductual es una línea preventiva que favorece el desarrollo de competencias emocionales de toda la comunidad. La desregulación emocional es una situación conductualmente desafiante según su naturaleza, intensidad o frecuencia, y se categoriza en tres tipos según sus manifestaciones."},
+  {t:"Reglamento Interno · Educación Parvularia",r:ALL,
+   x:"En Educación Parvularia, la alteración de la sana convivencia no da lugar a medidas disciplinarias contra el niño o niña, pues está en pleno proceso de formación de su personalidad y autorregulación. Se privilegia el aprendizaje de la resolución pacífica de conflictos: compartir, jugar y relacionarse con el entorno."},
+  {t:"Plan Integral de Seguridad Escolar (PISE)",r:ALL,
+   x:"El PISE proporciona a la comunidad educativa un ambiente de seguridad integral, fortaleciendo el autocuidado y la autoprotección para responder adecuadamente ante emergencias, sismos o catástrofes. En una emergencia, los estudiantes se dirigen a las zonas de seguridad demarcadas. El establecimiento se ubica en Rey Don Felipe 1990, La Pintana."},
+  {t:"Plan de Gestión de la Convivencia Escolar 2025",r:ALL,
+   x:"El Plan de Gestión de la Convivencia Escolar 2025 promueve un clima nutritivo y la sana convivencia, con técnicas de gestión emocional para estudiantes de 1° Básico a IV° Medio y para los funcionarios, reconociendo los valores que sostienen una buena convivencia."},
+  {t:"Consejos para ser un buen apoderado",r:ALL,
+   x:"Para acompañar mejor a tu pupilo: mantén comunicación frecuente con el profesor jefe, revisa Alexia y el calendario, asiste a las reuniones de apoderados y firma las comunicaciones. En casa fomenta hábitos de estudio y lectura, horarios y descanso, y refuerza los valores del colegio como el respeto, la responsabilidad y la honestidad. Según el PEI, los padres se comprometen a orientar a sus hijos y a formarse para hacerlo."},
+  {t:"Justificación de inasistencias",r:ALL,
+   x:"Las inasistencias se justifican mediante comunicación escrita del apoderado dirigida al profesor jefe, idealmente al regreso del estudiante. Las ausencias prolongadas por enfermedad se acreditan con certificado médico, que también permite justificar la asistencia inferior al 85% para efectos de promoción."},
+  {t:"Pauta de Evaluación Docente (reservada)",r:["teacher"],
+   x:"Las pautas de corrección y rúbricas internas son de uso exclusivo del cuerpo docente y no se comparten con estudiantes ni apoderados. La escala de corrección de referencia considera un 60% de logro para el 4,0."},
 ];
-const WORKSPACE={
-  classroom:[{curso:"Matemática",titulo:"Guía de fracciones",vence:"2026-07-03"},{curso:"Lenguaje",titulo:"Ensayo argumentativo",vence:"2026-07-05"},{curso:"Historia",titulo:"Línea de tiempo de la Independencia",vence:"2026-07-08"}],
-  calendar:[{titulo:"Prueba de Matemática (sumativa)",fecha:"2026-07-04"},{titulo:"Reunión de apoderados",fecha:"2026-07-10"},{titulo:"Acto aniversario del colegio",fecha:"2026-07-14"}],
-  drive:[{nombre:"Material Matemática - Fracciones.pdf",curso:"Matemática"},{nombre:"Guía Lenguaje - Argumentación.docx",curso:"Lenguaje"},{nombre:"Presentación Historia - Independencia.pptx",curso:"Historia"}],
-};
-const NO_INFO="No tengo información autorizada por el establecimiento sobre eso. Te sugiero consultarlo con tu profesor jefe, en secretaría o revisar Alexia.";
-const OUT_SCOPE="Solo puedo ayudarte con temas escolares del Colegio Presidente José Joaquín Prieto (evaluación, reglamentos, PEI, protocolos, tareas, fechas y materiales).";
-const OUT_WORDS=["bitcoin","apuesta","casino","horoscopo","horóscopo","receta de cocina","chiste"];
 
+/* Google Workspace (simulado, con enlaces a Classroom/Calendar/Drive) */
+const WORKSPACE={
+  classroom:[{c:"Matemática",t:"Guía de fracciones",v:"2026-07-03"},{c:"Lenguaje",t:"Ensayo argumentativo",v:"2026-07-05"},{c:"Historia",t:"Línea de tiempo de la Independencia",v:"2026-07-08"}],
+  calendar:[{t:"Prueba de Matemática (sumativa)",f:"2026-07-04"},{t:"Reunión de apoderados",f:"2026-07-10"},{t:"Acto aniversario del colegio",f:"2026-07-14"}],
+  drive:[{n:"Material Matemática - Fracciones.pdf",c:"Matemática"},{n:"Guía Lenguaje - Argumentación.docx",c:"Lenguaje"},{n:"Presentación Historia - Independencia.pptx",c:"Historia"}],
+};
+
+const NO_INFO="No encuentro esa información en los documentos del establecimiento. Puedes reformular la pregunta, o consultarlo con tu profesor jefe, en secretaría o en Alexia. 🙌";
+const OUT_SCOPE="Puedo ayudarte con temas escolares del Colegio Presidente José Joaquín Prieto: evaluación, reglamentos, PEI, protocolos, convivencia, tareas, fechas y materiales. ¿Sobre cuál te ayudo?";
+const OUT_WORDS=["bitcoin","apuesta","casino","horoscopo","horóscopo","receta de cocina","futbol americano","pornograf"];
+
+/* ============ MOTOR (retriever con sinónimos + respuesta coherente) ============ */
 function normalize(s){return s.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"").replace(/[^a-z0-9\s]/g," ").replace(/\s+/g," ").trim();}
-function keywords(q){return normalize(q).split(" ").filter(w=>w.length>3);}
-function has(t,w){const x=normalize(t);return w.some(k=>x.includes(k));}
-function retrieveDocs(query,role){
-  const kw=keywords(query);
-  return DOCS.filter(d=>d.roles.includes(role)).map(d=>{const t=normalize(d.texto+" "+d.titulo);return{d,score:kw.reduce((a,w)=>a+(t.includes(w)?1:0),0)};})
-    .filter(r=>r.score>0).sort((a,b)=>b.score-a.score).slice(0,3).map(r=>({titulo:r.d.titulo,fragmento:r.d.texto}));
+/* Grupos de sinónimos: acercan el lenguaje del usuario al de los documentos. */
+const SYNGROUPS=[
+  ["nota","notas","calificacion","calificaciones","puntaje","promedio","promedios","minima","minimo"],
+  ["aprobar","aprobacion","aprobado","aprueba"],
+  ["pasar","paso","promocion","promovido","promovidos","curso","repitencia","repetir","repite","reprobar","reprobada","reprobado"],
+  ["asistencia","asistir","asiste","porcentaje"],
+  ["inasistencia","inasistencias","falta","faltas","faltar","falte","falto","ausencia","ausencias"],
+  ["justificar","justificacion","justificativo","certificado","comunicacion"],
+  ["evaluacion","evaluaciones","prueba","pruebas","examen","test","sumativa","control","controles"],
+  ["formativa","retroalimentacion"],
+  ["mision"],["vision","futuro"],
+  ["valores","valor","principios","sello","excelencia","vocacion"],
+  ["seguridad","pise","emergencia","sismo","terremoto","evacuacion","catastrofe","autocuidado","zona"],
+  ["convivencia","clima","conflicto"],
+  ["desregulacion","emocional","conductual","dec"],
+  ["apoderado","apoderados","familia","familias","padre","padres","madre"],
+  ["consejo","consejos","recomendacion","recomiendas","tips","mejor","ayudar"],
+  ["reglamento","reglamentos","norma","normas","reglas"],
+  ["material","materiales","guia","guias","apunte","apuntes","recurso","recursos","presentacion","archivo"],
+  ["tarea","tareas","deber","entrega","pendiente","pendientes"],
+  ["parvulo","parvulos","parvularia","prekinder","kinder","preescolar"],
+  ["eximir","eximicion","eximido","eximiciones"],
+  ["semestre","semestres","semestral","calendario"],
+];
+function words(s){return normalize(s).split(" ").filter(w=>w.length>2);}
+/* Palabras vacías: verbos/pronombres genéricos que no aportan al significado. */
+const STOP=new Set(["pasa","paso","pasar","hago","hace","hacer","hacen","caso","cual","cuales","como","donde","cuando","cuanto","cuanta","cuantos","cuantas","tengo","tiene","tienen","tienes","dice","dicen","decir","puedo","puede","pueden","podria","necesito","necesita","quiero","quiere","sobre","acerca","algun","alguna","algunos","algo","favor","dime","explica","explicame","cuentame","saber","informacion","ayuda","ayudame","esta","este","estos","estas","para","por","con","del","los","las","una","unos","unas","muy","mas","pero","tambien","entonces","cosa","cosas","aqui","alli","donde","cuales","porque","segun","cada","todo","toda","todos","todas"]);
+function qWords(q){return words(q).filter(w=>w.length>3&&!STOP.has(w));}
+function expand(tokens){const out=new Set(tokens);tokens.forEach(t=>{SYNGROUPS.forEach(g=>{if(g.some(m=>m===t||m.startsWith(t)||t.startsWith(m)))g.forEach(m=>out.add(m));});});return [...out];}
+function kwset(q){return new Set(expand(words(q).filter(w=>w.length>3)));}
+function has(t,arr){const x=normalize(t);return arr.some(k=>x.includes(k));}
+function inSet(set,w){for(const dw of set){if(dw===w||dw.startsWith(w)||w.startsWith(dw))return true;}return false;}
+
+const GREET=["hola","holaa","buenas","buenos dias","buenas tardes","buenas noches","hey","que tal","como estas"];
+const THANKS=["gracias","muchas gracias","genial","perfecto","excelente","ok gracias","muy bien"];
+
+function docWords(d){ if(!d._tw){ d._tw=new Set(words(d.t)); d._bw=new Set(words(d.x)); } }
+function groupOf(w){ for(const g of SYNGROUPS){ if(g.some(m=>m===w||m.startsWith(w)||w.startsWith(m))) return g; } return null; }
+function retrieve(query,role){
+  const base=qWords(query);
+  if(base.length===0) return [];
+  const scored=DOCS.filter(d=>d.r.includes(role)).map(d=>{
+    docWords(d);
+    let s=0;
+    // Se puntúa UNA vez por palabra de la pregunta (por grupo de sinónimos),
+    // no por cada sinónimo, para no inflar documentos verbosos. Coincidencia por
+    // palabra completa con prefijos (evita "asistencia" dentro de "inasistencias").
+    base.forEach(w=>{
+      if(inSet(d._tw,w)) s+=3;
+      else if(inSet(d._bw,w)) s+=2;
+      else { const g=groupOf(w); if(g){ if(g.some(m=>inSet(d._tw,m))) s+=1.5; else if(g.some(m=>inSet(d._bw,m))) s+=1; } }
+    });
+    return {d,s};
+  }).filter(r=>r.s>0).sort((a,b)=>b.s-a.s);
+  // Umbral: exige relevancia real (al menos una coincidencia fuerte) para no inventar.
+  if(scored.length===0||scored[0].s<2) return [];
+  const top=scored[0].s;
+  return scored.filter(r=>r.s>=top-1.4).slice(0,2).map(r=>({titulo:r.d.t,fragmento:r.d.x}));
 }
 function workspaceSources(query,role){
   const out=[];
-  if((role==="student"||role==="teacher")&&has(query,["tarea","pendiente","entrega","deber"]))
-    out.push({titulo:"Google Classroom · Tareas",fragmento:WORKSPACE.classroom.map(t=>`${t.curso}: ${t.titulo} (vence ${t.vence})`).join(". ")+". Ábrelas en Google Classroom."});
-  if(has(query,["fecha","evaluacion","evaluación","prueba","calendario","reunion","reunión","cuando","cuándo","vacaciones","evento"]))
-    out.push({titulo:"Google Calendar · Próximos eventos",fragmento:WORKSPACE.calendar.map(e=>`${e.titulo} (${e.fecha})`).join(". ")+". Revísalos en Google Calendar."});
-  if(has(query,["material","donde","dónde","archivo","documento","guia","guía","presentacion","presentación","apunte"]))
-    out.push({titulo:"Google Drive · Material",fragmento:WORKSPACE.drive.map(f=>`${f.nombre} (${f.curso})`).join(". ")+". Disponible en Google Drive."});
+  if((role==="student"||role==="teacher")&&has(query,["tarea","tareas","pendiente","entrega","deber"]))
+    out.push({titulo:"Google Classroom · Tareas",fragmento:WORKSPACE.classroom.map(t=>`${t.c}: ${t.t} (vence ${t.v})`).join(". ")+". Ábrelas en Google Classroom."});
+  if(has(query,["fecha","fechas","evento","proxima","calendario"])||/reunion|reunión|aniversario/i.test(query))
+    out.push({titulo:"Google Calendar · Próximos eventos",fragmento:WORKSPACE.calendar.map(e=>`${e.t} (${e.f})`).join(". ")+". Revísalos en Google Calendar."});
+  if(has(query,["material","materiales","archivo","guia","presentacion","apunte","recurso"]))
+    out.push({titulo:"Google Drive · Material",fragmento:WORKSPACE.drive.map(f=>`${f.n} (${f.c})`).join(". ")+". Disponible en Google Drive."});
   return out;
 }
-function localAnswer(query,sources,hist){
-  const kw=new Set(keywords(query));const cands=[];
-  sources.forEach((src,idx)=>{src.fragmento.split(/(?<=[.!?])\s+/).forEach(s=>{const w=normalize(s).split(" ");const sc=w.reduce((a,x)=>a+(kw.has(x)?1:0),0);if(s.trim())cands.push({idx,sent:s.trim(),score:sc});});});
-  const conP=cands.filter(c=>c.score>0);
-  const el=(conP.length?conP:cands).sort((a,b)=>b.score-a.score).slice(0,3).sort((a,b)=>a.idx-b.idx);
-  return (hist?"Con gusto. ":"Según la información del establecimiento: ")+el.map(c=>`${c.sent} [${c.idx+1}]`).join(" ");
-}
-let ROLE="student";const convo=[];
-function answer(query){
-  if(has(query,OUT_WORDS))return{reply:OUT_SCOPE,citations:[]};
-  const sources=[...retrieveDocs(query,ROLE),...workspaceSources(query,ROLE)].map((c,i)=>({index:i+1,...c}));
-  if(sources.length===0)return{reply:NO_INFO,citations:[]};
-  return{reply:localAnswer(query,sources,convo.length>0),citations:sources};
+/* Respuesta extractiva coherente: prioriza las frases más pertinentes del mejor documento. */
+function compose(query,sources,hist){
+  const kw=new Set(qWords(query));
+  const parts=[];
+  sources.forEach((src,idx)=>{
+    const sents=src.fragmento.split(/(?<=[.!?])\s+/).map(s=>s.trim()).filter(Boolean);
+    const ranked=sents.map(s=>{const w=normalize(s).split(" ");return {s,sc:w.reduce((a,x)=>a+(kw.has(x)?1:0),0)};})
+      .sort((a,b)=>b.sc-a.sc);
+    // Del documento principal se toman hasta 2 frases; de uno secundario, 1.
+    const take=idx===0?2:1;
+    const chosen=(ranked.some(r=>r.sc>0)?ranked.filter(r=>r.sc>0):ranked).slice(0,take);
+    chosen.forEach(c=>parts.push(c.s+" ["+(idx+1)+"]"));
+  });
+  const intro=hist?"Claro. ":"Según los documentos del colegio: ";
+  return intro+parts.join(" ");
 }
 
-/* ============ UI ============ */
-const SUGS={
-  student:["¿Cuál es la nota mínima de aprobación?","¿Cuánta asistencia necesito para pasar de curso?","¿Qué tareas tengo pendientes?","¿Cuándo es la próxima evaluación?"],
-  teacher:["¿Qué dice el protocolo de desregulación emocional?","¿Cómo se calcula la promoción?","¿Qué material hay de Historia?","¿Cuál es el plan de convivencia 2025?"],
-  guardian:["¿Cómo justifico una inasistencia?","¿Cuál es la misión del colegio?","¿Cuándo es la reunión de apoderados?","¿Qué dice el PISE de seguridad?"],
-};
-const log=document.getElementById("log");
-/* Si existen los logos reales en assets/, se usan; si no, se muestra el SVG. */
-let ROBOT_OK=false;
-function mascotSVG(sz){return ROBOT_OK
-  ? '<img src="assets/robot.png" width="'+sz+'" height="'+sz+'" alt="ASE-IA" style="object-fit:contain">'
+const convo=[];let ROLE="student";
+function answer(query){
+  const nq=normalize(query);
+  if(GREET.includes(nq)||GREET.some(g=>nq===g)) return {reply:"¡Hola! 👋 Soy ASE-IA. Pregúntame por evaluación, reglamentos, el PEI, protocolos, convivencia, tus tareas o fechas.",citations:[]};
+  if(THANKS.some(t=>nq.startsWith(t))) return {reply:"¡Con gusto! 😊 Si necesitas algo más sobre el colegio, aquí estoy.",citations:[]};
+  if(has(query,OUT_WORDS)) return {reply:OUT_SCOPE,citations:[]};
+  // Workspace primero (tareas/fechas/material son consultas específicas).
+  const ws=workspaceSources(query,ROLE);
+  const wsIntent = has(query,["tarea","tareas","pendiente","entrega","material","materiales","guia","apunte","presentacion"])
+    || /pr[oó]xim|cu[aá]ndo|qu[eé]\s+fecha|fecha\s+de|reuni[oó]n|evento|calendario|d[oó]nde\s+est/i.test(query);
+  const docs=retrieve(query,ROLE);
+  let sources = (wsIntent && ws.length) ? ws : [...ws, ...docs];
+  sources = sources.map((c,i)=>({index:i+1,...c}));
+  if(sources.length===0) return {reply:NO_INFO,citations:[]};
+  return {reply:compose(query,sources,convo.length>0),citations:sources};
+}
+
+/* ============ AVATAR / BADGE ============ */
+let BADGE_OK=false;
+function badgeMarkup(sz){return BADGE_OK
+  ? '<img src="assets/ase-ia-badge.png" width="'+sz+'" height="'+sz+'" alt="ASE-IA" style="object-fit:contain">'
   : '<svg viewBox="0 0 120 120" width="'+sz+'" height="'+sz+'"><use href="#mascot"/></svg>';}
 (function(){
-  const r=new Image();
-  r.onload=function(){ROBOT_OK=true;document.querySelectorAll('svg[data-robot]').forEach(function(n){
-    const im=document.createElement('img');im.src='assets/robot.png';im.width=n.getAttribute('width');im.height=n.getAttribute('height');
-    im.alt='ASE-IA';im.style.objectFit='contain';im.className=n.getAttribute('class')||'';n.replaceWith(im);});};
-  r.src='assets/robot.png';
+  const im=new Image();
+  im.onload=function(){BADGE_OK=true;};
+  im.src="assets/ase-ia-badge.png";
   const c=new Image();
   c.onload=function(){document.querySelectorAll('svg[data-crest]').forEach(function(n){
-    const im=document.createElement('img');im.src='assets/logo-sip.png';im.width=n.getAttribute('width');im.height=n.getAttribute('height');
-    im.alt='SIP';if(n.getAttribute('style'))im.setAttribute('style',n.getAttribute('style'));im.className=n.getAttribute('class')||'';n.replaceWith(im);});};
-  c.src='assets/logo-sip.png';
+    const el=document.createElement('img');el.src='assets/logo-sip.png';el.width=n.getAttribute('width');el.height=n.getAttribute('height');
+    el.alt='SIP';el.style.objectFit='contain';n.replaceWith(el);});};
+  c.src="assets/logo-sip.png";
 })();
+
+/* ============ UI DEL CHAT ============ */
+const SUGS={
+  student:["¿Cuál es la nota mínima de aprobación?","¿Cuánta asistencia necesito para pasar de curso?","¿Qué tareas tengo pendientes?","¿Cuáles son los valores del colegio?"],
+  teacher:["¿Qué dice el protocolo de desregulación emocional?","¿Cómo se calcula la promoción?","¿Cuál es la visión del colegio?","¿Qué material hay de Historia?"],
+  guardian:["¿Cómo puedo ser un mejor apoderado?","¿Cómo justifico una inasistencia?","¿Cuál es la misión del colegio?","¿Cómo se calcula la promoción?"],
+};
+const log=document.getElementById("log");
 function el(t,c,x){const e=document.createElement(t);if(c)e.className=c;if(x!=null)e.textContent=x;return e;}
+function avatarEl(){const w=el("span");w.innerHTML=badgeMarkup(30);const n=w.firstElementChild;if(n)n.setAttribute("class","av");return n||w;}
 function add(text,who,cites){
   const row=el("div","row "+who);
-  if(who==="bot"){const a=el("span","avatar");a.innerHTML=mascotSVG(28);row.appendChild(a);}
+  if(who==="bot")row.appendChild(avatarEl());
   const msg=el("div","msg",text);
   if(cites&&cites.length){const box=el("div","cites");cites.forEach(c=>box.appendChild(el("span","cite","["+c.index+"] "+c.titulo)));msg.appendChild(box);}
   row.appendChild(msg);log.appendChild(row);log.scrollTop=log.scrollHeight;
 }
 let typingRow=null;
 function typing(on){
-  if(on&&!typingRow){typingRow=el("div","row bot");const a=el("span","avatar");a.innerHTML=mascotSVG(28);typingRow.appendChild(a);const t=el("div","typing");t.appendChild(el("span","dot"));t.appendChild(el("span","dot"));t.appendChild(el("span","dot"));typingRow.appendChild(t);log.appendChild(typingRow);log.scrollTop=log.scrollHeight;}
+  if(on&&!typingRow){typingRow=el("div","row bot");typingRow.appendChild(avatarEl());
+    const t=el("div","typing");t.appendChild(el("span","tdot"));t.appendChild(el("span","tdot"));t.appendChild(el("span","tdot"));
+    typingRow.appendChild(t);log.appendChild(typingRow);log.scrollTop=log.scrollHeight;}
   else if(!on&&typingRow){typingRow.remove();typingRow=null;}
 }
 function renderSugs(){const box=document.getElementById("sugs");box.innerHTML="";SUGS[ROLE].forEach(s=>{const b=el("button","sug",s);b.type="button";b.onclick=()=>ask(s);box.appendChild(b);});}
 function ask(text){text=(text||"").trim();if(!text)return;document.getElementById("sugs").innerHTML="";add(text,"user");document.getElementById("q").value="";typing(true);
-  setTimeout(()=>{const r=answer(text);typing(false);add(r.reply,"bot",r.citations);convo.push({role:"user",content:text});convo.push({role:"assistant",content:r.reply});},480);}
+  setTimeout(()=>{const r=answer(text);typing(false);add(r.reply,"bot",r.citations);convo.push({role:"user",content:text});convo.push({role:"assistant",content:r.reply});},520);}
 
 function enter(role){
   ROLE=role;convo.length=0;log.innerHTML="";
   document.getElementById("whoLabel").textContent=ROLE_LABEL[role];
   renderQuick(role);renderSugs();
-  add("¡Hola! 👋 Soy ASE-IA, tu Asistente Escolar del Colegio Presidente José Joaquín Prieto. Pregúntame por reglamentos, evaluación, protocolos, tareas o fechas.","bot");
+  add("¡Hola! 👋 Soy ASE-IA, tu Asistente Escolar del Colegio Presidente José Joaquín Prieto. Pregúntame por reglamentos, evaluación, el PEI, protocolos, convivencia, tareas o fechas.","bot");
   document.getElementById("gate").style.display="none";
   document.getElementById("app").style.display="block";
   window.scrollTo(0,0);
