@@ -696,7 +696,7 @@ function normalize(s){return s.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g
 const SYNGROUPS=[
   ["nota","notas","calificacion","calificaciones","puntaje","promedio","promedios","minima","minimo"],
   ["aprobar","aprobacion","aprobado","aprueba"],
-  ["pasar","paso","promocion","promovido","promovidos","curso","repitencia","repetir","repite","reprobar","reprobada","reprobado"],
+  ["pasar","paso","promocion","promovido","promovidos","curso","repitencia","repetir","repite","reprobar","reprobada","reprobado","repruebo","reprueba","repruebas","repruebe","reprueban","asignatura","asignaturas","ramo","ramos","modulo","modulos"],
   ["asistencia","asistir","asiste","porcentaje"],
   ["inasistencia","inasistencias","falta","faltas","faltar","falte","falto","ausencia","ausencias"],
   ["justificar","justificacion","justificativo","certificado","comunicacion"],
@@ -704,7 +704,7 @@ const SYNGROUPS=[
   ["formativa","retroalimentacion"],
   ["mision"],["vision","futuro"],
   ["valores","valor","principios","sello","excelencia","vocacion"],
-  ["seguridad","pise","emergencia","sismo","terremoto","evacuacion","catastrofe","autocuidado","zona"],
+  ["seguridad","pise","emergencia","sismo","sismos","temblor","temblores","terremoto","evacuacion","evacuar","catastrofe","incendio","autocuidado","zona"],
   ["convivencia","clima","conflicto"],
   ["desregulacion","emocional","conductual","dec"],
   ["apoderado","apoderados","familia","familias","padre","padres","madre"],
@@ -717,13 +717,13 @@ const SYNGROUPS=[
   ["semestre","semestres","semestral","calendario"],
   ["celular","celulares","telefono","telefonos","dispositivo","dispositivos","movil","moviles","musica","audifonos"],
   ["atraso","atrasos","atrasado","atrasados","atrasada","atrasar","puntualidad","tardanza","tarde","presentacion","uniforme","vestimenta"],
-  ["falta","faltas","leve","leves","grave","graves","gravisima","gravisimas","sancion","sanciones","sancionar","disciplinaria","medida","castigo"],
+  ["falta","faltas","leve","leves","grave","graves","gravisima","gravisimas","sancion","sanciones","sancionar","disciplinaria","medida","castigo","conducta","comportamiento","portarse","porto","comporto","comporta","comportan","comporte"],
   ["apelacion","apelar","reconsideracion","reconsiderar","recurso","injusta","desmedida"],
   ["acoso","bullying","matonaje","hostigamiento","ciberacoso","violencia"],
   ["expulsion","expulsar","matricula","cancelacion","condicionalidad","baja","ausente"],
   ["derecho","derechos","deberes","obligacion","obligaciones"],
   ["conflicto","conflictos","mediacion","colaborativa","dialogo","pacifica"],
-  ["suicidio","suicida","autolesion","autolesiva","autolesivas","ideacion","mental"],
+  ["suicidio","suicida","autolesion","autolesiva","autolesivas","ideacion","mental","triste","tristeza","depresion","depresivo","angustia","animo"],
   ["sexual","sexuales","connotacion","abuso"],
   ["maltrato","agrede","agredir","agresor","agresion"],
   ["necesidades","especiales","inclusion","multidisciplinario"],
@@ -731,12 +731,19 @@ const SYNGROUPS=[
 ];
 function words(s){return normalize(s).split(" ").filter(w=>w.length>2);}
 /* Palabras vacías: verbos/pronombres genéricos que no aportan al significado. */
-const STOP=new Set(["pasa","paso","pasar","hago","hace","hacer","hacen","caso","cual","cuales","como","donde","cuando","cuanto","cuanta","cuantos","cuantas","tengo","tiene","tienen","tienes","dice","dicen","decir","puedo","puede","pueden","podria","necesito","necesita","quiero","quiere","usar","uso","usa","usan","utilizar","llego","llega","clase","clases","sobre","acerca","algun","alguna","algunos","algo","favor","dime","explica","explicame","cuentame","saber","informacion","ayuda","ayudame","esta","este","estos","estas","para","por","con","del","los","las","una","unos","unas","muy","mas","pero","tambien","entonces","cosa","cosas","aqui","alli","donde","cuales","porque","segun","cada","todo","toda","todos","todas"]);
-function qWords(q){return words(q).filter(w=>w.length>3&&!STOP.has(w));}
+const STOP=new Set(["pasa","paso","pasar","hago","hace","hacer","hacen","caso","cual","cuales","como","donde","cuando","cuanto","cuanta","cuantos","cuantas","tengo","tiene","tienen","tienes","dice","dicen","decir","puedo","puede","pueden","podria","necesito","necesita","quiero","quiere","usar","uso","usa","usan","utilizar","llego","llega","clase","clases","hora","horas","resultado","resultados","clasico","clima","sobre","acerca","algun","alguna","algunos","algo","favor","dime","explica","explicame","cuentame","saber","informacion","ayuda","ayudame","esta","este","estos","estas","para","por","con","del","los","las","una","unos","unas","muy","mas","pero","tambien","entonces","cosa","cosas","aqui","alli","donde","cuales","porque","segun","cada","todo","toda","todos","todas"]);
+/* Acrónimos/siglas cortas que sí importan (se conservan pese a tener ≤3 letras). */
+const KEEP=new Set(["pei","dec","sip","cra"]);
+function qWords(q){return words(q).filter(w=>(w.length>3||KEEP.has(w))&&!STOP.has(w));}
 function expand(tokens){const out=new Set(tokens);tokens.forEach(t=>{SYNGROUPS.forEach(g=>{if(g.some(m=>m===t||m.startsWith(t)||t.startsWith(m)))g.forEach(m=>out.add(m));});});return [...out];}
 function kwset(q){return new Set(expand(words(q).filter(w=>w.length>3)));}
 function has(t,arr){const x=normalize(t);return arr.some(k=>x.includes(k));}
-function inSet(set,w){for(const dw of set){if(dw===w||dw.startsWith(w)||w.startsWith(dw))return true;}return false;}
+/* Coincidencia por palabra: exacta siempre; por prefijo solo si la palabra más
+   corta tiene ≥5 letras (evita colisiones como "sus"→"sushi" u "hora"→"horarios"). */
+function inSet(set,w){for(const dw of set){
+  if(dw===w) return true;
+  if((dw.startsWith(w)||w.startsWith(dw)) && Math.min(dw.length,w.length)>=5) return true;
+}return false;}
 
 const GREET=["hola","holaa","buenas","buenos dias","buenas tardes","buenas noches","hey","que tal","como estas"];
 const THANKS=["gracias","muchas gracias","genial","perfecto","excelente","ok gracias","muy bien"];
@@ -759,11 +766,12 @@ function retrieve(query,role){
     });
     return {d,s};
   }).filter(r=>r.s>0).sort((a,b)=>b.s-a.s);
-  // Umbral: exige relevancia temática real (coincidencia directa o de sinónimo en
-  // el título) para no inventar; las consultas sin relación puntúan 0 y se descartan.
+  // Umbral: una coincidencia temática en el título (directa o por sinónimo, >=1.5)
+  // basta para responder; lo no relacionado puntúa 0 y se descarta. El recall se
+  // mejora con más sinónimos y acrónimos, no bajando el umbral (evita falsos positivos).
   if(scored.length===0||scored[0].s<1.5) return [];
   const top=scored[0].s;
-  return scored.filter(r=>r.s>=top-1.4).slice(0,2).map(r=>({titulo:r.d.t,fragmento:r.d.x}));
+  return scored.filter(r=>r.s>=top-1.6).slice(0,3).map(r=>({titulo:r.d.t,fragmento:r.d.x}));
 }
 function workspaceSources(query,role){
   const out=[];
@@ -1086,6 +1094,44 @@ function realGoogle(){
 }
 
 /* ============ INTRO · se cierra sola (o al tocar) y muestra el acceso ============ */
+/* ====== SONIDO ÉPICO DE BIENVENIDA (Web Audio API, sin archivos) ====== */
+let audioCtx=null, introSoundPlayed=false;
+function playIntroSound(){
+  if(introSoundPlayed)return;
+  const AC=window.AudioContext||window.webkitAudioContext; if(!AC)return;
+  try{ audioCtx=audioCtx||new AC(); }catch(_){ return; }
+  if(audioCtx.state==="suspended"){ try{audioCtx.resume();}catch(_){} }
+  if(audioCtx.state!=="running") return;   // aún bloqueado; se reintenta con el primer toque
+  introSoundPlayed=true;
+  const ctx=audioCtx, t=ctx.currentTime;
+  const master=ctx.createGain(); master.gain.value=0.9; master.connect(ctx.destination);
+  // 1) Golpe grave (sub-boom)
+  const boom=ctx.createOscillator(),bg=ctx.createGain();
+  boom.type="sine";boom.frequency.setValueAtTime(95,t);boom.frequency.exponentialRampToValueAtTime(42,t+0.9);
+  bg.gain.setValueAtTime(0.0001,t);bg.gain.exponentialRampToValueAtTime(0.9,t+0.03);bg.gain.exponentialRampToValueAtTime(0.0001,t+1.7);
+  boom.connect(bg).connect(master);boom.start(t);boom.stop(t+1.8);
+  // 2) Barrido ascendente (riser)
+  const ris=ctx.createOscillator(),rg=ctx.createGain(),rf=ctx.createBiquadFilter();
+  ris.type="sawtooth";ris.frequency.setValueAtTime(80,t);ris.frequency.exponentialRampToValueAtTime(900,t+1.5);
+  rf.type="lowpass";rf.frequency.setValueAtTime(300,t);rf.frequency.exponentialRampToValueAtTime(6500,t+1.5);rf.Q.value=7;
+  rg.gain.setValueAtTime(0.0001,t);rg.gain.linearRampToValueAtTime(0.26,t+1.4);rg.gain.exponentialRampToValueAtTime(0.0001,t+1.75);
+  ris.connect(rf).connect(rg).connect(master);ris.start(t);ris.stop(t+1.8);
+  // 3) Impacto en el clímax
+  const cx=t+1.5, len=Math.floor(ctx.sampleRate*0.5), buf=ctx.createBuffer(1,len,ctx.sampleRate), d=buf.getChannelData(0);
+  for(let i=0;i<len;i++) d[i]=(Math.random()*2-1)*Math.pow(1-i/len,2);
+  const nb=ctx.createBufferSource();nb.buffer=buf;
+  const nf=ctx.createBiquadFilter();nf.type="highpass";nf.frequency.value=1200;
+  const ng=ctx.createGain();ng.gain.setValueAtTime(0.55,cx);ng.gain.exponentialRampToValueAtTime(0.0001,cx+0.6);
+  nb.connect(nf).connect(ng).connect(master);nb.start(cx);nb.stop(cx+0.6);
+  // 4) Acorde mayor épico que se despliega
+  const chord=[130.81,196.00,261.63,329.63,392.00,523.25];
+  const cg=ctx.createGain();cg.gain.setValueAtTime(0.0001,cx);
+  cg.gain.linearRampToValueAtTime(0.42,cx+0.08);cg.gain.exponentialRampToValueAtTime(0.0001,cx+2.4);
+  const cf=ctx.createBiquadFilter();cf.type="lowpass";cf.frequency.value=5200;cg.connect(cf).connect(master);
+  chord.forEach((f,i)=>{const o=ctx.createOscillator();o.type=i<3?"triangle":"sawtooth";o.frequency.value=f;o.detune.value=(i-2.5)*3;o.connect(cg);o.start(cx);o.stop(cx+2.5);});
+}
+function unlockAudioOnce(){ playIntroSound(); }
+
 let introTimer=null;
 function skipIntro(){const i=document.getElementById("intro");if(!i||i.classList.contains("done"))return;
   if(introTimer)clearInterval(introTimer);
@@ -1103,8 +1149,13 @@ function skipIntro(){const i=document.getElementById("intro");if(!i||i.classList
   function nextMsg(){ if(!msg)return; msg.classList.remove("on");
     setTimeout(()=>{ msg.textContent="« "+FRASES[k%FRASES.length]+" »"; msg.classList.add("on"); k++; },240); }
   nextMsg(); introTimer=setInterval(nextMsg,1650);
-  i.addEventListener("click",skipIntro);       // se puede tocar para entrar
-  setTimeout(skipIntro,4200);                   // duración de la intro
+  // Sonido: intenta sonar de inmediato; si el navegador lo bloquea, suena con el primer toque.
+  playIntroSound();
+  ["pointerdown","touchstart","keydown"].forEach(ev=>window.addEventListener(ev,unlockAudioOnce,{once:true,capture:true}));
+  // Se puede tocar para entrar, pero no en el primer instante (deja lucir el logo y el sonido).
+  const startT=Date.now();
+  i.addEventListener("click",()=>{ if(Date.now()-startT<1400)return; skipIntro(); });
+  setTimeout(skipIntro,4400);                   // duración de la intro
 })();
 
 /* ============ MONEDA 3D (girar el logo arrastrando, con inercia) ============ */
