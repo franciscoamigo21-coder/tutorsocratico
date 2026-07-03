@@ -50,10 +50,15 @@ function systemPrompt(role) {
     `REGLAS ABSOLUTAS:\n` +
     `1. Responde ÚNICAMENTE con la información de las FUENTES AUTORIZADAS que ` +
     `recibas. PROHIBIDO inventar datos, fechas o normas.\n` +
-    `2. Cita la fuente de cada afirmación con su marcador [n].\n` +
-    `3. Si las fuentes no contienen la respuesta, dilo con honestidad y sugiere ` +
+    `2. Si las fuentes no contienen la respuesta, dilo con honestidad y sugiere ` +
     `consultar al profesor jefe, secretaría o Alexia.\n` +
-    `4. Español de Chile, tono claro, cercano y respetuoso. Sé conciso.\n` +
+    `3. Español de Chile, tono claro, cercano y respetuoso.\n` +
+    `4. SÉ MUY BREVE: 2 a 4 frases, directo al grano, sin relleno. La página ` +
+    `muestra las fuentes en tarjetas aparte, así que NO repitas el texto completo ` +
+    `del reglamento ni enumeres todo; resume y responde solo lo preguntado.\n` +
+    `5. FORMATO OBLIGATORIO: texto plano corrido. PROHIBIDO usar Markdown: nada de ` +
+    `#, ##, ###, **negritas**, *cursivas*, viñetas con - o *, ni marcadores [n]. ` +
+    `Escribe como un mensaje humano normal.\n` +
     `${ROLE_TXT[role] || ROLE_TXT.student}`
   );
 }
@@ -95,7 +100,8 @@ export default {
       .join("\n");
     const userContent =
       `PREGUNTA: ${question}\n\n` +
-      `FUENTES AUTORIZADAS (usa solo estas y cita [n]):\n${fuentes}`;
+      `FUENTES AUTORIZADAS (basa tu respuesta solo en estas; NO las copies literal ` +
+      `ni cites [n], solo resume lo pertinente):\n${fuentes}`;
 
     const messages = [];
     for (const h of history) {
@@ -116,7 +122,7 @@ export default {
         },
         body: JSON.stringify({
           model: MODEL,
-          max_tokens: 700,
+          max_tokens: 420,
           system: systemPrompt(role),
           messages,
         }),
