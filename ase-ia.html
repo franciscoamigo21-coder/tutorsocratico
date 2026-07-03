@@ -13,7 +13,7 @@
     --azul:#0b3d91;--azul2:#1157c9;--azul-dark:#06214f;--azul-ink:#0a2a63;
     --oro:#f5b301;--oro2:#d99e00;--cyan:#22c3e6;--verde:#16b981;
     --bg:#eef2fb;--card:#ffffff;--border:#e4e9f3;--muted:#657390;--text:#132441;
-    --grad-azul:linear-gradient(135deg,#1157c9,#0b3d91 60%,#0a2f7a);
+    --grad-azul:linear-gradient(135deg,#0e4593,#092a63 60%,#082353);
     --shadow:0 14px 40px -18px rgba(11,61,145,.35);
     --shadow-sm:0 6px 18px -10px rgba(11,61,145,.30);
   }
@@ -189,7 +189,7 @@
   .pick{border-radius:22px;background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.28);}
   .pick:hover{box-shadow:0 24px 48px -16px rgba(0,0,0,.5);}
   .chat{border-radius:28px;border:1px solid rgba(255,255,255,.7);box-shadow:0 34px 80px -34px rgba(11,61,145,.55);}
-  .chead{position:relative;overflow:hidden;background:linear-gradient(120deg,#1668e6,#0b3d91 66%,#0a2f7a);}
+  .chead{position:relative;overflow:hidden;background:linear-gradient(120deg,#134f9e,#0a2c66 66%,#082558);}
   .chead::after{content:"";position:absolute;inset:0;background:radial-gradient(520px 130px at 92% -50%, rgba(255,255,255,.20), transparent 60%);pointer-events:none;}
   #log{background:linear-gradient(180deg,#f8fbff,#eef3fb);}
   .msg{font-size:15px;border-radius:20px;}
@@ -203,7 +203,7 @@
   .rolechip .who{box-shadow:0 8px 18px -12px rgba(17,87,201,.7);}
 
   /* ============ PANTALLA DE INICIO · REDISEÑO HD ============ */
-  #gate{background:radial-gradient(1200px 820px at 50% -18%, #1b6bf0, #0b3d91 52%, #05193f 100%);}
+  #gate{background:radial-gradient(1200px 820px at 50% -18%, #123f86, #09285e 52%, #030e26 100%);}
   /* Aurora animada (orbes flotantes tipo Tutor Socrático) */
   .gorbs{position:absolute;inset:0;overflow:hidden;pointer-events:none;z-index:0;}
   .gorbs i{position:absolute;border-radius:50%;filter:blur(60px);opacity:.55;mix-blend-mode:screen;animation:orb 18s ease-in-out infinite;}
@@ -285,7 +285,7 @@
 
   /* ============ INTRO · VIDEO DE BIENVENIDA (muy corto) ============ */
   #intro{position:fixed;inset:0;z-index:300;display:flex;flex-direction:column;align-items:center;justify-content:center;
-    background:radial-gradient(1200px 820px at 50% -18%, #1b6bf0, #0b3d91 52%, #05193f 100%);
+    background:radial-gradient(1200px 820px at 50% -18%, #123f86, #09285e 52%, #030e26 100%);
     overflow:hidden;transition:opacity .7s ease, transform .7s ease;cursor:pointer;}
   #intro::after{content:"";position:absolute;inset:0;pointer-events:none;
     background:radial-gradient(120% 90% at 50% 42%, transparent 45%, rgba(2,10,30,.55) 100%);} /* viñeta */
@@ -314,10 +314,11 @@
   #intro .ibar i{display:block;height:100%;width:0;border-radius:999px;background:linear-gradient(90deg,#22c3e6,#ffd34d);
     box-shadow:0 0 10px rgba(34,195,230,.7);animation:iBar 1.85s cubic-bezier(.4,0,.2,1) .9s forwards;}
   @keyframes iBar{to{width:100%;}}
-  #intro .iskip{position:absolute;bottom:24px;right:24px;z-index:3;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.25);
-    color:#fff;border-radius:999px;padding:8px 16px;font-family:inherit;font-weight:600;font-size:12.5px;cursor:pointer;transition:.15s;}
-  #intro .iskip:hover{background:rgba(255,255,255,.22);}
-  @media(max-width:640px){ #intro .ilogoWrap{width:170px;height:170px;} #intro .iring{width:166px;height:166px;} #intro .ihalo{width:200px;height:200px;} #intro .ilogo{width:120px;height:120px;} #intro .iname{font-size:42px;} #intro .isub{font-size:13.5px;} }
+  #intro .imsg{position:absolute;left:0;right:0;bottom:34px;padding:0 26px;text-align:center;
+    font-size:14px;font-style:italic;color:#c7d8f7;line-height:1.5;max-width:560px;margin:0 auto;
+    opacity:0;transition:opacity .5s ease;animation:iUp .7s ease 1.4s backwards;}
+  #intro .imsg.on{opacity:.92;}
+  @media(max-width:640px){ #intro .ilogoWrap{width:170px;height:170px;} #intro .iring{width:166px;height:166px;} #intro .ihalo{width:200px;height:200px;} #intro .ilogo{width:120px;height:120px;} #intro .iname{font-size:42px;} #intro .isub{font-size:13.5px;} #intro .imsg{font-size:12.5px;bottom:24px;} }
 </style>
 </head>
 <body>
@@ -359,7 +360,7 @@
     <div class="icol">Colegio Presidente José Joaquín Prieto · SIP Red de Colegios</div>
     <div class="ibar"><i></i></div>
   </div>
-  <button class="iskip" onclick="skipIntro()">Saltar intro ›</button>
+  <div class="imsg" id="imsg"></div>
 </div>
 
 <!-- PANTALLA DE INICIO -->
@@ -387,12 +388,12 @@
 
       <!-- PASO 1: elegir perfil -->
       <div class="gstep" id="step1">
-        <p>Hola 👋 Elige tu perfil para ingresar con tu correo. Responderé solo con
+        <p>Hola 👋 Elige tu perfil e ingresa con tu cuenta de Google. Responderé solo con
            información autorizada del colegio; si no la tengo, te lo diré con honestidad.</p>
         <div class="picker">
           <button class="pick" onclick="pick('student')"><span class="emo">🎓</span><span class="t">Estudiante</span><span class="d">Correo @alumnos.sip.cl</span></button>
           <button class="pick" onclick="pick('teacher')"><span class="emo">👩‍🏫</span><span class="t">Docente</span><span class="d">Correo @sip.cl</span></button>
-          <button class="pick" onclick="pick('guardian')"><span class="emo">👪</span><span class="t">Apoderado</span><span class="d">Cualquier correo</span></button>
+          <button class="pick" onclick="pick('guardian')"><span class="emo">👪</span><span class="t">Apoderado</span><span class="d">Correo personal</span></button>
         </div>
       </div>
 
@@ -830,9 +831,9 @@ function badgeMarkup(sz){return BADGE_OK
 
 /* ============ UI DEL CHAT ============ */
 const SUGS={
-  student:["¿Cuál es la nota mínima de aprobación?","¿Puedo usar el celular en clases?","¿Qué tareas tengo pendientes?","¿Cuáles son mis deberes como estudiante?"],
-  teacher:["¿Qué dice el protocolo de desregulación emocional?","¿Qué es una falta grave según el reglamento?","¿Cómo se calcula la promoción?","¿Qué material hay de Historia?"],
-  guardian:["¿Cuáles son mis deberes como apoderado?","¿Cómo justifico una inasistencia?","¿Cómo apelo una sanción?","¿Cuál es la misión del colegio?"],
+  student:["¿Cuál es la nota mínima de aprobación?","¿Puedo usar el celular en clases?","¿Qué dice el reglamento sobre el bullying?","¿Cuáles son mis deberes como estudiante?","¿Cómo apelo una sanción?","¿Qué tareas tengo pendientes?"],
+  teacher:["¿Qué dice el protocolo de desregulación emocional?","¿Qué es una falta grave según el reglamento?","¿Qué protocolo hay frente al acoso escolar?","¿Qué es la condicionalidad de matrícula?","¿Cómo se calcula la promoción?","¿Qué material hay de Historia?"],
+  guardian:["¿Cuáles son mis deberes como apoderado?","¿Cómo justifico una inasistencia?","¿Puede mi pupilo usar el celular en el colegio?","¿Qué pasa con los atrasos?","¿Cómo apelo una sanción?","¿Cuál es la misión del colegio?"],
 };
 const log=document.getElementById("log");
 function el(t,c,x){const e=document.createElement(t);if(c)e.className=c;if(x!=null)e.textContent=x;return e;}
@@ -938,19 +939,35 @@ function enter(role,email){
   document.getElementById("mailLabel").textContent=email||"";
   renderQuick(role);renderSugs();
   add("¡Hola! 👋 Soy ASE-IA, tu Asistente Escolar del Colegio Presidente José Joaquín Prieto. Pregúntame por reglamentos, evaluación, el PEI, protocolos, convivencia, tareas o fechas.","bot");
-  document.getElementById("gate").style.display="none";
-  document.getElementById("app").style.display="block";
+  history.replaceState({screen:"app"},"");  // reemplaza 'login': el botón atrás vuelve a elegir perfil
+  showScreen("app");
+}
+function showGate(){ if(history.state&&history.state.screen==="app") history.back(); else showScreen("gate"); }
+document.getElementById("f").addEventListener("submit",e=>{e.preventDefault();ask(document.getElementById("q").value);});
+
+/* ====== NAVEGACIÓN CON EL BOTÓN ATRÁS DEL NAVEGADOR (sin salir de la página) ======
+   Pantallas: 'gate' (elegir perfil) → 'login' (acceso Google) → 'app' (chat).
+   Se guardan como estados del historial, así el botón «atrás» retrocede dentro de
+   la app en vez de cerrarla. */
+function showScreen(s){
+  closeGoogle();
+  const gate=document.getElementById("gate"),app=document.getElementById("app");
+  if(s==="app"){ gate.style.display="none"; app.style.display="block"; }
+  else if(s==="login"){ app.style.display="none"; gate.style.display="flex";
+    document.getElementById("step1").hidden=true; document.getElementById("step2").hidden=false; }
+  else { app.style.display="none"; gate.style.display="flex";
+    document.getElementById("step1").hidden=false; document.getElementById("step2").hidden=true; PENDING=null; }
   window.scrollTo(0,0);
 }
-function showGate(){backToStep1();document.getElementById("app").style.display="none";document.getElementById("gate").style.display="flex";window.scrollTo(0,0);}
-document.getElementById("f").addEventListener("submit",e=>{e.preventDefault();ask(document.getElementById("q").value);});
+window.addEventListener("popstate",e=>{ showScreen((e.state&&e.state.screen)||"gate"); });
+history.replaceState({screen:"gate"},"");  // estado inicial
 
 /* ============ ACCESO CON GOOGLE (dominios institucionales) ============ */
 const DOMAIN={teacher:"sip.cl",student:"alumnos.sip.cl"}; // apoderado: libre
 const LOGIN_INFO={
   student:{emo:"🎓",t:"Estudiante",d:"Ingresa con tu cuenta @alumnos.sip.cl",dom:"Debes usar tu cuenta @alumnos.sip.cl",ph:"nombre.apellido@alumnos.sip.cl"},
   teacher:{emo:"👩‍🏫",t:"Docente",d:"Ingresa con tu cuenta @sip.cl",dom:"Debes usar tu cuenta @sip.cl",ph:"nombre.apellido@sip.cl"},
-  guardian:{emo:"👪",t:"Apoderado",d:"Acceso libre con cualquier cuenta de Google",dom:"Puedes usar cualquier cuenta de Google",ph:"tu.correo@gmail.com"},
+  guardian:{emo:"👪",t:"Apoderado",d:"Ingresa con tu correo personal",dom:"Puedes usar tu correo personal",ph:"tu.correo@gmail.com"},
 };
 let PENDING=null;
 function pick(role){
@@ -959,10 +976,10 @@ function pick(role){
   document.getElementById("loginT").textContent=i.t;
   document.getElementById("loginD").textContent=i.d;
   gDom(i.dom,false);
-  document.getElementById("step1").hidden=true;
-  document.getElementById("step2").hidden=false;
+  history.pushState({screen:"login"},"");
+  showScreen("login");
 }
-function backToStep1(){document.getElementById("step2").hidden=true;document.getElementById("step1").hidden=false;PENDING=null;}
+function backToStep1(){history.back();}  // «← Elegir otro perfil» usa el historial
 function validEmail(e){return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(e);}
 function gDom(msg,err){const g=document.getElementById("gdom");if(g){g.textContent=msg||"";g.className="gdom"+(err?" err":"");}}
 function gErr(msg){const e=document.getElementById("gerr");e.textContent=msg||"";e.style.display=msg?"block":"none";}
@@ -1010,11 +1027,25 @@ function realGoogle(){
 }
 
 /* ============ INTRO · se cierra sola (o al tocar) y muestra el acceso ============ */
+let introTimer=null;
 function skipIntro(){const i=document.getElementById("intro");if(!i||i.classList.contains("done"))return;
-  i.classList.add("done");setTimeout(()=>{i.style.display="none";},650);}
+  if(introTimer)clearInterval(introTimer);
+  i.classList.add("done");setTimeout(()=>{i.style.display="none";},700);}
 (function(){const i=document.getElementById("intro");if(!i)return;
-  i.addEventListener("click",skipIntro);
-  setTimeout(skipIntro,3100); // duración del video de bienvenida
+  const msg=document.getElementById("imsg");
+  /* Mensajes sobre ASE-IA y la educación (rotan durante la intro). */
+  const FRASES=[
+    "La educación es la herramienta más poderosa para transformar el futuro.",
+    "ASE-IA te acompaña a aprender con información confiable del colegio.",
+    "Aprender con criterio, convivir con respeto y decidir con valores.",
+    "Preguntar con curiosidad es el primer paso del conocimiento.",
+  ];
+  let k=0;
+  function nextMsg(){ if(!msg)return; msg.classList.remove("on");
+    setTimeout(()=>{ msg.textContent="« "+FRASES[k%FRASES.length]+" »"; msg.classList.add("on"); k++; },240); }
+  nextMsg(); introTimer=setInterval(nextMsg,1650);
+  i.addEventListener("click",skipIntro);       // se puede tocar para entrar
+  setTimeout(skipIntro,4200);                   // duración de la intro
 })();
 
 /* ============ MONEDA 3D (girar el logo arrastrando, con inercia) ============ */
