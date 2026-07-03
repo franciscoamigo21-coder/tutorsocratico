@@ -162,6 +162,10 @@
     .qgrid{grid-template-columns:repeat(3,1fr);gap:9px;}
     .qcard{padding:12px 6px;border-radius:15px;} .qcard .ic{width:42px;height:42px;} .qcard .lb{font-size:11px;} .qcard .lb small{font-size:9px;}
     .chat{height:auto;min-height:0;border-radius:20px;} #log{height:54vh;flex:none;} .msg{max-width:88%;}
+    form{gap:8px;padding:11px 12px;}
+    input[type=text]{padding:12px 14px;min-width:0;}
+    button.send,button.mic{width:46px;height:46px;min-width:46px;}
+    button.mic svg{width:20px;height:20px;}
   }
   @media(max-width:380px){ .qgrid{grid-template-columns:repeat(2,1fr);} }
 
@@ -987,8 +991,17 @@ function toggleMic(){
 }
 (function initMic(){
   const m=document.getElementById("mic");if(!m)return;
-  if(!SR){m.style.display="none";return;}  // navegador sin soporte de voz
-  m.addEventListener("click",toggleMic);
+  if(SR){ m.addEventListener("click",toggleMic); return; }  // dictado dentro de la app
+  // Sin Web Speech API (p. ej. Chrome en iPhone): en celulares usamos el dictado
+  // del teclado, que SIEMPRE está disponible. En escritorio sin soporte, ocultamos.
+  const touch = ("ontouchstart" in window) || (navigator.maxTouchPoints||0) > 0;
+  if(!touch){ m.style.display="none"; return; }
+  m.title="Dictar con el teclado";
+  m.addEventListener("click",()=>{
+    const q=document.getElementById("q");q.focus();
+    if(!m._hinted){ m._hinted=true;
+      add("Para preguntar por voz, toca el micrófono 🎤 del teclado de tu celular y habla; tu pregunta se escribirá sola.","bot"); }
+  });
 })();
 
 /* ====== NAVEGACIÓN CON EL BOTÓN ATRÁS DEL NAVEGADOR (sin salir de la página) ======
