@@ -264,6 +264,28 @@
   /* Correo del usuario en la cabecera */
   .rolechip .mail{font-size:11px;color:var(--muted);font-weight:500;display:block;margin-top:1px;max-width:170px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
   @media(max-width:640px){ .rolechip .mail{display:none;} .gcard{padding:24px 20px 26px;border-radius:24px;} }
+
+  /* ============ INTRO · VIDEO DE BIENVENIDA (muy corto) ============ */
+  #intro{position:fixed;inset:0;z-index:300;display:flex;flex-direction:column;align-items:center;justify-content:center;
+    background:radial-gradient(1200px 820px at 50% -18%, #1b6bf0, #0b3d91 52%, #05193f 100%);
+    overflow:hidden;transition:opacity .6s ease;cursor:pointer;}
+  #intro.done{opacity:0;pointer-events:none;}
+  #intro .introC{position:relative;z-index:2;text-align:center;display:flex;flex-direction:column;align-items:center;padding:20px;}
+  #intro .ilogo{width:172px;height:172px;object-fit:contain;filter:drop-shadow(0 18px 40px rgba(0,0,0,.45));
+    animation:iLogo 1.5s cubic-bezier(.2,.8,.2,1) both;transform-style:preserve-3d;}
+  @keyframes iLogo{0%{opacity:0;transform:scale(.3) rotateY(-560deg);}55%{opacity:1;}100%{opacity:1;transform:scale(1) rotateY(0);}}
+  #intro .iname{margin-top:20px;font-family:'Montserrat',sans-serif;font-weight:800;font-size:54px;line-height:1;color:#fff;letter-spacing:1px;
+    animation:iUp .7s ease .6s backwards;}
+  #intro .iname b{background:linear-gradient(90deg,#ffd34d,#f5b301);-webkit-background-clip:text;background-clip:text;color:transparent;}
+  #intro .isub{margin-top:8px;color:#dbe7ff;font-size:15.5px;font-weight:500;animation:iUp .7s ease .85s backwards;}
+  #intro .icol{margin-top:5px;color:#8fabe0;font-size:12px;animation:iUp .7s ease 1.05s backwards;}
+  #intro .ibar{margin-top:28px;width:190px;height:4px;border-radius:999px;background:rgba(255,255,255,.16);overflow:hidden;animation:iUp .5s ease 1.15s backwards;}
+  #intro .ibar i{display:block;height:100%;width:0;border-radius:999px;background:linear-gradient(90deg,#22c3e6,#ffd34d);animation:iBar 1.75s ease .95s forwards;}
+  @keyframes iBar{to{width:100%;}}
+  #intro .iskip{position:absolute;bottom:24px;right:24px;z-index:3;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.25);
+    color:#fff;border-radius:999px;padding:8px 16px;font-family:inherit;font-weight:600;font-size:12.5px;cursor:pointer;transition:.15s;}
+  #intro .iskip:hover{background:rgba(255,255,255,.22);}
+  @media(max-width:640px){ #intro .ilogo{width:132px;height:132px;} #intro .iname{font-size:40px;} #intro .isub{font-size:13.5px;} }
 </style>
 </head>
 <body>
@@ -288,6 +310,20 @@
     <rect x="38" y="78" width="44" height="30" rx="14" fill="#fff" stroke="#17423f" stroke-width="3"/><rect x="53" y="85" width="14" height="5" rx="2.5" fill="#22c3e6"/>
   </g>
 </defs></svg>
+
+<!-- INTRO · video de bienvenida muy corto -->
+<div id="intro">
+  <div class="gorbs"><i></i><i></i><i></i></div>
+  <div class="introC">
+    <img class="ilogo" alt="ASE-IA" src="assets/ase-ia-badge.png"
+         onerror="this.outerHTML='<svg class=\'ilogo\' viewBox=\'0 0 120 120\'><use href=\'#mascot\'/></svg>'">
+    <div class="iname">ASE<b>-IA</b></div>
+    <div class="isub">Asistente Escolar de Inteligencia Artificial</div>
+    <div class="icol">Colegio Presidente José Joaquín Prieto · SIP Red de Colegios</div>
+    <div class="ibar"><i></i></div>
+  </div>
+  <button class="iskip" onclick="skipIntro()">Saltar intro ›</button>
+</div>
 
 <!-- PANTALLA DE INICIO -->
 <div id="gate">
@@ -395,8 +431,9 @@
   <footer>
     <b>ASE-IA</b> · Colegio Presidente José Joaquín Prieto ·
     <a href="https://www.sip.cl" target="_blank" rel="noopener">SIP Red de Colegios</a>.
-    Basado en el Reglamento de Evaluación 2026, el PEI, el Reglamento de Educación
-    Parvularia, el PISE, el Plan de Convivencia 2025 y el Protocolo DEC del establecimiento.
+    Basado en el Reglamento Interno de Convivencia Escolar 2026, el Reglamento de
+    Evaluación 2026, el PEI, el Reglamento de Educación Parvularia, el PISE, el Plan
+    de Convivencia 2025 y el Protocolo DEC del establecimiento.
   </footer>
 </div>
 
@@ -513,6 +550,24 @@ const DOCS=[
    x:"Para acompañar mejor a tu pupilo: mantén comunicación frecuente con el profesor jefe, revisa Alexia y el calendario, asiste a las reuniones de apoderados y firma las comunicaciones. En casa fomenta hábitos de estudio y lectura, horarios y descanso, y refuerza los valores del colegio como el respeto, la responsabilidad y la honestidad. Según el PEI, los padres se comprometen a orientar a sus hijos y a formarse para hacerlo."},
   {t:"Justificación de inasistencias",r:ALL,
    x:"Las inasistencias se justifican mediante comunicación escrita del apoderado dirigida al profesor jefe, idealmente al regreso del estudiante. Las ausencias prolongadas por enfermedad se acreditan con certificado médico, que también permite justificar la asistencia inferior al 85% para efectos de promoción."},
+  {t:"Reglamento Interno de Convivencia Escolar · Objetivo",r:ALL,
+   x:"El Reglamento Interno de Convivencia Escolar del Colegio José Joaquín Prieto (SIP Red de Colegios, abril 2026) fue actualizado conforme a la Ley N°20.845. Su objetivo es permitir el cumplimiento y ejercicio efectivo de los derechos y deberes de todos sus miembros, orientando a la comunidad escolar para que, en colaboración, se logre una buena y sana convivencia."},
+  {t:"Reglamento Interno · Derechos de los estudiantes",r:ALL,
+   x:"Los estudiantes tienen derecho a recibir una educación que ofrezca oportunidades para su formación y desarrollo integral; a una atención y educación adecuada, oportuna e inclusiva, sin ser discriminados arbitrariamente; a ser informados de las pautas evaluativas y a ser evaluados y promovidos mediante un sistema objetivo y transparente; y a participar en la vida cultural y deportiva del establecimiento."},
+  {t:"Reglamento Interno · Deberes de los estudiantes",r:ALL,
+   x:"Los estudiantes deben asistir e ingresar puntualmente a clases; estudiar y esforzarse por alcanzar el máximo desarrollo de sus capacidades; brindar un trato digno, respetuoso y no discriminatorio a todos los integrantes de la comunidad educativa; colaborar y cooperar en mejorar la convivencia escolar; y respetar el Proyecto Educativo Institucional y el Reglamento Interno."},
+  {t:"Reglamento Interno · Deberes de los padres y apoderados",r:ALL,
+   x:"Los padres y apoderados deben educar y apoyar los procesos educativos de sus estudiantes y cumplir los compromisos asumidos con el colegio, procurando que cumplan sus exigencias escolares como puntualidad, uniforme, tareas, lectura y estudio. Además, deben asistir de manera obligatoria a las reuniones de apoderados y a las entrevistas con el profesor jefe, y dar un trato respetuoso a toda la comunidad educativa."},
+  {t:"Reglamento Interno · Uso de dispositivos móviles (celulares)",r:ALL,
+   x:"Conforme a la Ley N°21.801, el colegio prohíbe el uso de dispositivos móviles en todos sus espacios, desde educación parvularia hasta cuarto medio. Tampoco se permiten dispositivos personales para escuchar música en el aula, tengan o no acceso a internet, salvo las excepciones expresamente establecidas por la ley."},
+  {t:"Reglamento Interno · Presentación personal y atrasos",r:ALL,
+   x:"La falta a la presentación personal y los atrasos se consideran una falta leve a la normativa interna. Conforme a la Ley de Inclusión, la medida disciplinaria asociada no consiste en la suspensión de clases. Como procedimiento, cada 5 faltas de presentación personal o atrasos el apoderado es notificado vía agenda y/o llamado telefónico por los reiterados atrasos."},
+  {t:"Reglamento Interno · Faltas: leves, graves y gravísimas",r:ALL,
+   x:"Las faltas se clasifican según su gravedad. Las faltas graves son acciones u omisiones que atentan contra la integridad psicológica de otro miembro de la comunidad educativa, o acciones deshonestas que afectan la convivencia. Las faltas gravísimas son acciones extremas contra la integridad física y psicológica de otros, como agresiones sostenidas en el tiempo, y a ellas puede aplicarse la Ley N°21.128 de Aula Segura. Se consideran factores atenuantes y agravantes al determinar la medida."},
+  {t:"Reglamento Interno · Recurso de apelación",r:ALL,
+   x:"Todo estudiante o apoderado que considere que una sanción fue injusta, desmedida o improcedente tiene derecho a interponer un recurso de apelación, según las reglas de cada falta o protocolo. Cuando no se contemple de forma expresa, siempre se puede apelar ante el Director del establecimiento dentro de un plazo de 2 días hábiles, contados desde la notificación de la medida."},
+  {t:"Reglamento Interno · Acoso escolar (bullying)",r:ALL,
+   x:"El colegio cuenta con un Protocolo de actuación frente a situaciones de acoso escolar o violencia entre miembros de la comunidad educativa. El acoso escolar o bullying constituye una falta a la buena convivencia y se aborda conforme a ese protocolo, que resguarda a los involucrados y define los pasos de investigación, apoyo y las medidas formativas o disciplinarias que correspondan."},
   {t:"Pauta de Evaluación Docente (reservada)",r:["teacher"],
    x:"Las pautas de corrección y rúbricas internas son de uso exclusivo del cuerpo docente y no se comparten con estudiantes ni apoderados. La escala de corrección de referencia considera un 60% de logro para el 4,0."},
 ];
@@ -553,10 +608,17 @@ const SYNGROUPS=[
   ["parvulo","parvulos","parvularia","prekinder","kinder","preescolar"],
   ["eximir","eximicion","eximido","eximiciones"],
   ["semestre","semestres","semestral","calendario"],
+  ["celular","celulares","telefono","telefonos","dispositivo","dispositivos","movil","moviles","musica","audifonos"],
+  ["atraso","atrasos","atrasado","atrasados","atrasada","atrasar","puntualidad","tardanza","tarde","presentacion","uniforme","vestimenta"],
+  ["falta","faltas","leve","leves","grave","graves","gravisima","gravisimas","sancion","sanciones","sancionar","disciplinaria","medida","castigo"],
+  ["apelacion","apelar","reconsideracion","reconsiderar","recurso","injusta","desmedida"],
+  ["acoso","bullying","matonaje","hostigamiento","ciberacoso","violencia"],
+  ["expulsion","expulsar","matricula","cancelacion","condicionalidad"],
+  ["derecho","derechos","deberes","obligacion","obligaciones"],
 ];
 function words(s){return normalize(s).split(" ").filter(w=>w.length>2);}
 /* Palabras vacías: verbos/pronombres genéricos que no aportan al significado. */
-const STOP=new Set(["pasa","paso","pasar","hago","hace","hacer","hacen","caso","cual","cuales","como","donde","cuando","cuanto","cuanta","cuantos","cuantas","tengo","tiene","tienen","tienes","dice","dicen","decir","puedo","puede","pueden","podria","necesito","necesita","quiero","quiere","sobre","acerca","algun","alguna","algunos","algo","favor","dime","explica","explicame","cuentame","saber","informacion","ayuda","ayudame","esta","este","estos","estas","para","por","con","del","los","las","una","unos","unas","muy","mas","pero","tambien","entonces","cosa","cosas","aqui","alli","donde","cuales","porque","segun","cada","todo","toda","todos","todas"]);
+const STOP=new Set(["pasa","paso","pasar","hago","hace","hacer","hacen","caso","cual","cuales","como","donde","cuando","cuanto","cuanta","cuantos","cuantas","tengo","tiene","tienen","tienes","dice","dicen","decir","puedo","puede","pueden","podria","necesito","necesita","quiero","quiere","usar","uso","usa","usan","utilizar","llego","llega","clase","clases","sobre","acerca","algun","alguna","algunos","algo","favor","dime","explica","explicame","cuentame","saber","informacion","ayuda","ayudame","esta","este","estos","estas","para","por","con","del","los","las","una","unos","unas","muy","mas","pero","tambien","entonces","cosa","cosas","aqui","alli","donde","cuales","porque","segun","cada","todo","toda","todos","todas"]);
 function qWords(q){return words(q).filter(w=>w.length>3&&!STOP.has(w));}
 function expand(tokens){const out=new Set(tokens);tokens.forEach(t=>{SYNGROUPS.forEach(g=>{if(g.some(m=>m===t||m.startsWith(t)||t.startsWith(m)))g.forEach(m=>out.add(m));});});return [...out];}
 function kwset(q){return new Set(expand(words(q).filter(w=>w.length>3)));}
@@ -584,8 +646,9 @@ function retrieve(query,role){
     });
     return {d,s};
   }).filter(r=>r.s>0).sort((a,b)=>b.s-a.s);
-  // Umbral: exige relevancia real (al menos una coincidencia fuerte) para no inventar.
-  if(scored.length===0||scored[0].s<2) return [];
+  // Umbral: exige relevancia temática real (coincidencia directa o de sinónimo en
+  // el título) para no inventar; las consultas sin relación puntúan 0 y se descartan.
+  if(scored.length===0||scored[0].s<1.5) return [];
   const top=scored[0].s;
   return scored.filter(r=>r.s>=top-1.4).slice(0,2).map(r=>({titulo:r.d.t,fragmento:r.d.x}));
 }
@@ -667,9 +730,9 @@ function badgeMarkup(sz){return BADGE_OK
 
 /* ============ UI DEL CHAT ============ */
 const SUGS={
-  student:["¿Cuál es la nota mínima de aprobación?","¿Cuánta asistencia necesito para pasar de curso?","¿Qué tareas tengo pendientes?","¿Cuáles son los valores del colegio?"],
-  teacher:["¿Qué dice el protocolo de desregulación emocional?","¿Cómo se calcula la promoción?","¿Cuál es la visión del colegio?","¿Qué material hay de Historia?"],
-  guardian:["¿Cómo puedo ser un mejor apoderado?","¿Cómo justifico una inasistencia?","¿Cuál es la misión del colegio?","¿Cómo se calcula la promoción?"],
+  student:["¿Cuál es la nota mínima de aprobación?","¿Puedo usar el celular en clases?","¿Qué tareas tengo pendientes?","¿Cuáles son mis deberes como estudiante?"],
+  teacher:["¿Qué dice el protocolo de desregulación emocional?","¿Qué es una falta grave según el reglamento?","¿Cómo se calcula la promoción?","¿Qué material hay de Historia?"],
+  guardian:["¿Cuáles son mis deberes como apoderado?","¿Cómo justifico una inasistencia?","¿Cómo apelo una sanción?","¿Cuál es la misión del colegio?"],
 };
 const log=document.getElementById("log");
 function el(t,c,x){const e=document.createElement(t);if(c)e.className=c;if(x!=null)e.textContent=x;return e;}
@@ -741,7 +804,7 @@ function add(text,who,extra){
 let typingRow=null;
 function typing(on){
   if(on&&!typingRow){typingRow=el("div","row bot");typingRow.appendChild(avatarEl());
-    const t=el("div","typing");t.appendChild(el("span","tlabel","ASE-IA está trabajando"));
+    const t=el("div","typing");t.appendChild(el("span","tlabel","ASE-IA está pensando…"));
     t.appendChild(el("span","tdot"));t.appendChild(el("span","tdot"));t.appendChild(el("span","tdot"));
     typingRow.appendChild(t);log.appendChild(typingRow);log.scrollTop=log.scrollHeight;}
   else if(!on&&typingRow){typingRow.remove();typingRow=null;}
@@ -813,6 +876,14 @@ document.getElementById("loginForm").addEventListener("submit",e=>{
   setHint("Acceso verificado ✓","ok");
   const role=PENDING;setTimeout(()=>enter(role,email),300);
 });
+
+/* ============ INTRO · se cierra sola (o al tocar) y muestra el acceso ============ */
+function skipIntro(){const i=document.getElementById("intro");if(!i||i.classList.contains("done"))return;
+  i.classList.add("done");setTimeout(()=>{i.style.display="none";},650);}
+(function(){const i=document.getElementById("intro");if(!i)return;
+  i.addEventListener("click",skipIntro);
+  setTimeout(skipIntro,3100); // duración del video de bienvenida
+})();
 
 /* ============ MONEDA 3D (girar el logo arrastrando, con inercia) ============ */
 (function(){
