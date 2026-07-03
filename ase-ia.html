@@ -227,21 +227,39 @@
   .loginHead .emo{font-size:34px;line-height:1;}
   .loginHead .lt{font-weight:800;font-size:17px;font-family:'Montserrat',sans-serif;color:#fff;}
   .loginHead .ld{font-size:12.5px;color:#cfe0ff;margin-top:2px;line-height:1.4;}
-  #loginForm{display:flex;flex-direction:column;gap:10px;text-align:left;background:transparent;padding:0;}
-  #loginForm label{font-size:12.5px;color:#cfe0ff;font-weight:600;}
-  #email{width:100%;padding:14px 16px;border-radius:14px;border:1.5px solid rgba(255,255,255,.28);background:rgba(255,255,255,.94);
-    font-size:15px;font-family:inherit;color:#132441;outline:none;transition:.15s;}
-  #email:focus{border-color:var(--oro);background:#fff;box-shadow:0 0 0 4px rgba(245,179,1,.28);}
-  .emailHint{font-size:12px;color:#bcd0f6;min-height:16px;line-height:1.4;}
-  .emailHint.err{color:#ffd0d0;font-weight:600;}
-  .emailHint.ok{color:#bff0d4;font-weight:600;}
-  .loginBtns{display:flex;gap:10px;margin-top:6px;}
-  .loginBtns button{flex:1;border:none;border-radius:14px;padding:13px 14px;font-family:inherit;font-weight:800;font-size:14.5px;cursor:pointer;transition:.15s;}
-  .loginBtns .back{flex:0 0 auto;background:rgba(255,255,255,.12);color:#fff;border:1px solid rgba(255,255,255,.25);padding:13px 18px;}
-  .loginBtns .back:hover{background:rgba(255,255,255,.2);}
-  .loginBtns .go{background:linear-gradient(135deg,#ffd34d,#f5b301);color:#3a2b00;box-shadow:0 14px 30px -12px rgba(245,179,1,.7);}
-  .loginBtns .go:hover{filter:brightness(1.05);transform:translateY(-1px);}
+  /* Botón oficial "Iniciar sesión con Google" */
+  .gbtn{display:flex;align-items:center;justify-content:center;gap:12px;width:100%;margin-top:4px;
+    background:#fff;color:#3c4043;border:none;border-radius:14px;padding:14px 18px;font-family:'Inter',Roboto,Arial,sans-serif;
+    font-weight:700;font-size:15px;cursor:pointer;transition:.15s;box-shadow:0 12px 30px -12px rgba(0,0,0,.5);}
+  .gbtn:hover{background:#f8fbff;transform:translateY(-1px);box-shadow:0 18px 38px -14px rgba(0,0,0,.55);}
+  .gbtn .gg{width:22px;height:22px;display:flex;}.gbtn .gg svg{width:22px;height:22px;}
+  .gdom{font-size:12.5px;color:#cfe0ff;min-height:16px;line-height:1.4;margin-top:12px;text-align:center;}
+  .gdom.err{color:#ffd0d0;font-weight:600;}
+  .gback{margin-top:16px;background:transparent;border:none;color:#9fb6e6;font-family:inherit;font-weight:600;font-size:12.5px;cursor:pointer;}
+  .gback:hover{color:#dbe7ff;text-decoration:underline;}
   .freehint{font-size:11.5px;color:#9fb6e6;margin-top:12px;text-align:center;}
+
+  /* Modal de cuenta de Google */
+  #gmodal{position:fixed;inset:0;z-index:210;display:none;align-items:center;justify-content:center;padding:20px;
+    background:rgba(8,22,52,.6);backdrop-filter:blur(4px);}
+  #gmodal.open{display:flex;animation:fadeUp .2s ease both;}
+  .gcard2{background:#fff;color:#202124;border-radius:26px;max-width:400px;width:100%;padding:40px 36px 26px;
+    box-shadow:0 34px 80px -20px rgba(0,0,0,.6);font-family:'Inter',Roboto,Arial,sans-serif;text-align:left;}
+  .gwm{font-family:'Montserrat',Arial,sans-serif;font-weight:700;font-size:26px;letter-spacing:-1px;text-align:center;margin-bottom:16px;}
+  .gcard2 h3{margin:0;font-size:23px;font-weight:500;color:#202124;text-align:center;}
+  .gcard2 p{margin:8px 0 22px;font-size:14.5px;color:#5f6368;text-align:center;}
+  #gform{display:block;background:transparent;padding:0;gap:0;}
+  #gemail{width:100%;padding:14px 15px;border:1px solid #dadce0;border-radius:8px;font-size:15px;font-family:inherit;color:#202124;outline:none;transition:.15s;}
+  #gemail:focus{border-color:#1a73e8;box-shadow:0 0 0 2px rgba(26,115,232,.25);}
+  .gerr{display:none;color:#d93025;font-size:12.5px;margin-top:8px;}
+  .gforgot{display:inline-block;margin-top:14px;color:#1a73e8;font-size:13.5px;font-weight:600;}
+  .grow{display:flex;align-items:center;justify-content:space-between;margin-top:28px;}
+  .glink{background:transparent;border:none;color:#1a73e8;font-family:inherit;font-weight:700;font-size:14px;cursor:pointer;padding:8px;border-radius:6px;}
+  .glink:hover{background:#f0f6ff;}
+  .gnext{background:#1a73e8;color:#fff;border:none;border-radius:8px;padding:11px 24px;font-family:inherit;font-weight:600;font-size:14px;cursor:pointer;transition:.15s;}
+  .gnext:hover{background:#1b66c9;box-shadow:0 6px 16px -6px rgba(26,115,232,.7);}
+  .gfoot{margin-top:22px;padding-top:16px;border-top:1px solid #eef0f3;font-size:11.5px;color:#5f6368;line-height:1.5;text-align:center;}
+  @media(max-width:640px){ .gcard2{padding:32px 24px 22px;border-radius:22px;} }
 
   /* ============ CUADROS EN EL CHAT (fuentes + workspace) ============ */
   .srccards{margin-top:11px;display:flex;flex-direction:column;gap:8px;}
@@ -268,24 +286,38 @@
   /* ============ INTRO · VIDEO DE BIENVENIDA (muy corto) ============ */
   #intro{position:fixed;inset:0;z-index:300;display:flex;flex-direction:column;align-items:center;justify-content:center;
     background:radial-gradient(1200px 820px at 50% -18%, #1b6bf0, #0b3d91 52%, #05193f 100%);
-    overflow:hidden;transition:opacity .6s ease;cursor:pointer;}
-  #intro.done{opacity:0;pointer-events:none;}
+    overflow:hidden;transition:opacity .7s ease, transform .7s ease;cursor:pointer;}
+  #intro::after{content:"";position:absolute;inset:0;pointer-events:none;
+    background:radial-gradient(120% 90% at 50% 42%, transparent 45%, rgba(2,10,30,.55) 100%);} /* viñeta */
+  #intro.done{opacity:0;transform:scale(1.04);pointer-events:none;}
   #intro .introC{position:relative;z-index:2;text-align:center;display:flex;flex-direction:column;align-items:center;padding:20px;}
-  #intro .ilogo{width:172px;height:172px;object-fit:contain;filter:drop-shadow(0 18px 40px rgba(0,0,0,.45));
+  #intro .ilogoWrap{position:relative;width:210px;height:210px;display:flex;align-items:center;justify-content:center;}
+  #intro .iring{position:absolute;width:206px;height:206px;border-radius:50%;
+    background:conic-gradient(from 0deg,#22c3e6,#ffd34d,#7db2ff,#22c3e6);
+    -webkit-mask:radial-gradient(farthest-side,transparent 70%,#000 72%);mask:radial-gradient(farthest-side,transparent 70%,#000 72%);
+    opacity:.8;filter:drop-shadow(0 0 12px rgba(34,195,230,.5));animation:iSpin 6s linear infinite, iUp .6s ease .2s backwards;}
+  #intro .ihalo{position:absolute;width:250px;height:250px;border-radius:50%;
+    background:radial-gradient(circle, rgba(34,195,230,.45), rgba(245,179,1,.14) 46%, transparent 70%);
+    filter:blur(8px);animation:iHalo 3.2s ease-in-out infinite;}
+  #intro .ilogo{position:relative;z-index:1;width:150px;height:150px;object-fit:contain;filter:drop-shadow(0 16px 34px rgba(0,0,0,.5));
     animation:iLogo 1.5s cubic-bezier(.2,.8,.2,1) both;transform-style:preserve-3d;}
   @keyframes iLogo{0%{opacity:0;transform:scale(.3) rotateY(-560deg);}55%{opacity:1;}100%{opacity:1;transform:scale(1) rotateY(0);}}
-  #intro .iname{margin-top:20px;font-family:'Montserrat',sans-serif;font-weight:800;font-size:54px;line-height:1;color:#fff;letter-spacing:1px;
-    animation:iUp .7s ease .6s backwards;}
-  #intro .iname b{background:linear-gradient(90deg,#ffd34d,#f5b301);-webkit-background-clip:text;background-clip:text;color:transparent;}
-  #intro .isub{margin-top:8px;color:#dbe7ff;font-size:15.5px;font-weight:500;animation:iUp .7s ease .85s backwards;}
-  #intro .icol{margin-top:5px;color:#8fabe0;font-size:12px;animation:iUp .7s ease 1.05s backwards;}
-  #intro .ibar{margin-top:28px;width:190px;height:4px;border-radius:999px;background:rgba(255,255,255,.16);overflow:hidden;animation:iUp .5s ease 1.15s backwards;}
-  #intro .ibar i{display:block;height:100%;width:0;border-radius:999px;background:linear-gradient(90deg,#22c3e6,#ffd34d);animation:iBar 1.75s ease .95s forwards;}
+  @keyframes iSpin{to{transform:rotate(360deg);}}
+  @keyframes iHalo{0%,100%{transform:scale(.9);opacity:.55;}50%{transform:scale(1.12);opacity:1;}}
+  #intro .iname{margin-top:22px;font-family:'Montserrat',sans-serif;font-weight:800;font-size:56px;line-height:1;color:#fff;letter-spacing:1px;
+    text-shadow:0 6px 26px rgba(0,0,0,.35);animation:iUp .7s ease .55s backwards;}
+  #intro .iname b{background:linear-gradient(90deg,#ffe07a,#f5b301);-webkit-background-clip:text;background-clip:text;color:transparent;}
+  #intro .ilema{margin-top:9px;color:#ffdd8a;font-weight:700;font-size:14px;letter-spacing:.5px;animation:iUp .7s ease .75s backwards;}
+  #intro .isub{margin-top:7px;color:#dbe7ff;font-size:15px;font-weight:500;animation:iUp .7s ease .9s backwards;}
+  #intro .icol{margin-top:4px;color:#8fabe0;font-size:12px;animation:iUp .7s ease 1.05s backwards;}
+  #intro .ibar{margin-top:26px;width:200px;height:4px;border-radius:999px;background:rgba(255,255,255,.16);overflow:hidden;animation:iUp .5s ease 1.15s backwards;}
+  #intro .ibar i{display:block;height:100%;width:0;border-radius:999px;background:linear-gradient(90deg,#22c3e6,#ffd34d);
+    box-shadow:0 0 10px rgba(34,195,230,.7);animation:iBar 1.85s cubic-bezier(.4,0,.2,1) .9s forwards;}
   @keyframes iBar{to{width:100%;}}
   #intro .iskip{position:absolute;bottom:24px;right:24px;z-index:3;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.25);
     color:#fff;border-radius:999px;padding:8px 16px;font-family:inherit;font-weight:600;font-size:12.5px;cursor:pointer;transition:.15s;}
   #intro .iskip:hover{background:rgba(255,255,255,.22);}
-  @media(max-width:640px){ #intro .ilogo{width:132px;height:132px;} #intro .iname{font-size:40px;} #intro .isub{font-size:13.5px;} }
+  @media(max-width:640px){ #intro .ilogoWrap{width:170px;height:170px;} #intro .iring{width:166px;height:166px;} #intro .ihalo{width:200px;height:200px;} #intro .ilogo{width:120px;height:120px;} #intro .iname{font-size:42px;} #intro .isub{font-size:13.5px;} }
 </style>
 </head>
 <body>
@@ -315,9 +347,14 @@
 <div id="intro">
   <div class="gorbs"><i></i><i></i><i></i></div>
   <div class="introC">
-    <img class="ilogo" alt="ASE-IA" src="assets/ase-ia-badge.png"
-         onerror="this.outerHTML='<svg class=\'ilogo\' viewBox=\'0 0 120 120\'><use href=\'#mascot\'/></svg>'">
+    <div class="ilogoWrap">
+      <span class="ihalo"></span>
+      <span class="iring"></span>
+      <img class="ilogo" alt="ASE-IA" src="assets/ase-ia-badge.png"
+           onerror="this.outerHTML='<svg class=\'ilogo\' viewBox=\'0 0 120 120\'><use href=\'#mascot\'/></svg>'">
+    </div>
     <div class="iname">ASE<b>-IA</b></div>
+    <div class="ilema">« Vocación y Pasión por la Excelencia »</div>
     <div class="isub">Asistente Escolar de Inteligencia Artificial</div>
     <div class="icol">Colegio Presidente José Joaquín Prieto · SIP Red de Colegios</div>
     <div class="ibar"><i></i></div>
@@ -359,21 +396,20 @@
         </div>
       </div>
 
-      <!-- PASO 2: acceso con correo -->
+      <!-- PASO 2: acceso con Google -->
       <div class="gstep" id="step2" hidden>
         <div class="loginHead">
           <span class="emo" id="loginEmo">🎓</span>
           <div><div class="lt" id="loginT">Estudiante</div><div class="ld" id="loginD"></div></div>
         </div>
-        <form id="loginForm">
-          <label for="email">Correo electrónico</label>
-          <input id="email" type="email" inputmode="email" autocomplete="email" placeholder="tu.correo@sip.cl" required>
-          <div class="emailHint" id="emailHint"></div>
-          <div class="loginBtns">
-            <button type="button" class="back" onclick="backToStep1()">←</button>
-            <button type="submit" class="go">Ingresar →</button>
-          </div>
-        </form>
+        <button type="button" class="gbtn" id="gbtn" onclick="startGoogle()">
+          <span class="gg" aria-hidden="true">
+            <svg viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>
+          </span>
+          <span>Iniciar sesión con Google</span>
+        </button>
+        <div class="gdom" id="gdom"></div>
+        <button type="button" class="gback" onclick="backToStep1()">← Elegir otro perfil</button>
       </div>
     </div>
     <div class="freehint">SIP Red de Colegios · josejoaquinprieto.cl</div>
@@ -437,6 +473,25 @@
   </footer>
 </div>
 
+<!-- Modal de acceso con Google (estilo cuenta de Google) -->
+<div id="gmodal" onclick="if(event.target===this)closeGoogle()">
+  <div class="gcard2">
+    <div class="gwm"><span style="color:#4285F4">G</span><span style="color:#EA4335">o</span><span style="color:#FBBC05">o</span><span style="color:#4285F4">g</span><span style="color:#34A853">l</span><span style="color:#EA4335">e</span></div>
+    <h3 id="gmTitle">Iniciar sesión</h3>
+    <p id="gmSub">Utiliza tu Cuenta de Google del colegio</p>
+    <form id="gform" autocomplete="off">
+      <input id="gemail" type="email" inputmode="email" placeholder="Correo electrónico" required>
+      <div class="gerr" id="gerr"></div>
+      <a class="gforgot" href="https://accounts.google.com/signin/recovery" target="_blank" rel="noopener">¿Olvidaste tu correo?</a>
+      <div class="grow">
+        <button type="button" class="glink" onclick="closeGoogle()">Cancelar</button>
+        <button type="submit" class="gnext">Siguiente</button>
+      </div>
+    </form>
+    <div class="gfoot">🔒 ASE-IA valida el dominio de tu correo institucional. No se guarda tu contraseña.</div>
+  </div>
+</div>
+
 <!-- Modal para ver el contenido de una fuente citada -->
 <div id="srcModal" onclick="if(event.target===this)closeSource()">
   <div class="card">
@@ -455,6 +510,17 @@
  *  Ej: const AI_PROXY_URL = "https://ase-ia.TU-CUENTA.workers.dev";
  * ========================================================================== */
 const AI_PROXY_URL = "https://ase-ia.franciscoamigo21.workers.dev";
+
+/* ============================================================================
+ *  AUTENTICACIÓN CON GOOGLE (opcional)
+ *  Deja "" para el modo demo: se muestra la pantalla "Iniciar sesión con Google"
+ *  y ASE-IA valida el DOMINIO del correo (docentes @sip.cl, estudiantes
+ *  @alumnos.sip.cl, apoderados libre).
+ *  Para OAuth REAL: crea un "ID de cliente de OAuth" en Google Cloud Console,
+ *  agrega tu dominio (https://franciscoamigo21-coder.github.io) a los "Orígenes
+ *  autorizados de JavaScript" y pega aquí el ID (…apps.googleusercontent.com).
+ * ========================================================================== */
+const GOOGLE_CLIENT_ID = "";
 
 /* ============ LOGOS DE PLATAFORMAS (SVG oficiales por marca) ============ */
 const ICONS={
@@ -568,6 +634,34 @@ const DOCS=[
    x:"Todo estudiante o apoderado que considere que una sanción fue injusta, desmedida o improcedente tiene derecho a interponer un recurso de apelación, según las reglas de cada falta o protocolo. Cuando no se contemple de forma expresa, siempre se puede apelar ante el Director del establecimiento dentro de un plazo de 2 días hábiles, contados desde la notificación de la medida."},
   {t:"Reglamento Interno · Acoso escolar (bullying)",r:ALL,
    x:"El colegio cuenta con un Protocolo de actuación frente a situaciones de acoso escolar o violencia entre miembros de la comunidad educativa. El acoso escolar o bullying constituye una falta a la buena convivencia y se aborda conforme a ese protocolo, que resguarda a los involucrados y define los pasos de investigación, apoyo y las medidas formativas o disciplinarias que correspondan."},
+  {t:"Reglamento Interno · Denuncia de acoso escolar",r:ALL,
+   x:"El establecimiento debe abrir siempre el protocolo de acoso escolar cuando exista una denuncia o sospecha de una posible situación de acoso o violencia entre miembros de la comunidad educativa. La denuncia puede realizarse ante cualquier funcionario, quien debe informarla al Encargado de Convivencia Escolar para iniciar la investigación y las medidas de resguardo."},
+  {t:"Reglamento Interno · Resolución pacífica de conflictos",r:ALL,
+   x:"Los conflictos deben abordarse formativamente, como una oportunidad de aprendizaje, y resolverse de forma pacífica mediante el diálogo. Ante faltas leves y graves, y en los protocolos que lo contemplen, el colegio puede ofrecer mecanismos de Gestión Colaborativa de Conflictos para promover el diálogo y contribuir a la formación integral de los estudiantes."},
+  {t:"Reglamento Interno · Medidas formativas",r:ALL,
+   x:"Todas las faltas graves se acompañan de al menos una medida formativa. Se procura incentivar al propio estudiante a decidir la medida formativa que se aplicará; si la rechaza, se le asigna otra. Su propósito es reparar el daño y aprender, más que solo sancionar."},
+  {t:"Reglamento Interno · Factores atenuantes y agravantes",r:ALL,
+   x:"Para determinar una medida se consideran factores atenuantes y agravantes según la edad, el rol y la jerarquía de los involucrados: a mayor edad, jerarquía o autoridad, mayor responsabilidad; a menor edad, menor autonomía y responsabilidad. También se evalúan el contexto, la motivación y los intereses en juego."},
+  {t:"Reglamento Interno · Responsabilidad penal adolescente",r:ALL,
+   x:"La Ley N°20.084 regula la responsabilidad penal de los adolescentes de 14 años o más, reconociéndolos como sujetos de derecho y exigiéndoles responsabilidad por los delitos cometidos, con las garantías de un debido proceso penal."},
+  {t:"Reglamento Interno · Condicionalidad de matrícula",r:ALL,
+   x:"La condicionalidad de matrícula es un estado transitorio que se aplica a un estudiante que ha cometido una falta grave establecida en el reglamento interno. Durante ese período el estudiante debe cumplir las medidas dispuestas; es una medida revisable que, por sí sola, no equivale a la cancelación de matrícula."},
+  {t:"Reglamento Interno · Expulsión y cancelación de matrícula",r:ALL,
+   x:"La expulsión y la cancelación de matrícula son las medidas más extremas y siguen un procedimiento formal con formulación de cargos, derecho a descargos y a apelar. En el procedimiento sumario asociado a la Ley N°21.128 (Aula Segura) puede decretarse la suspensión del estudiante como medida cautelar mientras dure el proceso."},
+  {t:"Reglamento Interno · Baja de matrícula por ausencia prolongada",r:ALL,
+   x:"El colegio puede dar de baja la matrícula de un estudiante con 40 días hábiles consecutivos de ausencia cuando no ha sido posible contactar al apoderado en ese período, tras realizar previamente las gestiones de contacto que establece el protocolo."},
+  {t:"Reglamento Interno · Estudiantes con necesidades educativas especiales",r:ALL,
+   x:"Cuando un estudiante con necesidades educativas especiales incurre en conductas que constituyen faltas a la buena convivencia, el establecimiento debe resguardar que cuente con el apoyo multidisciplinario necesario, incluyendo las derivaciones y el seguimiento adecuados a cada caso."},
+  {t:"Reglamento Interno · Ideación suicida y autolesiones",r:ALL,
+   x:"El colegio cuenta con un protocolo frente a la ideación suicida, el intento de suicidio u otras acciones autolesivas de un estudiante. Todos los integrantes de la comunidad deben promover la salud mental, y el Departamento de Formación coordina espacios y acciones de apoyo. Ante cualquier señal se activa el protocolo para acompañar y derivar al estudiante."},
+  {t:"Reglamento Interno · Hechos de connotación sexual entre pares",r:ALL,
+   x:"Este protocolo establece cómo actúa el colegio frente a una posible situación de hechos de connotación sexual entre pares o de agresión sexual que involucre a estudiantes, cualquiera sea el lugar donde hubiese ocurrido. Se atiende especialmente a la etapa de desarrollo de los involucrados y se activan las medidas de protección, apoyo y derivación pertinentes."},
+  {t:"Reglamento Interno · Maltrato de un adulto a un estudiante",r:ALL,
+   x:"Frente al maltrato de un adulto a un estudiante, el Encargado de Convivencia cita al apoderado y al estudiante agredido a una reunión con la Subdirección para informar los resultados del protocolo y aplicar las medidas formativas, pedagógicas y sanciones que correspondan según la gravedad. Además, se aplican medidas de apoyo psicosocial al estudiante afectado."},
+  {t:"Reglamento Interno · Faltas y sanciones de los apoderados",r:ALL,
+   x:"El reglamento contempla faltas cometidas por padres, madres y apoderados y un procedimiento para sancionarlas. Si un funcionario del establecimiento agrede física o psicológicamente a un apoderado, el afectado debe informar al equipo directivo; si el agresor forma parte del equipo directivo, la denuncia se dirige a la SIP Red de Colegios (Phillips 16, oficina O, piso 7, Santiago)."},
+  {t:"Reglamento Interno · Deberes de los profesores",r:ALL,
+   x:"Los profesores deben ejercer la función docente de forma idónea y responsable, orientar vocacionalmente a sus estudiantes cuando corresponda, actualizar sus conocimientos y evaluarse periódicamente, y enseñar los contenidos curriculares de cada nivel, respetando las normas del colegio y el Proyecto Educativo Institucional."},
   {t:"Pauta de Evaluación Docente (reservada)",r:["teacher"],
    x:"Las pautas de corrección y rúbricas internas son de uso exclusivo del cuerpo docente y no se comparten con estudiantes ni apoderados. La escala de corrección de referencia considera un 60% de logro para el 4,0."},
 ];
@@ -613,8 +707,14 @@ const SYNGROUPS=[
   ["falta","faltas","leve","leves","grave","graves","gravisima","gravisimas","sancion","sanciones","sancionar","disciplinaria","medida","castigo"],
   ["apelacion","apelar","reconsideracion","reconsiderar","recurso","injusta","desmedida"],
   ["acoso","bullying","matonaje","hostigamiento","ciberacoso","violencia"],
-  ["expulsion","expulsar","matricula","cancelacion","condicionalidad"],
+  ["expulsion","expulsar","matricula","cancelacion","condicionalidad","baja","ausente"],
   ["derecho","derechos","deberes","obligacion","obligaciones"],
+  ["conflicto","conflictos","mediacion","colaborativa","dialogo","pacifica"],
+  ["suicidio","suicida","autolesion","autolesiva","autolesivas","ideacion","mental"],
+  ["sexual","sexuales","connotacion","abuso"],
+  ["maltrato","agrede","agredir","agresor","agresion"],
+  ["necesidades","especiales","inclusion","multidisciplinario"],
+  ["penal","delito","delitos"],
 ];
 function words(s){return normalize(s).split(" ").filter(w=>w.length>2);}
 /* Palabras vacías: verbos/pronombres genéricos que no aportan al significado. */
@@ -845,12 +945,12 @@ function enter(role,email){
 function showGate(){backToStep1();document.getElementById("app").style.display="none";document.getElementById("gate").style.display="flex";window.scrollTo(0,0);}
 document.getElementById("f").addEventListener("submit",e=>{e.preventDefault();ask(document.getElementById("q").value);});
 
-/* ============ ACCESO POR CORREO (dominios institucionales) ============ */
+/* ============ ACCESO CON GOOGLE (dominios institucionales) ============ */
 const DOMAIN={teacher:"sip.cl",student:"alumnos.sip.cl"}; // apoderado: libre
 const LOGIN_INFO={
-  student:{emo:"🎓",t:"Estudiante",d:"Ingresa con tu correo institucional @alumnos.sip.cl",ph:"nombre.apellido@alumnos.sip.cl"},
-  teacher:{emo:"👩‍🏫",t:"Docente",d:"Ingresa con tu correo institucional @sip.cl",ph:"nombre.apellido@sip.cl"},
-  guardian:{emo:"👪",t:"Apoderado",d:"Acceso libre: ingresa con cualquier correo electrónico",ph:"tu.correo@ejemplo.com"},
+  student:{emo:"🎓",t:"Estudiante",d:"Ingresa con tu cuenta @alumnos.sip.cl",dom:"Debes usar tu cuenta @alumnos.sip.cl",ph:"nombre.apellido@alumnos.sip.cl"},
+  teacher:{emo:"👩‍🏫",t:"Docente",d:"Ingresa con tu cuenta @sip.cl",dom:"Debes usar tu cuenta @sip.cl",ph:"nombre.apellido@sip.cl"},
+  guardian:{emo:"👪",t:"Apoderado",d:"Acceso libre con cualquier cuenta de Google",dom:"Puedes usar cualquier cuenta de Google",ph:"tu.correo@gmail.com"},
 };
 let PENDING=null;
 function pick(role){
@@ -858,24 +958,56 @@ function pick(role){
   document.getElementById("loginEmo").textContent=i.emo;
   document.getElementById("loginT").textContent=i.t;
   document.getElementById("loginD").textContent=i.d;
-  const inp=document.getElementById("email");inp.value="";inp.placeholder=i.ph;
-  setHint("");
+  gDom(i.dom,false);
   document.getElementById("step1").hidden=true;
   document.getElementById("step2").hidden=false;
+}
+function backToStep1(){document.getElementById("step2").hidden=true;document.getElementById("step1").hidden=false;PENDING=null;}
+function validEmail(e){return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(e);}
+function gDom(msg,err){const g=document.getElementById("gdom");if(g){g.textContent=msg||"";g.className="gdom"+(err?" err":"");}}
+function gErr(msg){const e=document.getElementById("gerr");e.textContent=msg||"";e.style.display=msg?"block":"none";}
+
+/* Abre el acceso con Google. Con GOOGLE_CLIENT_ID usa OAuth real; sin él, muestra
+   la pantalla de cuenta de Google y valida el dominio institucional localmente. */
+function startGoogle(){
+  if(GOOGLE_CLIENT_ID){realGoogle();return;}
+  const i=LOGIN_INFO[PENDING];
+  const inp=document.getElementById("gemail");inp.value="";inp.placeholder=i.ph;
+  gErr("");
+  document.getElementById("gmSub").textContent = PENDING==="guardian"
+    ? "Utiliza tu Cuenta de Google" : "Utiliza tu Cuenta de Google del colegio";
+  document.getElementById("gmodal").classList.add("open");
   setTimeout(()=>inp.focus(),80);
 }
-function backToStep1(){document.getElementById("step2").hidden=true;document.getElementById("step1").hidden=false;PENDING=null;setHint("");}
-function setHint(msg,cls){const h=document.getElementById("emailHint");h.textContent=msg||"";h.className="emailHint"+(cls?" "+cls:"");}
-function validEmail(e){return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(e);}
-document.getElementById("loginForm").addEventListener("submit",e=>{
+function closeGoogle(){document.getElementById("gmodal").classList.remove("open");}
+document.getElementById("gform").addEventListener("submit",e=>{
   e.preventDefault();
-  const email=document.getElementById("email").value.trim().toLowerCase();
-  if(!validEmail(email)){setHint("Escribe un correo válido (ej: nombre@dominio.cl).","err");return;}
-  const need=DOMAIN[PENDING],dom=email.split("@")[1];
-  if(need&&dom!==need){setHint("Este perfil requiere un correo @"+need+". Revisa tu dominio.","err");return;}
-  setHint("Acceso verificado ✓","ok");
-  const role=PENDING;setTimeout(()=>enter(role,email),300);
+  const email=document.getElementById("gemail").value.trim().toLowerCase();
+  if(!validEmail(email)){gErr("Escribe un correo electrónico válido.");return;}
+  const need=DOMAIN[PENDING];
+  if(need&&email.split("@")[1]!==need){gErr("Este perfil requiere una cuenta @"+need+".");return;}
+  gErr("");closeGoogle();
+  const role=PENDING;setTimeout(()=>enter(role,email),200);
 });
+document.addEventListener("keydown",e=>{if(e.key==="Escape")closeGoogle();});
+
+/* OAuth REAL con Google Identity Services (si defines GOOGLE_CLIENT_ID). */
+function decodeJwt(t){try{return JSON.parse(decodeURIComponent(atob(t.split(".")[1].replace(/-/g,"+").replace(/_/g,"/")).split("").map(c=>"%"+("00"+c.charCodeAt(0).toString(16)).slice(-2)).join("")));}catch(_){return {};}}
+function realGoogle(){
+  const done=()=>{try{
+    google.accounts.id.initialize({client_id:GOOGLE_CLIENT_ID,callback:r=>{
+      const email=((decodeJwt(r.credential).email)||"").toLowerCase();
+      const need=DOMAIN[PENDING];
+      if(!email){gDom("No se pudo leer el correo de Google.",true);return;}
+      if(need&&email.split("@")[1]!==need){gDom("Ese perfil requiere una cuenta @"+need+".",true);return;}
+      enter(PENDING,email);
+    }});
+    google.accounts.id.prompt();
+  }catch(_){gDom("No se pudo iniciar Google. Intenta de nuevo.",true);}};
+  if(window.google&&window.google.accounts){done();return;}
+  const s=document.createElement("script");s.src="https://accounts.google.com/gsi/client";s.async=true;s.defer=true;
+  s.onload=done;s.onerror=()=>gDom("No se pudo cargar Google.",true);document.head.appendChild(s);
+}
 
 /* ============ INTRO · se cierra sola (o al tocar) y muestra el acceso ============ */
 function skipIntro(){const i=document.getElementById("intro");if(!i||i.classList.contains("done"))return;
