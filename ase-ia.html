@@ -88,11 +88,9 @@
 
   .quick{margin-top:18px;animation:fadeUp .6s ease both;}
   .quick h3{font-size:12px;text-transform:uppercase;letter-spacing:1.2px;color:var(--muted);margin:0 0 12px;font-weight:700;}
-  .qgrid{display:grid;grid-template-columns:repeat(8,1fr);gap:12px;}
-  @media(max-width:900px){.qgrid{grid-template-columns:repeat(4,1fr);}}
-  @media(max-width:460px){.qgrid{grid-template-columns:repeat(3,1fr);}}
-  .qcard{position:relative;display:flex;flex-direction:column;align-items:center;gap:9px;background:var(--card);
-    border:1px solid var(--border);border-radius:18px;padding:15px 8px;transition:.18s cubic-bezier(.2,.7,.3,1);text-align:center;box-shadow:var(--shadow-sm);}
+  .qgrid{display:grid;grid-template-columns:1fr;gap:9px;max-width:560px;}
+  .qcard{position:relative;display:flex;flex-direction:row;align-items:center;gap:14px;background:var(--card);
+    border:1px solid var(--border);border-radius:14px;padding:11px 16px;transition:.18s cubic-bezier(.2,.7,.3,1);text-align:left;box-shadow:var(--shadow-sm);}
   .qcard:hover{transform:translateY(-4px);box-shadow:0 18px 38px -16px rgba(11,61,145,.4);border-color:#cfe0ff;}
   .qcard .ic{width:46px;height:46px;display:flex;align-items:center;justify-content:center;border-radius:14px;
     background:linear-gradient(160deg,#f6f9ff,#eef3fc);overflow:hidden;}
@@ -161,15 +159,14 @@
     .instbar .t1{font-size:11px;line-height:1.2;} .instbar .t2{font-size:9.5px;} .instbar a.web{display:none;}
     .app-h .in{padding:10px 15px;} .brand .name{font-size:19px;} .brand .sub{display:none;}
     .hero{padding:18px 0 2px;} .hero h1{font-size:21px;} .hero p{font-size:13px;}
-    .qgrid{grid-template-columns:repeat(3,1fr);gap:9px;}
-    .qcard{padding:12px 6px;border-radius:15px;} .qcard .ic{width:42px;height:42px;} .qcard .lb{font-size:11px;} .qcard .lb small{font-size:9px;}
+    .qgrid{grid-template-columns:1fr;gap:8px;max-width:none;}
+    .qcard{padding:11px 14px;} .qcard .ic{width:40px;height:40px;} .qcard .lb{font-size:12.5px;} .qcard .lb small{font-size:10px;}
     .chat{height:auto;min-height:0;border-radius:20px;} #log{height:54vh;flex:none;} .msg{max-width:88%;}
     form{gap:8px;padding:11px 12px;}
     input[type=text]{padding:12px 14px;min-width:0;}
     button.send,button.mic{width:46px;height:46px;min-width:46px;}
     button.mic svg{width:20px;height:20px;}
   }
-  @media(max-width:380px){ .qgrid{grid-template-columns:repeat(2,1fr);} }
 
   /* ============ MONEDA 3D (logo de inicio) ============ */
   .coin3d{width:150px;height:150px;margin:0 auto;perspective:1000px;cursor:grab;touch-action:none;
@@ -276,6 +273,14 @@
   @media(max-width:640px){ .gcard2{padding:32px 24px 22px;border-radius:22px;} }
 
   /* ============ CUADROS EN EL CHAT (fuentes + workspace) ============ */
+  /* Tablas (cuadros) dentro del chat */
+  .tblwrap{margin:10px 0;overflow-x:auto;-webkit-overflow-scrolling:touch;border-radius:12px;border:1px solid #dbe6ff;box-shadow:0 8px 20px -16px rgba(11,61,145,.4);}
+  table.mdtable{border-collapse:collapse;width:100%;font-size:13.5px;background:#fff;min-width:280px;}
+  table.mdtable th{background:var(--grad-azul);color:#fff;font-weight:800;text-align:left;padding:9px 12px;font-family:'Montserrat',sans-serif;font-size:12.5px;}
+  table.mdtable td{padding:9px 12px;border-top:1px solid #e8eefb;color:var(--text);vertical-align:top;line-height:1.45;}
+  table.mdtable tbody tr:nth-child(even){background:#f6f9ff;}
+  table.mdtable tbody tr:hover{background:#eef4ff;}
+  .msg .mtext{white-space:pre-wrap;}
   .srccards{margin-top:11px;display:flex;flex-direction:column;gap:8px;}
   .srccard{display:flex;gap:11px;align-items:flex-start;background:linear-gradient(160deg,#f7faff,#eef4ff);
     border:1px solid #dbe6ff;border-radius:15px;padding:11px 13px;cursor:pointer;transition:.15s;text-align:left;}
@@ -700,6 +705,18 @@ const DOCS=[
    x:"El reglamento contempla faltas cometidas por padres, madres y apoderados y un procedimiento para sancionarlas. Si un funcionario del establecimiento agrede física o psicológicamente a un apoderado, el afectado debe informar al equipo directivo; si el agresor forma parte del equipo directivo, la denuncia se dirige a la SIP Red de Colegios (Phillips 16, oficina O, piso 7, Santiago)."},
   {t:"Reglamento Interno · Deberes de los profesores",r:ALL,
    x:"Los profesores deben ejercer la función docente de forma idónea y responsable, orientar vocacionalmente a sus estudiantes cuando corresponda, actualizar sus conocimientos y evaluarse periódicamente, y enseñar los contenidos curriculares de cada nivel, respetando las normas del colegio y el Proyecto Educativo Institucional."},
+  /* ===== Reglamento de Evaluación 2026 · fichas específicas ===== */
+  {t:"Reglamento de Evaluación · Escala de calificaciones",r:ALL,x:"Las calificaciones se expresan en una escala de 1,0 a 7,0, siendo 4,0 la nota mínima de aprobación. La escala de corrección de referencia considera un 60% de logro para obtener el 4,0. En Religión, Orientación y los Cursos de Desarrollo Integral se usa una escala conceptual (MB, B, S, I) que no incide en la promoción."},
+  {t:"Reglamento de Evaluación · Promoción de curso",r:ALL,x:"Para ser promovido se considera el logro de los objetivos de aprendizaje y la asistencia. Son promovidos quienes aprueban todas las asignaturas. Con UNA asignatura reprobada, se promueve si el promedio final anual es igual o superior a 4,5 (incluyéndola). Con DOS asignaturas reprobadas, si el promedio final anual es igual o superior a 5,0 (incluyéndolas)."},
+  {t:"Reglamento de Evaluación · Asistencia para la promoción",r:ALL,x:"Para ser promovido se requiere una asistencia igual o superior al 85% de las clases del año escolar. El Director puede autorizar la promoción con menos del 85% por causas justificadas (enfermedad con certificado médico, embarazo/maternidad, viaje o intercambio con aprobación de la Dirección)."},
+  {t:"Reglamento de Evaluación · Cálculo de promedios",r:ALL,x:"El promedio de cada asignatura en un semestre es el promedio simple de sus calificaciones, con redondeo a la décima. El promedio final anual de la asignatura es el promedio simple del primer y segundo semestre. El promedio general anual es el promedio simple de todas las asignaturas."},
+  {t:"Reglamento de Evaluación · Eximición (Artículo 41)",r:ALL,x:"Ningún estudiante puede ser eximido de una asignatura o módulo del plan de estudio. Sí se permite la eximición de evaluaciones puntuales, según el Artículo N°41 del Reglamento de Evaluación. Los estudiantes con necesidades educativas especiales acreditadas tienen derecho a evaluación diferenciada o adecuación curricular."},
+  {t:"Reglamento de Evaluación · Entrega tardía de trabajos (Artículo 47)",r:ALL,x:"Cuando un estudiante no entrega un trabajo en la fecha establecida (por olvido o negligencia) es una falta leve. Tiene una única oportunidad de entregarlo en una nueva fecha acordada con el docente, con una escala de corrección del 75% para el 4,0. Si no entrega un trabajo sumativo en esa nueva fecha, se califica con la nota mínima 1,0 y se informa al apoderado."},
+  {t:"Reglamento de Evaluación · Ausencia a una evaluación (Artículo 48)",r:ALL,x:"El estudiante tiene una única oportunidad para rendir la evaluación a la que se ausentó. Si presenta la justificación en la fecha establecida, recupera en las mismas condiciones. Si no la presenta, recupera pero con una escala de corrección del 75% para el 4,0. Si no se presenta a la nueva instancia, se califica con nota mínima 1,0 (salvo situación médica en la nueva fecha respaldada con certificado)."},
+  {t:"Reglamento de Evaluación · Negarse a rendir una evaluación (Artículo 49)",r:ALL,x:"Se entiende por negación a rendir una evaluación cuando el estudiante, estando presente y en actitud de rebeldía, no entrega evidencias de su aprendizaje. Se considera una falta leve y, si la evaluación es sumativa, se califica con la nota mínima 1,0, informando al apoderado y registrándolo en la hoja de observaciones."},
+  {t:"Reglamento de Evaluación · Copia o plagio (Artículo 53)",r:ALL,x:"Cuando se constata que un estudiante fue sorprendido copiando o plagiando en una evaluación, se entiende que no ha logrado el aprendizaje y se califica con la nota mínima 1,0, quedando registrado en la hoja de observaciones. El profesor informa al apoderado, con copia a subdirección, que cita al apoderado para aplicar el Reglamento Interno (la copia es además una falta grave)."},
+  {t:"Reglamento de Evaluación · Repitencia (Artículo 72)",r:ALL,x:"Los estudiantes tienen derecho a repetir curso en el establecimiento una vez en Educación Básica y una vez en Educación Media, sin que por ese solo motivo se cancele o no renueve su matrícula. Si un estudiante repite por segunda vez en básica o por segunda vez en media (doble repitencia), el colegio podrá iniciar un procedimiento de cancelación de matrícula por repitencia (con descargos en 2 días hábiles y derecho a reconsideración)."},
+  {t:"Reglamento de Evaluación · Evaluación formativa y sumativa",r:ALL,x:"La evaluación formativa acompaña y retroalimenta el aprendizaje y no siempre lleva calificación; la evaluación sumativa certifica los aprendizajes logrados y se comunica mediante una calificación. Ambas se planifican de forma coherente. La retroalimentación es información precisa y oportuna para que el estudiante mejore su aprendizaje. Las indicaciones específicas están en el Reglamento de Evaluación de cada colegio."},
   /* ===== Reglamento Interno · fichas de precisión (texto oficial 2026) ===== */
   {t:"Reglamento Interno · Definiciones · Buena convivencia y debido proceso",r:ALL,x:"Buena convivencia: coexistencia armónica de los miembros de la comunidad educativa, con interrelación positiva que permite cumplir los objetivos educativos en un clima de desarrollo integral. Debido proceso: todo procedimiento establecido antes de aplicar una medida, que comunica la falta al estudiante, respeta la presunción de inocencia, garantiza el derecho a descargos y apelación, y se resuelve de forma fundada y en plazo razonable. Comunidad educativa: alumnos, padres y apoderados, profesionales y asistentes de la educación, docentes, directivos y sostenedores."},
   {t:"Reglamento Interno · Definiciones · Delito, estupro, gradualidad, investigación sumaria",r:ALL,x:"Delito: acción u omisión voluntaria penada por la ley (Art. 1 Código Penal). Estupro: acceso carnal (vaginal, anal o bucal) a un menor de edad mayor de 14 años, aprovechando una anomalía o perturbación mental, relación de dependencia, grave desamparo o inexperiencia sexual de la víctima. Gradualidad: los tipos de falta (leve, grave y gravedad extrema). Investigación sumaria: investigación más rápida, de menor plazo. IDPS: Índice de Desarrollo Personal y Social. OPD: Oficina de Protección de Derechos. Principio de proporcionalidad: la sanción debe ser proporcional al hecho."},
@@ -990,6 +1007,8 @@ const SYNGROUPS=[
   ["hospital","clinica","urgencia","enfermeria","posta","accidente","accidentes","accidentado","lesion"],
   ["embarazo","embarazada","maternidad","paternidad","lactancia"],
   ["genero","transgenero","identidad"],
+  ["copia","copiar","copio","copie","copiando","copiado","plagio","plagiar","deshonestidad"],
+  ["repitencia","repite","repetir","repitio","repitiendo","reprobar","reprobado","rojo","rojos"],
 ];
 function words(s){return normalize(s).split(" ").filter(w=>w.length>2);}
 /* Palabras vacías: verbos/pronombres genéricos que no aportan al significado. */
@@ -1174,10 +1193,42 @@ function listCardEl(c){
     a.className="sc-m";a.style.display="inline-block";a.style.marginTop="9px";a.textContent="Abrir en Google →";card.appendChild(a);}
   return card;
 }
+/* Convierte tablas Markdown (| a | b | / |---|---|) en cuadros HTML dentro del chat. */
+function tableCells(line){
+  let s=line.trim();
+  if(s.startsWith("|"))s=s.slice(1);
+  if(s.endsWith("|"))s=s.slice(0,-1);
+  return s.split("|").map(c=>clean(c.trim()));
+}
+function isSepRow(line){return line.includes("-")&&/^\s*\|?[\s:|-]*-[\s:|-]*\|?\s*$/.test(line);}
+function buildTable(header,rows){
+  const wrap=el("div","tblwrap"),t=document.createElement("table");t.className="mdtable";
+  if(header&&header.some(h=>h!=="")){const thead=document.createElement("thead"),tr=document.createElement("tr");
+    header.forEach(h=>{const th=document.createElement("th");th.textContent=h;tr.appendChild(th);});thead.appendChild(tr);t.appendChild(thead);}
+  const tb=document.createElement("tbody");
+  rows.forEach(r=>{const tr=document.createElement("tr");r.forEach(c=>{const td=document.createElement("td");td.textContent=c;tr.appendChild(td);});tb.appendChild(tr);});
+  t.appendChild(tb);wrap.appendChild(t);return wrap;
+}
+/* Renderiza el texto del bot: párrafos limpios + tablas como cuadros. */
+function renderRich(msg,raw){
+  const lines=(raw||"").replace(/\r/g,"").split("\n");let buf=[],i=0;
+  function flush(){const t=clean(buf.join("\n")).trim();buf=[];if(t){const s=el("span","mtext");s.textContent=t;msg.appendChild(s);}}
+  while(i<lines.length){
+    if(lines[i].includes("|") && i+1<lines.length && isSepRow(lines[i+1])){
+      flush();
+      const header=tableCells(lines[i]);i+=2;const rows=[];
+      while(i<lines.length && lines[i].includes("|") && lines[i].trim()!==""){rows.push(tableCells(lines[i]));i++;}
+      msg.appendChild(buildTable(header,rows));continue;
+    }
+    buf.push(lines[i]);i++;
+  }
+  flush();
+}
 function add(text,who,extra){
   const row=el("div","row "+who);
   if(who==="bot")row.appendChild(avatarEl());
-  const msg=el("div","msg",text);
+  const msg=el("div","msg");
+  if(who==="bot") renderRich(msg,text); else msg.textContent=text;
   if(extra){
     if(extra.cards&&extra.cards.length)extra.cards.forEach(c=>msg.appendChild(listCardEl(c)));
     if(extra.docCites&&extra.docCites.length){const box=el("div","srccards");
@@ -1211,9 +1262,8 @@ async function ask(text){
   } else {
     await new Promise(r=>setTimeout(r,420));
   }
-  reply=clean(reply);
-  typing(false);add(reply,"bot",{docCites:local.docCites,cards:local.cards});
-  convo.push({role:"user",content:text});convo.push({role:"assistant",content:reply});
+  typing(false);add(reply,"bot",{docCites:local.docCites,cards:local.cards});  // renderRich limpia y arma tablas
+  convo.push({role:"user",content:text});convo.push({role:"assistant",content:clean(reply)});
 }
 
 function enter(role,email){
