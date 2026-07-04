@@ -1094,79 +1094,34 @@ function realGoogle(){
 }
 
 /* ============ INTRO · se cierra sola (o al tocar) y muestra el acceso ============ */
-/* ====== SONIDO DE BIENVENIDA DE ASE-IA (Web Audio API, sin archivos) ======
-   Identidad ASE-IA: orquesta épica (cuerdas/metales con reverberación de sala)
-   + firma digital de inteligencia artificial (arpegio de encendido y campanitas).
-   Estructura: encendido digital → golpe + riser de cuerdas → CLÍMAX (impacto +
-   acorde mayor orquestal en varias octavas) → brillo digital de resolución. */
-let audioCtx=null, introSoundPlayed=false;
+/* ====== SONIDO DE BIENVENIDA (archivo de audio: assets/intro.mp3) ======
+   Reproduce el audio del intro. Intenta sonar de inmediato; si el navegador
+   bloquea el autoplay, suena con el primer toque del usuario. */
+let introAudio=null, introSoundPlayed=false;
+function getIntroAudio(){
+  if(!introAudio){ introAudio=new Audio("assets/intro.mp3"); introAudio.preload="auto"; introAudio.volume=0.95; }
+  return introAudio;
+}
 function playIntroSound(){
   if(introSoundPlayed)return;
-  const AC=window.AudioContext||window.webkitAudioContext; if(!AC)return;
-  try{ audioCtx=audioCtx||new AC(); }catch(_){ return; }
-  if(audioCtx.state==="suspended"){ try{audioCtx.resume();}catch(_){} }
-  if(audioCtx.state!=="running") return;   // aún bloqueado; se reintenta con el primer toque
-  introSoundPlayed=true;
-  const ctx=audioCtx, t=ctx.currentTime+0.04;
-  // Bus maestro con compresor (evita saturación al sumar muchas capas)
-  const comp=ctx.createDynamicsCompressor();
-  const master=ctx.createGain(); master.gain.value=0.9; master.connect(comp); comp.connect(ctx.destination);
-  // Reverberación de sala (convolución con impulso sintético)
-  function makeImpulse(dur,decay){const n=Math.floor(ctx.sampleRate*dur),imp=ctx.createBuffer(2,n,ctx.sampleRate);
-    for(let ch=0;ch<2;ch++){const d=imp.getChannelData(ch);for(let i=0;i<n;i++)d[i]=(Math.random()*2-1)*Math.pow(1-i/n,decay);}return imp;}
-  const reverb=ctx.createConvolver(); reverb.buffer=makeImpulse(2.8,2.3);
-  const wet=ctx.createGain(); wet.gain.value=0.5; reverb.connect(wet); wet.connect(master);
-  function env(g,start,peak,dur,atk){g.gain.setValueAtTime(0.0001,start);g.gain.exponentialRampToValueAtTime(peak,start+atk);g.gain.exponentialRampToValueAtTime(0.0001,start+dur);}
-  // Instrumento orquestal: unísono detunado + vibrato + filtro que abre
-  function orch(freq,start,dur,peak,type){
-    const g=ctx.createGain(); env(g,start,peak,dur,0.22);
-    const lp=ctx.createBiquadFilter();lp.type="lowpass";lp.frequency.setValueAtTime(1100,start);lp.frequency.exponentialRampToValueAtTime(4800,start+0.5);
-    const lfo=ctx.createOscillator(),lg=ctx.createGain();lfo.frequency.value=5.3;lg.gain.value=4.5;lfo.connect(lg);lfo.start(start);lfo.stop(start+dur+0.1);
-    [-8,0,8].forEach(det=>{const o=ctx.createOscillator();o.type=type;o.frequency.value=freq;o.detune.value=det;lg.connect(o.detune);o.connect(g);o.start(start);o.stop(start+dur+0.1);});
-    g.connect(lp); lp.connect(master); lp.connect(reverb);
-  }
-  // Blip digital (firma IA)
-  function blip(freq,start,dur,peak,type){
-    const o=ctx.createOscillator();o.type=type||"square";const g=ctx.createGain();env(g,start,peak,dur,0.008);
-    o.frequency.value=freq;o.connect(g);g.connect(master);g.connect(reverb);o.start(start);o.stop(start+dur+0.02);
-  }
-  // Golpe grave / timbal
-  function boom(f0,f1,start,dur,peak){
-    const o=ctx.createOscillator(),g=ctx.createGain();o.type="sine";
-    o.frequency.setValueAtTime(f0,start);o.frequency.exponentialRampToValueAtTime(f1,start+dur*0.6);
-    env(g,start,peak,dur,0.02);o.connect(g);g.connect(master);o.start(start);o.stop(start+dur+0.05);
-  }
-  // Impacto de platillo (ruido filtrado)
-  function crash(start,dur,peak,hp){
-    const n=Math.floor(ctx.sampleRate*dur),buf=ctx.createBuffer(1,n,ctx.sampleRate),d=buf.getChannelData(0);
-    for(let i=0;i<n;i++)d[i]=(Math.random()*2-1)*Math.pow(1-i/n,1.5);
-    const s=ctx.createBufferSource();s.buffer=buf;const f=ctx.createBiquadFilter();f.type="highpass";f.frequency.value=hp||1000;
-    const g=ctx.createGain();g.gain.setValueAtTime(peak,start);g.gain.exponentialRampToValueAtTime(0.0001,start+dur);
-    s.connect(f).connect(g);g.connect(master);g.connect(reverb);s.start(start);s.stop(start+dur);
-  }
-  const climax=t+1.7;
-  // 1) Encendido digital de ASE-IA (arpegio ascendente)
-  [523.25,659.25,783.99,1046.50].forEach((f,i)=>blip(f,t+i*0.09,0.17,0.16,"square"));
-  // 2) Golpe grave + timbal de arranque
-  boom(110,44,t,1.7,0.9); boom(190,95,t+0.02,0.5,0.55);
-  // 3) Riser de cuerdas ascendente hacia el clímax
-  const ris=ctx.createOscillator(),rg=ctx.createGain(),rf=ctx.createBiquadFilter();
-  ris.type="sawtooth";ris.frequency.setValueAtTime(90,t+0.2);ris.frequency.exponentialRampToValueAtTime(880,climax);
-  rf.type="lowpass";rf.frequency.setValueAtTime(300,t+0.2);rf.frequency.exponentialRampToValueAtTime(6000,climax);rf.Q.value=6;
-  rg.gain.setValueAtTime(0.0001,t+0.2);rg.gain.linearRampToValueAtTime(0.2,climax-0.05);rg.gain.exponentialRampToValueAtTime(0.0001,climax+0.15);
-  ris.connect(rf).connect(rg);rg.connect(master);rg.connect(reverb);ris.start(t+0.2);ris.stop(climax+0.2);
-  // 4) CLÍMAX: impacto + acorde mayor orquestal desplegado en varias octavas (Do mayor)
-  boom(120,46,climax,2.5,0.95); crash(climax,0.7,0.5,1500);
-  const chord=[65.41,130.81,196.00,261.63,329.63,392.00,523.25,659.25];
-  chord.forEach((f,i)=>orch(f,climax,2.5,i<3?0.13:0.09,i<4?"sawtooth":"triangle"));
-  // 5) Brillo digital de resolución (campanitas de IA sobre el acorde)
-  [1046.50,1318.51,1567.98,2093.00].forEach((f,i)=>blip(f,climax+0.18+i*0.1,0.6,0.08,"triangle"));
+  try{
+    const a=getIntroAudio();
+    const pr=a.play();
+    if(pr&&pr.then){ pr.then(()=>{introSoundPlayed=true;}).catch(()=>{/* bloqueado; se reintenta con un gesto */}); }
+    else introSoundPlayed=true;
+  }catch(_){}
 }
 function unlockAudioOnce(){ playIntroSound(); }
+function stopIntroSound(){
+  if(!introAudio)return;
+  const a=introAudio; let v=a.volume||0;
+  const id=setInterval(()=>{ v-=0.12; if(v<=0){ clearInterval(id); try{a.pause();}catch(_){} } else { try{a.volume=Math.max(0,v);}catch(_){} } },45);
+}
 
 let introTimer=null;
 function skipIntro(){const i=document.getElementById("intro");if(!i||i.classList.contains("done"))return;
   if(introTimer)clearInterval(introTimer);
+  stopIntroSound();
   i.classList.add("done");setTimeout(()=>{i.style.display="none";},700);}
 (function(){const i=document.getElementById("intro");if(!i)return;
   const msg=document.getElementById("imsg");
@@ -1182,12 +1137,18 @@ function skipIntro(){const i=document.getElementById("intro");if(!i||i.classList
     setTimeout(()=>{ msg.textContent="« "+FRASES[k%FRASES.length]+" »"; msg.classList.add("on"); k++; },240); }
   nextMsg(); introTimer=setInterval(nextMsg,1650);
   // Sonido: intenta sonar de inmediato; si el navegador lo bloquea, suena con el primer toque.
+  const a=getIntroAudio();
   playIntroSound();
   ["pointerdown","touchstart","keydown"].forEach(ev=>window.addEventListener(ev,unlockAudioOnce,{once:true,capture:true}));
+  // La intro dura lo que dure el audio (tope de seguridad 10 s); 5 s si no hay metadatos.
+  let dismiss=setTimeout(skipIntro,5000);
+  a.addEventListener("loadedmetadata",()=>{
+    const dur=(isFinite(a.duration)&&a.duration>0)?Math.min(a.duration+0.4,10):5;
+    clearTimeout(dismiss); dismiss=setTimeout(skipIntro,dur*1000);
+  },{once:true});
   // Se puede tocar para entrar, pero no en el primer instante (deja lucir el logo y el sonido).
   const startT=Date.now();
-  i.addEventListener("click",()=>{ if(Date.now()-startT<2000)return; skipIntro(); });  // deja escuchar el clímax
-  setTimeout(skipIntro,4900);                   // duración de la intro (cola del acorde)
+  i.addEventListener("click",()=>{ if(Date.now()-startT<1800)return; clearTimeout(dismiss); skipIntro(); });
 })();
 
 /* ============ MONEDA 3D (girar el logo arrastrando, con inercia) ============ */
