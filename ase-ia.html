@@ -579,6 +579,9 @@ const ICONS={
  buk:'<svg viewBox="0 0 48 48"><rect x="4" y="4" width="40" height="40" rx="11" fill="#0b1f3a"/><text x="24" y="31" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-weight="800" font-size="18" fill="#00e0a4" letter-spacing="-.5">buk</text></svg>',
  claude:'<svg viewBox="0 0 48 48"><rect width="48" height="48" rx="12" fill="#0f0f0e"/><g fill="#d97757" transform="translate(24 24)"><g><rect x="-1.4" y="-15" width="2.8" height="30" rx="1.4"/><rect x="-1.4" y="-15" width="2.8" height="30" rx="1.4" transform="rotate(30)"/><rect x="-1.4" y="-15" width="2.8" height="30" rx="1.4" transform="rotate(60)"/><rect x="-1.4" y="-15" width="2.8" height="30" rx="1.4" transform="rotate(90)"/><rect x="-1.4" y="-15" width="2.8" height="30" rx="1.4" transform="rotate(120)"/><rect x="-1.4" y="-15" width="2.8" height="30" rx="1.4" transform="rotate(150)"/></g></g></svg>',
  mineduc:'<svg viewBox="0 0 48 48"><rect x="4" y="4" width="40" height="40" rx="11" fill="#0a3d91"/><path fill="#fff" d="M24 12l12 5-12 5-12-5z"/><path fill="#e7b100" d="M17 21.5v5.5c0 2.5 3.1 4.5 7 4.5s7-2 7-4.5v-5.5L24 25z"/><rect x="35" y="17" width="1.7" height="8" fill="#fff"/><circle cx="35.85" cy="26" r="2" fill="#e7b100"/></svg>',
+ docs:'<svg viewBox="0 0 48 48"><path fill="#4285F4" d="M29 4H12a3 3 0 0 0-3 3v34a3 3 0 0 0 3 3h24a3 3 0 0 0 3-3V14z"/><path fill="#a1c2fa" d="M29 4l10 10H29z"/><rect x="16" y="20" width="16" height="2.3" rx="1.1" fill="#fff"/><rect x="16" y="24.5" width="16" height="2.3" rx="1.1" fill="#fff"/><rect x="16" y="29" width="11" height="2.3" rx="1.1" fill="#fff"/></svg>',
+ slides:'<svg viewBox="0 0 48 48"><path fill="#f4b400" d="M29 4H12a3 3 0 0 0-3 3v34a3 3 0 0 0 3 3h24a3 3 0 0 0 3-3V14z"/><path fill="#f7cb4d" d="M29 4l10 10H29z"/><rect x="15" y="21" width="18" height="12" rx="1.5" fill="#fff"/></svg>',
+ canva:'<svg viewBox="0 0 48 48"><defs><linearGradient id="cv" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#7d2ae8"/><stop offset=".5" stop-color="#00c4cc"/><stop offset="1" stop-color="#01f1c4"/></linearGradient></defs><circle cx="24" cy="24" r="20" fill="url(#cv)"/><text x="24" y="32" text-anchor="middle" font-family="Georgia,\'Times New Roman\',serif" font-weight="700" font-size="24" fill="#fff">C</text></svg>',
 };
 const B = {
   classroom:{lb:"Classroom",sub:"Tareas y clases",url:"https://classroom.google.com",icon:"classroom"},
@@ -598,14 +601,17 @@ const B = {
   scielo:{lb:"SciELO Chile",sub:"Revistas científicas",url:"https://scielo.cl",icon:"scielo"},
   participacion:{lb:"Participación",sub:"Ayuda Mineduc",url:"https://www.ayudamineduc.cl/ficha/participacion-de-los-apoderados-en-el-establecimiento-educacional",icon:"participacion"},
   sheets:{lb:"Hojas de cálculo",sub:"Google Sheets",url:"https://sheets.google.com",icon:"sheets"},
+  docs:{lb:"Documentos",sub:"Google Docs",url:"https://docs.google.com",icon:"docs"},
+  slides:{lb:"Presentaciones",sub:"Google Slides",url:"https://slides.google.com",icon:"slides"},
+  canva:{lb:"Canva",sub:"Diseño y presentaciones",url:"https://www.canva.com",icon:"canva"},
   buk:{lb:"BUK",sub:"Personas y remuneraciones",url:"https://sip.buk.cl/users/sign_in",icon:"buk"},
   claude:{lb:"Claude",sub:"IA de Anthropic",url:"https://claude.ai",icon:"claude"},
   mineduc:{lb:"Mineduc",sub:"Ministerio de Educación",url:"https://www.mineduc.cl",icon:"mineduc"},
 };
 const LINKS = {
   student:[B.classroom,B.drive,B.calendar,B.correo,B.sheets,B.alexia,B.scholar,B.scielo,B.colegio],
-  teacher:[B.classroom,B.drive,B.calendar,B.correo,B.sheets,B.notebook,B.gemini,B.chatgpt,B.buk,B.alexia,B.tutor],
-  admin:[B.classroom,B.drive,B.calendar,B.correo,B.sheets,B.notebook,B.gemini,B.chatgpt,B.claude,B.buk,B.mineduc,B.alexia],
+  teacher:[B.classroom,B.drive,B.calendar,B.correo,B.sheets,B.docs,B.slides,B.canva,B.notebook,B.gemini,B.chatgpt,B.buk,B.alexia,B.tutor],
+  admin:[B.classroom,B.drive,B.calendar,B.correo,B.sheets,B.docs,B.notebook,B.gemini,B.chatgpt,B.buk,B.mineduc,B.alexia],
   guardian:[B.alexia,B.correo,B.whatsapp,B.instagram,B.participacion,B.colegio,B.sip],
 };
 const ROLE_LABEL={student:"Estudiante",teacher:"Docente",admin:"Administrativo",guardian:"Apoderado"};
