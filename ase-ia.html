@@ -41,7 +41,7 @@
   #gate .inner{position:relative;z-index:1;max-width:660px;width:100%;}
   #gate .badge{width:132px;height:132px;object-fit:contain;animation:floaty 5s ease-in-out infinite, glowPulse 6s ease-in-out infinite;}
   #gate .pill{display:inline-block;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.28);
-    border-radius:999px;padding:5px 14px;font-size:12px;font-weight:600;letter-spacing:.4px;margin-bottom:6px;backdrop-filter:blur(6px);}
+    border-radius:999px;padding:3px 10px;font-size:10px;font-weight:600;letter-spacing:.3px;margin-bottom:6px;backdrop-filter:blur(6px);}
   #gate h1{margin:12px 0 4px;font-size:30px;font-weight:800;line-height:1.1;}
   #gate .lema{color:#ffdd8a;font-weight:700;font-size:13.5px;letter-spacing:.4px;}
   #gate p{color:#d3e0fb;margin:14px auto 24px;font-size:14.5px;line-height:1.6;max-width:520px;}
@@ -330,6 +330,17 @@
     font-size:14px;font-style:italic;color:#c7d8f7;line-height:1.5;max-width:560px;margin:0 auto;
     opacity:0;transition:opacity .5s ease;animation:iUp .7s ease 1.4s backwards;}
   #intro .imsg.on{opacity:.92;}
+  /* Destellos dorados sobre el logo (sincronizados con la música) */
+  #intro .spark{position:absolute;width:var(--sz,12px);height:var(--sz,12px);margin-left:calc(var(--sz,12px)/-2);margin-top:calc(var(--sz,12px)/-2);
+    pointer-events:none;z-index:3;transform:scale(0) rotate(0deg);
+    background:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M12 0 L13.6 10.4 L24 12 L13.6 13.6 L12 24 L10.4 13.6 L0 12 L10.4 10.4 Z' fill='%23ffe89a'/></svg>") center/contain no-repeat;
+    filter:drop-shadow(0 0 4px rgba(255,221,120,.95));animation:sparkle .72s ease-out forwards;}
+  @keyframes sparkle{0%{transform:scale(0) rotate(0deg);opacity:0;}28%{transform:scale(1.15) rotate(35deg);opacity:1;}100%{transform:scale(.25) rotate(80deg);opacity:0;}}
+  /* Flash de transición a la pantalla de login */
+  .iflash{position:fixed;inset:0;z-index:301;pointer-events:none;
+    background:radial-gradient(circle at 50% 44%, rgba(255,236,170,.95), rgba(255,255,255,.55) 32%, transparent 72%);
+    animation:iflash .6s ease-out forwards;}
+  @keyframes iflash{0%{opacity:0;}22%{opacity:1;}100%{opacity:0;}}
   @media(max-width:640px){ #intro .ilogoWrap{width:170px;height:170px;} #intro .iring{width:166px;height:166px;} #intro .ihalo{width:200px;height:200px;} #intro .ilogo{width:120px;height:120px;} #intro .iname{font-size:42px;} #intro .isub{font-size:13.5px;} #intro .imsg{font-size:12.5px;bottom:24px;} }
 </style>
 </head>
@@ -401,7 +412,7 @@
       <!-- PASO 1: elegir perfil -->
       <div class="gstep" id="step1">
         <p>Hola 👋 Elige tu perfil e ingresa con tu cuenta de Google. Responderé solo con
-           información autorizada del colegio; si no la tengo, te lo diré con honestidad.</p>
+           información autorizada del colegio.</p>
         <div class="picker">
           <button class="pick" onclick="pick('student')"><span class="emo">🎓</span><span class="t">Estudiante</span><span class="d">Correo @alumnos.sip.cl</span></button>
           <button class="pick" onclick="pick('teacher')"><span class="emo">👩‍🏫</span><span class="t">Docente</span><span class="d">Correo @sip.cl</span></button>
@@ -552,6 +563,7 @@ const ICONS={
  scholar:'<svg viewBox="0 0 48 48"><path fill="#4285F4" d="M24 8 3 18l21 10 21-10z"/><path fill="#1a56c4" d="M12 24.5V33c0 3.3 5.4 6 12 6s12-2.7 12-6v-8.5L24 30z"/><rect x="42" y="18" width="2.2" height="12" fill="#4285F4"/><circle cx="43.1" cy="31" r="2.6" fill="#fbbc04"/></svg>',
  scielo:'<svg viewBox="0 0 48 48"><rect x="5" y="5" width="38" height="38" rx="11" fill="#f68a1e"/><path fill="#fff" d="M24 14.5c-3.4-2.6-8-2.6-11-1.6v19c3-1 7.6-1 11 1.6 3.4-2.6 8-2.6 11-1.6v-19c-3-1-7.6-1-11 1.6z"/><path stroke="#f68a1e" stroke-width="1.6" d="M24 15v18"/></svg>',
  participacion:'<svg viewBox="0 0 48 48"><rect x="5" y="5" width="38" height="38" rx="11" fill="#1565c0"/><circle cx="18" cy="19" r="4.2" fill="#fff"/><circle cx="30" cy="19" r="4.2" fill="#bbdefb"/><path fill="#fff" d="M9 35c0-4.6 3.6-7.5 9-7.5S27 30.4 27 35z"/><path fill="#bbdefb" d="M21 35c0-4.6 3.6-7.5 9-7.5S39 30.4 39 35z"/></svg>',
+ sip:'<svg viewBox="0 0 48 48"><circle cx="24" cy="24" r="21.5" fill="#0b3d91"/><circle cx="24" cy="24" r="21.5" fill="none" stroke="#f5b301" stroke-width="2.6"/><circle cx="24" cy="24" r="16.5" fill="none" stroke="#f5b301" stroke-width="1"/><text x="24" y="29.5" text-anchor="middle" font-family="Georgia,\'Times New Roman\',serif" font-weight="700" font-size="15.5" letter-spacing="1.2" fill="#fff">SIP</text></svg>',
 };
 const B = {
   classroom:{lb:"Classroom",sub:"Tareas y clases",url:"https://classroom.google.com",icon:"classroom"},
@@ -566,7 +578,7 @@ const B = {
   instagram:{lb:"Instagram",sub:"@colegiojjprieto",url:"https://www.instagram.com/colegiojjprieto/?hl=es",icon:"instagram"},
   tutor:{lb:"Tutor Socrático",sub:"Reflexión y defensa",url:"index.html",icon:"tutor"},
   colegio:{lb:"Colegio",sub:"Sitio oficial",url:"https://www.josejoaquinprieto.cl",icon:"crest"},
-  sip:{lb:"SIP",sub:"Red de Colegios",url:"https://www.sip.cl",icon:"crest"},
+  sip:{lb:"SIP",sub:"Red de Colegios",url:"https://www.sip.cl",icon:"sip"},
   scholar:{lb:"Google Scholar",sub:"Artículos académicos",url:"https://scholar.google.com",icon:"scholar"},
   scielo:{lb:"SciELO Chile",sub:"Revistas científicas",url:"https://scielo.cl",icon:"scielo"},
   participacion:{lb:"Participación",sub:"Ayuda Mineduc",url:"https://www.ayudamineduc.cl/ficha/participacion-de-los-apoderados-en-el-establecimiento-educacional",icon:"participacion"},
@@ -1097,15 +1109,28 @@ function realGoogle(){
 /* ====== SONIDO DE BIENVENIDA (archivo de audio: assets/intro.mp3) ======
    Reproduce el audio del intro. Intenta sonar de inmediato; si el navegador
    bloquea el autoplay, suena con el primer toque del usuario. */
-let introAudio=null, introSoundPlayed=false;
+let introAudio=null, introSoundPlayed=false, audioCtx2=null, analyser=null, sparkleRAF=0, sparkleTimer=0;
 function getIntroAudio(){
   if(!introAudio){ introAudio=new Audio("assets/intro.mp3"); introAudio.preload="auto"; introAudio.volume=0.95; }
   return introAudio;
+}
+/* Analizador para leer la energía del audio y disparar destellos en los golpes. */
+function setupAnalyser(){
+  if(analyser)return;
+  try{
+    const AC=window.AudioContext||window.webkitAudioContext; if(!AC)return;
+    audioCtx2=new AC();
+    const src=audioCtx2.createMediaElementSource(getIntroAudio());
+    analyser=audioCtx2.createAnalyser(); analyser.fftSize=128; analyser.smoothingTimeConstant=0.55;
+    src.connect(analyser); analyser.connect(audioCtx2.destination);
+  }catch(_){ analyser=null; }
 }
 function playIntroSound(){
   if(introSoundPlayed)return;
   try{
     const a=getIntroAudio();
+    setupAnalyser();
+    if(audioCtx2 && audioCtx2.state==="suspended"){ try{audioCtx2.resume();}catch(_){} }
     const pr=a.play();
     if(pr&&pr.then){ pr.then(()=>{introSoundPlayed=true;}).catch(()=>{/* bloqueado; se reintenta con un gesto */}); }
     else introSoundPlayed=true;
@@ -1117,11 +1142,48 @@ function stopIntroSound(){
   const a=introAudio; let v=a.volume||0;
   const id=setInterval(()=>{ v-=0.12; if(v<=0){ clearInterval(id); try{a.pause();}catch(_){} } else { try{a.volume=Math.max(0,v);}catch(_){} } },45);
 }
+/* Un destello dorado alrededor del logo. */
+function spawnSparkle(wrap,intensity){
+  const s=document.createElement("span"); s.className="spark";
+  const ang=Math.random()*Math.PI*2, r=30+Math.random()*24;   // % alrededor del centro del logo
+  s.style.left=(50+Math.cos(ang)*r)+"%"; s.style.top=(50+Math.sin(ang)*r)+"%";
+  s.style.setProperty("--sz",(7+Math.random()*12*(0.6+intensity)).toFixed(1)+"px");
+  wrap.appendChild(s); setTimeout(()=>{try{s.remove();}catch(_){}}, 780);
+}
+/* Muestra destellos: sobre los golpes del audio (si suena) o por tiempo (respaldo). */
+function startSparkleShow(){
+  const wrap=document.querySelector("#intro .ilogoWrap"); if(!wrap)return;
+  const data=analyser?new Uint8Array(analyser.frequencyBinCount):null; let prev=0,last=0;
+  function frame(){
+    const intro=document.getElementById("intro");
+    if(!intro||intro.classList.contains("done"))return;
+    const now=performance.now();
+    if(analyser&&data&&audioCtx2&&audioCtx2.state==="running"){
+      analyser.getByteFrequencyData(data);
+      let sum=0; for(let i=0;i<data.length;i++) sum+=data[i];
+      const e=sum/data.length/255;
+      if(e>0.28 && e-prev>0.045 && now-last>80){ spawnSparkle(wrap,e); if(e>0.55) spawnSparkle(wrap,e); last=now; }
+      prev=prev*0.72+e*0.28;
+    }
+    sparkleRAF=requestAnimationFrame(frame);
+  }
+  sparkleRAF=requestAnimationFrame(frame);
+  // Base continua de destellos (garantiza chispas siempre); los golpes del audio
+  // añaden ráfagas extra alineadas a la música.
+  sparkleTimer=setInterval(()=>{
+    const intro=document.getElementById("intro");
+    if(!intro||intro.classList.contains("done")){ clearInterval(sparkleTimer); return; }
+    spawnSparkle(wrap,0.45);
+  },300);
+}
+function stopSparkleShow(){ if(sparkleRAF)cancelAnimationFrame(sparkleRAF); if(sparkleTimer)clearInterval(sparkleTimer); }
+/* Flash cinematográfico al pasar de la intro a la pantalla de login. */
+function flashTransition(){ const f=document.createElement("div"); f.className="iflash"; document.body.appendChild(f); setTimeout(()=>{try{f.remove();}catch(_){}}, 650); }
 
 let introTimer=null;
 function skipIntro(){const i=document.getElementById("intro");if(!i||i.classList.contains("done"))return;
   if(introTimer)clearInterval(introTimer);
-  stopIntroSound();
+  stopSparkleShow(); stopIntroSound(); flashTransition();   // transición a la pantalla de login
   i.classList.add("done");setTimeout(()=>{i.style.display="none";},700);}
 (function(){const i=document.getElementById("intro");if(!i)return;
   const msg=document.getElementById("imsg");
@@ -1139,6 +1201,7 @@ function skipIntro(){const i=document.getElementById("intro");if(!i||i.classList
   // Sonido: intenta sonar de inmediato; si el navegador lo bloquea, suena con el primer toque.
   const a=getIntroAudio();
   playIntroSound();
+  startSparkleShow();                       // destellos sobre el logo alineados a la música
   ["pointerdown","touchstart","keydown"].forEach(ev=>window.addEventListener(ev,unlockAudioOnce,{once:true,capture:true}));
   // La intro dura lo que dure el audio (recortada, tope 7.5 s); 5.5 s si no hay metadatos.
   // La barra se sincroniza para llenarse justo al final (así nunca parece pegada).
