@@ -88,9 +88,11 @@
 
   .quick{margin-top:18px;animation:fadeUp .6s ease both;}
   .quick h3{font-size:12px;text-transform:uppercase;letter-spacing:1.2px;color:var(--muted);margin:0 0 12px;font-weight:700;}
-  .qgrid{display:grid;grid-template-columns:1fr;gap:9px;max-width:560px;}
-  .qcard{position:relative;display:flex;flex-direction:row;align-items:center;gap:14px;background:var(--card);
-    border:1px solid var(--border);border-radius:14px;padding:11px 16px;transition:.18s cubic-bezier(.2,.7,.3,1);text-align:left;box-shadow:var(--shadow-sm);}
+  .qgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;}
+  @media(max-width:900px){.qgrid{grid-template-columns:repeat(3,1fr);}}
+  @media(max-width:460px){.qgrid{grid-template-columns:repeat(2,1fr);}}
+  .qcard{position:relative;display:flex;flex-direction:column;align-items:center;gap:9px;background:var(--card);
+    border:1px solid var(--border);border-radius:18px;padding:15px 8px;transition:.18s cubic-bezier(.2,.7,.3,1);text-align:center;box-shadow:var(--shadow-sm);}
   .qcard:hover{transform:translateY(-4px);box-shadow:0 18px 38px -16px rgba(11,61,145,.4);border-color:#cfe0ff;}
   .qcard .ic{width:46px;height:46px;display:flex;align-items:center;justify-content:center;border-radius:14px;
     background:linear-gradient(160deg,#f6f9ff,#eef3fc);overflow:hidden;}
@@ -159,8 +161,8 @@
     .instbar .t1{font-size:11px;line-height:1.2;} .instbar .t2{font-size:9.5px;} .instbar a.web{display:none;}
     .app-h .in{padding:10px 15px;} .brand .name{font-size:19px;} .brand .sub{display:none;}
     .hero{padding:18px 0 2px;} .hero h1{font-size:21px;} .hero p{font-size:13px;}
-    .qgrid{grid-template-columns:1fr;gap:8px;max-width:none;}
-    .qcard{padding:11px 14px;} .qcard .ic{width:40px;height:40px;} .qcard .lb{font-size:12.5px;} .qcard .lb small{font-size:10px;}
+    .qgrid{grid-template-columns:repeat(3,1fr);gap:9px;}
+    .qcard{padding:12px 6px;border-radius:15px;} .qcard .ic{width:42px;height:42px;} .qcard .lb{font-size:11px;} .qcard .lb small{font-size:9px;}
     .chat{height:auto;min-height:0;border-radius:20px;} #log{height:54vh;flex:none;} .msg{max-width:88%;}
     form{gap:8px;padding:11px 12px;}
     input[type=text]{padding:12px 14px;min-width:0;}
