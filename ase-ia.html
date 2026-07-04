@@ -324,7 +324,7 @@
   #intro .icol{margin-top:4px;color:#8fabe0;font-size:12px;animation:iUp .7s ease 1.05s backwards;}
   #intro .ibar{margin-top:26px;width:200px;height:4px;border-radius:999px;background:rgba(255,255,255,.16);overflow:hidden;animation:iUp .5s ease 1.15s backwards;}
   #intro .ibar i{display:block;height:100%;width:0;border-radius:999px;background:linear-gradient(90deg,#22c3e6,#ffd34d);
-    box-shadow:0 0 10px rgba(34,195,230,.7);animation:iBar 1.85s cubic-bezier(.4,0,.2,1) .9s forwards;}
+    box-shadow:0 0 10px rgba(34,195,230,.7);animation:iBar 4.6s linear .9s forwards;}
   @keyframes iBar{to{width:100%;}}
   #intro .imsg{position:absolute;left:0;right:0;bottom:34px;padding:0 26px;text-align:center;
     font-size:14px;font-style:italic;color:#c7d8f7;line-height:1.5;max-width:560px;margin:0 auto;
@@ -1140,10 +1140,14 @@ function skipIntro(){const i=document.getElementById("intro");if(!i||i.classList
   const a=getIntroAudio();
   playIntroSound();
   ["pointerdown","touchstart","keydown"].forEach(ev=>window.addEventListener(ev,unlockAudioOnce,{once:true,capture:true}));
-  // La intro dura lo que dure el audio (tope de seguridad 10 s); 5 s si no hay metadatos.
-  let dismiss=setTimeout(skipIntro,5000);
+  // La intro dura lo que dure el audio (recortada, tope 7.5 s); 5.5 s si no hay metadatos.
+  // La barra se sincroniza para llenarse justo al final (así nunca parece pegada).
+  const bar=document.querySelector("#intro .ibar i");
+  function syncBar(sec){ if(bar) bar.style.animationDuration=Math.max(2,sec-1).toFixed(2)+"s"; }
+  let dismiss=setTimeout(skipIntro,5500);
   a.addEventListener("loadedmetadata",()=>{
-    const dur=(isFinite(a.duration)&&a.duration>0)?Math.min(a.duration+0.4,10):5;
+    const dur=(isFinite(a.duration)&&a.duration>0)?Math.min(a.duration+0.4,7.5):5.5;
+    syncBar(dur);
     clearTimeout(dismiss); dismiss=setTimeout(skipIntro,dur*1000);
   },{once:true});
   // Se puede tocar para entrar, pero no en el primer instante (deja lucir el logo y el sonido).
