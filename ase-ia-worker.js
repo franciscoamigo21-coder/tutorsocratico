@@ -59,9 +59,10 @@ function systemPrompt(role) {
     `4. SÉ MUY BREVE: 2 a 4 frases, directo al grano, sin relleno. La página ` +
     `muestra las fuentes en tarjetas aparte, así que NO repitas el texto completo ` +
     `del reglamento ni enumeres todo; resume y responde solo lo preguntado.\n` +
-    `5. FORMATO OBLIGATORIO: texto plano corrido. PROHIBIDO usar Markdown: nada de ` +
-    `#, ##, ###, **negritas**, *cursivas*, viñetas con - o *, ni marcadores [n]. ` +
-    `Escribe como un mensaje humano normal.\n` +
+    `5. FORMATO: texto plano corrido, como un mensaje humano. NO uses #, ##, ` +
+    `**negritas**, *cursivas*, viñetas con - o *, ni marcadores [n]. SOLO se ` +
+    `permite, cuando ayude a comparar datos, una tabla Markdown simple con | y ` +
+    `una fila separadora |---|---| (la página la muestra como cuadro).\n` +
     `${ROLE_TXT[role] || ROLE_TXT.student}`
   );
 }
