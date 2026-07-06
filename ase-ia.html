@@ -86,20 +86,20 @@
   .hero p{margin:9px 0 0;color:var(--muted);font-size:14px;line-height:1.6;max-width:640px;}
   @media(max-width:620px){.hero .badge{display:none;}}
 
-  .quick{margin-top:18px;animation:fadeUp .6s ease both;}
-  .quick h3{font-size:12px;text-transform:uppercase;letter-spacing:1.2px;color:var(--muted);margin:0 0 12px;font-weight:700;}
-  .qgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;}
-  @media(max-width:900px){.qgrid{grid-template-columns:repeat(3,1fr);}}
-  @media(max-width:460px){.qgrid{grid-template-columns:repeat(2,1fr);}}
-  .qcard{position:relative;display:flex;flex-direction:column;align-items:center;gap:9px;background:var(--card);
-    border:1px solid var(--border);border-radius:18px;padding:15px 8px;transition:.18s cubic-bezier(.2,.7,.3,1);text-align:center;box-shadow:var(--shadow-sm);}
-  .qcard:hover{transform:translateY(-4px);box-shadow:0 18px 38px -16px rgba(11,61,145,.4);border-color:#cfe0ff;}
-  .qcard .ic{width:46px;height:46px;display:flex;align-items:center;justify-content:center;border-radius:14px;
+  .quick{margin-top:12px;animation:fadeUp .6s ease both;}
+  .quick h3{font-size:11px;text-transform:uppercase;letter-spacing:1.2px;color:var(--muted);margin:0 0 8px;font-weight:700;}
+  .qgrid{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;}
+  @media(max-width:900px){.qgrid{grid-template-columns:repeat(4,1fr);}}
+  @media(max-width:460px){.qgrid{grid-template-columns:repeat(3,1fr);}}
+  .qcard{position:relative;display:flex;flex-direction:column;align-items:center;gap:6px;background:var(--card);
+    border:1px solid var(--border);border-radius:13px;padding:9px 5px;transition:.18s cubic-bezier(.2,.7,.3,1);text-align:center;box-shadow:var(--shadow-sm);}
+  .qcard:hover{transform:translateY(-3px);box-shadow:0 14px 30px -16px rgba(11,61,145,.4);border-color:#cfe0ff;}
+  .qcard .ic{width:36px;height:36px;display:flex;align-items:center;justify-content:center;border-radius:11px;
     background:linear-gradient(160deg,#f6f9ff,#eef3fc);overflow:hidden;}
-  .qcard .ic img{width:30px;height:30px;object-fit:contain;}
-  .qcard .ic svg{width:30px;height:30px;display:block;}
-  .qcard .lb{font-size:12px;font-weight:700;line-height:1.2;color:var(--text);}
-  .qcard .lb small{display:block;font-weight:500;color:var(--muted);font-size:10px;margin-top:2px;}
+  .qcard .ic img{width:24px;height:24px;object-fit:contain;}
+  .qcard .ic svg{width:24px;height:24px;display:block;}
+  .qcard .lb{font-size:11px;font-weight:700;line-height:1.15;color:var(--text);}
+  .qcard .lb small{display:block;font-weight:500;color:var(--muted);font-size:9px;margin-top:1px;}
 
   .wrap{margin:22px 0 60px;animation:fadeUp .7s ease both;}
   .chat{background:var(--card);border:1px solid var(--border);border-radius:26px;overflow:hidden;box-shadow:var(--shadow);display:flex;flex-direction:column;height:62vh;min-height:460px;}
@@ -161,8 +161,8 @@
     .instbar .t1{font-size:11px;line-height:1.2;} .instbar .t2{font-size:9.5px;} .instbar a.web{display:none;}
     .app-h .in{padding:10px 15px;} .brand .name{font-size:19px;} .brand .sub{display:none;}
     .hero{padding:18px 0 2px;} .hero h1{font-size:21px;} .hero p{font-size:13px;}
-    .qgrid{grid-template-columns:repeat(3,1fr);gap:9px;}
-    .qcard{padding:12px 6px;border-radius:15px;} .qcard .ic{width:42px;height:42px;} .qcard .lb{font-size:11px;} .qcard .lb small{font-size:9px;}
+    .qgrid{grid-template-columns:repeat(4,1fr);gap:7px;}
+    .qcard{padding:8px 4px;border-radius:12px;} .qcard .ic{width:34px;height:34px;} .qcard .ic svg,.qcard .ic img{width:22px;height:22px;} .qcard .lb{font-size:10px;} .qcard .lb small{font-size:8.5px;}
     .chat{height:auto;min-height:0;border-radius:20px;} #log{height:54vh;flex:none;} .msg{max-width:88%;}
     form{gap:8px;padding:11px 12px;}
     input[type=text]{padding:12px 14px;min-width:0;}
@@ -713,6 +713,10 @@ const DOCS=[
    x:"El reglamento contempla faltas cometidas por padres, madres y apoderados y un procedimiento para sancionarlas. Si un funcionario del establecimiento agrede física o psicológicamente a un apoderado, el afectado debe informar al equipo directivo; si el agresor forma parte del equipo directivo, la denuncia se dirige a la SIP Red de Colegios (Phillips 16, oficina O, piso 7, Santiago)."},
   {t:"Reglamento Interno · Deberes de los profesores",r:ALL,
    x:"Los profesores deben ejercer la función docente de forma idónea y responsable, orientar vocacionalmente a sus estudiantes cuando corresponda, actualizar sus conocimientos y evaluarse periódicamente, y enseñar los contenidos curriculares de cada nivel, respetando las normas del colegio y el Proyecto Educativo Institucional."},
+  {t:"Práctica docente · Redactar un correo a un estudiante",r:["teacher","admin"],
+   x:"Para escribir un correo a un estudiante, usa el correo institucional y un tono formal, respetuoso y cercano, propio del colegio. Estructura sugerida: 1) Saludo con el nombre del estudiante; 2) Motivo claro del correo (retroalimentación de una evaluación, recordatorio de una entrega o evaluación pendiente, refuerzo positivo o un llamado de atención por una falta); 3) Hechos objetivos y concretos, sin descalificar, cuidando la buena convivencia y la presunción de inocencia que exige el debido proceso; 4) Pasos a seguir o compromiso esperado (por ejemplo, la nueva fecha de entrega del Artículo 47, recuperar una evaluación según el Artículo 48 o una conversación formativa); 5) Despedida cordial y firma con tu nombre, asignatura y curso. Recuerda que las faltas y sus medidas se registran en la hoja de observaciones de Alexia y que, cuando corresponda, también se informa al apoderado. Evita comunicaciones por vías informales."},
+  {t:"Práctica docente · Redactar un correo a un apoderado",r:["teacher","admin"],
+   x:"Para escribir un correo a un apoderado, usa el correo institucional, un tono formal y respetuoso y respeta el conducto regular (profesor de asignatura o profesor jefe según el tema). Estructura sugerida: 1) Saludo (Estimado/a apoderado/a de [nombre del estudiante]); 2) Motivo del correo (informar rendimiento o asistencia, una inasistencia a evaluación, una falta y su medida formativa, o citar a una reunión); 3) Hechos objetivos con fechas, evitando juicios personales y resguardando la confidencialidad; 4) Referencia a la norma cuando corresponda (por ejemplo, la comunicación al apoderado que exigen los Artículos 47, 48 y 53, o la citación que realiza el Encargado de Convivencia); 5) Invitación a una reunión o a responder, con tu horario de atención y datos de contacto; 6) Despedida formal y firma con tu nombre, cargo y curso. Deja registro de la comunicación en Alexia o en el libro de clases."},
   /* ===== Reglamento de Evaluación 2026 · fichas específicas ===== */
   {t:"Reglamento de Evaluación · Escala de calificaciones",r:ALL,x:"Las calificaciones se expresan en una escala de 1,0 a 7,0, siendo 4,0 la nota mínima de aprobación. La escala de corrección de referencia considera un 60% de logro para obtener el 4,0. En Religión, Orientación y los Cursos de Desarrollo Integral se usa una escala conceptual (MB, B, S, I) que no incide en la promoción."},
   {t:"Reglamento de Evaluación · Promoción de curso",r:ALL,x:"Para ser promovido se considera el logro de los objetivos de aprendizaje y la asistencia. Son promovidos quienes aprueban todas las asignaturas. Con UNA asignatura reprobada, se promueve si el promedio final anual es igual o superior a 4,5 (incluyéndola). Con DOS asignaturas reprobadas, si el promedio final anual es igual o superior a 5,0 (incluyéndolas)."},
@@ -1141,7 +1145,7 @@ function badgeMarkup(sz){return BADGE_OK
 /* ============ UI DEL CHAT ============ */
 const SUGS={
   student:["¿Cuál es la nota mínima de aprobación?","¿Puedo usar el celular en clases?","¿Qué dice el reglamento sobre el bullying?","¿Cuáles son mis deberes como estudiante?","¿Cómo apelo una sanción?","¿Qué tareas tengo pendientes?"],
-  teacher:["¿Qué dice el protocolo de desregulación emocional?","¿Qué es una falta grave según el reglamento?","¿Qué protocolo hay frente al acoso escolar?","¿Qué es la condicionalidad de matrícula?","¿Cómo se calcula la promoción?","¿Qué material hay de Historia?"],
+  teacher:["Redactar un correo para un estudiante","Redactar un correo para un apoderado","¿Qué dice el protocolo de desregulación emocional?","¿Qué es una falta grave según el reglamento?","¿Qué protocolo hay frente al acoso escolar?","¿Qué es la condicionalidad de matrícula?","¿Cómo se calcula la promoción?"],
   admin:["¿Qué dice el protocolo de accidentes escolares?","¿Cómo es el procedimiento de expulsión?","¿Qué establece el reglamento sobre el uso de cámaras?","¿Cuáles son los deberes del equipo directivo?","¿Qué dice el reglamento sobre el retiro voluntario?","¿Cómo se conforma el Consejo Escolar?"],
   guardian:["¿Cuáles son mis deberes como apoderado?","¿Cómo justifico una inasistencia?","¿Puede mi pupilo usar el celular en el colegio?","¿Qué pasa con los atrasos?","¿Cómo apelo una sanción?","¿Cuál es la misión del colegio?"],
 };
