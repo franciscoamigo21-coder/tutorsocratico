@@ -1,0 +1,795 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fichas de Perfil — Colegio Presidente José Joaquín Prieto · SIP · IV° Medio 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&family=Lora:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --sip-red: #1B2B4B;
+  --sip-red-dark: #0f1d33;
+  --sip-red-light: #eef1f8;
+  --sip-navy: #1B2B4B;
+  --sip-navy-mid: #2c4070;
+  --sip-navy-light: #eef1f8;
+  --sip-gold: #C8921A;
+  --sip-gold-light: #fdf5e6;
+  --white: #ffffff;
+  --paper: #f7f8fc;
+  --cream: #f0f2f8;
+  --muted: #6b7a9a;
+  --border: #d8dde8;
+  --text: #1B2B4B;
+  --success: #1a6b3c;
+  --success-bg: #e9f7ef;
+  --warn-bg: #fff8e6;
+  --danger-bg: #eef1f8;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Montserrat', sans-serif; background: var(--paper); color: var(--text); min-height: 100vh; }
+
+/* ─── TOP BAR ─── */
+.top-bar {
+  background: var(--sip-gold);
+  height: 5px;
+}
+
+/* ─── HEADER ─── */
+.app-header {
+  background: var(--sip-navy);
+  padding: 0;
+  display: flex;
+  align-items: stretch;
+  min-height: 72px;
+}
+.header-logo {
+  background: var(--white);
+  padding: 12px 24px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border-right: 3px solid var(--sip-gold);
+  min-width: 220px;
+}
+.sip-logo-svg { width: 58px; height: 58px; flex-shrink: 0; border:none; box-shadow:none; outline:none; display:block; }
+.logo-text-block { line-height: 1.2; }
+.logo-text-main { font-size: 1rem; font-weight: 800; color: var(--sip-navy); letter-spacing: -0.01em; }
+.logo-text-sub { font-size: 0.65rem; font-weight: 600; color: var(--sip-gold); text-transform: uppercase; letter-spacing: 0.08em; }
+.header-info {
+  flex: 1;
+  padding: 14px 24px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.header-info h1 { font-size: 1.05rem; font-weight: 700; color: var(--white); letter-spacing: 0.01em; }
+.header-info p { font-size: 0.75rem; color: rgba(255,255,255,0.6); margin-top: 3px; }
+.header-badge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 24px;
+}
+.badge {
+  background: var(--sip-gold);
+  color: var(--sip-navy);
+  font-size: 0.68rem;
+  font-weight: 700;
+  padding: 5px 12px;
+  border-radius: 3px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.badge-year {
+  background: var(--sip-gold);
+  color: white;
+  font-size: 0.68rem;
+  font-weight: 700;
+  padding: 5px 12px;
+  border-radius: 3px;
+  letter-spacing: 0.06em;
+}
+
+/* ─── CONTROLS ─── */
+.controls {
+  background: var(--white);
+  border-bottom: 2px solid var(--sip-gold);
+  padding: 14px 28px;
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+.controls input, .controls select {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 500;
+  border: 1.5px solid var(--border);
+  background: var(--paper);
+  color: var(--text);
+  padding: 8px 14px;
+  border-radius: 5px;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.controls input:focus, .controls select:focus {
+  border-color: var(--sip-gold);
+  box-shadow: 0 0 0 3px rgba(200,146,26,0.15);
+}
+.controls input { flex: 1; min-width: 200px; }
+.search-wrap { position: relative; flex: 1; min-width: 200px; }
+.search-wrap input { width: 100%; padding-left: 36px; }
+.search-icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--muted); font-size: 0.9rem; }
+.btn-filter {
+  background: var(--sip-navy);
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 5px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.78rem;
+  font-weight: 700;
+  cursor: pointer;
+  letter-spacing: 0.04em;
+  transition: background 0.2s;
+}
+.btn-filter:hover { background: var(--sip-navy-mid); }
+.btn-filter.active { background: var(--sip-gold); color: var(--sip-navy); }
+.count-label { font-size: 0.78rem; color: var(--muted); font-weight: 600; margin-left: auto; }
+
+/* ─── TABS ─── */
+.tabs {
+  background: var(--cream);
+  border-bottom: 1px solid var(--border);
+  padding: 0 28px;
+  display: flex;
+  gap: 0;
+}
+.tab {
+  padding: 10px 20px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--muted);
+  cursor: pointer;
+  border-bottom: 3px solid transparent;
+  transition: all 0.2s;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+.tab:hover { color: var(--sip-navy); }
+.tab.active { color: var(--sip-gold); border-bottom-color: var(--sip-gold); }
+
+/* ─── GRID ─── */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
+  gap: 18px;
+  padding: 24px 28px;
+}
+
+/* ─── CARD ─── */
+.card {
+  background: var(--white);
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: box-shadow 0.2s, transform 0.15s, border-color 0.2s;
+}
+.card:hover {
+  box-shadow: 0 6px 20px rgba(27,43,75,0.12);
+  transform: translateY(-2px);
+  border-color: var(--sip-gold);
+}
+.card-header {
+  background: var(--sip-navy);
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+.card-curso {
+  font-size: 0.68rem;
+  font-weight: 800;
+  color: rgba(255,255,255,0.7);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.card-rank {
+  background: var(--sip-gold);
+  color: white;
+  font-size: 0.65rem;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 3px;
+}
+.card-body { padding: 14px 16px; }
+.card-name {
+  font-family: 'Lora', serif;
+  font-size: 1rem;
+  font-weight: 600;
+  line-height: 1.35;
+  color: var(--sip-navy);
+  margin-bottom: 3px;
+}
+.card-rut { font-size: 0.73rem; color: var(--muted); font-weight: 500; margin-bottom: 12px; }
+
+.card-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+  margin-bottom: 12px;
+}
+.stat-box {
+  text-align: center;
+  padding: 7px 4px 6px;
+  border-radius: 5px;
+  background: var(--paper);
+  border: 1px solid var(--border);
+}
+.stat-val {
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: var(--success);
+  font-family: 'Montserrat', sans-serif;
+}
+.stat-val.mid { color: var(--sip-gold); }
+.stat-val.low { color: var(--sip-red); }
+.stat-val.none { color: var(--muted); font-size: 0.85rem; }
+.stat-lbl { font-size: 0.6rem; color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; margin-top: 1px; }
+
+.card-tags { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 10px; }
+.tag {
+  font-size: 0.68rem; font-weight: 600;
+  padding: 3px 9px; border-radius: 3px;
+  border: 1px solid var(--border);
+  background: var(--paper); color: var(--text);
+}
+.tag.area-mat { background: #e8f0ff; border-color: #b0c4f0; color: #1a3a8c; }
+.tag.area-cien { background: #e8f7ee; border-color: #a0d8b8; color: #0a5c2a; }
+.tag.area-hum { background: #fdf5e8; border-color: #e8c870; color: #7a4800; }
+.tag.area-art { background: #f5e8ff; border-color: #c8a0e0; color: #5a1a80; }
+.tag.area-ind { background: #f0f2f8; border-color: #b0bcd8; color: #2c4070; }
+.tag.pueblo { background: #fff5e0; border-color: #e0b060; color: #6a3800; }
+.tag.carreras { background: var(--sip-navy-light); border-color: #c0cce0; color: var(--sip-navy); }
+
+.generate-btn {
+  width: 100%;
+  background: var(--sip-navy);
+  color: var(--sip-gold);
+  border: 2px solid var(--sip-gold);
+  padding: 9px 0;
+  border-radius: 5px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.78rem;
+  font-weight: 700;
+  cursor: pointer;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  transition: background 0.2s;
+}
+.generate-btn:hover { background: var(--sip-gold); color: var(--sip-navy); }
+.generate-btn:disabled { background: #c0c8d8; cursor: not-allowed; }
+
+/* ─── MODAL ─── */
+.modal-bg {
+  display: none;
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.65);
+  z-index: 100;
+  padding: 20px;
+  overflow-y: auto;
+}
+.modal-bg.open { display: flex; align-items: flex-start; justify-content: center; }
+.modal {
+  background: white;
+  border-radius: 10px;
+  width: 100%;
+  max-width: 740px;
+  overflow: hidden;
+  margin: auto;
+  animation: rise 0.22s ease;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+}
+@keyframes rise { from { opacity:0; transform: translateY(24px); } to { opacity:1; transform: translateY(0); } }
+
+.modal-top-bar { height: 5px; background: var(--sip-gold); }
+.modal-header {
+  background: var(--sip-navy);
+  padding: 18px 26px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+.modal-header-left { display: flex; align-items: center; gap: 14px; }
+.modal-avatar {
+  width: 46px; height: 46px;
+  border-radius: 50%;
+  background: var(--sip-red);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.1rem; font-weight: 800; color: white;
+  flex-shrink: 0;
+}
+.modal-header h2 { font-family: 'Lora', serif; font-size: 1.1rem; font-weight: 600; color: white; }
+.modal-header p { font-size: 0.75rem; color: rgba(255,255,255,0.55); margin-top: 2px; }
+.close-btn { background: rgba(255,255,255,0.1); border: none; color: white; width: 32px; height: 32px; border-radius: 50%; cursor: pointer; font-size: 1rem; transition: background 0.2s; }
+.close-btn:hover { background: rgba(255,255,255,0.2); }
+.modal-body { padding: 24px 26px; }
+
+/* ficha sections */
+.fs { margin-bottom: 22px; }
+.fs-title {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 0.68rem; font-weight: 800; color: var(--sip-gold);
+  text-transform: uppercase; letter-spacing: 0.1em;
+  padding-bottom: 7px;
+  border-bottom: 2px solid var(--sip-gold);
+  margin-bottom: 12px;
+}
+.fs-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 24px; }
+.fs-grid.three { grid-template-columns: 1fr 1fr 1fr; }
+.fi { display: flex; flex-direction: column; gap: 2px; }
+.fi-lbl { font-size: 0.65rem; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; }
+.fi-val { font-size: 0.9rem; font-weight: 600; color: var(--text); }
+
+/* trend chart */
+.trend-wrap { margin-top: 10px; }
+.trend-label { font-size: 0.62rem; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 6px; }
+.trend-bars { display: flex; align-items: flex-end; gap: 5px; height: 56px; }
+.tbar-col { flex: 1; display: flex; flex-direction: column; align-items: center; }
+.tbar {
+  width: 100%; border-radius: 3px 3px 0 0;
+  display: flex; align-items: flex-start; justify-content: center;
+  padding-top: 4px;
+}
+.tbar-v { font-size: 0.65rem; font-weight: 700; color: white; }
+.tbar-lbl { font-size: 0.6rem; color: var(--muted); margin-top: 4px; font-weight: 600; }
+.tbar.est { border: 2px dashed #aab; background: #f0f2f8 !important; }
+.tbar.est .tbar-v { color: #888; }
+.trend-note { font-size: 0.72rem; color: var(--muted); font-weight: 500; margin-top: 6px; }
+
+/* careers */
+.careers-wrap { display: flex; flex-wrap: wrap; gap: 5px; }
+
+/* AI section */
+.ai-loading { display: flex; align-items: center; gap: 10px; padding: 14px; color: var(--muted); font-size: 0.83rem; font-weight: 500; }
+.dots span { display: inline-block; width: 7px; height: 7px; background: var(--sip-red); border-radius: 50%; animation: dot-bounce 1.2s infinite; }
+.dots span:nth-child(2) { animation-delay: 0.18s; }
+.dots span:nth-child(3) { animation-delay: 0.36s; }
+@keyframes dot-bounce { 0%,80%,100%{transform:translateY(0)} 40%{transform:translateY(-8px)} }
+.ai-out {
+  background: var(--sip-navy-light);
+  border: 1.5px solid #c0cce0;
+  border-left: 4px solid var(--sip-gold);
+  border-radius: 6px;
+  padding: 16px 18px;
+  font-size: 0.84rem;
+  line-height: 1.75;
+  white-space: pre-wrap;
+  max-height: 360px;
+  overflow-y: auto;
+  font-family: 'Montserrat', sans-serif;
+}
+.ai-actions { display: flex; gap: 8px; margin-top: 10px; }
+.btn-copy, .btn-print {
+  padding: 8px 16px; border-radius: 5px;
+  font-family: 'Montserrat', sans-serif; font-size: 0.75rem; font-weight: 700;
+  cursor: pointer; border: none; letter-spacing: 0.04em; text-transform: uppercase; transition: background 0.2s;
+}
+.btn-copy { background: var(--sip-navy); color: white; }
+.btn-copy:hover { background: var(--sip-navy-mid); }
+.btn-print { background: var(--sip-gold); color: var(--sip-navy); }
+.btn-print:hover { background: #a87010; color: white; }
+
+/* bitacora */
+.bitacora-table { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
+.bitacora-table th { background: var(--sip-navy); color: white; padding: 8px 12px; text-align: left; font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.06em; }
+.bitacora-table td { padding: 12px; border: 1px solid var(--border); }
+.bitacora-table tr:nth-child(odd) td { background: var(--paper); }
+
+/* no results */
+.no-results { grid-column: 1/-1; text-align: center; color: var(--muted); padding: 70px 20px; font-size: 0.9rem; }
+.no-results .nr-icon { font-size: 2.5rem; margin-bottom: 10px; }
+
+/* footer */
+.app-footer {
+  background: var(--sip-navy);
+  color: rgba(255,255,255,0.45);
+  text-align: center;
+  padding: 14px;
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+}
+.app-footer span { color: var(--sip-red); }
+</style>
+</head>
+<body>
+
+<div class="top-bar"></div>
+
+<header class="app-header">
+  <div class="header-logo">
+    <img src="data:image/png;base64,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" class="sip-logo-svg" style="border-radius:50%;background:transparent;border:none;outline:none;" alt="Logo SIP JJP">
+    <div class="logo-text-block">
+      <div class="logo-text-main">Colegio Presidente</div>
+      <div class="logo-text-main">José Joaquín Prieto</div>
+      <div class="logo-text-sub">SIP · Desde 1856 · Educando con excelencia</div>
+    </div>
+  </div>
+  <div class="header-info">
+    <h1>Colegio Presidente José Joaquín Prieto</h1>
+    <p>Sistema de Fichas de Perfil Estudiantil · IV° Medio 2026 · 132 estudiantes · IV°A, IV°B, IV°C</p>
+  </div>
+  <div class="header-badge">
+    <span class="badge-year">2026</span>
+    <span class="badge">IA Pedagógica</span>
+  </div>
+</header>
+
+<div class="controls">
+  <div class="search-wrap">
+    <span class="search-icon">🔍</span>
+    <input type="text" id="search" placeholder="Buscar por nombre, RUT o curso…" oninput="renderGrid()">
+  </div>
+  <select id="curso" onchange="renderGrid()">
+    <option value="">Todos los cursos</option>
+    <option value="IV° A">IV° A</option>
+    <option value="IV° B">IV° B</option>
+    <option value="IV° C">IV° C</option>
+  </select>
+  <select id="area" onchange="renderGrid()">
+    <option value="">Todas las áreas</option>
+    <option value="Matemática">Matemática</option>
+    <option value="Ciencia">Ciencia</option>
+    <option value="Humanista">Humanista</option>
+    <option value="Artes">Artes</option>
+    <option value="Indeciso">Indeciso</option>
+  </select>
+  <select id="sort" onchange="renderGrid()">
+    <option value="ranking">Ordenar: Ranking ↓</option>
+    <option value="nombre">Ordenar: Nombre A–Z</option>
+    <option value="promedio">Ordenar: Promedio ↓</option>
+    <option value="ranking_asc">Ranking: Más bajo ↑</option>
+  </select>
+  <button class="btn-filter" id="btn-alert" onclick="toggleAlerta()">⚠ Solo alertas</button>
+  <button class="btn-filter" id="btn-rank-low" onclick="toggleRankBajo()">📉 Ranking bajo</button>
+  <span class="count-label" id="count"></span>
+</div>
+
+<div class="tabs">
+  <div class="tab active" onclick="setTab(this,'todos')">Todos</div>
+  <div class="tab" onclick="setTab(this,'IVA')">IV° A</div>
+  <div class="tab" onclick="setTab(this,'IVB')">IV° B</div>
+  <div class="tab" onclick="setTab(this,'IVC')">IV° C</div>
+</div>
+
+<div class="grid" id="grid"></div>
+
+<footer class="app-footer">
+  <span>Colegio Presidente José Joaquín Prieto</span> · SIP Red de Colegios · Sistema de Gestión Curricular · Fichas de Perfil IV° Medio 2026 · Desde 1856 Educando con Excelencia
+</footer>
+
+<!-- Modal -->
+<div class="modal-bg" id="modalBg" onclick="closeModalOutside(event)">
+  <div class="modal">
+    <div class="modal-top-bar"></div>
+    <div class="modal-header">
+      <div class="modal-header-left">
+        <div class="modal-avatar" id="modal-avatar">—</div>
+        <div>
+          <h2 id="modal-name">—</h2>
+          <p id="modal-sub">—</p>
+        </div>
+      </div>
+      <button class="close-btn" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body" id="modal-body"></div>
+  </div>
+</div>
+
+<script>
+// ── DATA ──
+const STUDENTS = [{"nombre": "Ayleen Aguilera", "rut": "22.790.933-1", "curso": "IV° C", "notas": {"2023": 6.7, "2024": 6.9, "2025": 6.8, "2026_est": 6.7, "promedio": 6.8}, "nem": 942.0, "ranking": 992.0, "area_interes": "", "carreras": [], "quiere_pedagogia": "", "etnia": "", "pueblo_originario": ""}, {"nombre": "Sánchez Riquelme Camila Alexandra", "rut": "22.689.777-1", "curso": "IV° B", "notas": {"2023": 6.7, "2024": 6.6, "2025": 6.8, "2026_est": 6.9, "promedio": 6.7}, "nem": 914.0, "ranking": 964.0, "area_interes": "Indeciso", "carreras": ["Ingeniería", "Arquitectura", "Animación digital", "Astronomía", "Gastronomía", "Química farmacéutica", "Biología marina", "Diseño de moda", "Licenciatura en biología"], "quiere_pedagogia": "", "etnia": "", "pueblo_originario": ""}, {"nombre": "Quintriqueo Marín Dannae Tahys", "rut": "22.799.074-0", "curso": "IV° C", "notas": {"2023": 7.0, "2024": 6.2, "2025": 6.3, "2026_est": 6.3, "promedio": 6.5}, "nem": 856.0, "ranking": 906.0, "area_interes": "Matemática", "carreras": [], "quiere_pedagogia": "", "etnia": "", "pueblo_originario": ""}, {"nombre": "Espinoza Araneda Stiven Gerrard", "rut": "22.785.432-4", "curso": "IV° A", "notas": {"2023": 6.4, "2024": 6.2, "2025": 6.8, "2026_est": 6.8, "promedio": 6.47}, "nem": 848.0, "ranking": 898.0, "area_interes": "Matemática", "carreras": ["Bioquimica", "Biotecnologia"], "quiere_pedagogia": "", "etnia": "", "pueblo_originario": ""}, {"nombre": "Parra Correa Paula Emilia", "rut": "22.919.007-5", "curso": "IV° C", "notas": {"2023": 6.3, "2024": 6.3, "2025": 6.8, "2026_est": 6.8, "promedio": 6.47}, "nem": 848.0, "ranking": 898.0, "area_interes": "Matemática", "carreras": [], "quiere_pedagogia": "", "etnia": "", "pueblo_originario": ""}, {"nombre": "Candia Castro Antonella Josefa", "rut": "22.694.475-3", "curso": "IV° C", "notas": {"2023": 6.5, "2024": 6.4, "2025": 6.5, "2026_est": 6.5, "promedio": 6.47}, "nem": 848.0, "ranking": 898.0, "area_interes": "Matemática", "carreras": ["Medicina", "Pedagogía en biología", "Enfermería"], "quiere_pedagogia": "", "etnia": "", "pueblo_originario": ""}, {"nombre": "Spedaletti Mariqueo Ignacio Nicolás", "rut": "22.761.359-9", "curso": "IV° A", "notas": {"2023": 6.1, "2024": 6.5, "2025": 6.7, "2026_est": 6.9, "promedio": 6.43}, "nem": 837.0, "ranking": 887.0, "area_interes": "Matemática", "carreras": ["Ingeniería Civil industrial", "Ing. Civil en minas"], "quiere_pedagogia": "", "etnia": "", "pueblo_originario": ""}, {"nombre": "Vallejos Altamirano Agustín Maximiliano", "rut": "22.873.436-5", "curso": "IV° C", "notas": {"2023": 6.2, "2024": 6.5, "2025": 6.5, "2026_est": 6.6, "promedio": 6.4}, "nem": 828.0, "ranking": 878.0, "area_interes": "Matemática", "carreras": [], "quiere_pedagogia": "", "etnia": "", "pueblo_originario": ""}, {"nombre": "Aguilar Uribe Alexander Gabriel", "rut": "22.758.986-8", "curso": "IV° B", "notas": {"2023": 5.8, "2024": 6.4, "2025": 6.8, "2026_est": 7.0, "promedio": 6.33}, "nem": 808.0, "ranking": 858.0, "area_interes": "Ciencia", "carreras": ["Medicina"], "quiere_pedagogia": "", "etnia": "", "pueblo_originario": ""}, {"nombre": "Abarzúa Olguín Vicente Antonio", "rut": "22.774.039-6", "curso": "IV° B", "notas": {"2023": 6.3, "2024": 6.2, "2025": 6.5, "2026_est": 6.7, "promedio": 6.33}, "nem": 808.0, "ranking": 858.0, "area_interes": "Matemática", "carreras": [], "quiere_pedagogia": "", "etnia": "", "pueblo_originario": ""}, {"nombre": "Valenzuela Barra Aníbal Lucían", "rut": "22.801.612-8", "curso": "IV° C", "notas": {"2023": 6.2, "2024": 6.4, "2025": 6.4, "2026_est": 6.5, "promedio": 6.33}, "nem": 808.0, "ranking": 858.0, "area_interes": "Matemática", "carreras": ["Ingeniería en softwer"], "quiere_pedagogia": "", "etnia": "", "pueblo_originario": ""}, {"nombre": "Urriola Torres Alejandro Antonio", "rut": "22.923.795-0", "curso": "IV° B", "notas": {"2023": 6.1, "2024": 6.2, "2025": 6.6, "2026_est": 6.8, "promedio": 6.3}, "nem": 799.0, "ranking": 849.0, "area_interes": "Humanista", "carreras": [], "quiere_pedagogia": "", "etnia": "", "pueblo_originario": ""}, {"nombre": "Armijo Hernández Diego Esteban", "rut": "22.720.478-8", "curso": "IV° B", "notas": {"2023": 6.5, "2024": 6.1, "2025": 6.3, "2026_est": 6.7, "promedio": 6.3}, "nem": 799.0, "ranking": 849.0, "area_interes": "Matemática", "carreras": ["Ingeniería civil", "Tecnico en telecomunicaciones"], "quiere_pedagogia": "", "etnia": "", "pueblo_originario": ""}, {"nombre": "Vergara Guevara Diego Andrés", "rut": "22.807.148-K", "curso": "IV° A", "notas": {"2023": 6.0, "2024": 6.1, "2025": 6.8, "2026_est": 6.7, "promedio": 6.3}, "nem": 799.0, "ranking": 849.0, "area_interes": "Matemática", "carreras": [], "quiere_pedagogia": "", "etnia": "", "pueblo_originario": ""}, {"nombre": "Ancacura Urrutia Catalina Victoria", "rut": "22.785.122-8", "curso": "IV° C", "notas": {"2023": 6.3, "2024": 6.1, "2025": 6.5, "2026_est": 6.6, "promedio": 6.3}, "nem": 799.0, "ranking": 849.0, "area_interes": "Matemática", "carreras": [], "quiere_pedagogia": "", "etnia": "", "pueblo_originario": ""}, {"nombre": "Romero Lobos Jenniffer Cynthia", "rut": "22.737.375-K", "curso": "IV° B", "notas": {"2023": 6.0, "2024": 6.1, "2025": 6.6, "2026_est": 6.8, "promedio": 6.23}, "nem": 779.0, "ranking": 829.0, "area_interes": "Humanista", "carreras": [], "quiere_pedagogia": "", "etnia": "", "pueblo_originario": ""}, {"nombre": "Barrios Valdés Luis Felipe", "rut": "22.795.369-1", "curso": "IV° C", "notas": {"2023": 6.1, "2024": 6.0, "2025": 6.5, "2026_est": 6.8, "promedio": 6.2}, "nem": 771.0, "ranking": 864.0, "area_interes": "Matemática", "carreras": ["Ingeniería civil industrial", "Ingeniería civil computación", "Ingeniería civil eléctrica"], "quiere_pedagogia": "", "etnia": "", "pueblo_originario": ""}, {"nombre": "Beltrán Cabrera Matías Esteban", "rut": "23.019.626-5", "curso": "IV° A", "notas": {"2023": 6.1, "2024": 5.7, "2025": 6.6, "2026_est": 6.9, "promedio": 6.13}, "nem": 751.0, "ranking": 801.0, "area_interes": "Ciencia", "carreras": [], "quiere_pedagogia": "", "etnia": "", "pueblo_originario": ""}, {"nombre": "Ley Cuevas Tomás Aarón", "rut": "22.836.667-6", "curso": "IV° A", "notas": {"2023": 5.9, "2024": 6.1, "2025": 6.4, "2026_est": 6.7, "promedio": 6.13}, "nem": 751.0, "ranking": 801.0, "area_interes": "Matemática", "carreras": ["Ingenieria Civil en minas", "Ingenieria civil industrial", "Ingenieria civil plan comun"], "quiere_pedagogia": "", "etnia": "", "pueblo_originario": ""}, {"nombre": "Huera Díaz Ezequiel Alexis", "rut": "22.712.332-K", "curso": "IV° B", "notas": {"2023": 6.0, "2024": 5.9, "2025": 6.4, "2026_est": 6.7, "promedio": 6.1}, "nem": 742.0, "ranking": 792.0, "area_interes": "Humanista", "carreras": ["Derecho"], "quiere_pedagogia": "", "etnia": "X", "pueblo_originario": ""}, {"nombre": "Carrillo Navarro Eidan Thomas", "rut": "22.737.515-9", "curso": "IV° A", "notas": {"2023": 6.1, "2024": 6.1, "2025": 6.1, "2026_est": 6.6, "promedio": 6.1}, "nem": 742.0, "ranking": 865.0, "area_interes": "Ciencia", "carreras": ["Medicina", "Psicología", "Ing. en Informática"], "quiere_pedagogia": "", "etnia": "", "pueblo_originario": ""}, {"nombre": "Núñez Santibáñez Cristóbal Alonso", "rut": "22.806.997-3", "curso": "IV° C", "notas": {"2023": 5.8, "2024": 6.1, "2025": 6.4, "2026_est": 6.6, "promedio": 6.1}, "nem": 742.0, "ranking": 865.0, "area_interes": "Matemática", "carreras": [], "quiere_pedagogia": "", "etnia": "", "pueblo_originario": ""}, {"nombre": "Rojas Carvajal Mayra Anais", "rut": "22.965.472-1", "curso": "IV° C", "notas": {"2023": 5.9, "2024": 6.0, "2025": 6.3, "2026_est": 6.5, "promedio": 6.07}, "nem": 734.0, "ranking": 784.0, "area_interes": "Humanista", "carreras": ["L. Lingüista, A. traducción en inglés", "Pedagogía en inglés", "Letra inglesa"], "quiere_pedagogia": "", "etnia": "", "pueblo_originario": ""}, {"nombre": "Alvarez Quijada Antonia Monserrath", "rut": "22.881.117-3", "curso": "IV° C", "notas": {"2023": 5.7, "2024": 6.0, "2025": 6.3, "2026_est": 6.6, "promedio": 6.0}, "nem": 713.0, "ranking": 763.0, "area_interes": "Matemática", "carreras": [], "quiere_pedagogia": "", "etnia": "", "pueblo_originario": ""}, {"nombre": "Pastén Ramos Dafne Stephany", "rut": "22.915.006-5", "curso": "IV° B", "notas": {"2023": 5.8, "2024": 5.9, "2025": 6.3, "2026_est": 6.6, "promedio": 6.0}, "nem": 713.0, "ranking": 763.0, "area_interes": "Matemática", "carreras": ["Arquitectura"], "quiere_pedagogia": "", "etnia": "", "pueblo_originario": ""}, {"nombre": "Cuadra Mena Ignacio Manuel Enrique", "rut": "22.857.433-3", "curso": "IV° B", "notas": {"2023": 5.9, "2024": 6.0, "2025": 6.1, "2026_est": 6.6, "promedio": 6.0}, "nem": 713.0, "ranking": 763.0, "area_interes": "Ciencia", "carreras": ["Química farmacéutica", "Bioquímica", "Ingeniería bioquímica"], "quiere_pedagogia": "si", "etnia": "", "pueblo_originario": ""}, {"nombre": "Valderas Espinoza Amanda Denisse", "rut": "22986964-7", "curso": "IV° A", "notas": {"2023": 5.6, "2024": 5.9, "2025": 6.5, "2026_est": 6.5, "promedio": 6.0}, "nem": 713.0, "ranking": 763.0, "area_interes": "Matemática", "carreras": [], "quiere_pedagogia": "", "etnia": "", "pueblo_originario": ""}, {"nombre": "Garrido Espinoza Jacqueline Maciel", "rut": "22.911.422-0", "curso": "IV° A", "notas": {"2023": 5.8, "2024": 6.1, "2025": 6.1, "2026_est": 6.3, "promedio": 6.0}, "nem": 713.0, "ranking": 763.0, "area_interes": "Ciencia", "carreras": ["Quimica y farmacia"], "quiere_pedagogia": "", "etnia": "", "pueblo_originario": ""}, {"nombre": "Palma Gonzàlez Esteban Alejandro", "rut": "22.884.357-1", "curso": "IV° B", "notas": {"2023": 5.7, "2024": 5.8, "2025": 6.4, "2026_est": 6.7, "promedio": 5.97}, "nem": 706.0, "ranking": 756.0, "area_interes": "Matemática", "carreras": ["ingeniería"], "quiere_pedagogia": "", "etnia": "", "pueblo_originario": ""}, {"nombre": "Olivares González Pablo Fabián", "rut": "22.777.557-2", "curso": "IV° A", "notas": {"2023": 5.8, "2024": 6.0, "2025": 6.1, "2026_est": 6.3, "promedio": 5.97}, "nem": 706.0, "ranking": 756.0, "area_interes": "Matemática", "carreras": [], "quiere_pedagogia": "", "etnia": "", "pueblo_originario": ""}, {"nombre": "García Antinao Vicente Ignacio", "rut": "22.893.721-5", "curso": "IV° C", "notas": {"2023": 5.9, "2024": 5.9, "2025": 6.1, "2026_est": 6.2, "promedio": 5.97}, "nem": 706.0, "ranking": 756.0, "area_interes": "Matemática", "carreras": ["Arquitectura", "Agronomía"], "quiere_pedagogia": "", "etnia": "", "pueblo_originario": ""}, {"nombre": "Bustos Caballero Paz Antonia", "rut": "22.811.875-3", "curso": "IV° C", "notas": {"2023": 5.9, "2024": 5.9, "2025": 6.0, "2026_est": 6.4, "promedio": 5.93}, "nem": 694.0, "ranking": 744.0, "area_interes": "Matemática", "carreras": [], "quiere_pedagogia": "", "etnia": "", "pueblo_originario": ""}, {"nombre": "Zurita Martinez Valentina", "rut": "22.783.621-0", "curso": "IV° C", "notas": {"2023": 5.7, "2024": 5.8, "2025": 6.3, "2026_est": 6.3, "promedio": 5.93}, "nem": 694.0, "ranking": 744.0, "area_interes": "Matemática", "carreras": ["Animación digital", "Interpretación musical"], "quiere_pedagogia": "", "etnia": "", "pueblo_originario": ""}, {"nombre": "Aravena Urrutia Noelia Araceli", "rut": "22.822.404-9", "curso": "IV° A", "notas": {"2023": 5.9, "2024": 5.7, "2025": 6.1, "2026_est": 6.3, "promedio": 5.9}, "nem": 685.0, "ranking": 735.0, "area_interes": "Matemática", "carreras": ["Estetica profesional", "Dansa y coreografia", "administracion de empresas"], "quiere_pedagogia": "", "etnia": "", "pueblo_originario": ""}, {"nombre": "Vidal Muñoz Akary Aylin", "rut": "22.730.754-4", "curso": "IV° B", "notas": {"2023": 5.7, "2024": 6.1, "2025": 5.9, "2026_est": 6.2, "promedio": 5.9}, "nem": 685.0, "ranking": 735.0, "area_interes": "Ciencia", "carreras": [], "quiere_pedagogia": "", "etnia": "", "pueblo_originario": ""}, {"nombre": "Zuñiga Becerra Victoria Paz", "rut": "22.918.289-7", "curso": "IV° C", "notas": {"2023": 5.8, "2024": 5.7, "2025": 6.2, "2026_est": 6.4, "promedio": 5.9}, "nem": 685.0, "ranking": 735.0, "area_interes": "Matemática", "carreras": ["Medicina veterinaria", "Obstetricia  y cultura", "Nutrición y dietética"], "quiere_pedagogia": "", "etnia": "", "pueblo_originario": ""}, {"nombre": "Reinoso Larraín Yael Danae", "rut": "22.742.704-3", "curso": "IV° C", "notas": {"2023": 5.5, "2024": 5.8, "2025": 6.3, "2026_est": 6.7, "promedio": 5.87}, "nem": 676.0, "ranking": 726.0, "area_interes": "Humanista", "carreras": ["Literatura y lingüística", "Gendarmería", "Psicología", "Técnico en secretariado"], "quiere_pedagogia": "", "etnia": "", "pueblo_originario": ""}, {"nombre": "Pezoa Suárez Priscila Jael", "rut": "22.975.384-3", "curso": "IV° B", "notas": {"2023": 5.9, "2024": 5.5, "2025": 6.2, "2026_est": 6.7, "promedio": 5.87}, "nem": 676.0, "ranking": 726.0, "area_interes": "Ciencia", "carreras": ["Enfermeria"], "quiere_pedagogia": "", "etnia": "", "pueblo_originario": ""}, {"nombre": "Ferrufino Monsalves Juan Felipe", "rut": "22.704.582-5", "curso": "IV° B", "notas": {"2023": 5.9, "2024": 5.7, "2025": 6.0, "2026_est": 6.4, "promedio": 5.87}, "nem": 676.0, "ranking": 726.0, "area_interes": "Matemática", "carreras": ["Ingeneria en electronica"], "quiere_pedagogia": "", "etnia": "", "pueblo_originario": ""}, {"nombre": "Bustamante Venegas Julio Enrique", "rut": "23.011.412-9", "curso": "IV° B", "notas": {"2023": 5.6, "2024": 5.9, "2025": 6.1, "2026_est": 6.4, "promedio": 5.87}, "nem": 676.0, "ranking": 726.0, "area_interes": "Matemática", "carreras": ["Ingeniería de ejecución industrial"], "quiere_pedagogia": "", "etnia": "", "pueblo_originario": ""}, {"nombre": "Hernández Riffo Matías Francisco", "rut": "22.842.004-2", "curso": "IV° B", "notas": {"2023": 5.7, "2024": 5.9, "2025": 6.0, "2026_est": 6.3, "promedio": 5.87}, "nem": 676.0, "ranking": 726.0, "area_interes": "Matemática", "carreras": ["ingeniería civil industrial"], "quiere_pedagogia": "", "etnia": "", "pueblo_originario": ""}, {"nombre": "Gómez Reyes Adanheis Maciel", "rut": "22.796.676-9", "curso": "IV° A", "notas": {"2023": 5.6, "2024": 5.4, "2025": 6.5, "2026_est": 6.5, "promedio": 5.83}, "nem": 664.0, "ranking": 714.0, "area_interes": "Humanista", "carreras": ["Derecho"], "quiere_pedagogia": "", "etnia": "", "pueblo_originario": ""}, {"nombre": "Yañez Cona Alexis Ignacio", "rut": "22.795.712-3", "curso": "IV° B", "notas": {"2023": 5.7, "2024": 5.5, "2025": 6.3, "2026_est": 6.5, "promedio": 5.83}, "nem": 664.0, "ranking": 714.0, "area_interes": "Matemática", "carreras": ["Inegeria civil en obra civil", "Ingeneria industrial"], "quiere_pedagogia": "", "etnia": "X", "pueblo_originario": ""}, {"nombre": "Acevedo Vera Emilia Anaís", "rut": "22.884.009-2", "curso": "IV° A", "notas": {"2023": 5.8, "2024": 5.8, "2025": 5.9, "2026_est": 6.1, "promedio": 5.83}, "nem": 664.0, "ranking": 714.0, "area_interes": "Ciencia", "carreras": ["Kinesiología"], "quiere_pedagogia": "", "etnia": "", "pueblo_originario": ""}, {"nombre": "Devia Vivanco Dylan Kenay", "rut": "22.909.936-1", "curso": "IV° B", "notas": {"2023": 5.9, "2024": 5.7, "2025": 5.9, "2026_est": 6.0, "promedio": 5.83}, "nem": 664.0, "ranking": 714.0, "area_interes": "Matemática", "carreras": [], "quiere_pedagogia": "", "etnia": "", "pueblo_originario": ""}, {"nombre": "Ruiz Ramos Javiera Amanda", "rut": "22.963.687-1", "curso": "IV° A", "notas": {"2023": 5.4, "2024": 5.8, "2025": 6.2, "2026_est": 6.6, "promedio": 5.8}, "nem": 657.0, "ranking": 707.0, "area_interes": "Matemática", "carreras": ["Psicologia"], "quiere_pedagogia": "", "etnia": "", "pueblo_originario": ""}, {"nombre": "Vera Castillo Emely Anaís", "rut": "22.738.080-2", "curso": "IV° B", "notas": {"2023": 5.6, "2024": 5.6, "2025": 6.2, "2026_est": 6.5, "promedio": 5.8}, "nem": 657.0, "ranking": 707.0, "area_interes": "Matemática", "carreras": ["Arquitectura"], "quiere_pedagogia": "", "etnia": "", "pueblo_originario": ""}, {"nombre": "Bermúdez Quinteros Yaresla Martina", "rut": "22.799.299-9", "curso": "IV° A", "notas": {"2023": 5.3, "2024": 5.6, "2025": 6.5, "2026_est": 6.5, "promedio": 5.8}, "nem": 657.0, "ranking": 707.0, "area_interes": "Ciencia", "carreras": ["Odontologia"], "quiere_pedagogia": "", "etnia": "", "pueblo_originario": ""}, {"nombre": "Turedo Jofré Mario Benjamín", "rut": "22.749.699-1", "curso": "IV° A", "notas": {"2023": 5.6, "2024": 5.6, "2025": 6.2, "2026_est": 6.2, "promedio": 5.8}, "nem": 657.0, "ranking": 707.0, "area_interes": "Matemática", "carreras": ["Contador auditor", "Piloto Comercial", "Ciencias Politicas"], "quiere_pedagogia": "", "etnia": "", "pueblo_originario": ""}, {"nombre": "Uribe Calquín Agustina Ignacia", "rut": "22.947.989-k", "curso": "IV° A", "notas": {"2023": 5.6, "2024": 5.7, "2025": 6.1, "2026_est": 6.0, "promedio": 5.8}, "nem": 657.0, "ranking": 707.0, "area_interes": "Matemática", "carreras": [], "quiere_pedagogia": "", "etnia": "", "pueblo_originario": ""}, {"nombre": "Briceño Pérez Isidora Josefa", "rut": "22.857.841-K", "curso": "IV° B", "notas": {"2023": 5.5, "2024": 5.6, "2025": 6.2, "2026_est": 6.5, "promedio": 5.77}, "nem": 648.0, "ranking": 698.0, "area_interes": "Humanista", "carreras": ["Derecho"], "quiere_pedagogia": "", "etnia": "", "pueblo_originario": ""}, {"nombre": "Peña Pichipil Geraldine Eileen", "rut": "22.999.402-6", "curso": "IV° B", "notas": {"2023": 5.2, "2024": 6.2, "2025": 5.9, "2026_est": 6.5, "promedio": 5.77}, "nem": 648.0, "ranking": 698.0, "area_interes": "Humanista", "carreras": [], "quiere_pedagogia": "", "etnia": "", "pueblo_originario": ""}, {"nombre": "Magdalena Guíñez", "rut": "22.776.532-1", "curso": "IV° B", "notas": {"2023": 5.8, "2024": 5.8, "2025": 5.7, "2026_est": 6.0, "promedio": 5.77}, "nem": 648.0, "ranking": 698.0, "area_interes": "Humanista", "carreras": ["Derecho"], "quiere_pedagogia": "", "etnia": "", "pueblo_originario": ""}, {"nombre": "Cayul Mellico Carolina Ester", "rut": "22.799.797-4", "curso": "IV° C", "notas": {"2023": 5.8, "2024": 5.7, "2025": 5.8, "2026_est": 5.8, "promedio": 5.77}, "nem": 648.0, "ranking": 698.0, "area_interes": "Matemática", "carreras": [], "quiere_pedagogia": "", "etnia": "", "pueblo_originario": "Si"}, {"nombre": "Medina Medel Franshesca", "rut": "22.960.653-0", "curso": "IV° B", "notas": {"2023": 6.3, "2024": 5.4, "2025": 5.6, "2026_est": 6.5, "promedio": 5.77}, "nem": 648.0, "ranking": 698.0, "area_interes": "Ciencia", "carreras": ["Veterinaria"], "quiere_pedagogia": "", "etnia": "", "pueblo_originario": ""}, {"nombre": "Herrera Nuñez Piero Baltázar", "rut": "22.839.371-1", "curso": "IV° C", "notas": {"2023": 5.6, "2024": 5.7, "2025": 5.9, "2026_est": 6.3, "promedio": 5.73}, "nem": 636.0, "ranking": 686.0, "area_interes": "Matemática", "carreras": ["Ingeniería civil industrial", "Ingeniería ejecución industrial"], "quiere_pedagogia": "", "etnia": "", "pueblo_originario": ""}, {"nombre": "Cabello Ayala Alonso Andres", "rut": "22.802.208-k", "curso": "IV° A", "notas": {"2023": 5.9, "2024": 5.5, "2025": 5.8, "2026_est": 6.6, "promedio": 5.73}, "nem": 636.0, "ranking": 686.0, "area_interes": "Matemática", "carreras": [], "quiere_pedagogia": "", "etnia": "", "pueblo_originario": ""}, {"nombre": "Gregorio de las Heras Castro Lorenzo Amaro", "rut": "22.853.731-4", "curso": "IV° A", "notas": {"2023": 5.3, "2024": 5.6, "2025": 6.3, "2026_est": 6.6, "promedio": 5.73}, "nem": 636.0, "ranking": 686.0, "area_interes": "Matemática", "carreras": ["Ingenieria informatica"], "quiere_pedagogia": "", "etnia": "", "pueblo_originario": ""}, {"nombre": "Jara Fuentes Fernanda Carolina", "rut": "22.926.628-4", "curso": "IV° C", "notas": {"2023": 5.4, "2024": 5.5, "2025": 6.3, "2026_est": 6.6, "promedio": 5.73}, "nem": 636.0, "ranking": 686.0, "area_interes": "Humanista", "carreras": ["Derecho", "Fach", "PDI"], "quiere_pedagogia": "", "etnia": "", "pueblo_originario": ""}, {"nombre": "Muñoz Isla Fernanda Catalina", "rut": "22.833.894-K", "curso": "IV° A", "notas": {"2023": 5.5, "2024": 5.6, "2025": 6.1, "2026_est": 6.5, "promedio": 5.73}, "nem": 636.0, "ranking": 686.0, "area_interes": "Matemática", "carreras": ["Derecho", "Psicologia"], "quiere_pedagogia": "", "etnia": "", "pueblo_originario": ""}, {"nombre": "Díaz Epul Thomas Ignacio", "rut": "22.839.219-7", "curso": "IV° B", "notas": {"2023": 5.5, "2024": 5.6, "2025": 6.1, "2026_est": 6.5, "promedio": 5.73}, "nem": 636.0, "ranking": 686.0, "area_interes": "Matemática", "carreras": ["ingeniería en informática"], "quiere_pedagogia": "", "etnia": "X", "pueblo_originario": ""}, {"nombre": "Cares Roman Catalina Antonia", "rut": "22.709.798-1", "curso": "IV° A", "notas": {"2023": 5.4, "2024": 5.4, "2025": 6.3, "2026_est": 6.3, "promedio": 5.7}, "nem": 628.0, "ranking": 678.0, "area_interes": "Humanista", "carreras": ["Negocios Internacionales"], "quiere_pedagogia": "", "etnia": "", "pueblo_originario": ""}, {"nombre": "Arriaza Molina Sebastián Martín", "rut": "22.836.530-0", "curso": "IV° A", "notas": {"2023": 5.9, "2024": 5.4, "2025": 5.8, "2026_est": 6.2, "promedio": 5.7}, "nem": 628.0, "ranking": 678.0, "area_interes": "Ciencia", "carreras": ["Pedagogia en Ed. Fisica", "Periodismo"], "quiere_pedagogia": "Si", "etnia": "", "pueblo_originario": ""}, {"nombre": "Echeverría Biadayoli Benjamín Eduardo", "rut": "22.786.284-K", "curso": "IV° A", "notas": {"2023": 5.3, "2024": 5.5, "2025": 6.3, "2026_est": 6.0, "promedio": 5.7}, "nem": 628.0, "ranking": 678.0, "area_interes": "Matemática", "carreras": ["Contador auditor", "Ingenieria comercial"], "quiere_pedagogia": "", "etnia": "", "pueblo_originario": ""}, {"nombre": "Vásquez Morales Alan Elías", "rut": "22.782.609-6", "curso": "IV° C", "notas": {"2023": 5.2, "2024": 5.9, "2025": 6.0, "2026_est": 6.0, "promedio": 5.7}, "nem": 628.0, "ranking": 678.0, "area_interes": "Matemática", "carreras": ["Interpretación musical", "Composición musical"], "quiere_pedagogia": "", "etnia": "", "pueblo_originario": ""}, {"nombre": "Gutierrez Salinas Alan Maro", "rut": "22.984.274-9", "curso": "IV° C", "notas": {"2023": 5.6, "2024": 5.6, "2025": 5.8, "2026_est": 6.5, "promedio": 5.67}, "nem": 619.0, "ranking": 619.0, "area_interes": "Matemática", "carreras": [], "quiere_pedagogia": "", "etnia": "", "pueblo_originario": ""}, {"nombre": "Contreras Gutiérrez Enzo Nicolás", "rut": "22.815.571-3", "curso": "IV° B", "notas": {"2023": 5.7, "2024": 5.9, "2025": 5.4, "2026_est": 6.0, "promedio": 5.67}, "nem": 619.0, "ranking": 619.0, "area_interes": "Matemática", "carreras": ["Ingeneria electronica"], "quiere_pedagogia": "", "etnia": "", "pueblo_originario": ""}, {"nombre": "Mariqueo Muñoz Javiera Carolina", "rut": "22.935.186-9", "curso": "IV° C", "notas": {"2023": 5.7, "2024": 5.5, "2025": 5.8, "2026_est": 5.8, "promedio": 5.67}, "nem": 619.0, "ranking": 619.0, "area_interes": "Matemática", "carreras": [], "quiere_pedagogia": "", "etnia": "", "pueblo_originario": ""}, {"nombre": "Valenzuela Salas Sofía Paz", "rut": "22.675.297-8", "curso": "IV° A", "notas": {"2023": 6.0, "2024": 6.0, "2025": 5.0, "2026_est": 5.5, "promedio": 5.67}, "nem": 619.0, "ranking": 619.0, "area_interes": "Ciencia", "carreras": ["Odontologia"], "quiere_pedagogia": "", "etnia": "", "pueblo_originario": ""}, {"nombre": "Valdivia Moreno Natacha Paz", "rut": "22.825.458-4", "curso": "IV° A", "notas": {"2023": 5.4, "2024": 5.5, "2025": 6.0, "2026_est": 6.3, "promedio": 5.63}, "nem": 608.0, "ranking": 608.0, "area_interes": "Matemática", "carreras": ["Educacion parvularia"], "quiere_pedagogia": "", "etnia": "", "pueblo_originario": ""}, {"nombre": "Yáñez Pérez Asenat Jerusalén", "rut": "22.510.535-9", "curso": "IV° C", "notas": {"2023": 5.3, "2024": 5.6, "2025": 6.0, "2026_est": 6.2, "promedio": 5.63}, "nem": 608.0, "ranking": 608.0, "area_interes": "Artes", "carreras": ["Pedagogía en arte", "Artes visuales", "Diseño e imagen"], "quiere_pedagogia": "", "etnia": "", "pueblo_originario": ""}, {"nombre": "Vera Ferrufino Francoise Madelaine", "rut": "22.695.340-K", "curso": "IV° B", "notas": {"2023": 5.5, "2024": 5.4, "2025": 5.9, "2026_est": 6.3, "promedio": 5.6}, "nem": 599.0, "ranking": 599.0, "area_interes": "Humanista", "carreras": ["Parvulo"], "quiere_pedagogia": "si", "etnia": "", "pueblo_originario": ""}, {"nombre": "Arce Zuñiga Alan", "rut": "22.873.631-7", "curso": "IV° B", "notas": {"2023": 5.0, "2024": 5.8, "2025": 5.9, "2026_est": 6.0, "promedio": 5.57}, "nem": 591.0, "ranking": 591.0, "area_interes": "Humanista", "carreras": ["Gastronomía"], "quiere_pedagogia": "", "etnia": "", "pueblo_originario": ""}, {"nombre": "Pizarro Vidal Martina Antonia", "rut": "22.900.281-3", "curso": "IV° C", "notas": {"2023": 5.5, "2024": 5.3, "2025": 5.9, "2026_est": 6.0, "promedio": 5.57}, "nem": 591.0, "ranking": 591.0, "area_interes": "Matemática", "carreras": [], "quiere_pedagogia": "", "etnia": "", "pueblo_originario": ""}, {"nombre": "Navea Pizarro Valentina Ignacia", "rut": "22.770.212-5", "curso": "IV° C", "notas": {"2023": 5.1, "2024": 5.4, "2025": 6.2, "2026_est": 6.4, "promedio": 5.57}, "nem": 591.0, "ranking": 591.0, "area_interes": "Matemática", "carreras": [], "quiere_pedagogia": "", "etnia": "", "pueblo_originario": ""}, {"nombre": "Alarcón Civilo Dilan Patrick", "rut": "22.853.466-8", "curso": "IV° B", "notas": {"2023": 5.4, "2024": 5.5, "2025": 5.8, "2026_est": 6.2, "promedio": 5.57}, "nem": 591.0, "ranking": 591.0, "area_interes": "Matemática", "carreras": ["Arquitectura"], "quiere_pedagogia": "", "etnia": "X", "pueblo_originario": ""}, {"nombre": "La Rosa Urbina Israel Alonso", "rut": "22.905.499-6", "curso": "IV° C", "notas": {"2023": 5.2, "2024": 5.4, "2025": 6.0, "2026_est": 6.0, "promedio": 5.53}, "nem": 580.0, "ranking": 580.0, "area_interes": "Matemática", "carreras": [], "quiere_pedagogia": "", "etnia": "", "pueblo_originario": ""}, {"nombre": "Astete Contreras Lucas Ignacio", "rut": "22.922.457-3", "curso": "IV° C", "notas": {"2023": 5.5, "2024": 5.5, "2025": 5.6, "2026_est": 6.7, "promedio": 5.53}, "nem": 580.0, "ranking": 580.0, "area_interes": "Matemática", "carreras": ["Informática", "Programación"], "quiere_pedagogia": "", "etnia": "", "pueblo_originario": ""}, {"nombre": "Rojas González Pascal Antonella", "rut": "22.939.147-K", "curso": "IV° B", "notas": {"2023": 5.3, "2024": 5.4, "2025": 5.8, "2026_est": 6.0, "promedio": 5.5}, "nem": 572.0, "ranking": 572.0, "area_interes": "Ciencia", "carreras": [], "quiere_pedagogia": "", "etnia": "", "pueblo_originario": ""}, {"nombre": "Morales Caniullán Esteban Alexis", "rut": "22.673.429-5", "curso": "IV° A", "notas": {"2023": 5.4, "2024": 5.6, "2025": 5.5, "2026_est": 5.3, "promedio": 5.5}, "nem": 572.0, "ranking": 572.0, "area_interes": "Matemática", "carreras": [], "quiere_pedagogia": "", "etnia": "", "pueblo_originario": ""}, {"nombre": "Maulén Morales Trinidad Ignacia", "rut": "22.818.323-7", "curso": "IV° A", "notas": {"2023": 5.2, "2024": 5.5, "2025": 5.7, "2026_est": 6.8, "promedio": 5.47}, "nem": 564.0, "ranking": 564.0, "area_interes": "Matemática", "carreras": [], "quiere_pedagogia": "", "etnia": "", "pueblo_originario": ""}, {"nombre": "González Muñoz Arantza Thais", "rut": "22.836.184-4", "curso": "IV° C", "notas": {"2023": 5.3, "2024": 5.2, "2025": 5.9, "2026_est": 6.2, "promedio": 5.47}, "nem": 564.0, "ranking": 564.0, "area_interes": "Matemática", "carreras": [], "quiere_pedagogia": "", "etnia": "", "pueblo_originario": ""}, {"nombre": "Castillo Figueroa Ana Trinidad", "rut": "22.898.744-1", "curso": "IV° B", "notas": {"2023": 5.1, "2024": 5.4, "2025": 5.9, "2026_est": 6.0, "promedio": 5.47}, "nem": 564.0, "ranking": 564.0, "area_interes": "Ciencia", "carreras": ["Fonoaudiologia"], "quiere_pedagogia": "", "etnia": "", "pueblo_originario": ""}, {"nombre": "Suarez Sanhueza Francisca Antonella", "rut": "22.488.045-6", "curso": "IV° A", "notas": {"2023": 5.4, "2024": 5.4, "2025": 5.6, "2026_est": 6.0, "promedio": 5.47}, "nem": 564.0, "ranking": 564.0, "area_interes": "Matemática", "carreras": ["ingenieria turismo y hoteleria"], "quiere_pedagogia": "", "etnia": "", "pueblo_originario": ""}, {"nombre": "Carvacho Urrutia Cristóbal Agustín", "rut": "22.742.880-5", "curso": "IV° B", "notas": {"2023": 5.2, "2024": 5.3, "2025": 5.9, "2026_est": 6.0, "promedio": 5.47}, "nem": 564.0, "ranking": 564.0, "area_interes": "Matemática", "carreras": ["Ingeneria mecanica automotris"], "quiere_pedagogia": "", "etnia": "", "pueblo_originario": ""}, {"nombre": "Gallardo Inostroza Valentín Amaro", "rut": "22.889.509-1", "curso": "IV° B", "notas": {"2023": 5.4, "2024": 5.4, "2025": 5.6, "2026_est": 5.9, "promedio": 5.47}, "nem": 564.0, "ranking": 564.0, "area_interes": "Humanista", "carreras": ["Instalaciones sanitarias"], "quiere_pedagogia": "", "etnia": "", "pueblo_originario": ""}, {"nombre": "Sepulveda Rodriguez Martina Ignacia", "rut": "22.725.137-9", "curso": "IV° C", "notas": {"2023": 5.0, "2024": 5.3, "2025": 6.0, "2026_est": 6.7, "promedio": 5.43}, "nem": 551.0, "ranking": 551.0, "area_interes": "Matemática", "carreras": ["Fuerza aérea", "Ingeniería en informática"], "quiere_pedagogia": "", "etnia": "", "pueblo_originario": ""}, {"nombre": "Soto Campos Josefa Antonia", "rut": "22.923.563-k", "curso": "IV° C", "notas": {"2023": 5.2, "2024": 5.3, "2025": 5.8, "2026_est": 5.8, "promedio": 5.43}, "nem": 551.0, "ranking": 551.0, "area_interes": "Matemática", "carreras": [], "quiere_pedagogia": "", "etnia": "", "pueblo_originario": ""}, {"nombre": "Otegui Caro Bastián Andrés", "rut": "22.860.734-7", "curso": "IV° B", "notas": {"2023": 5.2, "2024": 5.4, "2025": 5.6, "2026_est": 6.0, "promedio": 5.4}, "nem": 542.0, "ranking": 542.0, "area_interes": "Humanista", "carreras": ["Economia"], "quiere_pedagogia": "", "etnia": "", "pueblo_originario": ""}, {"nombre": "Cárdenas Vidal Maite Paskal", "rut": "22.915.838-4", "curso": "IV° C", "notas": {"2023": 5.2, "2024": 5.4, "2025": 5.6, "2026_est": 5.8, "promedio": 5.4}, "nem": 542.0, "ranking": 542.0, "area_interes": "Humanista", "carreras": ["Gastronomía", "Veterinaria"], "quiere_pedagogia": "", "etnia": "", "pueblo_originario": ""}, {"nombre": "Pizzorno González Daniela Anaís", "rut": "22.808.195-7", "curso": "IV° B", "notas": {"2023": 5.0, "2024": 5.4, "2025": 5.8, "2026_est": 6.0, "promedio": 5.4}, "nem": 542.0, "ranking": 542.0, "area_interes": "Humanista", "carreras": [], "quiere_pedagogia": "", "etnia": "", "pueblo_originario": ""}, {"nombre": "Romàn Condori Eluney Aldana", "rut": "23.326.513-6", "curso": "IV° B", "notas": {"2023": 5.2, "2024": 5.2, "2025": 5.8, "2026_est": 6.0, "promedio": 5.4}, "nem": 542.0, "ranking": 542.0, "area_interes": "Ciencia", "carreras": ["Veterinaria", "Gastronomia"], "quiere_pedagogia": "", "etnia": "", "pueblo_originario": ""}, {"nombre": "Albornoz Cavieres Benjamín Ignacio", "rut": "22.724.249-3", "curso": "IV° C", "notas": {"2023": 5.2, "2024": 5.4, "2025": 5.5, "2026_est": 6.2, "promedio": 5.37}, "nem": 532.0, "ranking": 532.0, "area_interes": "Matemática", "carreras": [], "quiere_pedagogia": "", "etnia": "", "pueblo_originario": ""}, {"nombre": "Cutiño Burgos Eikon Ignacio", "rut": "22.965.079-3", "curso": "IV° C", "notas": {"2023": 5.2, "2024": 5.0, "2025": 5.8, "2026_est": 5.9, "promedio": 5.33}, "nem": 519.0, "ranking": 519.0, "area_interes": "Matemática", "carreras": ["Traducción e interpretación"], "quiere_pedagogia": "", "etnia": "", "pueblo_originario": ""}, {"nombre": "Quezada Leal Axcel Lizandro", "rut": "22.914.643-2", "curso": "IV° A", "notas": {"2023": 5.2, "2024": 5.3, "2025": 5.5, "2026_est": 5.5, "promedio": 5.33}, "nem": 519.0, "ranking": 519.0, "area_interes": "Matemática", "carreras": [], "quiere_pedagogia": "", "etnia": "", "pueblo_originario": ""}, {"nombre": "Otárola Mora Gamaliel Alonso", "rut": "22.585.042-9", "curso": "IV° B", "notas": {"2023": 5.1, "2024": 5.3, "2025": 5.5, "2026_est": 6.1, "promedio": 5.3}, "nem": 510.0, "ranking": 510.0, "area_interes": "Artes", "carreras": ["comunicación audiovisual"], "quiere_pedagogia": "", "etnia": "X", "pueblo_originario": ""}, {"nombre": "Pérez Romero Yosimar Daniel", "rut": "22.771.365-8", "curso": "IV° A", "notas": {"2023": 5.2, "2024": 5.3, "2025": 5.4, "2026_est": 5.8, "promedio": 5.3}, "nem": 510.0, "ranking": 510.0, "area_interes": "Matemática", "carreras": ["Ingenieria comercial"], "quiere_pedagogia": "", "etnia": "", "pueblo_originario": ""}, {"nombre": "Elgueta Garabito Joaquín Vicente", "rut": "22.483.483-7", "curso": "IV° B", "notas": {"2023": 5.2, "2024": 5.3, "2025": 5.2, "2026_est": 5.6, "promedio": 5.23}, "nem": 488.0, "ranking": 488.0, "area_interes": "Matemática", "carreras": ["Turismo"], "quiere_pedagogia": "", "etnia": "", "pueblo_originario": ""}, {"nombre": "Silva Martinez Joaquin Esteban", "rut": "22.945.087-5", "curso": "IV° C", "notas": {"2023": 5.1, "2024": 5.3, "2025": 5.3, "2026_est": 5.3, "promedio": 5.23}, "nem": 488.0, "ranking": 488.0, "area_interes": "Matemática", "carreras": ["Arqueologia", "Antropologia"], "quiere_pedagogia": "", "etnia": "", "pueblo_originario": ""}, {"nombre": "Cerda Silva Matías Irael", "rut": "22.644.551-k", "curso": "IV° A", "notas": {"2023": 5.1, "2024": 5.2, "2025": 5.3, "2026_est": 6.5, "promedio": 5.2}, "nem": 479.0, "ranking": 479.0, "area_interes": "Matemática", "carreras": [], "quiere_pedagogia": "", "etnia": "", "pueblo_originario": ""}, {"nombre": "Piña Nuñez Sebastian Benjamin", "rut": "22.880.749-4", "curso": "IV° C", "notas": {"2023": 5.0, "2024": 5.3, "2025": 5.3, "2026_est": 5.6, "promedio": 5.2}, "nem": 479.0, "ranking": 479.0, "area_interes": "Matemática", "carreras": [], "quiere_pedagogia": "", "etnia": "", "pueblo_originario": ""}, {"nombre": "Jiménez Sepúlveda Luna Sayen", "rut": "22.971.891-6", "curso": "IV° C", "notas": {"2023": 5.1, "2024": 5.0, "2025": 5.5, "2026_est": 5.5, "promedio": 5.2}, "nem": 479.0, "ranking": 479.0, "area_interes": "Matemática", "carreras": ["Derecho", "Ciencias política"], "quiere_pedagogia": "", "etnia": "", "pueblo_originario": ""}, {"nombre": "Saavedra Moya David Alonso", "rut": "22.801.579-2", "curso": "IV° B", "notas": {"2023": 5.1, "2024": 5.2, "2025": 5.2, "2026_est": 5.4, "promedio": 5.17}, "nem": 469.0, "ranking": 469.0, "area_interes": "Humanista", "carreras": ["Gastronomia"], "quiere_pedagogia": "", "etnia": "", "pueblo_originario": ""}, {"nombre": "Baeza Ortiz Annais Constanza", "rut": "22-761-833-7", "curso": "IV° C", "notas": {"2023": 4.8, "2024": 5.1, "2025": 5.6, "2026_est": 5.8, "promedio": 5.17}, "nem": 459.0, "ranking": 459.0, "area_interes": "Matemática", "carreras": ["Cosmético general", "Enfermería", "Psicología"], "quiere_pedagogia": "", "etnia": "", "pueblo_originario": ""}, {"nombre": "Guzmán Beltrán Dominique Ignacia Elvira", "rut": "22.968.906-1", "curso": "IV° A", "notas": {"2023": 5.1, "2024": 4.7, "2025": 5.6, "2026_est": 5.9, "promedio": 5.13}, "nem": 456.0, "ranking": 456.0, "area_interes": "Matemática", "carreras": [], "quiere_pedagogia": "", "etnia": "", "pueblo_originario": ""}, {"nombre": "Abarca Lobos Ghislaine Valentina", "rut": "22.167.108-2", "curso": "IV° B", "notas": {"2023": 4.8, "2024": 5.1, "2025": 5.0, "2026_est": 5.6, "promedio": 4.97}, "nem": 406.0, "ranking": 406.0, "area_interes": "Ciencia", "carreras": ["Enfermeria"], "quiere_pedagogia": "", "etnia": "", "pueblo_originario": ""}, {"nombre": "Adriazola González Laura Sofía", "rut": "22.978.768-3", "curso": "IV° A", "notas": {"2023": null, "2024": null, "2025": null, "2026_est": null, "promedio": null}, "nem": null, "ranking": null, "area_interes": "Matemática", "carreras": [], "quiere_pedagogia": "", "etnia": "", "pueblo_originario": ""}, {"nombre": "Alarcón Riesco Estephanya Araceli", "rut": "22.489.109-1", "curso": "IV° A", "notas": {"2023": null, "2024": null, "2025": null, "2026_est": null, "promedio": null}, "nem": null, "ranking": null, "area_interes": "Matemática", "carreras": [], "quiere_pedagogia": "", "etnia": "", "pueblo_originario": ""}, {"nombre": "Bravo González Lucas Alejandro", "rut": "22.939.605-6", "curso": "IV° A", "notas": {"2023": null, "2024": null, "2025": null, "2026_est": null, "promedio": null}, "nem": null, "ranking": null, "area_interes": "Matemática", "carreras": [], "quiere_pedagogia": "", "etnia": "", "pueblo_originario": ""}, {"nombre": "Del Canto Vallejos Ignacio Alejandro", "rut": "22.850.533-1", "curso": "IV° A", "notas": {"2023": null, "2024": null, "2025": null, "2026_est": null, "promedio": null}, "nem": null, "ranking": null, "area_interes": "Matemática", "carreras": [], "quiere_pedagogia": "", "etnia": "", "pueblo_originario": ""}, {"nombre": "Fuentes Aravena Fernanda Aillin", "rut": "22.973.552-7", "curso": "IV° A", "notas": {"2023": null, "2024": null, "2025": null, "2026_est": null, "promedio": null}, "nem": null, "ranking": null, "area_interes": "Matemática", "carreras": [], "quiere_pedagogia": "", "etnia": "", "pueblo_originario": ""}, {"nombre": "Nuñez Cayupán Trinidad Sofía", "rut": "22.493.574-9", "curso": "IV° A", "notas": {"2023": null, "2024": null, "2025": null, "2026_est": null, "promedio": null}, "nem": null, "ranking": null, "area_interes": "Matemática", "carreras": [], "quiere_pedagogia": "", "etnia": "", "pueblo_originario": ""}, {"nombre": "Quijada Vásquez Daniel Justin", "rut": "22.937.172-k", "curso": "IV° A", "notas": {"2023": null, "2024": null, "2025": null, "2026_est": null, "promedio": null}, "nem": null, "ranking": null, "area_interes": "Matemática", "carreras": [], "quiere_pedagogia": "", "etnia": "", "pueblo_originario": ""}, {"nombre": "Román Condori Alex Demián", "rut": "23.038.668-4", "curso": "IV° A", "notas": {"2023": null, "2024": null, "2025": null, "2026_est": null, "promedio": null}, "nem": null, "ranking": null, "area_interes": "Matemática", "carreras": [], "quiere_pedagogia": "", "etnia": "", "pueblo_originario": ""}, {"nombre": "Salas Vega Antonia Mia", "rut": "22.721.833-9", "curso": "IV° A", "notas": {"2023": null, "2024": null, "2025": null, "2026_est": null, "promedio": null}, "nem": null, "ranking": null, "area_interes": "Matemática", "carreras": ["ing. civil en obras civiles"], "quiere_pedagogia": "", "etnia": "", "pueblo_originario": ""}, {"nombre": "Vásquez Paineo Bastian Ignacio", "rut": "22.488.239-4", "curso": "IV° A", "notas": {"2023": null, "2024": null, "2025": null, "2026_est": null, "promedio": null}, "nem": null, "ranking": null, "area_interes": "Matemática", "carreras": [], "quiere_pedagogia": "", "etnia": "", "pueblo_originario": ""}, {"nombre": "Paredes Gutierrez Sofia Antonia", "rut": "22.704.909-k", "curso": "IV° C", "notas": {"2023": null, "2024": null, "2025": null, "2026_est": null, "promedio": null}, "nem": null, "ranking": null, "area_interes": "Matemática", "carreras": [], "quiere_pedagogia": "", "etnia": "", "pueblo_originario": ""}, {"nombre": "Ramírez Vicuña Alexander Jesús", "rut": "22.879.734-0", "curso": "IV° C", "notas": {"2023": null, "2024": null, "2025": null, "2026_est": null, "promedio": null}, "nem": null, "ranking": null, "area_interes": "Matemática", "carreras": [], "quiere_pedagogia": "", "etnia": "", "pueblo_originario": ""}, {"nombre": "Romero Cerda Angelina Valentina", "rut": "22.674.013-9", "curso": "IV° C", "notas": {"2023": null, "2024": null, "2025": null, "2026_est": null, "promedio": null}, "nem": null, "ranking": null, "area_interes": "Matemática", "carreras": ["Odontologia", "Arquitectura", "Ingeniería civil"], "quiere_pedagogia": "", "etnia": "", "pueblo_originario": ""}, {"nombre": "Sánchez Astorga Eduardo Ignacio", "rut": "22.370.175-2", "curso": "IV° C", "notas": {"2023": null, "2024": null, "2025": null, "2026_est": null, "promedio": null}, "nem": null, "ranking": null, "area_interes": "Matemática", "carreras": [], "quiere_pedagogia": "", "etnia": "", "pueblo_originario": ""}, {"nombre": "Vivanco Inostroza Miguel Enrique", "rut": "23.021.855-2", "curso": "IV° C", "notas": {"2023": null, "2024": null, "2025": null, "2026_est": null, "promedio": null}, "nem": null, "ranking": null, "area_interes": "Matemática", "carreras": ["Ingeniería en informática con especialización en softwet", "Física"], "quiere_pedagogia": "", "etnia": "", "pueblo_originario": ""}, {"nombre": "Lobos Marchant Dania Alexandra", "rut": "22.680.085-9", "curso": "IV° C", "notas": {"2023": null, "2024": null, "2025": null, "2026_est": null, "promedio": null}, "nem": null, "ranking": null, "area_interes": "Matemática", "carreras": [], "quiere_pedagogia": "", "etnia": "", "pueblo_originario": ""}, {"nombre": "Herrera Acosta Estephanie Gabriela", "rut": "29.096.865-8", "curso": "IV° B", "notas": {"2023": null, "2024": null, "2025": null, "2026_est": null, "promedio": null}, "nem": null, "ranking": null, "area_interes": "Matemática", "carreras": ["arquitectura", "ingeniería"], "quiere_pedagogia": "", "etnia": "", "pueblo_originario": ""}, {"nombre": "Benain Pavez Jadhe Agatha Paloma", "rut": "22.884.805-0", "curso": "IV° B", "notas": {"2023": null, "2024": null, "2025": null, "2026_est": null, "promedio": null}, "nem": null, "ranking": null, "area_interes": "Humanista", "carreras": [], "quiere_pedagogia": "", "etnia": "", "pueblo_originario": ""}, {"nombre": "Henriquez Carrasco Gerardo Nicolás", "rut": "22.948.585-7", "curso": "IV° A", "notas": {"2023": null, "2024": null, "2025": null, "2026_est": null, "promedio": null}, "nem": null, "ranking": null, "area_interes": "Matemática", "carreras": [], "quiere_pedagogia": "", "etnia": "", "pueblo_originario": ""}];
+
+// ── STATE ──
+let showAlerta = false;
+let showRankBajo = false;
+
+function isAlerta(s) {
+  const p = s.notas.promedio;
+  return p && p < 5.5;
+}
+
+function toggleRankBajo() {
+  showRankBajo = !showRankBajo;
+  document.getElementById('btn-rank-low').classList.toggle('active', showRankBajo);
+  renderGrid();
+}
+
+function toggleAlerta() {
+  showAlerta = !showAlerta;
+  document.getElementById('btn-alert').classList.toggle('active', showAlerta);
+  renderGrid();
+}
+
+function setTab(el, val) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  const sel = document.getElementById('curso');
+  if (val === 'todos') sel.value = '';
+  else sel.value = 'IV° ' + val.replace('IV','');
+  renderGrid();
+}
+
+function areaTagClass(area) {
+  const map = { 'Matemática':'area-mat','Ciencia':'area-cien','Humanista':'area-hum','Artes':'area-art','Indeciso':'area-ind' };
+  return map[area] || '';
+}
+
+function gradeClass(v) {
+  if (!v) return 'none';
+  if (v >= 6.0) return '';
+  if (v >= 5.5) return 'mid';
+  return 'low';
+}
+
+function initials(nombre) {
+  const parts = nombre.trim().split(' ');
+  return (parts[0][0] + (parts[1]?.[0] || '')).toUpperCase();
+}
+
+function renderGrid() {
+  const q = document.getElementById('search').value.toLowerCase();
+  const curso = document.getElementById('curso').value;
+  const area = document.getElementById('area').value;
+  const sort = document.getElementById('sort').value;
+
+  let list = STUDENTS.filter(s => {
+    if (q && !s.nombre.toLowerCase().includes(q) && !s.rut.toLowerCase().includes(q) && !s.curso.toLowerCase().includes(q)) return false;
+    if (curso && s.curso !== curso) return false;
+    if (area && s.area_interes !== area) return false;
+    if (showAlerta && !isAlerta(s)) return false;
+    if (showRankBajo && !(s.ranking && s.ranking < 650)) return false;
+    return true;
+  });
+
+  if (sort === 'ranking') list.sort((a,b) => (b.ranking||0) - (a.ranking||0));
+  else if (sort === 'nombre') list.sort((a,b) => a.nombre.localeCompare(b.nombre, 'es'));
+  else if (sort === 'promedio') list.sort((a,b) => (b.notas.promedio||0) - (a.notas.promedio||0));
+  else if (sort === 'ranking_asc') list.sort((a,b) => (a.ranking||9999) - (b.ranking||9999));
+
+  document.getElementById('count').textContent = `${list.length} estudiante${list.length !== 1?'s':''}`;
+
+  const grid = document.getElementById('grid');
+  if (!list.length) {
+    grid.innerHTML = '<div class="no-results"><div class="nr-icon">🔎</div>No se encontraron estudiantes con los filtros seleccionados.</div>';
+    return;
+  }
+
+  grid.innerHTML = list.map(s => {
+    const idx = STUDENTS.indexOf(s);
+    const p = s.notas.promedio;
+    const rankDisplay = s.ranking ? `Ranking ${Math.round(s.ranking)}` : 'Sin ranking';
+    const alertDot = isAlerta(s) ? ' ⚠' : '';
+    return `
+    <div class="card" onclick="openModal(${idx})">
+      <div class="card-header">
+        <span class="card-curso">📚 ${s.curso}${alertDot}</span>
+        <span class="card-rank">${rankDisplay}</span>
+      </div>
+      <div class="card-body">
+        <div class="card-name">${s.nombre}</div>
+        <div class="card-rut">${s.rut !== 'nan' ? s.rut : 'RUT no registrado'}</div>
+        <div class="card-stats">
+          <div class="stat-box">
+            <div class="stat-val ${gradeClass(p)}">${p ? p.toFixed(2) : '—'}</div>
+            <div class="stat-lbl">Prom. III°</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-val ${s.nem && s.nem < 600 ? 'low' : s.nem && s.nem < 750 ? 'mid' : (!s.nem ? 'none' : '')}">${s.nem ? Math.round(s.nem) : '—'}</div>
+            <div class="stat-lbl">NEM</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-val ${s.ranking && s.ranking < 600 ? 'low' : s.ranking && s.ranking < 800 ? 'mid' : (!s.ranking ? 'none' : '')}">${s.ranking ? Math.round(s.ranking) : '—'}</div>
+            <div class="stat-lbl">Ranking</div>
+          </div>
+        </div>
+        <div class="card-tags">
+          ${s.area_interes ? `<span class="tag ${areaTagClass(s.area_interes)}">${s.area_interes}</span>` : ''}
+          ${s.pueblo_originario && s.pueblo_originario.toLowerCase() !== '' && s.pueblo_originario.toLowerCase() !== 'nan' ? '<span class="tag pueblo">🪶 Pueblo originario</span>' : ''}
+          ${s.carreras.length ? `<span class="tag carreras">${s.carreras.length} carrera${s.carreras.length>1?'s':''}</span>` : ''}
+          ${isAlerta(s) ? '<span class="tag" style="background:#fff8e0;border-color:#C8921A;color:#7a4800">⚠ Alerta</span>' : ''}
+        </div>
+        <button class="generate-btn" onclick="event.stopPropagation();generateFicha(${idx},this)">✦ GENERAR FICHA SIP CON IA</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function openModal(idx) {
+  const s = STUDENTS[idx];
+  document.getElementById('modal-name').textContent = s.nombre;
+  document.getElementById('modal-sub').textContent = `${s.rut !== 'nan' ? s.rut : 'RUT no registrado'} · ${s.curso} · ${s.area_interes || 'Área no declarada'}`;
+  document.getElementById('modal-avatar').textContent = initials(s.nombre);
+  renderModalBody(s, idx);
+  document.getElementById('modalBg').classList.add('open');
+}
+
+function renderModalBody(s, idx) {
+  const n = s.notas;
+  const years = ['2023','2024','2025'];
+  const vals = years.map(y => n[y]).filter(Boolean);
+  const maxV = Math.max(...vals, 7);
+
+  const bars = years.map(y => {
+    const v = n[y];
+    if (!v) return '';
+    const h = Math.max(8, Math.round((v/maxV)*52));
+    const bg = v >= 6.0 ? '#1a6b3c' : v >= 5.5 ? '#C8921A' : '#C8102E';
+    return `<div class="tbar-col">
+      <div class="tbar" style="height:${h}px;background:${bg}"><span class="tbar-v">${v.toFixed(1)}</span></div>
+      <div class="tbar-lbl">${y}</div>
+    </div>`;
+  }).join('');
+
+  const estBar = n['2026_est'] ? (() => {
+    const v = n['2026_est'];
+    const h = Math.max(8, Math.round((v/maxV)*52));
+    return `<div class="tbar-col">
+      <div class="tbar est" style="height:${h}px"><span class="tbar-v">${v.toFixed(1)}</span></div>
+      <div class="tbar-lbl">2026*</div>
+    </div>`;
+  })() : '';
+
+  const trendNote = (() => {
+    if (vals.length < 2) return '';
+    const diff = vals[vals.length-1] - vals[0];
+    if (diff > 0.3) return '📈 Tendencia académica ascendente — potencial a fortalecer';
+    if (diff < -0.3) return '📉 Tendencia descendente — requiere seguimiento tutorial';
+    return '➡️ Trayectoria estable a lo largo de la enseñanza media';
+  })();
+
+  const careersHTML = s.carreras.length
+    ? s.carreras.map(c => `<span class="tag">${c}</span>`).join('')
+    : '<span style="color:var(--muted);font-size:0.8rem;font-style:italic">Sin carreras declaradas</span>';
+
+  document.getElementById('modal-body').innerHTML = `
+    <div class="fs">
+      <div class="fs-title">📊 Hitos Académicos — NEM & Ranking</div>
+      <div class="fs-grid three">
+        <div class="fi"><span class="fi-lbl">Promedio hasta III°</span><span class="fi-val">${n.promedio ? n.promedio.toFixed(2) : '—'}</span></div>
+        <div class="fi"><span class="fi-lbl">NEM (hasta III°)</span><span class="fi-val">${s.nem ? Math.round(s.nem) : '—'}</span></div>
+        <div class="fi"><span class="fi-lbl">Ranking (hasta III°)</span><span class="fi-val">${s.ranking ? Math.round(s.ranking) : '—'}</span></div>
+      </div>
+      <div class="trend-wrap">
+        <div class="trend-label">Trayectoria anual de calificaciones · * estimado 2026</div>
+        <div class="trend-bars">${bars}${estBar}</div>
+        <div class="trend-note">${trendNote}</div>
+      </div>
+    </div>
+
+    <div class="fs">
+      <div class="fs-title">🎯 Proyección Vocacional</div>
+      <div class="fs-grid" style="margin-bottom:10px">
+        <div class="fi"><span class="fi-lbl">Área de interés</span><span class="fi-val">${s.area_interes || '—'}</span></div>
+        <div class="fi"><span class="fi-lbl">Interés en Pedagogía</span><span class="fi-val">${s.quiere_pedagogia && !['','nan'].includes(s.quiere_pedagogia.toLowerCase()) ? '✅ Sí declara interés' : 'No declarado'}</span></div>
+        ${s.pueblo_originario && !['','nan'].includes(s.pueblo_originario.toLowerCase()) ? `<div class="fi"><span class="fi-lbl">Pueblo Originario</span><span class="fi-val">🪶 Sí</span></div>` : ''}
+      </div>
+      <div class="fi-lbl" style="margin-bottom:6px">Carreras de interés declaradas</div>
+      <div class="careers-wrap">${careersHTML}</div>
+    </div>
+
+    <div class="fs">
+      <div class="fs-title">✦ Análisis Pedagógico — IA SIP</div>
+      <div id="ai-zone-${idx}">
+        <button class="generate-btn" style="max-width:320px" onclick="generateFicha(${idx},this)">Generar análisis completo con IA</button>
+      </div>
+    </div>
+
+    <div class="fs">
+      <div class="fs-title">📋 Bitácora de Tutoría 2026</div>
+      <table class="bitacora-table">
+        <thead><tr>
+          <th style="width:110px">Fecha</th>
+          <th>Observaciones y Compromisos</th>
+          <th style="width:90px">Docente</th>
+        </tr></thead>
+        <tbody>
+          ${[1,2,3,4,5].map(()=>`<tr>
+            <td style="height:36px"></td><td></td><td></td>
+          </tr>`).join('')}
+        </tbody>
+      </table>
+      <div style="font-size:0.68rem;color:var(--muted);margin-top:6px;font-weight:500">Colegio Presidente José Joaquín Prieto · SIP Red de Colegios · Gestión Curricular 2026 · Confidencial</div>
+    </div>`;
+}
+
+async function generateFicha(idx, btn) {
+  const s = STUDENTS[idx];
+  const zoneId = `ai-zone-${idx}`;
+  const zone = document.getElementById(zoneId);
+  if (!zone) return;
+
+  btn.disabled = true;
+  btn.textContent = 'Generando análisis…';
+  zone.innerHTML = `<div class="ai-loading"><div class="dots"><span></span><span></span><span></span></div><span>Analizando perfil estudiantil con IA SIP…</span></div>`;
+
+  const carrerasStr = s.carreras.length ? s.carreras.join(', ') : 'No declaradas';
+  const notasStr = Object.entries(s.notas)
+    .filter(([k,v]) => v !== null && v !== undefined)
+    .map(([k,v]) => `${k.replace('_est',' (est.)')}: ${v}`)
+    .join(' | ');
+
+  const prompt = `Eres un orientador educativo experto del Colegio Presidente José Joaquín Prieto, perteneciente a la SIP Red de Colegios, institución chilena con historia desde 1856, dedicada a educar con excelencia y valores. Tu rol es generar una ficha pedagógica clara, empática y orientadora para el profesor jefe.
+
+DATOS DEL ESTUDIANTE:
+• Nombre: ${s.nombre}
+• Curso: ${s.curso} — SIP Red de Colegios — Año 2026
+• RUT: ${s.rut}
+• Área de interés declarada: ${s.area_interes || 'No declarada'}
+• Trayectoria de calificaciones: ${notasStr || 'Sin datos registrados'}
+• NEM (hasta III°): ${s.nem || 'Sin datos'}
+• Ranking (hasta III°): ${s.ranking || 'Sin datos'}
+• Carreras de interés: ${carrerasStr}
+• Interés declarado en Pedagogía: ${s.quiere_pedagogia || 'No'}
+• Pertenece a pueblo originario: ${s.pueblo_originario || 'No'}
+
+Genera el análisis en texto estructurado SOLO CON ESTAS SECCIONES (en mayúsculas, sin markdown):
+
+ANÁLISIS DE TRAYECTORIA ACADÉMICA
+(4-5 líneas. Interpreta la evolución de notas, identifica tendencias. Menciona NEM y Ranking en contexto PAES. Identifica fortalezas o puntos de atención.)
+
+PERFIL E INTERESES VOCACIONALES
+(3-4 líneas. Comenta el área de interés y las carreras declaradas. Si hay coherencia entre área e interés, señálalo. Si hay dispersión o indefinición, abórdalo con empatía.)
+
+RECOMENDACIONES DE ACOMPAÑAMIENTO TUTORIAL
+(Lista de 3-4 acciones concretas y empáticas que el profesor jefe puede implementar. Formato: "1. …", "2. …", etc.)
+
+ALERTAS O ASPECTOS PRIORITARIOS
+(2-3 líneas. Si hay riesgos académicos, señálalos con tacto. Si el/la estudiante tiene buen desempeño, sugiere cómo potenciarlo. Mencionar si aplica el enfoque de equidad SIP para pueblos originarios u otras consideraciones.)
+
+Mantén un tono profesional, cálido y esperanzador, acorde a la misión de la SIP de creer en el potencial de cada estudiante.`;
+
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        messages: [{ role: 'user', content: prompt }]
+      })
+    });
+    const data = await res.json();
+    const text = data.content?.map(b => b.text||'').join('') || 'Error al generar el análisis.';
+    const safe = text.replace(/`/g,'\\`').replace(/\$/g,'\\$');
+    zone.innerHTML = `
+      <div class="ai-out">${text}</div>
+      <div class="ai-actions">
+        <button class="btn-copy" onclick="copyAI(this, \`${safe}\`)">📋 Copiar texto</button>
+        <button class="btn-print" onclick="window.print()">🖨 Imprimir ficha</button>
+      </div>`;
+  } catch(e) {
+    zone.innerHTML = `<div class="ai-out" style="border-left-color:var(--sip-red);color:var(--sip-red)">Error de conexión. Verifique su conexión e intente nuevamente.</div>`;
+  }
+}
+
+function copyAI(btn, text) {
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = '✅ Copiado';
+    setTimeout(() => btn.textContent = '📋 Copiar texto', 2500);
+  });
+}
+
+function closeModal() { document.getElementById('modalBg').classList.remove('open'); }
+function closeModalOutside(e) { if (e.target === document.getElementById('modalBg')) closeModal(); }
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+renderGrid();
+</script>
+</body>
+</html>
