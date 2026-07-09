@@ -102,34 +102,52 @@
   .qcard .lb small{display:block;font-weight:500;color:var(--muted);font-size:9px;margin-top:1px;}
 
   .wrap{margin:22px 0 60px;animation:fadeUp .7s ease both;}
-  .chat{background:var(--card);border:1px solid var(--border);border-radius:26px;overflow:hidden;box-shadow:var(--shadow);display:flex;flex-direction:column;height:62vh;min-height:460px;}
+  .chat{position:relative;background:var(--card);border:1px solid #e7edf8;border-radius:24px;overflow:hidden;
+    box-shadow:0 34px 74px -36px rgba(11,61,145,.5),0 2px 10px -5px rgba(11,61,145,.12);display:flex;flex-direction:column;height:64vh;min-height:470px;}
+  .chat.fs{position:fixed;inset:0;z-index:900;height:100dvh;min-height:0;border-radius:0;border:none;max-width:none;box-shadow:none;}
   .chead{background:var(--grad-azul);color:#fff;padding:14px 18px;display:flex;align-items:center;gap:12px;position:relative;}
   .chead .badge{width:38px;height:38px;object-fit:contain;}
-  .chead .h{font-weight:800;font-family:'Montserrat',sans-serif;}
-  .chead .s{font-size:11px;color:#c9d9ff;display:flex;align-items:center;gap:5px;}
+  .chead .h{font-weight:800;font-family:'Montserrat',sans-serif;letter-spacing:.2px;}
+  .chead .s{font-size:11px;color:#cfe0ff;display:flex;align-items:center;gap:5px;}
   .chead .dot{width:7px;height:7px;border-radius:50%;background:#34e39b;box-shadow:0 0 0 3px rgba(52,227,155,.25);}
-  #log{flex:1;overflow-y:auto;padding:18px;display:flex;flex-direction:column;gap:13px;
-    background:radial-gradient(700px 300px at 100% 0%, #f2f7ff, transparent), #f7f9fe;}
-  .row{display:flex;align-items:flex-end;gap:9px;animation:fadeUp .28s ease both;}
+  .chead .fsbtn{margin-left:auto;width:38px;height:38px;display:flex;align-items:center;justify-content:center;
+    background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.24);border-radius:12px;color:#fff;cursor:pointer;transition:.15s;flex-shrink:0;}
+  .chead .fsbtn:hover{background:rgba(255,255,255,.28);transform:translateY(-1px);}
+  .chead .fsbtn svg{width:18px;height:18px;}
+  #log{flex:1;position:relative;overflow-y:auto;padding:20px 18px;display:flex;flex-direction:column;gap:14px;scroll-behavior:smooth;
+    background:radial-gradient(900px 340px at 100% -6%, #eaf1ff, transparent), linear-gradient(#fbfcff,#f4f8ff);}
+  .row{display:flex;align-items:flex-end;gap:10px;animation:fadeUp .28s ease both;}
   .row.user{flex-direction:row-reverse;}
   .row .av{width:30px;height:30px;object-fit:contain;flex-shrink:0;}
-  .msg{max-width:80%;padding:12px 15px;border-radius:18px;font-size:14.5px;line-height:1.58;white-space:pre-wrap;}
-  .user .msg{background:linear-gradient(135deg,#1157c9,#0b3d91);color:#fff;border-bottom-right-radius:6px;box-shadow:0 8px 20px -10px rgba(11,61,145,.6);}
-  .bot .msg{background:#fff;border:1px solid var(--border);border-bottom-left-radius:6px;box-shadow:0 4px 14px -10px rgba(11,61,145,.3);}
+  .msg{max-width:82%;padding:13px 16px;border-radius:20px;font-size:14.5px;line-height:1.62;white-space:pre-wrap;}
+  .msg .mtext{display:block;} .msg .mtext + .mtext{margin-top:9px;}
+  .user .msg{background:linear-gradient(135deg,#2b6fe0,#0b3d91);color:#fff;border-bottom-right-radius:7px;box-shadow:0 12px 26px -12px rgba(11,61,145,.7);}
+  .bot .msg{background:#fff;border:1px solid #e9eef8;border-bottom-left-radius:7px;box-shadow:0 12px 28px -18px rgba(11,61,145,.38);}
+  .mailbtn{display:inline-flex;align-items:center;gap:9px;margin-top:13px;padding:11px 17px;border-radius:13px;
+    background:linear-gradient(135deg,#ea4335,#c5221f);color:#fff;font-weight:800;font-size:13px;text-decoration:none;
+    box-shadow:0 13px 28px -13px rgba(234,67,53,.75);transition:.15s;font-family:inherit;}
+  .mailbtn:hover{filter:brightness(1.06);transform:translateY(-1px);}
+  .mailbtn svg{width:18px;height:18px;flex-shrink:0;}
   .cites{margin-top:10px;display:flex;flex-wrap:wrap;gap:6px;}
   .cite{background:linear-gradient(135deg,#eef4ff,#e6efff);color:var(--azul);border:1px solid #d6e3ff;border-radius:999px;padding:3px 11px;font-size:11px;font-weight:700;}
   .typing{display:flex;gap:5px;padding:14px 16px;background:#fff;border:1px solid var(--border);border-radius:18px;border-bottom-left-radius:6px;}
   .tdot{width:7px;height:7px;border-radius:50%;background:#9fb0c8;animation:b 1s infinite ease-in-out;}
   .tdot:nth-child(2){animation-delay:.15s;}.tdot:nth-child(3){animation-delay:.3s;}
   @keyframes b{0%,80%,100%{transform:translateY(0);opacity:.5;}40%{transform:translateY(-5px);opacity:1;}}
-  .sugs{display:flex;flex-wrap:wrap;gap:8px;padding:13px 16px 2px;background:#fff;border-top:1px solid var(--border);}
-  .sug{border:1px solid #dfe7f5;color:var(--azul);background:linear-gradient(180deg,#fff,#f6f9ff);border-radius:999px;padding:8px 14px;font-size:12.5px;cursor:pointer;font-family:inherit;font-weight:600;transition:.15s;}
-  .sug:hover{background:#eef4ff;border-color:#bcd3ff;transform:translateY(-1px);}
-  form{display:flex;gap:10px;padding:14px 16px;background:#fff;}
-  input[type=text]{flex:1;padding:13px 16px;border:1px solid var(--border);border-radius:14px;font-size:14.5px;outline:none;font-family:inherit;background:#f8fafe;transition:.15s;}
-  input[type=text]:focus{border-color:var(--cyan);background:#fff;box-shadow:0 0 0 4px rgba(34,195,230,.14);}
-  button.send{background:linear-gradient(135deg,#1157c9,#0b3d91);color:#fff;border:none;border-radius:14px;padding:0 18px;font-weight:800;cursor:pointer;font-size:17px;transition:.15s;box-shadow:0 8px 20px -10px rgba(11,61,145,.7);}
-  button.send:hover{filter:brightness(1.08);} button.send:disabled{opacity:.45;cursor:default;box-shadow:none;}
+  .sugs{display:flex;flex-wrap:wrap;gap:8px;padding:14px 16px 4px;background:#fff;border-top:1px solid #eef2f9;}
+  .sug{border:1px solid #e2e9f6;color:var(--azul);background:#f6f9ff;border-radius:999px;padding:8px 15px;font-size:12.5px;cursor:pointer;font-family:inherit;font-weight:600;transition:.15s;}
+  .sug:hover{background:#e7f0ff;border-color:#bcd3ff;transform:translateY(-1px);box-shadow:0 8px 18px -12px rgba(17,87,201,.6);}
+  form{display:flex;align-items:center;gap:9px;padding:14px 16px;background:#fff;border-top:1px solid #eef2f9;}
+  input[type=text]{flex:1;padding:14px 20px;border:1px solid #e4eaf5;border-radius:999px;font-size:14.5px;outline:none;font-family:inherit;background:#f4f7fd;transition:.15s;}
+  input[type=text]:focus{border-color:var(--cyan);background:#fff;box-shadow:0 0 0 4px rgba(34,195,230,.15);}
+  button.send,button.mic{width:48px;height:48px;min-width:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;border:none;cursor:pointer;transition:.15s;font-family:inherit;}
+  button.mic{background:#eef3fc;color:var(--azul);border:1px solid #dfe7f5;}
+  button.mic:hover{background:#e2ecff;transform:translateY(-1px);}
+  button.mic.rec{background:#ffe4e4;color:#d92d2d;border-color:#f4b5b5;}
+  button.mic svg{width:20px;height:20px;}
+  button.send{background:linear-gradient(135deg,#2b6fe0,#0b3d91);color:#fff;box-shadow:0 12px 24px -11px rgba(11,61,145,.75);}
+  button.send svg{width:20px;height:20px;}
+  button.send:hover{filter:brightness(1.08);transform:translateY(-1px);} button.send:disabled{opacity:.45;cursor:default;box-shadow:none;}
   footer{max-width:1080px;margin:0 auto;padding:0 18px 48px;color:var(--muted);font-size:12px;text-align:center;line-height:1.7;}
   footer a{color:var(--azul);font-weight:600;}
 
@@ -140,7 +158,7 @@
   .cite{cursor:pointer;transition:.12s;}
   .cite:hover{background:#dbe7ff;border-color:#b9d1ff;transform:translateY(-1px);}
   /* Modal de fuente */
-  #srcModal{position:fixed;inset:0;z-index:200;display:none;align-items:center;justify-content:center;padding:20px;background:rgba(8,22,52,.55);backdrop-filter:blur(3px);}
+  #srcModal{position:fixed;inset:0;z-index:1200;display:none;align-items:center;justify-content:center;padding:20px;background:rgba(8,22,52,.55);backdrop-filter:blur(3px);}
   #srcModal.open{display:flex;animation:fadeUp .2s ease both;}
   #srcModal .card{background:#fff;border-radius:22px;max-width:520px;width:100%;padding:24px;box-shadow:0 34px 70px -22px rgba(0,0,0,.55);}
   #srcModal .tag{font-size:11px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.7px;}
@@ -492,10 +510,11 @@
         <img class="badge" alt="ASE-IA" src="assets/ase-ia-badge.png"
              onerror="this.outerHTML='<svg class=\'badge\' viewBox=\'0 0 120 120\'><use href=\'#mascot\'/></svg>'">
         <div><div class="h">ASE-IA</div><div class="s"><span class="dot"></span> Asistente Escolar · en línea</div></div>
+        <button class="fsbtn" id="fsBtn" type="button" onclick="toggleFS()" title="Pantalla completa" aria-label="Pantalla completa"><span id="fsIcon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3M16 3h3a2 2 0 0 1 2 2v3M8 21H5a2 2 0 0 1-2-2v-3M16 21h3a2 2 0 0 0 2-2v-3"/></svg></span></button>
       </div>
       <div id="log"></div>
       <div class="sugs" id="sugs"></div>
-      <form id="f" autocomplete="off"><input id="q" type="text" placeholder="Escribe tu pregunta…" /><button class="mic" id="mic" type="button" aria-label="Hablar" title="Preguntar por voz"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10a7 7 0 0 0 14 0"/><line x1="12" y1="18.5" x2="12" y2="22"/><line x1="8.5" y1="22" x2="15.5" y2="22"/></svg></button><button class="send" type="submit" aria-label="Enviar">➤</button></form>
+      <form id="f" autocomplete="off"><input id="q" type="text" placeholder="Escribe tu pregunta…" /><button class="mic" id="mic" type="button" aria-label="Hablar" title="Preguntar por voz"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10a7 7 0 0 0 14 0"/><line x1="12" y1="18.5" x2="12" y2="22"/><line x1="8.5" y1="22" x2="15.5" y2="22"/></svg></button><button class="send" type="submit" aria-label="Enviar" title="Enviar"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M3.4 20.4l17.45-7.48a1 1 0 0 0 0-1.84L3.4 3.6a1 1 0 0 0-1.4.92V9.5c0 .5.37.93.87.99L14 12 2.87 13.51a1 1 0 0 0-.87.99v4.98a1 1 0 0 0 1.4.92z"/></svg></button></form>
     </div></div>
   </div>
 
@@ -1111,12 +1130,57 @@ function workspaceCards(query,role){
   return out;
 }
 
+/* ============ REDACTAR CORREOS · borrador humano + acceso a Gmail ============ */
+const GMAIL_COMPOSE="https://mail.google.com/mail/u/0/#inbox?compose=new";
+const GMAIL_ICON='<svg viewBox="0 0 24 24" fill="none"><rect x="2.5" y="4.5" width="19" height="15" rx="2.5" fill="#fff"/><path d="M3 6l9 6 9-6" stroke="#ea4335" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+/* Detecta la intención de redactar un correo y a quién va dirigido. */
+function emailIntent(q){
+  const n=normalize(q);
+  if(!/redact|escrib|correo|email|mail|mensaje/.test(n)) return null;
+  if(!/correo|email|mail/.test(n) && !/redact/.test(n)) return null;
+  if(/apoderad|padre|madre|familia|tutor legal/.test(n)) return "apoderado";
+  if(/estudiant|alumn|pupil/.test(n)) return "estudiante";
+  return null;
+}
+/* Borrador breve, cercano y con el mensaje central claro (campos entre [corchetes]). */
+function emailDraft(to){
+  if(to==="apoderado") return (
+`Aquí tienes un borrador breve y cercano. Reemplaza los campos entre [corchetes] y ábrelo en Gmail:
+
+Estimado/a apoderado/a de [nombre del estudiante]:
+
+Junto con saludar, me comunico para conversar sobre [motivo: por ejemplo, el desempeño o la conducta de su pupilo/a esta semana].
+
+[Cuéntele el hecho concreto en una o dos frases, con la fecha.] Me gustaría que trabajemos juntos para apoyarlo/a.
+
+Quedo atento/a a su respuesta y disponible en mi horario de atención.
+
+Saludos cordiales,
+[Su nombre] · [asignatura o cargo]`);
+  return (
+`Aquí tienes un borrador breve y cercano. Reemplaza los campos entre [corchetes] y ábrelo en Gmail:
+
+Hola [nombre]:
+
+Te escribo por [motivo: por ejemplo, la entrega de tu trabajo o una evaluación pendiente].
+
+[Explica en una frase qué necesitas de ti y para cuándo.] Cualquier duda, me avisas y lo vemos juntos.
+
+¡Saludos!
+[Su nombre] · [asignatura]`);
+}
+
 const convo=[];let ROLE="student";
 function answer(query){
   const nq=normalize(query);
   if(GREET.includes(nq)||GREET.some(g=>nq===g)) return {reply:"¡Hola! 👋 Soy ASE-IA. Pregúntame por evaluación, reglamentos, el PEI, protocolos, convivencia, tus tareas o fechas.",docCites:[],cards:[]};
   if(THANKS.some(t=>nq.startsWith(t))) return {reply:"¡Con gusto! 😊 Si necesitas algo más sobre el colegio, aquí estoy.",docCites:[],cards:[]};
   if(has(query,OUT_WORDS)) return {reply:OUT_SCOPE,docCites:[],cards:[]};
+  const et=emailIntent(query);                                  // ¿pide redactar un correo?
+  if(et){
+    const src=retrieve(query,ROLE).slice(0,1).map((c,i)=>({index:1,...c}));
+    return {reply:emailDraft(et), docCites:src, cards:[], mail:{url:GMAIL_COMPOSE}, email:true};
+  }
   const cards=workspaceCards(query,ROLE);                       // cuadros visuales (Workspace)
   const docs=retrieve(query,ROLE).map((c,i)=>({index:i+1,...c}));// reglamentos (fuentes citables)
   if(docs.length===0 && cards.length===0) return {reply:NO_INFO,docCites:[],cards:[]};
@@ -1243,10 +1307,15 @@ function add(text,who,extra){
   if(who==="bot") renderRich(msg,text); else msg.textContent=text;
   if(extra){
     if(extra.cards&&extra.cards.length)extra.cards.forEach(c=>msg.appendChild(listCardEl(c)));
+    if(extra.mail){const a=document.createElement("a");a.className="mailbtn";a.href=extra.mail.url;
+      a.target="_blank";a.rel="noopener";a.innerHTML=GMAIL_ICON+"<span>Abrir Gmail y redactar</span>";msg.appendChild(a);}
     if(extra.docCites&&extra.docCites.length){const box=el("div","srccards");
       extra.docCites.forEach(c=>box.appendChild(srcCardEl(c)));msg.appendChild(box);}
   }
-  row.appendChild(msg);log.appendChild(row);log.scrollTop=log.scrollHeight;
+  row.appendChild(msg);log.appendChild(row);
+  // La respuesta del bot se muestra desde su INICIO; los mensajes del usuario, al final.
+  if(who==="bot") requestAnimationFrame(()=>{log.scrollTop=Math.max(0,row.offsetTop-14);});
+  else log.scrollTop=log.scrollHeight;
 }
 let typingRow=null;
 function typing(on){
@@ -1257,6 +1326,35 @@ function typing(on){
   else if(!on&&typingRow){typingRow.remove();typingRow=null;}
 }
 function renderSugs(){const box=document.getElementById("sugs");box.innerHTML="";SUGS[ROLE].forEach(s=>{const b=el("button","sug",s);b.type="button";b.onclick=()=>ask(s);box.appendChild(b);});}
+/* ============ PANTALLA COMPLETA del chat (expandir / reducir) ============ */
+const FS_EXPAND='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3M16 3h3a2 2 0 0 1 2 2v3M8 21H5a2 2 0 0 1-2-2v-3M16 21h3a2 2 0 0 0 2-2v-3"/></svg>';
+const FS_COMPRESS='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3v3a2 2 0 0 1-2 2H3M21 8h-3a2 2 0 0 1-2-2V3M3 16h3a2 2 0 0 1 2 2v3M16 21v-3a2 2 0 0 1 2-2h3"/></svg>';
+let fsParent=null,fsNext=null;
+function toggleFS(){
+  const chat=document.querySelector(".chat");if(!chat)return;
+  const on=!chat.classList.contains("fs");
+  if(on){
+    // Se mueve a <body> para que position:fixed cubra TODA la pantalla
+    // (los ancestros animados con transform crearían un marco reducido).
+    fsParent=chat.parentNode;fsNext=chat.nextSibling;
+    document.body.appendChild(chat);chat.classList.add("fs");
+  }else{
+    chat.classList.remove("fs");
+    if(fsParent){fsParent.insertBefore(chat,fsNext);fsParent=null;fsNext=null;}
+  }
+  document.body.style.overflow=on?"hidden":"";
+  const btn=document.getElementById("fsBtn"),ic=document.getElementById("fsIcon");
+  if(ic)ic.innerHTML=on?FS_COMPRESS:FS_EXPAND;
+  if(btn){btn.title=on?"Reducir":"Pantalla completa";btn.setAttribute("aria-label",btn.title);}
+  requestAnimationFrame(()=>{log.scrollTop=log.scrollHeight;});
+}
+document.addEventListener("keydown",e=>{
+  if(e.key!=="Escape")return;
+  const modalOpen=document.getElementById("srcModal").classList.contains("open")||
+                  document.getElementById("gmodal").classList.contains("open");
+  const chat=document.querySelector(".chat.fs");
+  if(chat&&!modalOpen) toggleFS();   // Esc reduce solo si no hay un modal abierto encima
+});
 async function ask(text){
   text=(text||"").trim();if(!text)return;
   document.getElementById("sugs").innerHTML="";add(text,"user");document.getElementById("q").value="";typing(true);
@@ -1264,7 +1362,8 @@ async function ask(text){
   let reply=local.reply;
   // Modo online: si hay proxy y la consulta cita reglamentos, la IA redacta a
   // partir de ESAS fuentes (grounding). Si falla, usa la respuesta local.
-  if(AI_PROXY_URL && local.docCites.length){
+  // Los borradores de correo usan SIEMPRE la redacción local (humana y breve), sin pasar por la IA.
+  if(AI_PROXY_URL && local.docCites.length && !local.email){
     try{
       const res=await fetch(AI_PROXY_URL,{method:"POST",headers:{"Content-Type":"application/json"},
         body:JSON.stringify({question:text,role:ROLE,context:local.docCites.map(c=>({titulo:c.titulo,fragmento:c.fragmento})),history:convo.slice(-6)})});
@@ -1274,7 +1373,7 @@ async function ask(text){
   } else {
     await new Promise(r=>setTimeout(r,420));
   }
-  typing(false);add(reply,"bot",{docCites:local.docCites,cards:local.cards});  // renderRich limpia y arma tablas
+  typing(false);add(reply,"bot",{docCites:local.docCites,cards:local.cards,mail:local.mail});  // renderRich limpia y arma tablas
   convo.push({role:"user",content:text});convo.push({role:"assistant",content:clean(reply)});
 }
 
