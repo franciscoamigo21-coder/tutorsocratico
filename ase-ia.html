@@ -100,6 +100,46 @@
   .qcard .ic svg{width:24px;height:24px;display:block;}
   .qcard .lb{font-size:11px;font-weight:700;line-height:1.15;color:var(--text);}
   .qcard .lb small{display:block;font-weight:500;color:var(--muted);font-size:9px;margin-top:1px;}
+  /* Cabecera de accesos + botón Vista semanal */
+  .quickhead{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:0 0 8px;}
+  .quickhead h3{margin:0;}
+  .weekbtn{display:inline-flex;align-items:center;gap:7px;background:linear-gradient(135deg,#1a73e8,#0b3d91);color:#fff;
+    border:none;border-radius:999px;padding:7px 14px;font-size:12px;font-weight:800;cursor:pointer;font-family:inherit;
+    box-shadow:0 10px 22px -12px rgba(11,61,145,.75);transition:.15s;white-space:nowrap;}
+  .weekbtn:hover{filter:brightness(1.08);transform:translateY(-1px);}
+  /* Tarjeta desplegable (menú de accesos) */
+  .qcardm{cursor:pointer;}
+  .qcardm.open{border-color:#bcd3ff;box-shadow:0 14px 30px -16px rgba(11,61,145,.45);}
+  .qpop{position:absolute;top:calc(100% + 6px);left:50%;transform:translateX(-50%);min-width:210px;max-width:78vw;
+    background:#fff;border:1px solid #e7edf8;border-radius:14px;padding:6px;z-index:70;display:none;text-align:left;
+    box-shadow:0 24px 54px -22px rgba(11,61,145,.6),0 3px 10px -6px rgba(11,61,145,.25);}
+  .qcardm.open .qpop{display:block;animation:fadeUp .16s ease both;}
+  .qpop-i{display:flex;align-items:center;gap:9px;padding:9px 10px;border-radius:9px;font-size:12.5px;color:var(--text);
+    text-decoration:none;background:none;border:none;width:100%;text-align:left;cursor:pointer;font-family:inherit;font-weight:600;}
+  .qpop-i:hover{background:#eef4ff;}
+  .qpop-i .qp-em{font-size:15px;flex-shrink:0;}
+  .qpop-i .qp-soon{margin-left:auto;font-size:9px;color:#9aa7bd;background:#f0f3f9;border-radius:999px;padding:1px 7px;font-weight:700;}
+  .qpop-i.pending{color:var(--muted);cursor:default;}
+  /* Modal del Calendario JJP */
+  #calModal{position:fixed;inset:0;z-index:1300;display:none;align-items:center;justify-content:center;padding:16px;background:rgba(8,22,52,.6);backdrop-filter:blur(4px);}
+  #calModal.open{display:flex;animation:fadeUp .2s ease both;}
+  .calcard{background:#fff;border-radius:20px;width:100%;max-width:920px;height:min(86vh,760px);display:flex;flex-direction:column;overflow:hidden;box-shadow:0 34px 80px -22px rgba(0,0,0,.6);}
+  .calhead{background:var(--grad-azul);color:#fff;padding:13px 16px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;}
+  .calhead .calt{font-weight:800;font-family:'Montserrat',sans-serif;font-size:15px;}
+  .calhead .calsub{font-size:11.5px;color:#cfe0ff;}
+  .caltabs{display:flex;gap:6px;margin-left:auto;}
+  .caltabs button{background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.24);color:#fff;border-radius:999px;padding:6px 13px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;transition:.15s;}
+  .caltabs button:hover{background:rgba(255,255,255,.28);}
+  .caltabs button.on{background:#fff;color:var(--azul);}
+  .calx{width:34px;height:34px;border-radius:10px;background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.26);color:#fff;cursor:pointer;font-size:15px;flex-shrink:0;}
+  .calbody{flex:1;background:#f4f7fd;position:relative;}
+  .calbody iframe{width:100%;height:100%;border:0;display:block;}
+  .calfoot{padding:9px 16px;border-top:1px solid #eef2f9;font-size:11.5px;color:var(--muted);display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;}
+  .calfoot a{color:var(--azul);font-weight:700;}
+  @media(max-width:560px){ .calhead{gap:8px;} .caltabs{width:100%;margin-left:0;} .calcard{height:88vh;} }
+  /* Foto de perfil (Google) en avatares */
+  .rb-av img,.pm-av img{width:100%;height:100%;object-fit:cover;border-radius:50%;display:block;}
+  .gnote{margin-top:12px;font-size:12px;color:var(--muted);text-align:center;line-height:1.45;}
 
   .wrap{margin:22px 0 60px;animation:fadeUp .7s ease both;}
   .chat{position:relative;background:var(--card);border:1px solid #e7edf8;border-radius:24px;overflow:hidden;
@@ -514,8 +554,9 @@
           <span class="gg" aria-hidden="true">
             <svg viewBox="0 0 24 24" fill="none" stroke="#1157c9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 12a4.5 4.5 0 1 0 0-9 4.5 4.5 0 0 0 0 9z"/><path d="M4.5 20.5a7.5 7.5 0 0 1 15 0"/></svg>
           </span>
-          <span>Ingresar o crear mi perfil</span>
+          <span>Ingresar con mi correo institucional</span>
         </button>
+        <div class="gnote">Ingresa con los datos de tu correo institucional del colegio.</div>
         <div class="gdom" id="gdom"></div>
         <button type="button" class="gback" onclick="backToStep1()">← Elegir otro perfil</button>
       </div>
@@ -570,7 +611,10 @@
     </section>
 
     <section class="quick">
-      <h3 id="quickTitle">Accesos rápidos</h3>
+      <div class="quickhead">
+        <h3 id="quickTitle">Accesos rápidos</h3>
+        <button class="weekbtn" type="button" onclick="openCalendar('WEEK')" title="Ver la semana en curso">📅 Vista semanal</button>
+      </div>
       <div class="qgrid" id="qgrid"></div>
     </section>
 
@@ -596,7 +640,27 @@
   </footer>
 </div>
 
-<!-- Modal de acceso con Google (estilo cuenta de Google) -->
+<!-- Modal del Calendario del Colegio JJP (Vista semanal / Mes / Agenda) -->
+<div id="calModal" onclick="if(event.target===this)closeCal()">
+  <div class="calcard">
+    <div class="calhead">
+      <div><div class="calt">📅 Calendario del Colegio JJP</div><div class="calsub" id="calWeek"></div></div>
+      <div class="caltabs">
+        <button type="button" id="calTabWEEK" onclick="openCalendar('WEEK')">Semana</button>
+        <button type="button" id="calTabMONTH" onclick="openCalendar('MONTH')">Mes</button>
+        <button type="button" id="calTabAGENDA" onclick="openCalendar('AGENDA')">Agenda</button>
+      </div>
+      <button class="calx" type="button" onclick="closeCal()" aria-label="Cerrar">✕</button>
+    </div>
+    <div class="calbody"><iframe id="calFrame" title="Calendario del Colegio JJP" loading="lazy"></iframe></div>
+    <div class="calfoot">
+      <span>Se actualiza solo cada semana. La vista semanal muestra los eventos de la semana en curso.</span>
+      <a id="calFull" href="#" target="_blank" rel="noopener">Abrir en Google Calendar ↗</a>
+    </div>
+  </div>
+</div>
+
+<!-- Modal de acceso institucional -->
 <div id="gmodal" onclick="if(event.target===this)closeGoogle()">
   <div class="gcard2">
     <div class="gbrand"><img alt="ASE-IA" src="assets/ase-ia-badge.png" onerror="this.outerHTML='<svg viewBox=\'0 0 120 120\'><use href=\'#mascot\'/></svg>'"><span>ASE<b>-IA</b></span></div>
@@ -672,11 +736,41 @@ const ICONS={
  docs:'<svg viewBox="0 0 48 48"><path fill="#4285F4" d="M29 4H12a3 3 0 0 0-3 3v34a3 3 0 0 0 3 3h24a3 3 0 0 0 3-3V14z"/><path fill="#a1c2fa" d="M29 4l10 10H29z"/><rect x="16" y="20" width="16" height="2.3" rx="1.1" fill="#fff"/><rect x="16" y="24.5" width="16" height="2.3" rx="1.1" fill="#fff"/><rect x="16" y="29" width="11" height="2.3" rx="1.1" fill="#fff"/></svg>',
  slides:'<svg viewBox="0 0 48 48"><path fill="#f4b400" d="M29 4H12a3 3 0 0 0-3 3v34a3 3 0 0 0 3 3h24a3 3 0 0 0 3-3V14z"/><path fill="#f7cb4d" d="M29 4l10 10H29z"/><rect x="15" y="21" width="18" height="12" rx="1.5" fill="#fff"/></svg>',
  canva:'<svg viewBox="0 0 48 48"><defs><linearGradient id="cv" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#7d2ae8"/><stop offset=".5" stop-color="#00c4cc"/><stop offset="1" stop-color="#01f1c4"/></linearGradient></defs><circle cx="24" cy="24" r="20" fill="url(#cv)"/><text x="24" y="32" text-anchor="middle" font-family="Georgia,\'Times New Roman\',serif" font-weight="700" font-size="24" fill="#fff">C</text></svg>',
+ aptus:'<svg viewBox="0 0 48 48"><rect x="4" y="4" width="40" height="40" rx="11" fill="#e8412e"/><text x="24" y="32" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-weight="800" font-size="20" fill="#fff">A</text></svg>',
+ folder:'<svg viewBox="0 0 48 48"><path fill="#f6b429" d="M6 12a3 3 0 0 1 3-3h9l4 4h14a3 3 0 0 1 3 3v3H6z"/><path fill="#ffd15c" d="M6 17h36a3 3 0 0 1 3 3v16a3 3 0 0 1-3 3H9a3 3 0 0 1-3-3z"/></svg>',
+ doc:'<svg viewBox="0 0 48 48"><path fill="#1a73e8" d="M28 5H14a3 3 0 0 0-3 3v32a3 3 0 0 0 3 3h20a3 3 0 0 0 3-3V14z"/><path fill="#a7c7fb" d="M28 5l9 9h-9z"/><rect x="16" y="21" width="16" height="2.3" rx="1.1" fill="#fff"/><rect x="16" y="26" width="16" height="2.3" rx="1.1" fill="#fff"/><rect x="16" y="31" width="10" height="2.3" rx="1.1" fill="#fff"/></svg>',
+ calweek:'<svg viewBox="0 0 48 48"><rect x="7" y="10" width="34" height="31" rx="4" fill="#fff" stroke="#dadce0"/><rect x="7" y="10" width="34" height="8" rx="4" fill="#1a73e8"/><rect x="12" y="24" width="7" height="12" rx="1.5" fill="#4285F4"/><rect x="21" y="24" width="7" height="12" rx="1.5" fill="#7ba7f5"/><rect x="30" y="24" width="6" height="12" rx="1.5" fill="#4285F4"/></svg>',
 };
+/* ===== Calendario oficial del Colegio JJP (Google Calendar embebido) ===== */
+const CAL_ID="c_3f3bea78fc9c997f2e3f79f146ae9442ae5462c4d62094874df8610659a6e5c7@group.calendar.google.com";
+const CAL_FULL_URL="https://calendar.google.com/calendar/embed?src="+encodeURIComponent(CAL_ID)+"&ctz=America%2FSantiago";
+/* ===== Accesos desplegables · REEMPLAZA cada "#" por el enlace real ===== */
+const DRIVE_LINKS=[
+  {em:"🏫",lb:"Colegio JJP",url:"#"},          // TODO: pegar link de la carpeta
+  {em:"🕐",lb:"Horarios de Clase",url:"#"},     // TODO: pegar link
+  {em:"📚",lb:"Material por asignatura",url:"#"},// TODO
+  {em:"🗂️",lb:"Carpeta de mi curso",url:"#"},   // TODO
+];
+const DOCS_IMPORTANTES=[
+  {em:"📋",lb:"Planilla de Matrículas",url:"#"},              // TODO
+  {em:"🧾",lb:"Listas de estudiantes por electivo",url:"#"},  // TODO
+  {em:"📕",lb:"Reglamento Interno de Convivencia 2026",url:"#"}, // TODO
+  {em:"📗",lb:"Reglamento de Evaluación 2026",url:"#"},       // TODO
+  {em:"🛡️",lb:"Protocolos de actuación",url:"#"},            // TODO
+  {em:"📅",lb:"Calendario escolar 2026",url:"#"},            // TODO
+];
+const CAL_MENU=[
+  {em:"📆",lb:"Vista semanal",action:"weekcal"},
+  {em:"🗓️",lb:"Calendario del mes",action:"monthcal"},
+  {em:"📋",lb:"Agenda de la semana",action:"agendacal"},
+  {em:"↗",lb:"Abrir en Google Calendar",url:CAL_FULL_URL},
+];
 const B = {
   classroom:{lb:"Classroom",sub:"Tareas y clases",url:"https://classroom.google.com",icon:"classroom"},
-  drive:{lb:"Drive",sub:"Archivos",url:"https://drive.google.com",icon:"drive"},
-  calendar:{lb:"Calendar",sub:"Fechas",url:"https://calendar.google.com",icon:"calendar"},
+  drive:{lb:"Drive",sub:"Carpetas del colegio",icon:"drive",menu:DRIVE_LINKS},
+  calendar:{lb:"Calendar",sub:"Calendario JJP",icon:"calendar",menu:CAL_MENU},
+  aptus:{lb:"Aptus",sub:"Recursos y evaluaciones",url:"https://www.aptus.org/",icon:"aptus"},
+  docsimp:{lb:"Documentos",sub:"Importantes",icon:"folder",menu:DOCS_IMPORTANTES},
   correo:{lb:"Correo",sub:"Gmail",url:"https://mail.google.com",icon:"gmail"},
   alexia:{lb:"Alexia",sub:"Notas y asistencia",url:"https://josejoaquinprieto.alexiaeducl.com/ACWeb/paginas/Home/HomeProgDidactica.aspx",icon:"alexia"},
   notebook:{lb:"NotebookLM",sub:"Cuaderno IA",url:"https://notebooklm.google.com",icon:"notebook"},
@@ -699,10 +793,10 @@ const B = {
   mineduc:{lb:"Mineduc",sub:"Ministerio de Educación",url:"https://www.mineduc.cl",icon:"mineduc"},
 };
 const LINKS = {
-  student:[B.classroom,B.drive,B.calendar,B.correo,B.sheets,B.alexia,B.scholar,B.scielo,B.colegio],
-  teacher:[B.classroom,B.drive,B.calendar,B.correo,B.sheets,B.docs,B.slides,B.canva,B.notebook,B.gemini,B.chatgpt,B.buk,B.alexia,B.tutor],
-  admin:[B.classroom,B.drive,B.calendar,B.correo,B.sheets,B.docs,B.notebook,B.gemini,B.chatgpt,B.buk,B.mineduc,B.alexia],
-  guardian:[B.alexia,B.correo,B.whatsapp,B.instagram,B.participacion,B.colegio,B.sip],
+  student:[B.classroom,B.drive,B.calendar,B.correo,B.sheets,B.docsimp,B.alexia,B.scholar,B.scielo,B.colegio],
+  teacher:[B.classroom,B.drive,B.calendar,B.correo,B.sheets,B.docs,B.slides,B.canva,B.aptus,B.docsimp,B.notebook,B.gemini,B.chatgpt,B.buk,B.alexia,B.tutor],
+  admin:[B.classroom,B.drive,B.calendar,B.correo,B.sheets,B.docs,B.aptus,B.docsimp,B.notebook,B.gemini,B.chatgpt,B.buk,B.mineduc,B.alexia],
+  guardian:[B.alexia,B.calendar,B.correo,B.docsimp,B.whatsapp,B.instagram,B.participacion,B.colegio,B.sip],
 };
 const ROLE_LABEL={student:"Estudiante",teacher:"Docente",admin:"Administrativo",guardian:"Apoderado"};
 
@@ -714,13 +808,67 @@ function iconMarkup(b){
 function renderQuick(role){
   const g=document.getElementById("qgrid");g.innerHTML="";
   LINKS[role].forEach(b=>{
-    const a=document.createElement("a");a.className="qcard";a.href=b.url;a.target="_blank";a.rel="noopener";a.title=b.lb;
-    const ic=document.createElement("span");ic.className="ic";ic.innerHTML=iconMarkup(b);
-    const lb=document.createElement("span");lb.className="lb";lb.innerHTML=b.lb+"<small>"+b.sub+"</small>";
-    a.appendChild(ic);a.appendChild(lb);g.appendChild(a);
+    if(b.menu&&b.menu.length) g.appendChild(qcardMenu(b));
+    else{
+      const a=document.createElement("a");a.className="qcard";a.href=b.url;a.target="_blank";a.rel="noopener";a.title=b.lb;
+      const ic=document.createElement("span");ic.className="ic";ic.innerHTML=iconMarkup(b);
+      const lb=document.createElement("span");lb.className="lb";lb.innerHTML=b.lb+"<small>"+b.sub+"</small>";
+      a.appendChild(ic);a.appendChild(lb);g.appendChild(a);
+    }
   });
   document.getElementById("quickTitle").textContent="Accesos rápidos para "+ROLE_LABEL[role].toLowerCase()+"s";
 }
+/* Tarjeta de acceso con menú desplegable (Drive, Calendar, Documentos importantes…). */
+function qcardMenu(b){
+  const wrap=document.createElement("div");wrap.className="qcard qcardm";wrap.tabIndex=0;wrap.title=b.lb;
+  const ic=document.createElement("span");ic.className="ic";ic.innerHTML=iconMarkup(b);
+  const lb=document.createElement("span");lb.className="lb";lb.innerHTML=b.lb+"<small>"+b.sub+" ▾</small>";
+  wrap.appendChild(ic);wrap.appendChild(lb);
+  const pop=document.createElement("div");pop.className="qpop";
+  (b.menu||[]).forEach(it=>{
+    let n;
+    if(it.action){n=document.createElement("button");n.type="button";n.className="qpop-i";
+      n.onclick=(e)=>{e.stopPropagation();closeAllPops();runQuickAction(it.action);};}
+    else{n=document.createElement("a");n.className="qpop-i";n.href=it.url||"#";
+      if(!it.url||it.url==="#"){n.classList.add("pending");n.onclick=e=>{e.preventDefault();e.stopPropagation();};}
+      else{n.target="_blank";n.rel="noopener";n.onclick=e=>e.stopPropagation();}}
+    n.innerHTML='<span class="qp-em">'+(it.em||"📁")+'</span><span>'+it.lb+'</span>'+((!it.url||it.url==="#")&&!it.action?'<span class="qp-soon">pronto</span>':'');
+    pop.appendChild(n);
+  });
+  wrap.appendChild(pop);
+  wrap.onclick=(e)=>{e.stopPropagation();const open=wrap.classList.contains("open");closeAllPops();if(!open)wrap.classList.add("open");};
+  return wrap;
+}
+function closeAllPops(){document.querySelectorAll(".qcardm.open").forEach(x=>x.classList.remove("open"));}
+document.addEventListener("click",()=>closeAllPops());
+function runQuickAction(a){
+  if(a==="weekcal")openCalendar("WEEK");
+  else if(a==="monthcal")openCalendar("MONTH");
+  else if(a==="agendacal")openCalendar("AGENDA");
+}
+/* ============ CALENDARIO JJP · vista semanal / mes / agenda ============ */
+function calEmbedUrl(mode){
+  return "https://calendar.google.com/calendar/embed?src="+encodeURIComponent(CAL_ID)
+    +"&ctz=America%2FSantiago&mode="+mode+"&showTitle=0&showPrint=0&showTz=0&showCalendars=0&wkst=2";
+}
+function weekLabel(){
+  const now=new Date();const dow=(now.getDay()+6)%7;             // 0 = lunes
+  const mon=new Date(now);mon.setHours(0,0,0,0);mon.setDate(now.getDate()-dow);
+  const sun=new Date(mon);sun.setDate(mon.getDate()+6);
+  const f=d=>d.getDate()+" "+MESES[d.getMonth()];
+  return "Semana del "+f(mon)+" al "+f(sun);
+}
+let calMode="WEEK";
+function openCalendar(mode){
+  calMode=mode||"WEEK";
+  const fr=document.getElementById("calFrame");if(fr)fr.src=calEmbedUrl(calMode);
+  const w=document.getElementById("calWeek");if(w)w.textContent=(calMode==="WEEK"?weekLabel():"Calendario del Colegio · zona horaria de Santiago");
+  const full=document.getElementById("calFull");if(full)full.href=CAL_FULL_URL;
+  ["WEEK","MONTH","AGENDA"].forEach(m=>{const b=document.getElementById("calTab"+m);if(b)b.classList.toggle("on",m===calMode);});
+  document.getElementById("calModal").classList.add("open");document.body.style.overflow="hidden";
+}
+function closeCal(){const m=document.getElementById("calModal");if(m)m.classList.remove("open");document.body.style.overflow="";}
+document.addEventListener("keydown",e=>{if(e.key==="Escape")closeCal();});
 
 /* ============ BASE DE CONOCIMIENTO (documentos institucionales reales) ============ */
 const ALL=["student","teacher","guardian","admin"];
@@ -1457,19 +1605,26 @@ async function ask(text){
   convo.push({role:"user",content:text});convo.push({role:"assistant",content:clean(reply)});
 }
 
-let CURRENT={role:"student",email:"",name:""};
+let CURRENT={role:"student",email:"",name:"",photo:""};
 function niceName(email,name){
   if(name) return name;
   if(email) return email.split("@")[0].replace(/[._-]+/g," ").replace(/\b\w/g,c=>c.toUpperCase());
   return ROLE_LABEL[ROLE]||"Invitado";
 }
-function enter(role,email,name){
+/* Pone la foto del correo (Google) en un avatar; si no hay, muestra la inicial/emoji. */
+function avatarInto(elId,photo,fallback){
+  const e=document.getElementById(elId);if(!e)return;
+  if(photo){const img=new Image();img.src=photo;img.alt="";img.referrerPolicy="no-referrer";
+    img.onerror=()=>{e.textContent=fallback||"A";};e.textContent="";e.appendChild(img);}
+  else e.textContent=fallback||"A";
+}
+function enter(role,email,name,photo){
   ROLE=role;convo.length=0;log.innerHTML="";
-  CURRENT={role,email:email||"",name:name||""};
+  CURRENT={role,email:email||"",name:name||"",photo:photo||""};
   const disp=niceName(email,name);
   document.getElementById("whoLabel").textContent=disp;
   document.getElementById("mailLabel").textContent=email||"";
-  document.getElementById("rbAv").textContent=(disp.trim()[0]||"A").toUpperCase();
+  avatarInto("rbAv",CURRENT.photo,(disp.trim()[0]||"A").toUpperCase());
   renderQuick(role);renderSugs();buildProfileMenu();
   const saludo=name?("¡Hola, "+name.split(" ")[0]+"! 👋"):"¡Hola! 👋";
   add(saludo+" Soy ASE-IA, tu Asistente Escolar del Colegio Presidente José Joaquín Prieto. Pregúntame por reglamentos, evaluación, el PEI, protocolos, convivencia, tareas o fechas.","bot");
@@ -1513,11 +1668,16 @@ function pmSection(icon,title,items,open){
   d.appendChild(sm);
   const list=el("div","pm-list");
   (items||[]).forEach(it=>{
-    let node;
-    if(it.url){node=document.createElement("a");node.href=it.url;node.target="_blank";node.rel="noopener";}
-    else{node=document.createElement("button");node.type="button";node.onclick=()=>{closeProfileMenu();ask(it.q||it.t);};}
-    node.className="pm-item";
-    node.appendChild(el("span","em",it.em||"·"));node.appendChild(el("span",null,it.t));
+    const label=it.t||it.lb;let node;
+    if(it.action){node=document.createElement("button");node.type="button";
+      node.onclick=()=>{closeProfileMenu();runQuickAction(it.action);};}
+    else if(it.url){node=document.createElement("a");node.href=it.url;
+      if(it.url==="#"){node.classList.add("pending");node.onclick=e=>e.preventDefault();}
+      else{node.target="_blank";node.rel="noopener";}}
+    else{node=document.createElement("button");node.type="button";node.onclick=()=>{closeProfileMenu();ask(it.q||label);};}
+    node.className="pm-item"+(it.url==="#"?" pending":"");
+    node.appendChild(el("span","em",it.em||"·"));node.appendChild(el("span",null,label));
+    if(it.url==="#"){const s=el("span","qp-soon","pronto");s.style.marginLeft="auto";node.appendChild(s);}
     list.appendChild(node);
   });
   d.appendChild(list);return d;
@@ -1549,11 +1709,29 @@ function buildProfileMenu(){
   document.getElementById("pmName").textContent=disp;
   document.getElementById("pmMail").textContent=CURRENT.email||"—";
   document.getElementById("pmRole").textContent=ROLE_LABEL[ROLE];
-  document.getElementById("pmAv").textContent=(LOGIN_INFO[ROLE]||{}).emo||"👤";
+  if(CURRENT.photo)avatarInto("pmAv",CURRENT.photo,null);
+  else document.getElementById("pmAv").textContent=(LOGIN_INFO[ROLE]||{}).emo||"👤";
   const body=document.getElementById("pmBody");body.innerHTML="";
+  const acts=[{em:"📅",t:"Calendario · Vista semanal",action:"weekcal"}].concat(ACTIONS[ROLE]||[]);
   body.appendChild(pmSection("🔎","Búsquedas frecuentes",(SUGS[ROLE]||[]).map(s=>({em:"·",t:s,q:s})),true));
-  body.appendChild(pmSection("⚡","Acciones frecuentes",ACTIONS[ROLE]||[],false));
+  body.appendChild(pmSection("⚡","Acciones frecuentes",acts,false));
+  body.appendChild(pmSection("📂","Documentos importantes",DOCS_IMPORTANTES,false));
   body.appendChild(pmPrefs());
+  body.appendChild(pmAbout());
+}
+function pmAbout(){
+  const d=el("details","pm-sec");
+  const sm=document.createElement("summary");
+  sm.innerHTML='<span class="ci">ℹ️</span><span>Ayuda y acerca de</span><span class="cx">▾</span>';
+  d.appendChild(sm);
+  const wrap=el("div","pm-list");
+  const b1=document.createElement("button");b1.type="button";b1.className="pm-item";
+  b1.appendChild(el("span","em","❓"));b1.appendChild(el("span",null,"¿Cómo funciona ASE-IA?"));
+  b1.onclick=()=>{closeProfileMenu();add("Soy ASE-IA, tu Asistente Escolar. Respondo solo con información oficial del colegio (Reglamento Interno, Reglamento de Evaluación, PEI, protocolos y calendario). No mantengo conversaciones cotidianas: pregúntame por normas, evaluación, convivencia, tareas o fechas. 🙂","bot");};
+  const b2=document.createElement("a");b2.className="pm-item";b2.href="https://www.josejoaquinprieto.cl";b2.target="_blank";b2.rel="noopener";
+  b2.appendChild(el("span","em","🌐"));b2.appendChild(el("span",null,"Sitio del colegio"));
+  wrap.appendChild(b1);wrap.appendChild(b2);
+  d.appendChild(wrap);return d;
 }
 function toggleProfileMenu(e){if(e)e.stopPropagation();
   const w=document.getElementById("rolewrap");const open=w.classList.toggle("open");
@@ -1664,7 +1842,8 @@ function setAuthMode(m){
   document.getElementById("gname").style.display=signup?"block":"none";
   document.getElementById("gmTitle").textContent=signup?"Crear tu perfil":"Iniciar sesión";
   document.getElementById("gmSub").textContent=signup
-    ? "Regístrate con tu correo y una contraseña" : "Ingresa con tu correo y contraseña";
+    ? "Regístrate con los datos de tu correo institucional"
+    : "Ingresa con los datos de tu correo institucional";
   document.getElementById("gSubmit").textContent=signup?"Crear perfil":"Ingresar";
   document.getElementById("gToggle").textContent=signup
     ? "¿Ya tienes perfil? Inicia sesión" : "¿Primera vez? Crear tu perfil";
@@ -1713,11 +1892,13 @@ function decodeJwt(t){try{return JSON.parse(decodeURIComponent(atob(t.split(".")
 function realGoogle(){
   const done=()=>{try{
     google.accounts.id.initialize({client_id:GOOGLE_CLIENT_ID,callback:r=>{
-      const email=((decodeJwt(r.credential).email)||"").toLowerCase();
+      const p=decodeJwt(r.credential);
+      const email=(p.email||"").toLowerCase();
       const need=DOMAIN[PENDING];
       if(!email){gDom("No se pudo leer el correo de Google.",true);return;}
       if(need&&email.split("@")[1]!==need){gDom("Ese perfil requiere una cuenta @"+need+".",true);return;}
-      enter(PENDING,email);
+      closeGoogle();
+      enter(PENDING,email,p.name||"",p.picture||"");   // name + FOTO del correo
     }});
     google.accounts.id.prompt();
   }catch(_){gDom("No se pudo iniciar Google. Intenta de nuevo.",true);}};
@@ -1745,11 +1926,17 @@ function playIntroSound(){
   }catch(_){}
 }
 function unlockAudioOnce(){ playIntroSound(); }
-function stopIntroSound(){
+/* Fade-out suave del sonido (evita el corte abrupto al terminar la intro). */
+function fadeIntro(ms){
   if(!introAudio)return;
-  const a=introAudio; let v=a.volume||0;
-  const id=setInterval(()=>{ v-=0.12; if(v<=0){ clearInterval(id); try{a.pause();}catch(_){} } else { try{a.volume=Math.max(0,v);}catch(_){} } },45);
+  const a=introAudio;const v0=a.volume||0;const steps=Math.max(8,Math.round(ms/50));let n=0;
+  if(a._fadeId)clearInterval(a._fadeId);
+  a._fadeId=setInterval(()=>{ n++;
+    if(n>=steps){clearInterval(a._fadeId);a._fadeId=null;try{a.volume=0;a.pause();}catch(_){}}
+    else{try{a.volume=Math.max(0,v0*(1-n/steps));}catch(_){}}
+  },50);
 }
+function stopIntroSound(){ fadeIntro(1200); }
 
 let introTimer=null;
 function skipIntro(){const i=document.getElementById("intro");if(!i||i.classList.contains("done"))return;
@@ -1777,11 +1964,14 @@ function skipIntro(){const i=document.getElementById("intro");if(!i||i.classList
   // La barra se sincroniza para llenarse justo al final (así nunca parece pegada).
   const bar=document.querySelector("#intro .ibar i");
   function syncBar(sec){ if(bar) bar.style.animationDuration=Math.max(2,sec-1).toFixed(2)+"s"; }
-  let dismiss=setTimeout(skipIntro,5500);
+  let dismiss=setTimeout(skipIntro,6000);
   a.addEventListener("loadedmetadata",()=>{
-    const dur=(isFinite(a.duration)&&a.duration>0)?Math.min(a.duration+0.4,7.5):5.5;
+    const dur=(isFinite(a.duration)&&a.duration>0)?Math.min(a.duration+0.4,8.5):6.0;
     syncBar(dur);
-    clearTimeout(dismiss); dismiss=setTimeout(skipIntro,dur*1000);
+    clearTimeout(dismiss);
+    // El sonido empieza a desvanecerse ~1,7 s antes del cierre → final tipo "fade out".
+    setTimeout(()=>fadeIntro(1700),Math.max(0,(dur-1.7))*1000);
+    dismiss=setTimeout(skipIntro,dur*1000);
   },{once:true});
   // Se puede tocar para entrar, pero no en el primer instante (deja lucir el logo y el sonido).
   const startT=Date.now();
