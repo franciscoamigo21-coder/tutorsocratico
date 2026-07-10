@@ -109,11 +109,15 @@
   .weekbtn:hover{filter:brightness(1.08);transform:translateY(-1px);}
   /* Tarjeta desplegable (menú de accesos) */
   .qcardm{cursor:pointer;}
-  .qcardm.open{border-color:#bcd3ff;box-shadow:0 14px 30px -16px rgba(11,61,145,.45);}
-  .qpop{position:absolute;top:calc(100% + 6px);left:50%;transform:translateX(-50%);min-width:210px;max-width:78vw;
-    background:#fff;border:1px solid #e7edf8;border-radius:14px;padding:6px;z-index:70;display:none;text-align:left;
-    box-shadow:0 24px 54px -22px rgba(11,61,145,.6),0 3px 10px -6px rgba(11,61,145,.25);}
+  .qcardm.open{border-color:#bcd3ff;box-shadow:0 14px 30px -16px rgba(11,61,145,.45);z-index:300;}
+  .qpop{position:absolute;top:calc(100% + 6px);left:50%;transform:translateX(-50%);min-width:216px;max-width:80vw;
+    background:#fff;border:1px solid #e7edf8;border-radius:14px;padding:6px;z-index:320;display:none;text-align:left;
+    box-shadow:0 26px 60px -20px rgba(11,61,145,.65),0 4px 12px -6px rgba(11,61,145,.3);}
   .qcardm.open .qpop{display:block;animation:fadeUp .16s ease both;}
+  .qpop-h{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:3px 5px 8px;border-bottom:1px solid #eef2f9;margin-bottom:5px;}
+  .qpop-t{font-size:10.5px;font-weight:800;color:var(--azul-ink);text-transform:uppercase;letter-spacing:.7px;}
+  .qpop-x{width:25px;height:25px;border-radius:8px;border:1px solid #e4eaf5;background:#f6f9ff;color:var(--muted);cursor:pointer;font-size:12px;line-height:1;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:.12s;}
+  .qpop-x:hover{background:#ffe7e7;color:#c5221f;border-color:#f4b5b5;}
   .qpop-i{display:flex;align-items:center;gap:9px;padding:9px 10px;border-radius:9px;font-size:12.5px;color:var(--text);
     text-decoration:none;background:none;border:none;width:100%;text-align:left;cursor:pointer;font-family:inherit;font-weight:600;}
   .qpop-i:hover{background:#eef4ff;}
@@ -825,6 +829,11 @@ function qcardMenu(b){
   const lb=document.createElement("span");lb.className="lb";lb.innerHTML=b.lb+"<small>"+b.sub+" ▾</small>";
   wrap.appendChild(ic);wrap.appendChild(lb);
   const pop=document.createElement("div");pop.className="qpop";
+  const ph=document.createElement("div");ph.className="qpop-h";
+  const pt=document.createElement("span");pt.className="qpop-t";pt.textContent=b.lb;
+  const px=document.createElement("button");px.type="button";px.className="qpop-x";px.innerHTML="✕";px.setAttribute("aria-label","Cerrar");
+  px.onclick=(e)=>{e.stopPropagation();closeAllPops();};
+  ph.appendChild(pt);ph.appendChild(px);pop.appendChild(ph);
   (b.menu||[]).forEach(it=>{
     let n;
     if(it.action){n=document.createElement("button");n.type="button";n.className="qpop-i";
@@ -1713,8 +1722,7 @@ function buildProfileMenu(){
   else document.getElementById("pmAv").textContent=(LOGIN_INFO[ROLE]||{}).emo||"👤";
   const body=document.getElementById("pmBody");body.innerHTML="";
   const acts=[{em:"📅",t:"Calendario · Vista semanal",action:"weekcal"}].concat(ACTIONS[ROLE]||[]);
-  body.appendChild(pmSection("🔎","Búsquedas frecuentes",(SUGS[ROLE]||[]).map(s=>({em:"·",t:s,q:s})),true));
-  body.appendChild(pmSection("⚡","Acciones frecuentes",acts,false));
+  body.appendChild(pmSection("⚡","Acciones frecuentes",acts,true));
   body.appendChild(pmSection("📂","Documentos importantes",DOCS_IMPORTANTES,false));
   body.appendChild(pmPrefs());
   body.appendChild(pmAbout());
