@@ -668,7 +668,7 @@
     <section class="quick">
       <div class="quickhead">
         <h3 id="quickTitle">Accesos rápidos</h3>
-        <button class="weekbtn" id="weekbtn" type="button" onclick="openCalendar('GRID')" title="Ver el horario de la semana en curso">📅 Vista semanal</button>
+        <button class="weekbtn" id="weekbtn" type="button" onclick="openCalendar('WEEK')" title="Ver el calendario JJP de la semana en curso">📅 Vista semanal</button>
       </div>
       <div class="qgrid" id="qgrid"></div>
     </section>
@@ -704,7 +704,7 @@
     <div class="calhead">
       <div><div class="calt">📅 Calendario del Colegio JJP</div><div class="calsub" id="calWeek"></div></div>
       <div class="caltabs">
-        <button type="button" id="calTabGRID" onclick="openCalendar('GRID')">Horario semanal</button>
+        <button type="button" id="calTabWEEK" onclick="openCalendar('WEEK')">Semana</button>
         <button type="button" id="calTabAGENDA" onclick="openCalendar('AGENDA')">Agenda</button>
         <button type="button" id="calTabMONTH" onclick="openCalendar('MONTH')">Mes</button>
       </div>
@@ -910,7 +910,7 @@ function qcardMenu(b){
 function closeAllPops(){document.querySelectorAll(".qcardm.open").forEach(x=>x.classList.remove("open"));}
 document.addEventListener("click",()=>closeAllPops());
 function runQuickAction(a){
-  if(a==="weekcal")openCalendar("GRID");
+  if(a==="weekcal")openCalendar("WEEK");
   else if(a==="monthcal")openCalendar("MONTH");
   else if(a==="agendacal")openCalendar("AGENDA");
   else if(a==="testremind")testReminder();
@@ -954,20 +954,19 @@ function renderWeekGrid(){
   if(inWeek.length===0)html+='<div class="wg-empty">Aún no hay actividades cargadas para esta semana.<br>Ábrelas en Google Calendar ↗ o agrégalas en la lista de eventos del colegio.</div>';
   grid.innerHTML=html;grid.scrollTop=0;   // arranca en las 08:00
 }
-let calMode="GRID";
+let calMode="WEEK";
 function openCalendar(mode){
   if(!STAFF(ROLE))return;                       // el Calendario JJP es solo para funcionarios
-  calMode=mode||"GRID";
-  const grid=document.getElementById("calGrid"),fr=document.getElementById("calFrame");
-  if(calMode==="GRID"){ if(fr){fr.style.display="none";} if(grid){grid.style.display="block";} renderWeekGrid(); }
-  else{ if(grid){grid.style.display="none";} if(fr){fr.style.display="block";fr.src=calEmbedUrl(calMode);} }
+  calMode=mode||"WEEK";
+  const grid=document.getElementById("calGrid");if(grid)grid.style.display="none";
+  const fr=document.getElementById("calFrame");if(fr){fr.style.display="block";fr.src=calEmbedUrl(calMode);}  // calendario JJP real
   const w=document.getElementById("calWeek");
   if(w)w.textContent=(calMode==="MONTH"?"Calendario del Colegio · zona horaria de Santiago":weekLabel());
   const full=document.getElementById("calFull");if(full)full.href=CAL_FULL_URL;
-  ["GRID","AGENDA","MONTH"].forEach(m=>{const b=document.getElementById("calTab"+m);if(b)b.classList.toggle("on",m===calMode);});
+  ["WEEK","AGENDA","MONTH"].forEach(m=>{const b=document.getElementById("calTab"+m);if(b)b.classList.toggle("on",m===calMode);});
   document.getElementById("calModal").classList.add("open");document.body.style.overflow="hidden";
 }
-function reloadCal(){ if(calMode==="GRID")renderWeekGrid(); else{const fr=document.getElementById("calFrame");if(fr)fr.src=calEmbedUrl(calMode);} }
+function reloadCal(){const fr=document.getElementById("calFrame");if(fr)fr.src=calEmbedUrl(calMode);}
 function closeCal(){const m=document.getElementById("calModal");if(m)m.classList.remove("open");document.body.style.overflow="";}
 document.addEventListener("keydown",e=>{if(e.key==="Escape")closeCal();});
 
