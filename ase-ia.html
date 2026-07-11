@@ -57,7 +57,7 @@
   #gate .foot{margin-top:26px;font-size:11.5px;color:#9fb6e6;}
 
   /* ============ APP ============ */
-  #app{display:none;animation:fadeUp .4s ease both;}
+  #app{display:none;animation:fadeOnly .4s ease both;}
   .instbar{background:var(--grad-azul);color:#fff;border-bottom:3px solid var(--oro);}
   .instbar .in{max-width:1080px;margin:0 auto;padding:9px 18px;display:flex;align-items:center;gap:12px;justify-content:space-between;}
   .instbar .left{display:flex;align-items:center;gap:11px;}
@@ -86,7 +86,8 @@
   .hero p{margin:9px 0 0;color:var(--muted);font-size:14px;line-height:1.6;max-width:640px;}
   @media(max-width:620px){.hero .badge{display:none;}}
 
-  .quick{margin-top:12px;animation:fadeUp .6s ease both;position:relative;z-index:40;}
+  .quick{margin-top:12px;animation:fadeOnly .6s ease both;position:relative;z-index:40;}
+  @keyframes fadeOnly{from{opacity:0;}to{opacity:1;}}
   .quick h3{font-size:11px;text-transform:uppercase;letter-spacing:1.2px;color:var(--muted);margin:0 0 8px;font-weight:700;}
   .qgrid{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;}
   @media(max-width:900px){.qgrid{grid-template-columns:repeat(4,1fr);}}
@@ -120,6 +121,17 @@
   .qpop-t{font-size:10.5px;font-weight:800;color:var(--azul-ink);text-transform:uppercase;letter-spacing:.7px;}
   .qpop-x{width:25px;height:25px;border-radius:8px;border:1px solid #e4eaf5;background:#f6f9ff;color:var(--muted);cursor:pointer;font-size:12px;line-height:1;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:.12s;}
   .qpop-x:hover{background:#ffe7e7;color:#c5221f;border-color:#f4b5b5;}
+  /* En celular el desplegable es una hoja inferior DENTRO de la pantalla (sin scroll lateral) */
+  @media(max-width:640px){
+    /* la tarjeta no debe crear un "marco" para la hoja (backdrop-filter lo hacía) */
+    .qcardm{backdrop-filter:none !important;-webkit-backdrop-filter:none !important;}
+    .qpop{position:fixed;left:10px;right:10px;bottom:10px;top:auto;width:auto;max-width:none;transform:none;
+      max-height:66vh;border-radius:18px;padding:8px;z-index:1400;
+      box-shadow:0 -10px 40px -12px rgba(8,22,52,.45),0 20px 50px -20px rgba(11,61,145,.6);}
+    .qcardm.open .qpop{animation:fadeOnly .2s ease both;}
+    .qcardm.open::after{content:"";position:fixed;inset:0;background:rgba(8,22,52,.28);z-index:1390;}
+    .qpop-i{padding:11px 12px;font-size:13.5px;}
+  }
   .qpop-i{display:flex;align-items:center;gap:9px;padding:9px 10px;border-radius:9px;font-size:12.5px;color:var(--text);
     text-decoration:none;background:none;border:none;width:100%;text-align:left;cursor:pointer;font-family:inherit;font-weight:600;}
   .qpop-i:hover{background:#eef4ff;}
@@ -1057,23 +1069,27 @@ function renderHelp(role){
 /* ============ ASE-IA con voz · lee las respuestas (Web Speech API) ============ */
 const synth=window.speechSynthesis||null;
 function cleanForSpeech(t){return clean(t||"").replace(/[^\p{L}\p{N}\s.,;:¿?¡!()%°]/gu," ").replace(/\s{2,}/g," ").trim();}
-/* Prefiere una voz FEMENINA en español, agradable (tipo asistente). */
+/* Elige la voz más NATURAL y femenina en español disponible (tipo asistente/Alexa):
+   prioriza voces neuronales ("Natural"/"Online"/"Neural") y nombres femeninos. */
 function pickVoice(){
   if(!synth)return null;
-  const vs=synth.getVoices()||[];
-  const es=vs.filter(v=>/^es/i.test(v.lang));
-  const female=/(sabina|helena|elena|m[oó]nica|paulina|laura|marisol|luc[ií]a|lupe|conchita|isabela|female|femenina|mujer|google espa)/i;
-  return es.find(v=>female.test(v.name))
-      || es.find(v=>/google/i.test(v.name))            // "Google español" suele ser femenina
-      || es.find(v=>/^es[-_]?(cl|419|mx)/i.test(v.lang))
-      || es[0] || null;
+  const es=(synth.getVoices()||[]).filter(v=>/^es/i.test(v.lang));
+  if(!es.length)return null;
+  const fem=/(sabina|elvira|helena|elena|m[oó]nica|paulina|laura|marisol|luc[ií]a|lupe|conchita|isabela|dalia|ximena|female|femenina|mujer)/i;
+  const score=v=>{const n=(v.name||"").toLowerCase();let s=0;
+    if(/natural|neural|online/.test(n))s+=6;          // voces neuronales (las más naturales)
+    if(fem.test(n)||/google espa/.test(n))s+=4;        // voz femenina
+    if(/google/.test(n))s+=2;
+    if(/es[-_]?(cl|419|mx)/i.test(v.lang))s+=1;         // acento latinoamericano, más cercano
+    return s;};
+  return es.slice().sort((a,b)=>score(b)-score(a))[0];
 }
 function speak(text){
   if(!synth||!PREFS.voice)return;
   const t=cleanForSpeech(text);if(!t)return;
   try{synth.cancel();const u=new SpeechSynthesisUtterance(t);
-    const v=pickVoice();if(v)u.voice=v;u.lang=(v&&v.lang)||"es-ES";
-    u.rate=0.97;u.pitch=1.08;   // tono cálido y agradable
+    const v=pickVoice();if(v)u.voice=v;u.lang=(v&&v.lang)||"es-US";
+    u.rate=0.95;u.pitch=1.02;   // ritmo calmado y tono cálido, agradable de escuchar
     synth.speak(u);}catch(_){}
 }
 function stopSpeak(){try{if(synth)synth.cancel();}catch(_){}}
