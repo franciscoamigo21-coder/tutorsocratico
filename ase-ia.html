@@ -820,10 +820,11 @@ const CAL_FULL_URL="https://calendar.google.com/calendar/embed?src="+encodeURICo
 /* Planificaciones por asignatura (solo funcionarios). Links: pendientes. */
 const PLANIF_SUBJECTS=[
   {em:"📖",lb:"Lenguaje",url:"#"},          {em:"🔢",lb:"Matemáticas",url:"#"},
-  {em:"🔬",lb:"Ciencias",url:"#"},          {em:"🏺",lb:"Historia",url:"#"},
-  {em:"⚗️",lb:"Química",url:"#"},           {em:"🧲",lb:"Física",url:"#"},
-  {em:"🎵",lb:"Música",url:"#"},            {em:"🎨",lb:"Artes",url:"#"},
-  {em:"✝️",lb:"Religión",url:"#"},          {em:"💻",lb:"Tecnología",url:"#"},
+  {em:"🔤",lb:"Inglés",url:"#"},            {em:"🔬",lb:"Ciencias",url:"#"},
+  {em:"🏺",lb:"Historia",url:"#"},          {em:"⚗️",lb:"Química",url:"#"},
+  {em:"🧲",lb:"Física",url:"#"},            {em:"🎵",lb:"Música",url:"#"},
+  {em:"🎨",lb:"Artes",url:"#"},             {em:"✝️",lb:"Religión",url:"#"},
+  {em:"💻",lb:"Tecnología",url:"#"},        {em:"🧭",lb:"Orientación",url:"#"},
   {em:"🗣️",lb:"Consejo de curso",url:"#"}, {em:"⚽",lb:"Educación Física",url:"#"},
 ];
 const DRIVE_LINKS=[
@@ -969,7 +970,10 @@ function closeAllPops(){
 }
 document.addEventListener("click",()=>closeAllPops());
 window.addEventListener("resize",()=>closeAllPops());
-window.addEventListener("scroll",()=>closeAllPops(),true);
+// Solo cierra si el scroll es de la PÁGINA; si es dentro del desplegable, se puede mover libremente.
+window.addEventListener("scroll",(e)=>{const t=e.target;
+  if(t&&t.nodeType===1&&t.closest&&t.closest(".qpop"))return;
+  closeAllPops();},true);
 function runQuickAction(a){
   if(a==="weekcal")openCalendar("WEEK");
   else if(a==="monthcal")openCalendar("MONTH");
