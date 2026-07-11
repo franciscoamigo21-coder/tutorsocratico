@@ -86,7 +86,7 @@
   .hero p{margin:9px 0 0;color:var(--muted);font-size:14px;line-height:1.6;max-width:640px;}
   @media(max-width:620px){.hero .badge{display:none;}}
 
-  .quick{margin-top:12px;animation:fadeUp .6s ease both;}
+  .quick{margin-top:12px;animation:fadeUp .6s ease both;position:relative;z-index:40;}
   .quick h3{font-size:11px;text-transform:uppercase;letter-spacing:1.2px;color:var(--muted);margin:0 0 8px;font-weight:700;}
   .qgrid{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;}
   @media(max-width:900px){.qgrid{grid-template-columns:repeat(4,1fr);}}
@@ -111,6 +111,7 @@
   .qcardm{cursor:pointer;}
   .qcardm.open{border-color:#bcd3ff;box-shadow:0 14px 30px -16px rgba(11,61,145,.45);z-index:300;}
   .qpop{position:absolute;top:calc(100% + 6px);left:50%;transform:translateX(-50%);min-width:216px;max-width:80vw;
+    max-height:min(52vh,360px);overflow-y:auto;
     background:#fff;border:1px solid #e7edf8;border-radius:14px;padding:6px;z-index:320;display:none;text-align:left;
     box-shadow:0 26px 60px -20px rgba(11,61,145,.65),0 4px 12px -6px rgba(11,61,145,.3);}
   .qcardm.open .qpop{display:block;animation:fadeUp .16s ease both;}
@@ -144,6 +145,34 @@
   /* Foto de perfil (Google) en avatares */
   .rb-av img,.pm-av img{width:100%;height:100%;object-fit:cover;border-radius:50%;display:block;}
   .gnote{margin-top:12px;font-size:12px;color:var(--muted);text-align:center;line-height:1.45;}
+  /* Barra útil que cubre el pie de Google (reemplaza "Enviar comentarios a Google") */
+  .calmask{position:absolute;left:0;right:0;bottom:0;height:40px;background:#fff;border-top:1px solid #eef2f9;
+    display:flex;align-items:center;gap:8px;padding:0 12px;z-index:5;}
+  .calmask .cm-b{display:inline-flex;align-items:center;gap:6px;background:#eef4ff;border:1px solid #dbe6ff;color:var(--azul);
+    border-radius:999px;padding:6px 13px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;text-decoration:none;transition:.12s;}
+  .calmask .cm-b:hover{background:#e2ecff;}
+  .calmask .cm-sp{margin-left:auto;font-size:11px;color:var(--muted);}
+  /* Recordatorio emergente de ASE-IA (calendario) */
+  #toasts{position:fixed;top:16px;right:16px;z-index:2000;display:flex;flex-direction:column;gap:10px;max-width:92vw;}
+  .asetoast{display:flex;gap:11px;align-items:flex-start;width:340px;max-width:92vw;background:#fff;border:1px solid #e7edf8;
+    border-left:5px solid var(--azul);border-radius:16px;padding:13px 14px;box-shadow:0 24px 54px -20px rgba(11,61,145,.6);
+    transform:translateX(120%);opacity:0;transition:transform .4s cubic-bezier(.2,.8,.3,1),opacity .4s;}
+  .asetoast.show{transform:translateX(0);opacity:1;}
+  .asetoast .tav{width:40px;height:40px;flex-shrink:0;border-radius:50%;overflow:hidden;box-shadow:0 4px 12px -6px rgba(11,61,145,.6);}
+  .asetoast .tav img,.asetoast .tav svg{width:100%;height:100%;object-fit:contain;}
+  .asetoast .tk{font-size:11px;font-weight:800;color:var(--azul);text-transform:uppercase;letter-spacing:.6px;}
+  .asetoast .th{font-size:14px;font-weight:800;color:var(--azul-ink);line-height:1.2;margin:2px 0;}
+  .asetoast .ts{font-size:12.5px;color:var(--muted);line-height:1.4;}
+  .asetoast .tx{margin-left:auto;background:none;border:none;color:#9aa7bd;font-size:15px;cursor:pointer;padding:0 2px;flex-shrink:0;}
+  /* Panel didáctico (apoderados y estudiantes) */
+  .helpbox{margin-top:14px;background:linear-gradient(135deg,#eef5ff,#e7f0ff);border:1px solid #d7e6ff;border-radius:18px;
+    padding:15px 16px;animation:fadeUp .6s ease both;}
+  .helpbox h4{margin:0 0 3px;font-size:15px;color:var(--azul-ink);font-family:'Montserrat',sans-serif;}
+  .helpbox p{margin:0 0 11px;font-size:13px;color:var(--muted);line-height:1.45;}
+  .helprow{display:flex;flex-wrap:wrap;gap:8px;}
+  .helpbtn{display:inline-flex;align-items:center;gap:7px;background:#fff;border:1px solid #cfe0ff;color:var(--azul);
+    border-radius:999px;padding:8px 14px;font-size:12.5px;font-weight:700;cursor:pointer;font-family:inherit;transition:.14s;}
+  .helpbtn:hover{background:var(--azul);color:#fff;border-color:var(--azul);transform:translateY(-1px);}
 
   .wrap{margin:22px 0 60px;animation:fadeUp .7s ease both;}
   .chat{position:relative;background:var(--card);border:1px solid #e7edf8;border-radius:24px;overflow:hidden;
@@ -614,10 +643,12 @@
       </div>
     </section>
 
+    <div class="helpbox" id="helpbox" style="display:none"></div>
+
     <section class="quick">
       <div class="quickhead">
         <h3 id="quickTitle">Accesos rápidos</h3>
-        <button class="weekbtn" type="button" onclick="openCalendar('WEEK')" title="Ver la semana en curso">📅 Vista semanal</button>
+        <button class="weekbtn" id="weekbtn" type="button" onclick="openCalendar('AGENDA')" title="Ver las actividades de la semana en curso">📅 Vista semanal</button>
       </div>
       <div class="qgrid" id="qgrid"></div>
     </section>
@@ -644,22 +675,28 @@
   </footer>
 </div>
 
+<!-- Recordatorios emergentes de ASE-IA (calendario) -->
+<div id="toasts"></div>
+
 <!-- Modal del Calendario del Colegio JJP (Vista semanal / Mes / Agenda) -->
 <div id="calModal" onclick="if(event.target===this)closeCal()">
   <div class="calcard">
     <div class="calhead">
       <div><div class="calt">📅 Calendario del Colegio JJP</div><div class="calsub" id="calWeek"></div></div>
       <div class="caltabs">
-        <button type="button" id="calTabWEEK" onclick="openCalendar('WEEK')">Semana</button>
+        <button type="button" id="calTabAGENDA" onclick="openCalendar('AGENDA')">Esta semana</button>
+        <button type="button" id="calTabWEEK" onclick="openCalendar('WEEK')">Cuadrícula</button>
         <button type="button" id="calTabMONTH" onclick="openCalendar('MONTH')">Mes</button>
-        <button type="button" id="calTabAGENDA" onclick="openCalendar('AGENDA')">Agenda</button>
       </div>
       <button class="calx" type="button" onclick="closeCal()" aria-label="Cerrar">✕</button>
     </div>
-    <div class="calbody"><iframe id="calFrame" title="Calendario del Colegio JJP" loading="lazy"></iframe></div>
-    <div class="calfoot">
-      <span>Se actualiza solo cada semana. La vista semanal muestra los eventos de la semana en curso.</span>
-      <a id="calFull" href="#" target="_blank" rel="noopener">Abrir en Google Calendar ↗</a>
+    <div class="calbody">
+      <iframe id="calFrame" title="Calendario del Colegio JJP" loading="lazy"></iframe>
+      <div class="calmask">
+        <button class="cm-b" type="button" onclick="reloadCal()">🔄 Actualizar</button>
+        <a class="cm-b" id="calFull" href="#" target="_blank" rel="noopener">↗ Abrir en Google Calendar</a>
+        <span class="cm-sp">Zona horaria de Santiago · se actualiza solo</span>
+      </div>
     </div>
   </div>
 </div>
@@ -761,6 +798,7 @@ const DOCS_IMPORTANTES=[
   {em:"📕",lb:"Reglamento Interno de Convivencia 2026",url:"#"}, // TODO
   {em:"📗",lb:"Reglamento de Evaluación 2026",url:"#"},       // TODO
   {em:"🛡️",lb:"Protocolos de actuación",url:"#"},            // TODO
+  {em:"🩺",lb:"Licencias médicas",url:"#"},                  // TODO
   {em:"📅",lb:"Calendario escolar 2026",url:"#"},            // TODO
 ];
 const CAL_MENU=[
@@ -797,10 +835,10 @@ const B = {
   mineduc:{lb:"Mineduc",sub:"Ministerio de Educación",url:"https://www.mineduc.cl",icon:"mineduc"},
 };
 const LINKS = {
-  student:[B.classroom,B.drive,B.calendar,B.correo,B.sheets,B.docsimp,B.alexia,B.scholar,B.scielo,B.colegio],
+  student:[B.classroom,B.drive,B.correo,B.sheets,B.alexia,B.scholar,B.scielo,B.colegio],
   teacher:[B.classroom,B.drive,B.calendar,B.correo,B.sheets,B.docs,B.slides,B.canva,B.aptus,B.docsimp,B.notebook,B.gemini,B.chatgpt,B.buk,B.alexia,B.tutor],
   admin:[B.classroom,B.drive,B.calendar,B.correo,B.sheets,B.docs,B.aptus,B.docsimp,B.notebook,B.gemini,B.chatgpt,B.buk,B.mineduc,B.alexia],
-  guardian:[B.alexia,B.calendar,B.correo,B.docsimp,B.whatsapp,B.instagram,B.participacion,B.colegio,B.sip],
+  guardian:[B.alexia,B.correo,B.whatsapp,B.instagram,B.participacion,B.colegio,B.sip],
 };
 const ROLE_LABEL={student:"Estudiante",teacher:"Docente",admin:"Administrativo",guardian:"Apoderado"};
 
@@ -854,8 +892,10 @@ function runQuickAction(a){
   if(a==="weekcal")openCalendar("WEEK");
   else if(a==="monthcal")openCalendar("MONTH");
   else if(a==="agendacal")openCalendar("AGENDA");
+  else if(a==="testremind")testReminder();
 }
-/* ============ CALENDARIO JJP · vista semanal / mes / agenda ============ */
+/* ============ CALENDARIO JJP · agenda / semana / mes (solo funcionarios) ============ */
+const STAFF=r=>(r==="teacher"||r==="admin");
 function calEmbedUrl(mode){
   return "https://calendar.google.com/calendar/embed?src="+encodeURIComponent(CAL_ID)
     +"&ctz=America%2FSantiago&mode="+mode+"&showTitle=0&showPrint=0&showTz=0&showCalendars=0&wkst=2";
@@ -867,17 +907,93 @@ function weekLabel(){
   const f=d=>d.getDate()+" "+MESES[d.getMonth()];
   return "Semana del "+f(mon)+" al "+f(sun);
 }
-let calMode="WEEK";
+let calMode="AGENDA";
 function openCalendar(mode){
-  calMode=mode||"WEEK";
+  if(!STAFF(ROLE))return;                       // el Calendario JJP es solo para funcionarios
+  calMode=mode||"AGENDA";
   const fr=document.getElementById("calFrame");if(fr)fr.src=calEmbedUrl(calMode);
-  const w=document.getElementById("calWeek");if(w)w.textContent=(calMode==="WEEK"?weekLabel():"Calendario del Colegio · zona horaria de Santiago");
+  const w=document.getElementById("calWeek");
+  if(w)w.textContent=((calMode==="AGENDA"||calMode==="WEEK")?weekLabel():"Calendario del Colegio · zona horaria de Santiago");
   const full=document.getElementById("calFull");if(full)full.href=CAL_FULL_URL;
-  ["WEEK","MONTH","AGENDA"].forEach(m=>{const b=document.getElementById("calTab"+m);if(b)b.classList.toggle("on",m===calMode);});
+  ["AGENDA","WEEK","MONTH"].forEach(m=>{const b=document.getElementById("calTab"+m);if(b)b.classList.toggle("on",m===calMode);});
   document.getElementById("calModal").classList.add("open");document.body.style.overflow="hidden";
 }
+function reloadCal(){const fr=document.getElementById("calFrame");if(fr)fr.src=calEmbedUrl(calMode);}
 function closeCal(){const m=document.getElementById("calModal");if(m)m.classList.remove("open");document.body.style.overflow="";}
 document.addEventListener("keydown",e=>{if(e.key==="Escape")closeCal();});
+
+/* ============ RECORDATORIOS del calendario · ASE-IA te avisa ============
+   Avisa 10 min antes de cada actividad, con un mensaje emergente (el personaje
+   de ASE-IA) que aparece y se va solo. Funciona para estudiantes, docentes y
+   administrativos. REEMPLAZA/AGREGA aquí los eventos del calendario JJP:
+   {t:"Nombre", when:"AAAA-MM-DD HH:MM", roles:["teacher","admin","student"]} */
+let CAL_EVENTS=[
+  // Ejemplo (edítalo o bórralo): {t:"Reunión de coordinación", when:"2026-07-11 08:00", roles:["teacher","admin"]},
+];
+const REMIND_MIN=10;
+function fmtHM(t){const d=new Date(t);return String(d.getHours()).padStart(2,"0")+":"+String(d.getMinutes()).padStart(2,"0");}
+function aseToast(kicker,title,sub,ms){
+  const box=document.getElementById("toasts");if(!box)return;
+  const t=document.createElement("div");t.className="asetoast";
+  const av=document.createElement("div");av.className="tav";av.innerHTML=badgeMarkup(40);
+  const body=document.createElement("div");body.style.flex="1";body.style.minWidth="0";
+  body.appendChild(el("div","tk",kicker));body.appendChild(el("div","th",title));body.appendChild(el("div","ts",sub||""));
+  const x=document.createElement("button");x.className="tx";x.innerHTML="✕";x.setAttribute("aria-label","Cerrar");
+  const close=()=>{t.classList.remove("show");setTimeout(()=>t.remove(),420);};
+  x.onclick=close;
+  t.appendChild(av);t.appendChild(body);t.appendChild(x);box.appendChild(t);
+  requestAnimationFrame(()=>t.classList.add("show"));
+  setTimeout(close,ms||9000);
+}
+function showReminder(ev,t){aseToast("⏰ Recordatorio de ASE-IA","En "+REMIND_MIN+" minutos: "+ev.t,"Hoy a las "+fmtHM(t)+" · Calendario del Colegio",10000);}
+function checkReminders(){
+  if(!(ROLE==="student"||ROLE==="teacher"||ROLE==="admin"))return;
+  if(PREFS.reminders===false)return;
+  const now=Date.now();
+  CAL_EVENTS.forEach(ev=>{
+    if(ev.roles&&ev.roles.indexOf(ROLE)<0)return;
+    const t=Date.parse((ev.when||"").replace(" ","T"));if(!t)return;
+    const remindAt=t-REMIND_MIN*60000;
+    if(now>=remindAt&&now<remindAt+60000&&!ev._fired){ev._fired=true;showReminder(ev,t);}
+  });
+}
+let reminderTimer=null;
+function startReminders(){
+  if(reminderTimer)clearInterval(reminderTimer);
+  if(ROLE==="student"||ROLE==="teacher"||ROLE==="admin"){checkReminders();reminderTimer=setInterval(checkReminders,30000);}
+}
+function testReminder(){aseToast("⏰ Recordatorio de ASE-IA","En 10 minutos: ejemplo de actividad","Así te avisaré antes de cada evento del calendario. 🙂",9000);}
+
+/* ============ PANEL DIDÁCTICO · apoderados y estudiantes ============ */
+const HELP={
+  guardian:{title:"¿Nuevo por aquí? 👋 Le damos la bienvenida",
+    p:"ASE-IA es el asistente del colegio para apoderados. Escríbale su duda en palabras simples y le responde solo con información oficial. Toque una opción para conocerlo:",
+    btns:[
+      {t:"¿Cómo funciona?",m:"Muy fácil: escriba su pregunta en el chat de abajo (o use el micrófono 🎤) y ASE-IA le responde al instante, solo con información oficial del colegio. Si no la tiene, se lo dirá con honestidad. 🙂"},
+      {t:"¿Para qué me sirve?",m:"Para resolver sus dudas como apoderado/a: deberes, cómo justificar una inasistencia, atrasos, uniforme, cómo apelar una sanción, reuniones y la misión del colegio, entre otras."},
+      {t:"¿Qué puedo preguntar?",m:"Por ejemplo: «¿Cómo justifico una inasistencia?», «¿Cuáles son mis deberes como apoderado?» o «¿Qué pasa con los atrasos?». Toque una sugerencia de abajo para probar. 👇",sug:true},
+    ]},
+  student:{title:"¡Hola! 👋 Así funciona tu asistente",
+    p:"ASE-IA responde tus dudas del colegio con información oficial. Toca una opción para aprender a usarlo:",
+    btns:[
+      {t:"¿Cómo funciona?",m:"Escribe tu pregunta en el chat de abajo (o usa el micrófono 🎤) y te respondo al tiro, solo con información oficial del colegio. Si no la tengo, te lo digo. 🙂"},
+      {t:"¿Para qué me sirve?",m:"Para consultar el reglamento, la evaluación y las notas, tus deberes y derechos, la convivencia, tus tareas y las fechas importantes."},
+      {t:"¿Qué puedo preguntar?",m:"Por ejemplo: «¿Cuál es la nota mínima de aprobación?», «¿Puedo usar el celular en clases?» o «¿Cómo apelo una sanción?». Toca una sugerencia de abajo para probar. 👇",sug:true},
+    ]},
+};
+function renderHelp(role){
+  const box=document.getElementById("helpbox");if(!box)return;
+  const h=HELP[role];
+  if(!h){box.style.display="none";box.innerHTML="";return;}
+  box.style.display="block";box.innerHTML="";
+  box.appendChild(el("h4",null,h.title));
+  box.appendChild(el("p",null,h.p));
+  const row=el("div","helprow");
+  h.btns.forEach(bn=>{const b=document.createElement("button");b.type="button";b.className="helpbtn";b.textContent=bn.t;
+    b.onclick=()=>{add(bn.m,"bot");if(bn.sug)renderSugs();const c=document.querySelector('.chat');if(c)c.scrollIntoView({behavior:'smooth',block:'start'});};
+    row.appendChild(b);});
+  box.appendChild(row);
+}
 
 /* ============ BASE DE CONOCIMIENTO (documentos institucionales reales) ============ */
 const ALL=["student","teacher","guardian","admin"];
@@ -1634,10 +1750,11 @@ function enter(role,email,name,photo){
   document.getElementById("whoLabel").textContent=disp;
   document.getElementById("mailLabel").textContent=email||"";
   avatarInto("rbAv",CURRENT.photo,(disp.trim()[0]||"A").toUpperCase());
-  renderQuick(role);renderSugs();buildProfileMenu();
+  renderQuick(role);renderSugs();buildProfileMenu();renderHelp(role);
+  const wb=document.getElementById("weekbtn");if(wb)wb.style.display=STAFF(role)?"":"none";  // Calendario JJP: solo funcionarios
   const saludo=name?("¡Hola, "+name.split(" ")[0]+"! 👋"):"¡Hola! 👋";
   add(saludo+" Soy ASE-IA, tu Asistente Escolar del Colegio Presidente José Joaquín Prieto. Pregúntame por reglamentos, evaluación, el PEI, protocolos, convivencia, tareas o fechas.","bot");
-  applyPrefsOnEnter();
+  applyPrefsOnEnter();startReminders();
   history.replaceState({screen:"app"},"");  // reemplaza 'login': el botón atrás vuelve a elegir perfil
   showScreen("app");
 }
@@ -1649,6 +1766,7 @@ const PREFS_KEY="aseia_prefs_v1";
 function loadPrefs(){try{return JSON.parse(localStorage.getItem(PREFS_KEY))||{};}catch(_){return {};}}
 function savePrefs(){try{localStorage.setItem(PREFS_KEY,JSON.stringify(PREFS));}catch(_){}}
 let PREFS=loadPrefs();
+if(PREFS.reminders===undefined)PREFS.reminders=true;   // recordatorios activados por defecto
 function applyPrefsOnEnter(){
   document.body.classList.toggle("bigtext",!!PREFS.bigtext);
   if(PREFS.autofs){const chat=document.querySelector(".chat");if(chat&&!chat.classList.contains("fs"))setTimeout(toggleFS,320);}
@@ -1706,6 +1824,7 @@ function pmPrefs(){
   const wrap=el("div","pm-list");
   wrap.appendChild(prefRow("Texto más grande","bigtext",on=>document.body.classList.toggle("bigtext",on)));
   wrap.appendChild(prefRow("Abrir el chat en pantalla completa","autofs",null));
+  if(ROLE!=="guardian")wrap.appendChild(prefRow("Recordatorios del calendario","reminders",on=>{if(on)startReminders();}));
   const rc=document.createElement("button");rc.type="button";rc.className="pm-item";
   rc.appendChild(el("span","em","🧹"));rc.appendChild(el("span",null,"Reiniciar conversación"));
   rc.onclick=()=>{closeProfileMenu();resetChat();};
@@ -1721,9 +1840,12 @@ function buildProfileMenu(){
   if(CURRENT.photo)avatarInto("pmAv",CURRENT.photo,null);
   else document.getElementById("pmAv").textContent=(LOGIN_INFO[ROLE]||{}).emo||"👤";
   const body=document.getElementById("pmBody");body.innerHTML="";
-  const acts=[{em:"📅",t:"Calendario · Vista semanal",action:"weekcal"}].concat(ACTIONS[ROLE]||[]);
+  const acts=[];
+  if(STAFF(ROLE))acts.push({em:"📅",t:"Calendario · Vista semanal",action:"weekcal"});
+  if(ROLE!=="guardian")acts.push({em:"🔔",t:"Probar recordatorio",action:"testremind"});
+  acts.push.apply(acts,ACTIONS[ROLE]||[]);
   body.appendChild(pmSection("⚡","Acciones frecuentes",acts,true));
-  body.appendChild(pmSection("📂","Documentos importantes",DOCS_IMPORTANTES,false));
+  if(STAFF(ROLE))body.appendChild(pmSection("📂","Documentos importantes",DOCS_IMPORTANTES,false));
   body.appendChild(pmPrefs());
   body.appendChild(pmAbout());
 }
