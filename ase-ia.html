@@ -108,36 +108,28 @@
     border:none;border-radius:999px;padding:7px 14px;font-size:12px;font-weight:800;cursor:pointer;font-family:inherit;
     box-shadow:0 10px 22px -12px rgba(11,61,145,.75);transition:.15s;line-height:1.15;text-align:center;}
   .weekbtn:hover{filter:brightness(1.08);transform:translateY(-1px);}
-  /* Tarjeta desplegable (menú de accesos) */
+  /* Menú desplegable de accesos: se monta en <body> para ocupar el ancho real
+     (así nunca queda angosto ni provoca scroll lateral). Texto en una línea. */
   .qcardm{cursor:pointer;}
-  .qcardm.open{border-color:#bcd3ff;box-shadow:0 14px 30px -16px rgba(11,61,145,.45);z-index:300;}
-  .qpop{position:absolute;top:calc(100% + 6px);left:50%;transform:translateX(-50%);width:360px;max-width:92vw;
-    max-height:min(62vh,460px);overflow-y:auto;overflow-x:hidden;
-    background:#fff;border:1px solid #e7edf8;border-radius:14px;padding:7px;z-index:320;display:none;text-align:left;
-    box-shadow:0 26px 60px -20px rgba(11,61,145,.65),0 4px 12px -6px rgba(11,61,145,.3);}
-  .qcardm.open .qpop{display:block;animation:fadeUp .16s ease both;}
-  /* El texto se ve COMPLETO (envuelve); si sobran ítems, scroll vertical dentro del desplegable */
-  .qpop-i>span:nth-child(2){white-space:normal;line-height:1.3;min-width:0;flex:1;}
+  .qcardm.active{border-color:#bcd3ff;box-shadow:0 14px 30px -16px rgba(11,61,145,.45);}
+  .qpop{position:fixed;display:none;width:340px;max-width:calc(100vw - 20px);
+    max-height:min(70vh,520px);overflow-y:auto;overflow-x:hidden;
+    background:#fff;border:1px solid #e7edf8;border-radius:14px;padding:7px;z-index:1420;text-align:left;
+    box-shadow:0 26px 60px -20px rgba(11,61,145,.65),0 6px 16px -8px rgba(11,61,145,.3);}
+  .qpop.open{display:block;animation:fadeOnly .16s ease both;}
+  .qpop.sheet{left:10px;right:10px;bottom:10px;top:auto !important;width:auto;max-height:74vh;border-radius:18px;padding:8px;}
+  #qpopmask{position:fixed;inset:0;background:rgba(8,22,52,.34);z-index:1400;display:none;}
+  #qpopmask.on{display:block;}
   .qpop-h{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:3px 5px 8px;border-bottom:1px solid #eef2f9;margin-bottom:5px;}
-  .qpop-t{font-size:10.5px;font-weight:800;color:var(--azul-ink);text-transform:uppercase;letter-spacing:.7px;}
-  .qpop-x{width:25px;height:25px;border-radius:8px;border:1px solid #e4eaf5;background:#f6f9ff;color:var(--muted);cursor:pointer;font-size:12px;line-height:1;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:.12s;}
+  .qpop-t{font-size:11px;font-weight:800;color:var(--azul-ink);text-transform:uppercase;letter-spacing:.7px;}
+  .qpop-x{width:26px;height:26px;border-radius:8px;border:1px solid #e4eaf5;background:#f6f9ff;color:var(--muted);cursor:pointer;font-size:12px;line-height:1;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:.12s;}
   .qpop-x:hover{background:#ffe7e7;color:#c5221f;border-color:#f4b5b5;}
-  /* En celular el desplegable es una hoja inferior DENTRO de la pantalla (sin scroll lateral) */
-  @media(max-width:640px){
-    /* la tarjeta no debe crear un "marco" para la hoja (backdrop-filter lo hacía) */
-    .qcardm{backdrop-filter:none !important;-webkit-backdrop-filter:none !important;}
-    .qpop{position:fixed;left:10px;right:10px;bottom:10px;top:auto;width:auto;max-width:none;transform:none;
-      max-height:66vh;border-radius:18px;padding:8px;z-index:1400;
-      box-shadow:0 -10px 40px -12px rgba(8,22,52,.45),0 20px 50px -20px rgba(11,61,145,.6);}
-    .qcardm.open .qpop{animation:fadeOnly .2s ease both;}
-    .qcardm.open::after{content:"";position:fixed;inset:0;background:rgba(8,22,52,.28);z-index:1390;}
-    .qpop-i{padding:11px 12px;font-size:13.5px;}
-  }
   .qpop-i{display:flex;align-items:center;gap:10px;padding:11px 12px;border-radius:10px;font-size:13.5px;color:var(--text);
     text-decoration:none;background:none;border:none;width:100%;text-align:left;cursor:pointer;font-family:inherit;font-weight:600;}
   .qpop-i:hover{background:#eef4ff;}
-  .qpop-i .qp-em{font-size:15px;flex-shrink:0;}
-  .qpop-i .qp-soon{margin-left:auto;font-size:9px;color:#9aa7bd;background:#f0f3f9;border-radius:999px;padding:1px 7px;font-weight:700;}
+  .qpop-i .qp-em{font-size:16px;flex-shrink:0;}
+  .qpop-i>span:nth-child(2){white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0;flex:1;}
+  .qpop-i .qp-soon{margin-left:auto;font-size:9px;color:#9aa7bd;background:#f0f3f9;border-radius:999px;padding:1px 7px;font-weight:700;flex-shrink:0;}
   .qpop-i.pending{color:var(--muted);cursor:default;}
   /* Modal del Calendario JJP */
   #calModal{position:fixed;inset:0;z-index:1300;display:none;align-items:center;justify-content:center;padding:16px;background:rgba(8,22,52,.6);backdrop-filter:blur(4px);}
@@ -826,18 +818,18 @@ const DRIVE_LINKS=[
   {em:"🗂️",lb:"Carpeta de mi curso",url:"#"},   // TODO
 ];
 const DOCS_IMPORTANTES=[
-  {em:"📋",lb:"Planilla de Matrículas",url:"#"},              // TODO
-  {em:"🧾",lb:"Listas de estudiantes por electivo",url:"#"},  // TODO
-  {em:"📕",lb:"Reglamento Interno de Convivencia 2026",url:"#"}, // TODO
-  {em:"📗",lb:"Reglamento de Evaluación 2026",url:"#"},       // TODO
-  {em:"🛡️",lb:"Protocolos de actuación",url:"#"},            // TODO
-  {em:"🩺",lb:"Licencias médicas",url:"#"},                  // TODO
-  {em:"📅",lb:"Calendario escolar 2026",url:"#"},            // TODO
+  {em:"📋",lb:"Planilla de Matrículas",url:"#"},   // TODO
+  {em:"🧾",lb:"Listas por electivo",url:"#"},      // TODO
+  {em:"📕",lb:"Reglamento Interno",url:"#"},       // TODO
+  {em:"📗",lb:"Reglamento de Evaluación",url:"#"}, // TODO
+  {em:"🛡️",lb:"Protocolos",url:"#"},              // TODO
+  {em:"🩺",lb:"Licencias médicas",url:"#"},        // TODO
+  {em:"📅",lb:"Calendario escolar",url:"#"},       // TODO
 ];
 const CAL_MENU=[
-  {em:"📆",lb:"¿Qué eventos hay esta semana?",action:"weekcal"},
-  {em:"🗓️",lb:"Calendario del mes",action:"monthcal"},
-  {em:"📋",lb:"Agenda de la semana",action:"agendacal"},
+  {em:"📆",lb:"Esta semana",action:"weekcal"},
+  {em:"🗓️",lb:"Este mes",action:"monthcal"},
+  {em:"📋",lb:"Agenda",action:"agendacal"},
   {em:"↗",lb:"Abrir en Google Calendar",url:CAL_FULL_URL},
 ];
 const B = {
@@ -882,6 +874,8 @@ function iconMarkup(b){
 }
 function renderQuick(role){
   const g=document.getElementById("qgrid");g.innerHTML="";
+  document.querySelectorAll("body > .qpop").forEach(p=>p.remove());   // limpia desplegables anteriores del <body>
+  const mk=document.getElementById("qpopmask");if(mk)mk.classList.remove("on");
   LINKS[role].forEach(b=>{
     if(b.menu&&b.menu.length) g.appendChild(qcardMenu(b));
     else{
@@ -915,23 +909,36 @@ function qcardMenu(b){
     n.innerHTML='<span class="qp-em">'+(it.em||"📁")+'</span><span>'+it.lb+'</span>'+((!it.url||it.url==="#")&&!it.action?'<span class="qp-soon">pronto</span>':'');
     pop.appendChild(n);
   });
-  wrap.appendChild(pop);
-  wrap.onclick=(e)=>{e.stopPropagation();const open=wrap.classList.contains("open");closeAllPops();if(!open){wrap.classList.add("open");clampPop(pop);}};
+  pop.addEventListener("click",e=>e.stopPropagation());   // clic dentro no cierra
+  document.body.appendChild(pop);                          // montado en <body>: ocupa el ancho real
+  wrap._pop=pop;
+  wrap.onclick=(e)=>{e.stopPropagation();const isOpen=pop.classList.contains("open");closeAllPops();if(!isOpen)openPop(wrap,pop);};
   return wrap;
 }
-function closeAllPops(){document.querySelectorAll(".qcardm.open").forEach(x=>x.classList.remove("open"));}
-/* En escritorio, mantiene el desplegable dentro de la pantalla (sin scroll horizontal). */
-function clampPop(pop){
-  if(window.innerWidth<=640)return;                 // en celular es hoja inferior de ancho completo
-  pop.style.left="50%";pop.style.transform="translateX(-50%)";
-  requestAnimationFrame(()=>{
-    const r=pop.getBoundingClientRect(),M=10;let shift=0;
-    if(r.right>window.innerWidth-M)shift=(window.innerWidth-M)-r.right;
-    if(r.left+shift<M)shift=M-r.left;
-    if(shift)pop.style.transform="translateX(calc(-50% + "+Math.round(shift)+"px))";
-  });
+function popMask(){let m=document.getElementById("qpopmask");
+  if(!m){m=document.createElement("div");m.id="qpopmask";m.onclick=closeAllPops;document.body.appendChild(m);}return m;}
+function openPop(card,pop){
+  card.classList.add("active");
+  if(window.innerWidth<=640){                              // celular: hoja inferior de ancho completo
+    pop.classList.remove("sheet");pop.style.cssText="";     // limpia estilos de escritorio
+    pop.classList.add("open","sheet");popMask().classList.add("on");
+  }else{                                                    // escritorio: anclado bajo la tarjeta, dentro de la pantalla
+    pop.classList.remove("sheet");pop.classList.add("open");pop.style.width="340px";
+    const r=card.getBoundingClientRect(),M=10,pw=pop.offsetWidth;
+    let left=Math.max(M,Math.min(r.left+r.width/2-pw/2,window.innerWidth-pw-M));
+    let top=r.bottom+6;const ph=pop.offsetHeight;
+    if(top+ph>window.innerHeight-M)top=Math.max(M,r.top-ph-6);   // abre hacia arriba si no cabe abajo
+    pop.style.left=Math.round(left)+"px";pop.style.top=Math.round(top)+"px";pop.style.right="auto";pop.style.bottom="auto";
+  }
+}
+function closeAllPops(){
+  document.querySelectorAll(".qpop.open").forEach(p=>{p.classList.remove("open","sheet");p.style.cssText="";});
+  document.querySelectorAll(".qcardm.active").forEach(c=>c.classList.remove("active"));
+  const m=document.getElementById("qpopmask");if(m)m.classList.remove("on");
 }
 document.addEventListener("click",()=>closeAllPops());
+window.addEventListener("resize",()=>closeAllPops());
+window.addEventListener("scroll",()=>closeAllPops(),true);
 function runQuickAction(a){
   if(a==="weekcal")openCalendar("WEEK");
   else if(a==="monthcal")openCalendar("MONTH");
