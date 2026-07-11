@@ -105,7 +105,7 @@
   .quickhead h3{margin:0;}
   .weekbtn{display:inline-flex;align-items:center;gap:7px;background:linear-gradient(135deg,#1a73e8,#0b3d91);color:#fff;
     border:none;border-radius:999px;padding:7px 14px;font-size:12px;font-weight:800;cursor:pointer;font-family:inherit;
-    box-shadow:0 10px 22px -12px rgba(11,61,145,.75);transition:.15s;white-space:nowrap;}
+    box-shadow:0 10px 22px -12px rgba(11,61,145,.75);transition:.15s;line-height:1.15;text-align:center;}
   .weekbtn:hover{filter:brightness(1.08);transform:translateY(-1px);}
   /* Tarjeta desplegable (menú de accesos) */
   .qcardm{cursor:pointer;}
@@ -668,7 +668,7 @@
     <section class="quick">
       <div class="quickhead">
         <h3 id="quickTitle">Accesos rápidos</h3>
-        <button class="weekbtn" id="weekbtn" type="button" onclick="openCalendar('WEEK')" title="Ver el calendario JJP de la semana en curso">📅 Vista semanal</button>
+        <button class="weekbtn" id="weekbtn" type="button" onclick="openCalendar('WEEK')" title="Ver el calendario JJP de la semana en curso">📅 ¿Qué eventos hay esta semana?</button>
       </div>
       <div class="qgrid" id="qgrid"></div>
     </section>
@@ -711,7 +711,6 @@
       <button class="calx" type="button" onclick="closeCal()" aria-label="Cerrar">✕</button>
     </div>
     <div class="calbody">
-      <div id="calGrid" class="calgrid" style="display:none"></div>
       <iframe id="calFrame" title="Calendario del Colegio JJP" loading="lazy" style="display:none"></iframe>
       <div class="calmask">
         <button class="cm-b" type="button" onclick="reloadCal()">🔄 Actualizar</button>
@@ -823,7 +822,7 @@ const DOCS_IMPORTANTES=[
   {em:"📅",lb:"Calendario escolar 2026",url:"#"},            // TODO
 ];
 const CAL_MENU=[
-  {em:"📆",lb:"Vista semanal",action:"weekcal"},
+  {em:"📆",lb:"¿Qué eventos hay esta semana?",action:"weekcal"},
   {em:"🗓️",lb:"Calendario del mes",action:"monthcal"},
   {em:"📋",lb:"Agenda de la semana",action:"agendacal"},
   {em:"↗",lb:"Abrir en Google Calendar",url:CAL_FULL_URL},
@@ -918,8 +917,9 @@ function runQuickAction(a){
 /* ============ CALENDARIO JJP · agenda / semana / mes (solo funcionarios) ============ */
 const STAFF=r=>(r==="teacher"||r==="admin");
 function calEmbedUrl(mode){
+  // Mismo aspecto visual de Google Calendar, vinculado al calendario JJP.
   return "https://calendar.google.com/calendar/embed?src="+encodeURIComponent(CAL_ID)
-    +"&ctz=America%2FSantiago&mode="+mode+"&showTitle=0&showPrint=0&showTz=0&showCalendars=0&wkst=2";
+    +"&ctz=America%2FSantiago&mode="+mode+"&wkst=2&showPrint=0";
 }
 function weekLabel(){
   const now=new Date();const dow=(now.getDay()+6)%7;             // 0 = lunes
@@ -1057,12 +1057,24 @@ function renderHelp(role){
 /* ============ ASE-IA con voz · lee las respuestas (Web Speech API) ============ */
 const synth=window.speechSynthesis||null;
 function cleanForSpeech(t){return clean(t||"").replace(/[^\p{L}\p{N}\s.,;:¿?¡!()%°]/gu," ").replace(/\s{2,}/g," ").trim();}
-function pickVoice(){if(!synth)return null;const vs=synth.getVoices()||[];
-  return vs.find(v=>/^es[-_]?cl/i.test(v.lang))||vs.find(v=>/^es[-_]?(419|mx|us)/i.test(v.lang))||vs.find(v=>/^es/i.test(v.lang))||null;}
+/* Prefiere una voz FEMENINA en español, agradable (tipo asistente). */
+function pickVoice(){
+  if(!synth)return null;
+  const vs=synth.getVoices()||[];
+  const es=vs.filter(v=>/^es/i.test(v.lang));
+  const female=/(sabina|helena|elena|m[oó]nica|paulina|laura|marisol|luc[ií]a|lupe|conchita|isabela|female|femenina|mujer|google espa)/i;
+  return es.find(v=>female.test(v.name))
+      || es.find(v=>/google/i.test(v.name))            // "Google español" suele ser femenina
+      || es.find(v=>/^es[-_]?(cl|419|mx)/i.test(v.lang))
+      || es[0] || null;
+}
 function speak(text){
   if(!synth||!PREFS.voice)return;
   const t=cleanForSpeech(text);if(!t)return;
-  try{synth.cancel();const u=new SpeechSynthesisUtterance(t);u.lang="es-CL";u.rate=1;u.pitch=0.9;const v=pickVoice();if(v)u.voice=v;synth.speak(u);}catch(_){}
+  try{synth.cancel();const u=new SpeechSynthesisUtterance(t);
+    const v=pickVoice();if(v)u.voice=v;u.lang=(v&&v.lang)||"es-ES";
+    u.rate=0.97;u.pitch=1.08;   // tono cálido y agradable
+    synth.speak(u);}catch(_){}
 }
 function stopSpeak(){try{if(synth)synth.cancel();}catch(_){}}
 if(synth&&"onvoiceschanged" in synth){synth.onvoiceschanged=function(){};}
@@ -1936,7 +1948,7 @@ function buildProfileMenu(){
   else document.getElementById("pmAv").textContent=(LOGIN_INFO[ROLE]||{}).emo||"👤";
   const body=document.getElementById("pmBody");body.innerHTML="";
   const acts=[];
-  if(STAFF(ROLE))acts.push({em:"📅",t:"Calendario · Vista semanal",action:"weekcal"});
+  if(STAFF(ROLE))acts.push({em:"📅",t:"¿Qué eventos hay esta semana?",action:"weekcal"});
   if(ROLE!=="guardian")acts.push({em:"🔔",t:"Probar recordatorio",action:"testremind"});
   acts.push.apply(acts,ACTIONS[ROLE]||[]);
   body.appendChild(pmSection("⚡","Acciones frecuentes",acts,true));
