@@ -131,6 +131,12 @@
   .qpop-i>span:nth-child(2){white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0;flex:1;}
   .qpop-i .qp-soon{margin-left:auto;font-size:9px;color:#9aa7bd;background:#f0f3f9;border-radius:999px;padding:1px 7px;font-weight:700;flex-shrink:0;}
   .qpop-i.pending{color:var(--muted);cursor:default;}
+  /* Submenú (p. ej. Planificaciones → asignaturas) */
+  .qpop-parent .qp-caret{margin-left:auto;color:var(--muted);font-size:11px;transition:.2s;flex-shrink:0;}
+  .qpop-parent.open .qp-caret{transform:rotate(180deg);}
+  .qpop-sub{display:none;margin:1px 0 4px 10px;padding-left:8px;border-left:2px solid #e7edf8;}
+  .qpop-sub.open{display:block;}
+  .qpop-sub .qpop-i{font-size:12.5px;padding:8px 10px;}
   /* Modal del Calendario JJP */
   #calModal{position:fixed;inset:0;z-index:1300;display:none;align-items:center;justify-content:center;padding:16px;background:rgba(8,22,52,.6);backdrop-filter:blur(4px);}
   #calModal.open{display:flex;animation:fadeUp .2s ease both;}
@@ -811,20 +817,31 @@ const ICONS={
 const CAL_ID="c_3f3bea78fc9c997f2e3f79f146ae9442ae5462c4d62094874df8610659a6e5c7@group.calendar.google.com";
 const CAL_FULL_URL="https://calendar.google.com/calendar/embed?src="+encodeURIComponent(CAL_ID)+"&ctz=America%2FSantiago";
 /* ===== Accesos desplegables · REEMPLAZA cada "#" por el enlace real ===== */
-const DRIVE_LINKS=[
-  {em:"🏫",lb:"Colegio JJP",url:"#"},          // TODO: pegar link de la carpeta
-  {em:"🕐",lb:"Horarios de Clase",url:"#"},     // TODO: pegar link
-  {em:"📚",lb:"Material por asignatura",url:"#"},// TODO
-  {em:"🗂️",lb:"Carpeta de mi curso",url:"#"},   // TODO
+/* Planificaciones por asignatura (solo funcionarios). Links: pendientes. */
+const PLANIF_SUBJECTS=[
+  {em:"📖",lb:"Lenguaje",url:"#"},          {em:"🔢",lb:"Matemáticas",url:"#"},
+  {em:"🔬",lb:"Ciencias",url:"#"},          {em:"🏺",lb:"Historia",url:"#"},
+  {em:"⚗️",lb:"Química",url:"#"},           {em:"🧲",lb:"Física",url:"#"},
+  {em:"🎵",lb:"Música",url:"#"},            {em:"🎨",lb:"Artes",url:"#"},
+  {em:"✝️",lb:"Religión",url:"#"},          {em:"💻",lb:"Tecnología",url:"#"},
+  {em:"🗣️",lb:"Consejo de curso",url:"#"}, {em:"⚽",lb:"Educación Física",url:"#"},
 ];
+const DRIVE_LINKS=[
+  {em:"🏫",lb:"Colegio JJP",url:"https://drive.google.com/drive/folders/1s4MJFkCJVt-tJcbOLA5lTSVPwtqPecGY"},
+  {em:"🗂️",lb:"Planificaciones",staff:true,submenu:PLANIF_SUBJECTS},
+];
+/* Documentos importantes. staff:true = solo funcionarios (docentes/administrativos);
+   sin staff = visibles para todos los perfiles. */
 const DOCS_IMPORTANTES=[
-  {em:"📋",lb:"Planilla de Matrículas",url:"#"},   // TODO
-  {em:"🧾",lb:"Listas por electivo",url:"#"},      // TODO
-  {em:"📕",lb:"Reglamento Interno",url:"#"},       // TODO
-  {em:"📗",lb:"Reglamento de Evaluación",url:"#"}, // TODO
-  {em:"🛡️",lb:"Protocolos",url:"#"},              // TODO
-  {em:"🩺",lb:"Licencias médicas",url:"#"},        // TODO
-  {em:"📅",lb:"Calendario escolar",url:"#"},       // TODO
+  {em:"🔗",lb:"Enlaces JJP",staff:true,url:"https://docs.google.com/spreadsheets/d/1-lyqcSoq_a5NpnsIiGs-Nb_fuEJalIVRVBPWYxww_8g/edit?usp=drivesdk"},
+  {em:"🕐",lb:"Horarios de cursos",url:"https://drive.google.com/file/d/1rYUtwEkKYzIoPAx9z9E_QpHE74sgdJ7y/view?usp=drivesdk"},
+  {em:"👩‍🏫",lb:"Horarios de profesores",staff:true,url:"https://drive.google.com/file/d/1uxpH-2n0qudkpGW9NOv6KHVBw9jhsjJs/view?usp=drivesdk"},
+  {em:"🧩",lb:"Nómina PIE 2026",staff:true,url:"https://docs.google.com/spreadsheets/d/1Sgq7tYbPQqQuyYbX_0qjGKmnJQMkaHPw/edit?usp=drivesdk&ouid=101908341513595616396&rtpof=true&sd=true"},
+  {em:"📄",lb:"Planilla de Matrículas",staff:true,url:"https://docs.google.com/spreadsheets/d/1jiDfBw6-T-HydpR1oK4jhwhyDgbTj9QbkU806-8fUeg/edit?usp=drivesdk"},
+  {em:"✉️",lb:"Correos de estudiantes",staff:true,url:"https://docs.google.com/spreadsheets/d/1pS-pi-Zm19UnuaXJE2p9_oGJeo7x25_woZIUngrrc9I/edit?usp=drivesdk"},
+  {em:"📘",lb:"Proyecto Educativo",url:"https://www.josejoaquinprieto.cl/protocolos-sip/proyecto-educativo-institucional/"},
+  {em:"📕",lb:"Reglamento Interno",url:"https://www.josejoaquinprieto.cl/protocolos-sip/reglamento-interno/"},
+  {em:"📗",lb:"Reglamento de Evaluación",url:"https://www.josejoaquinprieto.cl/protocolos-sip/reglamento-de-evaluacion/"},
 ];
 const CAL_MENU=[
   {em:"📆",lb:"Esta semana",action:"weekcal"},
@@ -860,10 +877,10 @@ const B = {
   mineduc:{lb:"Mineduc",sub:"Ministerio de Educación",url:"https://www.mineduc.cl",icon:"mineduc"},
 };
 const LINKS = {
-  student:[B.classroom,B.drive,B.correo,B.sheets,B.alexia,B.scholar,B.scielo,B.colegio],
+  student:[B.classroom,B.drive,B.correo,B.sheets,B.docsimp,B.alexia,B.scholar,B.scielo,B.colegio],
   teacher:[B.classroom,B.drive,B.calendar,B.correo,B.sheets,B.docs,B.slides,B.canva,B.aptus,B.docsimp,B.notebook,B.gemini,B.chatgpt,B.buk,B.alexia,B.tutor],
   admin:[B.classroom,B.drive,B.calendar,B.correo,B.sheets,B.docs,B.aptus,B.docsimp,B.notebook,B.gemini,B.chatgpt,B.buk,B.mineduc,B.alexia],
-  guardian:[B.alexia,B.correo,B.whatsapp,B.instagram,B.participacion,B.colegio,B.sip],
+  guardian:[B.alexia,B.correo,B.docsimp,B.whatsapp,B.instagram,B.participacion,B.colegio,B.sip],
 };
 const ROLE_LABEL={student:"Estudiante",teacher:"Docente",admin:"Administrativo",guardian:"Apoderado"};
 
@@ -887,6 +904,19 @@ function renderQuick(role){
   });
   document.getElementById("quickTitle").textContent="Accesos rápidos para "+ROLE_LABEL[role].toLowerCase()+"s";
 }
+/* Crea un ítem del desplegable (enlace, acción o pendiente). */
+function popItem(it){
+  let n;
+  if(it.action){n=document.createElement("button");n.type="button";
+    n.onclick=(e)=>{e.stopPropagation();closeAllPops();runQuickAction(it.action);};}
+  else{n=document.createElement("a");n.href=it.url||"#";
+    if(!it.url||it.url==="#"){n.onclick=e=>{e.preventDefault();e.stopPropagation();};}
+    else{n.target="_blank";n.rel="noopener";n.onclick=e=>e.stopPropagation();}}
+  const pend=(!it.url||it.url==="#")&&!it.action;
+  n.className="qpop-i"+(pend?" pending":"");
+  n.innerHTML='<span class="qp-em">'+(it.em||"📁")+'</span><span>'+it.lb+'</span>'+(pend?'<span class="qp-soon">pronto</span>':'');
+  return n;
+}
 /* Tarjeta de acceso con menú desplegable (Drive, Calendar, Documentos importantes…). */
 function qcardMenu(b){
   const wrap=document.createElement("div");wrap.className="qcard qcardm";wrap.tabIndex=0;wrap.title=b.lb;
@@ -900,14 +930,15 @@ function qcardMenu(b){
   px.onclick=(e)=>{e.stopPropagation();closeAllPops();};
   ph.appendChild(pt);ph.appendChild(px);pop.appendChild(ph);
   (b.menu||[]).forEach(it=>{
-    let n;
-    if(it.action){n=document.createElement("button");n.type="button";n.className="qpop-i";
-      n.onclick=(e)=>{e.stopPropagation();closeAllPops();runQuickAction(it.action);};}
-    else{n=document.createElement("a");n.className="qpop-i";n.href=it.url||"#";
-      if(!it.url||it.url==="#"){n.classList.add("pending");n.onclick=e=>{e.preventDefault();e.stopPropagation();};}
-      else{n.target="_blank";n.rel="noopener";n.onclick=e=>e.stopPropagation();}}
-    n.innerHTML='<span class="qp-em">'+(it.em||"📁")+'</span><span>'+it.lb+'</span>'+((!it.url||it.url==="#")&&!it.action?'<span class="qp-soon">pronto</span>':'');
-    pop.appendChild(n);
+    if(it.staff&&!STAFF(ROLE))return;                 // ítems solo para funcionarios
+    if(it.submenu){                                    // ítem con submenú (p. ej. Planificaciones)
+      const parent=document.createElement("button");parent.type="button";parent.className="qpop-i qpop-parent";
+      parent.innerHTML='<span class="qp-em">'+(it.em||"📁")+'</span><span>'+it.lb+'</span><span class="qp-caret">▾</span>';
+      const sub=document.createElement("div");sub.className="qpop-sub";
+      it.submenu.forEach(si=>sub.appendChild(popItem(si)));
+      parent.onclick=(e)=>{e.stopPropagation();const o=sub.classList.toggle("open");parent.classList.toggle("open",o);};
+      pop.appendChild(parent);pop.appendChild(sub);
+    }else pop.appendChild(popItem(it));
   });
   pop.addEventListener("click",e=>e.stopPropagation());   // clic dentro no cierra
   document.body.appendChild(pop);                          // montado en <body>: ocupa el ancho real
@@ -1990,7 +2021,8 @@ function buildProfileMenu(){
   if(ROLE!=="guardian")acts.push({em:"🔔",t:"Probar recordatorio",action:"testremind"});
   acts.push.apply(acts,ACTIONS[ROLE]||[]);
   body.appendChild(pmSection("⚡","Acciones frecuentes",acts,true));
-  if(STAFF(ROLE))body.appendChild(pmSection("📂","Documentos importantes",DOCS_IMPORTANTES,false));
+  const docsVis=DOCS_IMPORTANTES.filter(d=>!d.staff||STAFF(ROLE));
+  if(docsVis.length)body.appendChild(pmSection("📂","Documentos importantes",docsVis,false));
   body.appendChild(pmPrefs());
   body.appendChild(pmAbout());
 }
