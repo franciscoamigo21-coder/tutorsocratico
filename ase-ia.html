@@ -1713,24 +1713,25 @@ const CURSOS=(function(){const o=[];
   return o;})();   // AJUSTA esta lista a los 45 cursos reales del colegio
 const TO_LABEL={apoderado:"un apoderado",estudiante:"un estudiante",jefe:"el profesor jefe"};
 const TONES=[{id:"formal",t:"Formal"},{id:"cercano",t:"Cercano y cordial"},{id:"academico",t:"Académico"}];
+const ASIGNATURAS=["Lenguaje","Matemáticas","Inglés","Ciencias Naturales","Historia y Geografía","Biología","Química","Física","Educación Física","Artes Visuales","Música","Tecnología","Religión","Orientación","Filosofía","Consejo de Curso"];
 const EPURPOSES={
   apoderado:[
-    {id:"inasist",t:"Informar inasistencia a una evaluación",subject:"Inasistencia a evaluación",art:"el Artículo 48 del Reglamento de Evaluación",motivo:"Le informo que su pupilo/a{curso} no se presentó a la evaluación de [asignatura] del [fecha]. Según el Artículo 48 del Reglamento de Evaluación, tiene una única oportunidad de rendirla; presentando la justificación a tiempo la recupera en las mismas condiciones. La nueva fecha es [fecha]."},
-    {id:"conducta",t:"Informar un mal comportamiento o falta",subject:"Situación de convivencia",art:"el Reglamento Interno de Convivencia",motivo:"Me comunico para informarle una situación de convivencia de su pupilo/a{curso} ocurrida el [fecha]: [describa el hecho]. De acuerdo con el Reglamento Interno de Convivencia, se aplicará [medida formativa], buscando acompañar y reparar."},
-    {id:"rendimiento",t:"Informar bajo rendimiento",subject:"Rendimiento académico",art:"el Reglamento de Evaluación",motivo:"Le escribo por el rendimiento de su pupilo/a{curso} en [asignatura]. Según el Reglamento de Evaluación, la nota mínima de aprobación es 4,0 y la promoción exige cumplir asistencia y asignaturas. Le propongo [acción de apoyo]."},
-    {id:"citacion",t:"Citar a una reunión o entrevista",subject:"Citación a entrevista",art:"el conducto regular del Reglamento Interno",motivo:"Le invito a una entrevista el [fecha] a las [hora] para conversar sobre [tema] de su pupilo/a{curso}, en el marco del conducto regular del Reglamento Interno."},
-    {id:"felicitar",t:"Reconocer o felicitar",subject:"Reconocimiento",art:"los valores del Proyecto Educativo",motivo:"Quiero destacar el buen desempeño y actitud de su pupilo/a{curso} en [asignatura]. ¡Felicitaciones! Sigamos fortaleciendo estos valores del Proyecto Educativo."},
+    {id:"inasist",t:"Informar inasistencia a una evaluación",subject:"Inasistencia a evaluación",art:"el Artículo 48 del Reglamento de Evaluación",motivo:"Le informo que su pupilo/a{curso} no se presentó a la evaluación de {asig}. Según el Artículo 48 del Reglamento de Evaluación, tiene una única oportunidad de rendirla; presentando la justificación a tiempo la recupera en las mismas condiciones. Coordinaremos con usted la nueva fecha por este medio."},
+    {id:"conducta",t:"Informar un mal comportamiento o falta",subject:"Situación de convivencia",art:"el Reglamento Interno de Convivencia",motivo:"Me comunico para informarle una situación de convivencia de su pupilo/a{curso} en la asignatura de {asig}: [describa brevemente lo ocurrido]. De acuerdo con el Reglamento Interno de Convivencia, aplicaremos una medida formativa (una conversación reflexiva y el registro en la hoja de observaciones), buscando acompañar y reparar. Le mantendré informado/a del seguimiento."},
+    {id:"rendimiento",t:"Informar bajo rendimiento",subject:"Rendimiento académico",art:"el Reglamento de Evaluación",motivo:"Le escribo por el rendimiento de su pupilo/a{curso} en {asig}. Según el Reglamento de Evaluación, la nota mínima de aprobación es 4,0 y la promoción exige aprobar las asignaturas y cumplir el 85% de asistencia. Para apoyarlo/a proponemos: reforzamiento en el horario de atención, un plan de trabajo con metas semanales, retroalimentación después de cada evaluación y, si es necesario, derivación a la dupla psicosocial. Le invito a acompañar este proceso en casa con horarios de estudio y lectura."},
+    {id:"citacion",t:"Citar a una reunión o entrevista",subject:"Citación a entrevista",art:"el conducto regular del Reglamento Interno",motivo:"Le invito a una entrevista para conversar sobre el proceso escolar de su pupilo/a{curso} en {asig}. Coordinaremos el día y la hora por este mismo medio, dentro del conducto regular del Reglamento Interno."},
+    {id:"felicitar",t:"Reconocer o felicitar",subject:"Reconocimiento",art:"los valores del Proyecto Educativo",motivo:"Quiero destacar el buen desempeño, el esfuerzo y la actitud de su pupilo/a{curso} en {asig}. ¡Felicitaciones! Sigamos fortaleciendo estos valores del Proyecto Educativo desde el colegio y el hogar."},
   ],
   estudiante:[
-    {id:"entrega",t:"Recordar la entrega de un trabajo",subject:"Entrega de trabajo pendiente",art:"el Artículo 47 del Reglamento de Evaluación",motivo:"Te recuerdo que tienes pendiente la entrega de [trabajo] de [asignatura]. Según el Artículo 47 del Reglamento de Evaluación, tienes una nueva oportunidad hasta el [fecha]; la escala de corrección considera un 75% para el 4,0."},
-    {id:"recuperar",t:"Coordinar la recuperación de una evaluación",subject:"Recuperación de evaluación",art:"el Artículo 48 del Reglamento de Evaluación",motivo:"Coordinemos la recuperación de tu evaluación de [asignatura]. Según el Artículo 48 del Reglamento de Evaluación, con tu justificación a tiempo recuperas en las mismas condiciones. La nueva fecha es [fecha]."},
-    {id:"compromiso",t:"Acordar un compromiso de conducta",subject:"Compromiso de convivencia",art:"el Reglamento Interno de Convivencia",motivo:"Conversemos sobre [situación]. Te propongo un compromiso de conducta, en el marco del Reglamento Interno de Convivencia, para mejorar juntos."},
-    {id:"felicitar",t:"Reconocer o felicitar",subject:"¡Felicitaciones!",art:"los valores del Proyecto Educativo",motivo:"Quiero felicitarte por tu esfuerzo y actitud en [asignatura]. ¡Sigue así! Reflejas los valores del Proyecto Educativo."},
+    {id:"entrega",t:"Recordar la entrega de un trabajo",subject:"Entrega de trabajo pendiente",art:"el Artículo 47 del Reglamento de Evaluación",motivo:"Te recuerdo que tienes pendiente la entrega del trabajo de {asig}. Según el Artículo 47 del Reglamento de Evaluación, tienes una nueva oportunidad y la escala de corrección considera un 75% para el 4,0. Coordinemos la nueva fecha por este medio y avísame si necesitas apoyo."},
+    {id:"recuperar",t:"Coordinar la recuperación de una evaluación",subject:"Recuperación de evaluación",art:"el Artículo 48 del Reglamento de Evaluación",motivo:"Coordinemos la recuperación de tu evaluación de {asig}. Según el Artículo 48 del Reglamento de Evaluación, con tu justificación a tiempo la recuperas en las mismas condiciones. Te confirmaré la nueva fecha por este medio."},
+    {id:"compromiso",t:"Acordar un compromiso de conducta",subject:"Compromiso de convivencia",art:"el Reglamento Interno de Convivencia",motivo:"Conversemos sobre tu participación y convivencia en {asig}. Te propongo un compromiso, en el marco del Reglamento Interno de Convivencia: llegar puntual, respetar los turnos de habla y mantener tus materiales al día. Cuenta con mi apoyo para lograrlo."},
+    {id:"felicitar",t:"Reconocer o felicitar",subject:"¡Felicitaciones!",art:"los valores del Proyecto Educativo",motivo:"Quiero felicitarte por tu esfuerzo, tu responsabilidad y tu actitud en {asig}. ¡Sigue así! Reflejas los valores del Proyecto Educativo. Estoy para apoyarte en lo que necesites."},
   ],
   jefe:[
-    {id:"caso",t:"Informar una falta de un estudiante",subject:"Caso de un estudiante",art:"el Reglamento Interno de Convivencia",motivo:"Te informo un caso del estudiante [nombre]{curso} ocurrido el [fecha]: [describa el hecho]. Según el Reglamento Interno de Convivencia correspondería [medida]. Quedo disponible para el seguimiento."},
-    {id:"bienestar",t:"Derivar por bienestar o convivencia",subject:"Derivación por bienestar",art:"los protocolos de convivencia",motivo:"Quiero derivar al estudiante [nombre]{curso} por una situación de bienestar o convivencia: [describa]. Sugiero activar el protocolo correspondiente y coordinar apoyo."},
-    {id:"apoyo",t:"Coordinar apoyo pedagógico",subject:"Apoyo pedagógico",art:"el Reglamento de Evaluación",motivo:"Coordinemos apoyo pedagógico para [nombre]{curso} en [asignatura], considerando el Reglamento de Evaluación (evaluación diferenciada o adecuación si corresponde)."},
+    {id:"caso",t:"Informar una falta de un estudiante",subject:"Caso de un estudiante",art:"el Reglamento Interno de Convivencia",motivo:"Te informo un caso del estudiante [nombre del estudiante]{curso} en la asignatura de {asig}: [describa brevemente lo ocurrido]. Según el Reglamento Interno de Convivencia correspondería aplicar una medida formativa y dejar registro en la hoja de observaciones. Quedo disponible para coordinar el seguimiento contigo."},
+    {id:"bienestar",t:"Derivar por bienestar o convivencia",subject:"Derivación por bienestar",art:"los protocolos de convivencia",motivo:"Quiero derivar al estudiante [nombre del estudiante]{curso} por una situación de bienestar o convivencia observada en {asig}: [describa brevemente la situación]. Sugiero activar el protocolo correspondiente y coordinar apoyo con la dupla psicosocial."},
+    {id:"apoyo",t:"Coordinar apoyo pedagógico",subject:"Apoyo pedagógico",art:"el Reglamento de Evaluación",motivo:"Coordinemos apoyo pedagógico para el estudiante [nombre del estudiante]{curso} en {asig}, considerando el Reglamento de Evaluación (evaluación diferenciada o adecuación curricular si corresponde). Propongo reforzamiento y retroalimentación personalizada; quedo atento/a para trabajarlo juntos."},
   ],
 };
 const EMAIL_SUG="✉️ Redactar un correo (paso a paso)";
@@ -1762,13 +1763,20 @@ function emailTo(to){EFLOW.to=to;
   botCard(m=>choiceRow(m,"¿Cuál es el propósito del correo a "+TO_LABEL[to]+"?",
     EPURPOSES[to].map(pp=>({t:pp.t,fn:()=>emailPurpose(pp)}))));
 }
-function emailPurpose(pp){EFLOW.purpose=pp;
-  botCard(m=>{m.appendChild(el("div","mtext","¿De qué curso es el estudiante? (lo agrego al correo)"));
+/* Paso genérico de selección (curso, asignatura…). */
+function selectStep(label,options,placeholder,onDone){
+  botCard(m=>{m.appendChild(el("div","mtext",label));
     const sel=document.createElement("select");sel.className="ecurso";
-    sel.innerHTML='<option value="">Selecciona el curso…</option>'+CURSOS.map(c=>'<option>'+c+'</option>').join("");
+    sel.innerHTML='<option value="">'+placeholder+'</option>'+options.map(c=>'<option>'+c+'</option>').join("");
     const b=el("button","echoice");b.type="button";b.style.marginTop="8px";b.textContent="Continuar";
-    b.onclick=()=>{EFLOW.course=sel.value||"";sel.disabled=true;b.disabled=true;b.classList.add("sel");emailTone();};
+    b.onclick=()=>{sel.disabled=true;b.disabled=true;b.classList.add("sel");onDone(sel.value||"");};
     m.appendChild(sel);m.appendChild(b);});
+}
+function emailPurpose(pp){EFLOW.purpose=pp;
+  selectStep("¿De qué curso es el estudiante? (lo agrego al correo)",CURSOS,"Selecciona el curso…",v=>{EFLOW.course=v;emailAsig();});
+}
+function emailAsig(){
+  selectStep("¿De qué asignatura se trata?",ASIGNATURAS,"Selecciona la asignatura…",v=>{EFLOW.asig=v;emailTone();});
 }
 function emailTone(){
   botCard(m=>choiceRow(m,"¿En qué tono quieres redactarlo?",TONES.map(tn=>({t:tn.t,fn:()=>emailBuild(tn.id)}))));
@@ -1778,11 +1786,11 @@ function emailBuild(tone){EFLOW.tone=tone;
   const cursoTxt=course?(" del curso "+course):"";
   const saludo = to==="jefe" ? "Estimado/a profesor/a jefe:"
     : to==="apoderado" ? "Estimado/a apoderado/a de [nombre del estudiante]:"
-    : (tone==="cercano" ? "Hola [nombre]:" : "Estimado/a estudiante [nombre]:");
+    : (tone==="cercano" ? "Hola [nombre del estudiante]:" : "Estimado/a estudiante [nombre del estudiante]:");
   const cierre = to==="jefe" ? "Quedo atento/a para coordinar los pasos a seguir."
     : tone==="cercano" ? "Quedo atenta/o a su respuesta. Un cordial saludo,"
     : tone==="academico" ? "Le saluda atentamente," : "Atentamente,";
-  const cuerpo = purpose.motivo.replace("{curso}",cursoTxt);
+  const cuerpo = purpose.motivo.replace("{curso}",cursoTxt).replace("{asig}",EFLOW.asig||"[asignatura]");
   const body = saludo+"\n\n"+cuerpo+"\n\n"+cierre+"\n[Su nombre], [asignatura o cargo]";
   const subject = purpose.subject+(course?(" · "+course):"");
   const tName=(TONES.find(t=>t.id===tone)||{}).t||"";
