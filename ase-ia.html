@@ -229,6 +229,16 @@
     box-shadow:0 13px 28px -13px rgba(234,67,53,.75);transition:.15s;font-family:inherit;}
   .mailbtn:hover{filter:brightness(1.06);transform:translateY(-1px);}
   .mailbtn svg{width:18px;height:18px;flex-shrink:0;}
+  /* Botones "tipo conversación" del redactor de correos guiado */
+  .echoices{display:flex;flex-direction:column;gap:7px;margin-top:11px;}
+  .echoice{text-align:left;background:#f4f8ff;border:1px solid #d9e6ff;color:var(--azul-ink);border-radius:12px;
+    padding:11px 14px;font-size:13.5px;font-weight:700;cursor:pointer;font-family:inherit;transition:.13s;}
+  .echoice:hover{background:var(--azul);color:#fff;border-color:var(--azul);transform:translateY(-1px);}
+  .echoice:disabled{cursor:default;transform:none;}
+  .echoice:disabled:not(.sel){opacity:.45;}
+  .echoice.sel{background:var(--azul);color:#fff;border-color:var(--azul);}
+  .ecurso{width:100%;padding:11px 12px;border:1px solid #d9e6ff;border-radius:12px;font-size:13.5px;
+    font-family:inherit;background:#f4f8ff;color:var(--azul-ink);outline:none;}
   .cites{margin-top:10px;display:flex;flex-wrap:wrap;gap:6px;}
   .cite{background:linear-gradient(135deg,#eef4ff,#e6efff);color:var(--azul);border:1px solid #d6e3ff;border-radius:999px;padding:3px 11px;font-size:11px;font-weight:700;}
   .typing{display:flex;gap:5px;padding:14px 16px;background:#fff;border:1px solid var(--border);border-radius:18px;border-bottom-left-radius:6px;}
@@ -812,6 +822,7 @@ const ICONS={
  folder:'<svg viewBox="0 0 48 48"><path fill="#f6b429" d="M6 12a3 3 0 0 1 3-3h9l4 4h14a3 3 0 0 1 3 3v3H6z"/><path fill="#ffd15c" d="M6 17h36a3 3 0 0 1 3 3v16a3 3 0 0 1-3 3H9a3 3 0 0 1-3-3z"/></svg>',
  doc:'<svg viewBox="0 0 48 48"><path fill="#1a73e8" d="M28 5H14a3 3 0 0 0-3 3v32a3 3 0 0 0 3 3h20a3 3 0 0 0 3-3V14z"/><path fill="#a7c7fb" d="M28 5l9 9h-9z"/><rect x="16" y="21" width="16" height="2.3" rx="1.1" fill="#fff"/><rect x="16" y="26" width="16" height="2.3" rx="1.1" fill="#fff"/><rect x="16" y="31" width="10" height="2.3" rx="1.1" fill="#fff"/></svg>',
  calweek:'<svg viewBox="0 0 48 48"><rect x="7" y="10" width="34" height="31" rx="4" fill="#fff" stroke="#dadce0"/><rect x="7" y="10" width="34" height="8" rx="4" fill="#1a73e8"/><rect x="12" y="24" width="7" height="12" rx="1.5" fill="#4285F4"/><rect x="21" y="24" width="7" height="12" rx="1.5" fill="#7ba7f5"/><rect x="30" y="24" width="6" height="12" rx="1.5" fill="#4285F4"/></svg>',
+ capac:'<svg viewBox="0 0 48 48"><rect x="4" y="4" width="40" height="40" rx="11" fill="#6c4bd8"/><path fill="#fff" d="M24 12l14 6-14 6-14-6z"/><path fill="#d9ccff" d="M17 22.5V27c0 2.5 3.1 4.5 7 4.5s7-2 7-4.5v-4.5l-7 3z"/><rect x="37" y="18" width="1.6" height="7" fill="#fff"/></svg>',
 };
 /* ===== Calendario oficial del Colegio JJP (Google Calendar embebido) ===== */
 const CAL_ID="c_3f3bea78fc9c997f2e3f79f146ae9442ae5462c4d62094874df8610659a6e5c7@group.calendar.google.com";
@@ -819,13 +830,27 @@ const CAL_FULL_URL="https://calendar.google.com/calendar/embed?src="+encodeURICo
 /* ===== Accesos desplegables · REEMPLAZA cada "#" por el enlace real ===== */
 /* Planificaciones por asignatura (solo funcionarios). Links: pendientes. */
 const PLANIF_SUBJECTS=[
-  {em:"📖",lb:"Lenguaje",url:"#"},          {em:"🔢",lb:"Matemáticas",url:"#"},
-  {em:"🔤",lb:"Inglés",url:"#"},            {em:"🔬",lb:"Ciencias",url:"#"},
-  {em:"🏺",lb:"Historia",url:"#"},          {em:"⚗️",lb:"Química",url:"#"},
-  {em:"🧲",lb:"Física",url:"#"},            {em:"🎵",lb:"Música",url:"#"},
-  {em:"🎨",lb:"Artes",url:"#"},             {em:"✝️",lb:"Religión",url:"#"},
-  {em:"💻",lb:"Tecnología",url:"#"},        {em:"🧭",lb:"Orientación",url:"#"},
-  {em:"🗣️",lb:"Consejo de curso",url:"#"}, {em:"⚽",lb:"Educación Física",url:"#"},
+  {em:"🔢",lb:"Matemáticas",url:"https://drive.google.com/drive/folders/1kNNNggGCnyCRfmtBiYa_rq5u6phRjqZs?usp=drive_link"},
+  {em:"🧩",lb:"Inclusión",url:"https://drive.google.com/drive/folders/1zxTHUC-y9GrZ_5AB-09Gwn6ezCCLXffO?usp=drive_link"},
+  {em:"📖",lb:"Lenguaje",url:"https://drive.google.com/drive/folders/1Jg6VyzmmlkSVkhOG3rr2M5bBh5c-wnGd?usp=drive_link"},
+  {em:"🔬",lb:"Ciencias",url:"https://drive.google.com/drive/folders/1SUynEQ5XdQBZmELuXE7iQnUHTHubmt8A?usp=drive_link"},
+  {em:"🏺",lb:"Historia",url:"https://drive.google.com/drive/folders/11Q4PyHR43IEQd40bIcd122uIfGzVdRp7?usp=drive_link"},
+  {em:"🧸",lb:"Educación Inicial",url:"https://drive.google.com/drive/folders/1TqmivmFoxamlHKCup-xhmx_URu7BytMz?usp=drive_link"},
+  {em:"🔤",lb:"Inglés",url:"https://drive.google.com/drive/folders/1bd2yQjGAOd0ojXYDGykuKvU52z1gq5uy?usp=drive_link"},
+  {em:"🌱",lb:"Área de Formación",url:"https://drive.google.com/drive/folders/1HISUsV_5qzuPiCNKoyYgyvh8FhJ_Yovz?usp=drive_link"},
+  {em:"🗣️",lb:"Consejo de Curso",url:"https://drive.google.com/drive/folders/1KNExQ-Nrgh9Im7o7GmhrvNDUoj_Zhw__?usp=drive_link"},
+  {em:"🧭",lb:"Orientación",url:"https://drive.google.com/drive/folders/1sTX2Hv7ra6cVzYIIVXODoNMgI_LXB62E?usp=drive_link"},
+  {em:"⚽",lb:"Educación Física",url:"https://drive.google.com/drive/folders/1d0OXkE9gCRI5uo-RTYIXwcwuoq3qaKD8?usp=drive_link"},
+  {em:"🎵",lb:"Música",url:"https://drive.google.com/drive/folders/16EdeTc_Vt7MV3xJuSDoXdwRIVD9Wnpmx?usp=drive_link"},
+  {em:"📚",lb:"Biblioteca",url:"https://drive.google.com/drive/folders/1tkIgQptGlrpORPsRw_iSN_sQVuZ6sG8H?usp=drive_link"},
+  {em:"🎨",lb:"Artes Visuales",url:"https://drive.google.com/drive/folders/1-n_5B1OOYZ1q2ayX0tvkDma77D0h18yM?usp=drive_link"},
+  {em:"✝️",lb:"Religión",url:"https://drive.google.com/drive/folders/1j57jdUFP8DOVqTEEPpfHVJSfrfyEjnRh?usp=drive_link"},
+  {em:"💻",lb:"Tecnología",url:"https://drive.google.com/drive/folders/1GmDG3_9Vj8Vo-wWsEF_kvPQ3ex17E3-2?usp=drive_link"},
+  {em:"💭",lb:"Filosofía",url:"https://drive.google.com/drive/folders/1hvWX45fj7Q9q-XkOGWLu7RWUrZx6b1Id?usp=drive_link"},
+];
+/* Cursos y capacitaciones (solo funcionarios). */
+const CAPAC_LINKS=[
+  {em:"🎓",lb:"Modelo de Clase Efectiva",url:"https://student.getcircles.org/dashboard"},
 ];
 const DRIVE_LINKS=[
   {em:"🏫",lb:"Colegio JJP",url:"https://drive.google.com/drive/folders/1s4MJFkCJVt-tJcbOLA5lTSVPwtqPecGY"},
@@ -856,6 +881,7 @@ const B = {
   calendar:{lb:"Calendar",sub:"Calendario JJP",icon:"calendar",menu:CAL_MENU},
   aptus:{lb:"Aptus",sub:"Recursos y evaluaciones",url:"https://www.aptus.org/",icon:"aptus"},
   docsimp:{lb:"Documentos",sub:"Importantes",icon:"folder",menu:DOCS_IMPORTANTES},
+  capac:{lb:"Capacitaciones",sub:"Cursos y formación",icon:"capac",menu:CAPAC_LINKS},
   correo:{lb:"Correo",sub:"Gmail",url:"https://mail.google.com",icon:"gmail"},
   alexia:{lb:"Alexia",sub:"Notas y asistencia",url:"https://josejoaquinprieto.alexiaeducl.com/ACWeb/paginas/Home/HomeProgDidactica.aspx",icon:"alexia"},
   notebook:{lb:"NotebookLM",sub:"Cuaderno IA",url:"https://notebooklm.google.com",icon:"notebook"},
@@ -879,8 +905,8 @@ const B = {
 };
 const LINKS = {
   student:[B.classroom,B.drive,B.correo,B.sheets,B.docsimp,B.alexia,B.scholar,B.scielo,B.colegio],
-  teacher:[B.classroom,B.drive,B.calendar,B.correo,B.sheets,B.docs,B.slides,B.canva,B.aptus,B.docsimp,B.notebook,B.gemini,B.chatgpt,B.buk,B.alexia,B.tutor],
-  admin:[B.classroom,B.drive,B.calendar,B.correo,B.sheets,B.docs,B.aptus,B.docsimp,B.notebook,B.gemini,B.chatgpt,B.buk,B.mineduc,B.alexia],
+  teacher:[B.classroom,B.drive,B.calendar,B.correo,B.sheets,B.docs,B.slides,B.canva,B.aptus,B.capac,B.docsimp,B.notebook,B.gemini,B.chatgpt,B.buk,B.alexia,B.tutor],
+  admin:[B.classroom,B.drive,B.calendar,B.correo,B.sheets,B.docs,B.aptus,B.capac,B.docsimp,B.notebook,B.gemini,B.chatgpt,B.buk,B.mineduc,B.alexia],
   guardian:[B.alexia,B.correo,B.docsimp,B.whatsapp,B.instagram,B.participacion,B.colegio,B.sip],
 };
 const ROLE_LABEL={student:"Estudiante",teacher:"Docente",admin:"Administrativo",guardian:"Apoderado"};
@@ -979,6 +1005,7 @@ function runQuickAction(a){
   else if(a==="monthcal")openCalendar("MONTH");
   else if(a==="agendacal")openCalendar("AGENDA");
   else if(a==="testremind")testReminder();
+  else if(a==="emailflow")emailStart();
 }
 /* ============ CALENDARIO JJP · agenda / semana / mes (solo funcionarios) ============ */
 const STAFF=r=>(r==="teacher"||r==="admin");
@@ -1677,6 +1704,94 @@ Saludos,
   return {subject, body, reply:intro+body};
 }
 
+/* ============ REDACTOR DE CORREOS GUIADO (paso a paso, para docentes) ============
+   Siempre basado en el Reglamento Interno y el Reglamento de Evaluación. */
+const CURSOS=(function(){const o=[];
+  ["Pre-Kínder A","Pre-Kínder B","Kínder A","Kínder B"].forEach(c=>o.push(c));
+  for(let g=1;g<=8;g++)["A","B","C"].forEach(s=>o.push(g+"° Básico "+s));
+  ["I","II","III","IV"].forEach(m=>["A","B","C"].forEach(s=>o.push(m+"° Medio "+s)));
+  return o;})();   // AJUSTA esta lista a los 45 cursos reales del colegio
+const TO_LABEL={apoderado:"un apoderado",estudiante:"un estudiante",jefe:"el profesor jefe"};
+const TONES=[{id:"formal",t:"Formal"},{id:"cercano",t:"Cercano y cordial"},{id:"academico",t:"Académico"}];
+const EPURPOSES={
+  apoderado:[
+    {id:"inasist",t:"Informar inasistencia a una evaluación",subject:"Inasistencia a evaluación",art:"el Artículo 48 del Reglamento de Evaluación",motivo:"Le informo que su pupilo/a{curso} no se presentó a la evaluación de [asignatura] del [fecha]. Según el Artículo 48 del Reglamento de Evaluación, tiene una única oportunidad de rendirla; presentando la justificación a tiempo la recupera en las mismas condiciones. La nueva fecha es [fecha]."},
+    {id:"conducta",t:"Informar un mal comportamiento o falta",subject:"Situación de convivencia",art:"el Reglamento Interno de Convivencia",motivo:"Me comunico para informarle una situación de convivencia de su pupilo/a{curso} ocurrida el [fecha]: [describa el hecho]. De acuerdo con el Reglamento Interno de Convivencia, se aplicará [medida formativa], buscando acompañar y reparar."},
+    {id:"rendimiento",t:"Informar bajo rendimiento",subject:"Rendimiento académico",art:"el Reglamento de Evaluación",motivo:"Le escribo por el rendimiento de su pupilo/a{curso} en [asignatura]. Según el Reglamento de Evaluación, la nota mínima de aprobación es 4,0 y la promoción exige cumplir asistencia y asignaturas. Le propongo [acción de apoyo]."},
+    {id:"citacion",t:"Citar a una reunión o entrevista",subject:"Citación a entrevista",art:"el conducto regular del Reglamento Interno",motivo:"Le invito a una entrevista el [fecha] a las [hora] para conversar sobre [tema] de su pupilo/a{curso}, en el marco del conducto regular del Reglamento Interno."},
+    {id:"felicitar",t:"Reconocer o felicitar",subject:"Reconocimiento",art:"los valores del Proyecto Educativo",motivo:"Quiero destacar el buen desempeño y actitud de su pupilo/a{curso} en [asignatura]. ¡Felicitaciones! Sigamos fortaleciendo estos valores del Proyecto Educativo."},
+  ],
+  estudiante:[
+    {id:"entrega",t:"Recordar la entrega de un trabajo",subject:"Entrega de trabajo pendiente",art:"el Artículo 47 del Reglamento de Evaluación",motivo:"Te recuerdo que tienes pendiente la entrega de [trabajo] de [asignatura]. Según el Artículo 47 del Reglamento de Evaluación, tienes una nueva oportunidad hasta el [fecha]; la escala de corrección considera un 75% para el 4,0."},
+    {id:"recuperar",t:"Coordinar la recuperación de una evaluación",subject:"Recuperación de evaluación",art:"el Artículo 48 del Reglamento de Evaluación",motivo:"Coordinemos la recuperación de tu evaluación de [asignatura]. Según el Artículo 48 del Reglamento de Evaluación, con tu justificación a tiempo recuperas en las mismas condiciones. La nueva fecha es [fecha]."},
+    {id:"compromiso",t:"Acordar un compromiso de conducta",subject:"Compromiso de convivencia",art:"el Reglamento Interno de Convivencia",motivo:"Conversemos sobre [situación]. Te propongo un compromiso de conducta, en el marco del Reglamento Interno de Convivencia, para mejorar juntos."},
+    {id:"felicitar",t:"Reconocer o felicitar",subject:"¡Felicitaciones!",art:"los valores del Proyecto Educativo",motivo:"Quiero felicitarte por tu esfuerzo y actitud en [asignatura]. ¡Sigue así! Reflejas los valores del Proyecto Educativo."},
+  ],
+  jefe:[
+    {id:"caso",t:"Informar una falta de un estudiante",subject:"Caso de un estudiante",art:"el Reglamento Interno de Convivencia",motivo:"Te informo un caso del estudiante [nombre]{curso} ocurrido el [fecha]: [describa el hecho]. Según el Reglamento Interno de Convivencia correspondería [medida]. Quedo disponible para el seguimiento."},
+    {id:"bienestar",t:"Derivar por bienestar o convivencia",subject:"Derivación por bienestar",art:"los protocolos de convivencia",motivo:"Quiero derivar al estudiante [nombre]{curso} por una situación de bienestar o convivencia: [describa]. Sugiero activar el protocolo correspondiente y coordinar apoyo."},
+    {id:"apoyo",t:"Coordinar apoyo pedagógico",subject:"Apoyo pedagógico",art:"el Reglamento de Evaluación",motivo:"Coordinemos apoyo pedagógico para [nombre]{curso} en [asignatura], considerando el Reglamento de Evaluación (evaluación diferenciada o adecuación si corresponde)."},
+  ],
+};
+const EMAIL_SUG="✉️ Redactar un correo (paso a paso)";
+let EFLOW=null;
+function botCard(build){
+  const row=el("div","row bot");row.appendChild(avatarEl());
+  const msg=el("div","msg");build(msg);row.appendChild(msg);log.appendChild(row);
+  requestAnimationFrame(()=>{log.scrollTop=Math.max(0,row.offsetTop-14);});
+  return msg;
+}
+function choiceRow(msg,label,choices){
+  msg.appendChild(el("div","mtext",label));
+  const box=el("div","echoices");
+  choices.forEach(c=>{const b=el("button","echoice");b.type="button";b.textContent=c.t;
+    b.onclick=()=>{[...box.children].forEach(x=>x.disabled=true);b.classList.add("sel");c.fn();};
+    box.appendChild(b);});
+  msg.appendChild(box);
+}
+function emailStart(){
+  const sg=document.getElementById("sugs");if(sg)sg.innerHTML="";
+  EFLOW={};
+  botCard(m=>choiceRow(m,"Te ayudo a redactar el correo paso a paso, siempre según el Reglamento Interno y el de Evaluación. ¿A quién le escribirás?",[
+    {t:"👪 A un apoderado",fn:()=>emailTo("apoderado")},
+    {t:"🎓 A un estudiante",fn:()=>emailTo("estudiante")},
+    {t:"🧑‍🏫 Al profesor jefe (informar un caso)",fn:()=>emailTo("jefe")},
+  ]));
+}
+function emailTo(to){EFLOW.to=to;
+  botCard(m=>choiceRow(m,"¿Cuál es el propósito del correo a "+TO_LABEL[to]+"?",
+    EPURPOSES[to].map(pp=>({t:pp.t,fn:()=>emailPurpose(pp)}))));
+}
+function emailPurpose(pp){EFLOW.purpose=pp;
+  botCard(m=>{m.appendChild(el("div","mtext","¿De qué curso es el estudiante? (lo agrego al correo)"));
+    const sel=document.createElement("select");sel.className="ecurso";
+    sel.innerHTML='<option value="">Selecciona el curso…</option>'+CURSOS.map(c=>'<option>'+c+'</option>').join("");
+    const b=el("button","echoice");b.type="button";b.style.marginTop="8px";b.textContent="Continuar";
+    b.onclick=()=>{EFLOW.course=sel.value||"";sel.disabled=true;b.disabled=true;b.classList.add("sel");emailTone();};
+    m.appendChild(sel);m.appendChild(b);});
+}
+function emailTone(){
+  botCard(m=>choiceRow(m,"¿En qué tono quieres redactarlo?",TONES.map(tn=>({t:tn.t,fn:()=>emailBuild(tn.id)}))));
+}
+function emailBuild(tone){EFLOW.tone=tone;
+  const to=EFLOW.to,purpose=EFLOW.purpose,course=EFLOW.course;
+  const cursoTxt=course?(" del curso "+course):"";
+  const saludo = to==="jefe" ? "Estimado/a profesor/a jefe:"
+    : to==="apoderado" ? "Estimado/a apoderado/a de [nombre del estudiante]:"
+    : (tone==="cercano" ? "Hola [nombre]:" : "Estimado/a estudiante [nombre]:");
+  const cierre = to==="jefe" ? "Quedo atento/a para coordinar los pasos a seguir."
+    : tone==="cercano" ? "Quedo atenta/o a su respuesta. Un cordial saludo,"
+    : tone==="academico" ? "Le saluda atentamente," : "Atentamente,";
+  const cuerpo = purpose.motivo.replace("{curso}",cursoTxt);
+  const body = saludo+"\n\n"+cuerpo+"\n\n"+cierre+"\n[Su nombre], [asignatura o cargo]";
+  const subject = purpose.subject+(course?(" · "+course):"");
+  const tName=(TONES.find(t=>t.id===tone)||{}).t||"";
+  const reply = "Listo. Este es tu borrador en tono "+tName.toLowerCase()+", basado en "+purpose.art+". Revisa los campos entre [corchetes] y ábrelo en Gmail:\n\n"+body;
+  add(reply,"bot",{mail:{url:gmailComposeUrl(subject,body)}});
+  speak("Tu borrador está listo. Puedes abrirlo en Gmail con el botón de abajo.");
+  EFLOW=null;
+}
+
 const convo=[];let ROLE="student";
 function answer(query){
   const nq=normalize(query);
@@ -1717,7 +1832,7 @@ function badgeMarkup(sz){return BADGE_OK
 /* ============ UI DEL CHAT ============ */
 const SUGS={
   student:["¿Cuál es la nota mínima de aprobación?","¿Puedo usar el celular en clases?","¿Qué dice el reglamento sobre el bullying?","¿Cuáles son mis deberes como estudiante?","¿Cómo apelo una sanción?","¿Qué tareas tengo pendientes?"],
-  teacher:["Redactar un correo para un estudiante","Redactar un correo para un apoderado","¿Qué dice el protocolo de desregulación emocional?","¿Qué es una falta grave según el reglamento?","¿Qué protocolo hay frente al acoso escolar?","¿Qué es la condicionalidad de matrícula?","¿Cómo se calcula la promoción?"],
+  teacher:[EMAIL_SUG,"¿Qué dice el protocolo de desregulación emocional?","¿Qué es una falta grave según el reglamento?","¿Qué protocolo hay frente al acoso escolar?","¿Qué es la condicionalidad de matrícula?","¿Cómo se calcula la promoción?"],
   admin:["¿Qué dice el protocolo de accidentes escolares?","¿Cómo es el procedimiento de expulsión?","¿Qué establece el reglamento sobre el uso de cámaras?","¿Cuáles son los deberes del equipo directivo?","¿Qué dice el reglamento sobre el retiro voluntario?","¿Cómo se conforma el Consejo Escolar?"],
   guardian:["¿Cuáles son mis deberes como apoderado?","¿Cómo justifico una inasistencia?","¿Puede mi pupilo usar el celular en el colegio?","¿Qué pasa con los atrasos?","¿Cómo apelo una sanción?","¿Cuál es la misión del colegio?"],
 };
@@ -1836,7 +1951,7 @@ function typing(on){
     typingRow.appendChild(t);log.appendChild(typingRow);log.scrollTop=log.scrollHeight;}
   else if(!on&&typingRow){typingRow.remove();typingRow=null;}
 }
-function renderSugs(){const box=document.getElementById("sugs");box.innerHTML="";SUGS[ROLE].forEach(s=>{const b=el("button","sug",s);b.type="button";b.onclick=()=>ask(s);box.appendChild(b);});}
+function renderSugs(){const box=document.getElementById("sugs");box.innerHTML="";SUGS[ROLE].forEach(s=>{const b=el("button","sug",s);b.type="button";b.onclick=(s===EMAIL_SUG)?(()=>emailStart()):(()=>ask(s));box.appendChild(b);});}
 /* ============ PANTALLA COMPLETA del chat (expandir / reducir) ============ */
 const FS_EXPAND='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3M16 3h3a2 2 0 0 1 2 2v3M8 21H5a2 2 0 0 1-2-2v-3M16 21h3a2 2 0 0 0 2-2v-3"/></svg>';
 const FS_COMPRESS='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3v3a2 2 0 0 1-2 2H3M21 8h-3a2 2 0 0 1-2-2V3M3 16h3a2 2 0 0 1 2 2v3M16 21v-3a2 2 0 0 1 2-2h3"/></svg>';
@@ -1942,11 +2057,10 @@ const ACTIONS={
   student:[{em:"📚",t:"¿Qué tareas tengo pendientes?",q:"¿Qué tareas tengo pendientes?"},
            {em:"⭐",t:"¿Cuál es la nota mínima de aprobación?",q:"¿Cuál es la nota mínima de aprobación?"},
            {em:"🎓",t:"Abrir Classroom",url:"https://classroom.google.com"}],
-  teacher:[{em:"✉️",t:"Redactar un correo a un apoderado",q:"Redactar un correo para un apoderado"},
-           {em:"✉️",t:"Redactar un correo a un estudiante",q:"Redactar un correo para un estudiante"},
+  teacher:[{em:"✉️",t:"Redactar un correo (paso a paso)",action:"emailflow"},
            {em:"🗓️",t:"Abrir Calendar",url:"https://calendar.google.com"},
            {em:"📝",t:"Abrir Documentos",url:"https://docs.google.com"}],
-  admin:[{em:"✉️",t:"Redactar un correo a un apoderado",q:"Redactar un correo para un apoderado"},
+  admin:[{em:"✉️",t:"Redactar un correo (paso a paso)",action:"emailflow"},
          {em:"🏛️",t:"¿Cómo se conforma el Consejo Escolar?",q:"¿Cómo se conforma el Consejo Escolar?"},
          {em:"👥",t:"Abrir BUK",url:"https://sip.buk.cl/users/sign_in"},
          {em:"🏫",t:"Abrir Mineduc",url:"https://www.mineduc.cl"}],
