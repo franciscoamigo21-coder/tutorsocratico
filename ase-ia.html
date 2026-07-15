@@ -1718,6 +1718,21 @@ async function loadMatricula(){
   }catch(e){ /* silencioso: se mantiene el modo manual (escribir el nombre) */ }
 }
 loadMatricula();
+/* Directorio de estudiantes servido por el Worker (privado, no queda en la web).
+   Solo se pide para funcionarios, tras iniciar sesión. Si el Worker no lo tiene
+   configurado, se mantiene el modo manual (se escribe el nombre a mano). */
+async function loadDirectory(){
+  if(STUDENTS.length) return;                 // ya cargado (p. ej. desde CSV)
+  if(!AI_PROXY_URL) return;
+  try{
+    const sep=AI_PROXY_URL.includes("?")?"&":"?";
+    const r=await fetch(AI_PROXY_URL+sep+"resource=directory",{method:"GET"});
+    if(!r.ok) return;
+    const d=await r.json();
+    const arr=Array.isArray(d)?d:(d.students||d.directory||[]);
+    if(arr.length) STUDENTS=arr.map(x=>({name:x.n||x.name||"",course:x.c||x.course||"",email:x.e||x.email||"",apEmail:x.ae||x.apEmail||""})).filter(s=>s.name);
+  }catch(e){ /* silencioso: se mantiene el modo manual */ }
+}
 function nrmC(s){return (s||"").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"").replace(/basico|medio|[°º.\s-]/g,"");}
 function sameCourse(a,b){a=nrmC(a);b=nrmC(b);return !!a&&!!b&&(a===b||a.includes(b)||b.includes(a));}
 /* Detecta la intención de redactar un correo y a quién va dirigido. */
@@ -2216,6 +2231,7 @@ function enter(role,email,name,photo){
   document.getElementById("mailLabel").textContent=email||"";
   avatarInto("rbAv",CURRENT.photo,(disp.trim()[0]||"A").toUpperCase());
   renderQuick(role);renderSugs();buildProfileMenu();renderHelp(role);
+  if(STAFF(role))loadDirectory();   // carga el directorio de estudiantes desde el Worker (privado)
   const wb=document.getElementById("weekbtn");if(wb)wb.style.display=STAFF(role)?"":"none";  // Calendario JJP: solo funcionarios
   const saludo=name?("¡Hola, "+name.split(" ")[0]+"! 👋"):"¡Hola! 👋";
   add(saludo+" Soy ASE-IA, tu Asistente Escolar del Colegio Presidente José Joaquín Prieto. Pregúntame por reglamentos, evaluación, el PEI, protocolos, convivencia, tareas o fechas.","bot");

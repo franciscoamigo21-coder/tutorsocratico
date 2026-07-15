@@ -27,6 +27,18 @@ const ALLOWED_ORIGINS = [
 
 const MODEL = "claude-sonnet-4-6";
 
+/* ============================================================================
+ *  DIRECTORIO DE ESTUDIANTES (privado, opcional)
+ *  Aquí va la lista de estudiantes del colegio para que el redactor de correos
+ *  autocomplete el nombre y el correo. Vive SOLO en este Worker (su código no es
+ *  público) y jamás se publica en la página ni en GitHub. Cada entrada:
+ *     {n:"Nombre Apellido", c:"CÓDIGO CURSO", e:"correo@alumnos.sip.cl", ae:"correo apoderado"}
+ *  Reemplaza [] por la lista real (te la entrego lista para pegar). Si lo dejas
+ *  vacío, el redactor sigue funcionando pidiendo el nombre a mano.
+ *  El endpoint solo responde a los ORÍGENES del colegio (ALLOWED_ORIGINS).
+ * ========================================================================== */
+const DIRECTORY = [];
+
 function corsHeaders(origin) {
   const allowed = ALLOWED_ORIGINS.includes(origin) ? origin : ALLOWED_ORIGINS[0];
   return {
@@ -85,6 +97,17 @@ export default {
     const cors = corsHeaders(origin);
 
     if (request.method === "OPTIONS") return new Response(null, { status: 204, headers: cors });
+
+    // Directorio de estudiantes: solo para los orígenes del colegio.
+    const url = new URL(request.url);
+    if (request.method === "GET" && url.searchParams.get("resource") === "directory") {
+      if (!ALLOWED_ORIGINS.includes(origin)) return json({ error: "Origen no autorizado" }, 403, cors);
+      return new Response(JSON.stringify({ students: DIRECTORY }), {
+        status: 200,
+        headers: { "Content-Type": "application/json", "Cache-Control": "no-store", ...cors },
+      });
+    }
+
     if (request.method === "GET") {
       return json({ ok: true, servicio: "ASE-IA Worker", claveConfigurada: !!env.ANTHROPIC_API_KEY, modelo: MODEL }, 200, cors);
     }
