@@ -237,8 +237,9 @@
   .echoice:disabled{cursor:default;transform:none;}
   .echoice:disabled:not(.sel){opacity:.45;}
   .echoice.sel{background:var(--azul);color:#fff;border-color:var(--azul);}
-  .ecurso{width:100%;padding:11px 12px;border:1px solid #d9e6ff;border-radius:12px;font-size:13.5px;
-    font-family:inherit;background:#f4f8ff;color:var(--azul-ink);outline:none;}
+  .ecurso,.msg input.einput{width:100%;padding:11px 12px;border:1px solid #d9e6ff;border-radius:12px;font-size:13.5px;
+    font-family:inherit;background:#f4f8ff;color:var(--azul-ink);outline:none;box-sizing:border-box;}
+  .msg input.einput:focus{border-color:var(--cyan);background:#fff;box-shadow:0 0 0 3px rgba(34,195,230,.15);}
   .cites{margin-top:10px;display:flex;flex-wrap:wrap;gap:6px;}
   .cite{background:linear-gradient(135deg,#eef4ff,#e6efff);color:var(--azul);border:1px solid #d6e3ff;border-radius:999px;padding:3px 11px;font-size:11px;font-weight:700;}
   .typing{display:flex;gap:5px;padding:14px 16px;background:#fff;border:1px solid var(--border);border-radius:18px;border-bottom-left-radius:6px;}
@@ -1717,7 +1718,7 @@ const ASIGNATURAS=["Lenguaje","Matemáticas","Inglés","Ciencias Naturales","His
 const EPURPOSES={
   apoderado:[
     {id:"inasist",t:"Informar inasistencia a una evaluación",subject:"Inasistencia a evaluación",art:"el Artículo 48 del Reglamento de Evaluación",motivo:"Le informo que su pupilo/a{curso} no se presentó a la evaluación de {asig}. Según el Artículo 48 del Reglamento de Evaluación, tiene una única oportunidad de rendirla; presentando la justificación a tiempo la recupera en las mismas condiciones. Coordinaremos con usted la nueva fecha por este medio."},
-    {id:"conducta",t:"Informar un mal comportamiento o falta",subject:"Situación de convivencia",art:"el Reglamento Interno de Convivencia",motivo:"Me comunico para informarle una situación de convivencia de su pupilo/a{curso} en la asignatura de {asig}: [describa brevemente lo ocurrido]. De acuerdo con el Reglamento Interno de Convivencia, aplicaremos una medida formativa (una conversación reflexiva y el registro en la hoja de observaciones), buscando acompañar y reparar. Le mantendré informado/a del seguimiento."},
+    {id:"conducta",t:"Informar un mal comportamiento o falta",subject:"Situación de convivencia",art:"el Reglamento Interno de Convivencia",ex:["interrumpió la clase de forma reiterada","faltó el respeto a un compañero/a","usó el celular sin autorización","no trajo sus materiales de trabajo","se retiró de la sala sin autorización","no cumplió las normas de la clase"],motivo:"Me comunico para informarle una situación de convivencia de su pupilo/a{curso} en la asignatura de {asig}: {detalle}. De acuerdo con el Reglamento Interno de Convivencia, aplicaremos una medida formativa (una conversación reflexiva y el registro en la hoja de observaciones), buscando acompañar y reparar. Le mantendré informado/a del seguimiento."},
     {id:"rendimiento",t:"Informar bajo rendimiento",subject:"Rendimiento académico",art:"el Reglamento de Evaluación",motivo:"Le escribo por el rendimiento de su pupilo/a{curso} en {asig}. Según el Reglamento de Evaluación, la nota mínima de aprobación es 4,0 y la promoción exige aprobar las asignaturas y cumplir el 85% de asistencia. Para apoyarlo/a proponemos: reforzamiento en el horario de atención, un plan de trabajo con metas semanales, retroalimentación después de cada evaluación y, si es necesario, derivación a la dupla psicosocial. Le invito a acompañar este proceso en casa con horarios de estudio y lectura."},
     {id:"citacion",t:"Citar a una reunión o entrevista",subject:"Citación a entrevista",art:"el conducto regular del Reglamento Interno",motivo:"Le invito a una entrevista para conversar sobre el proceso escolar de su pupilo/a{curso} en {asig}. Coordinaremos el día y la hora por este mismo medio, dentro del conducto regular del Reglamento Interno."},
     {id:"felicitar",t:"Reconocer o felicitar",subject:"Reconocimiento",art:"los valores del Proyecto Educativo",motivo:"Quiero destacar el buen desempeño, el esfuerzo y la actitud de su pupilo/a{curso} en {asig}. ¡Felicitaciones! Sigamos fortaleciendo estos valores del Proyecto Educativo desde el colegio y el hogar."},
@@ -1729,9 +1730,9 @@ const EPURPOSES={
     {id:"felicitar",t:"Reconocer o felicitar",subject:"¡Felicitaciones!",art:"los valores del Proyecto Educativo",motivo:"Quiero felicitarte por tu esfuerzo, tu responsabilidad y tu actitud en {asig}. ¡Sigue así! Reflejas los valores del Proyecto Educativo. Estoy para apoyarte en lo que necesites."},
   ],
   jefe:[
-    {id:"caso",t:"Informar una falta de un estudiante",subject:"Caso de un estudiante",art:"el Reglamento Interno de Convivencia",motivo:"Te informo un caso del estudiante [nombre del estudiante]{curso} en la asignatura de {asig}: [describa brevemente lo ocurrido]. Según el Reglamento Interno de Convivencia correspondería aplicar una medida formativa y dejar registro en la hoja de observaciones. Quedo disponible para coordinar el seguimiento contigo."},
-    {id:"bienestar",t:"Derivar por bienestar o convivencia",subject:"Derivación por bienestar",art:"los protocolos de convivencia",motivo:"Quiero derivar al estudiante [nombre del estudiante]{curso} por una situación de bienestar o convivencia observada en {asig}: [describa brevemente la situación]. Sugiero activar el protocolo correspondiente y coordinar apoyo con la dupla psicosocial."},
-    {id:"apoyo",t:"Coordinar apoyo pedagógico",subject:"Apoyo pedagógico",art:"el Reglamento de Evaluación",motivo:"Coordinemos apoyo pedagógico para el estudiante [nombre del estudiante]{curso} en {asig}, considerando el Reglamento de Evaluación (evaluación diferenciada o adecuación curricular si corresponde). Propongo reforzamiento y retroalimentación personalizada; quedo atento/a para trabajarlo juntos."},
+    {id:"caso",t:"Informar una falta de un estudiante",subject:"Caso de un estudiante",art:"el Reglamento Interno de Convivencia",ex:["una falta a la buena convivencia con un compañero/a","reiterados atrasos e inasistencias","uso indebido del celular en clases","una situación de conflicto en el aula","incumplimiento reiterado de sus deberes"],motivo:"Te informo un caso del estudiante {nombre}{curso} en la asignatura de {asig}: {detalle}. Según el Reglamento Interno de Convivencia correspondería aplicar una medida formativa y dejar registro en la hoja de observaciones. Quedo disponible para coordinar el seguimiento contigo."},
+    {id:"bienestar",t:"Derivar por bienestar o convivencia",subject:"Derivación por bienestar",art:"los protocolos de convivencia",ex:["señales de desregulación emocional","posible situación de bienestar en el hogar","aislamiento o cambios de conducta","conflictos frecuentes con sus pares"],motivo:"Quiero derivar al estudiante {nombre}{curso} por una situación de bienestar o convivencia observada en {asig}: {detalle}. Sugiero activar el protocolo correspondiente y coordinar apoyo con la dupla psicosocial."},
+    {id:"apoyo",t:"Coordinar apoyo pedagógico",subject:"Apoyo pedagógico",art:"el Reglamento de Evaluación",motivo:"Coordinemos apoyo pedagógico para el estudiante {nombre}{curso} en {asig}, considerando el Reglamento de Evaluación (evaluación diferenciada o adecuación curricular si corresponde). Propongo reforzamiento y retroalimentación personalizada; quedo atento/a para trabajarlo juntos."},
   ],
 };
 const EMAIL_SUG="✉️ Redactar un correo (paso a paso)";
@@ -1772,11 +1773,30 @@ function selectStep(label,options,placeholder,onDone){
     b.onclick=()=>{sel.disabled=true;b.disabled=true;b.classList.add("sel");onDone(sel.value||"");};
     m.appendChild(sel);m.appendChild(b);});
 }
-function emailPurpose(pp){EFLOW.purpose=pp;
-  selectStep("¿De qué curso es el estudiante? (lo agrego al correo)",CURSOS,"Selecciona el curso…",v=>{EFLOW.course=v;emailAsig();});
+/* Paso de texto libre (nombre del estudiante, detalle escrito…). */
+function inputStep(label,placeholder,onDone){
+  botCard(m=>{m.appendChild(el("div","mtext",label));
+    const inp=document.createElement("input");inp.type="text";inp.className="einput";inp.placeholder=placeholder;
+    const b=el("button","echoice");b.type="button";b.style.marginTop="8px";b.textContent="Continuar";
+    const go=()=>{inp.disabled=true;b.disabled=true;b.classList.add("sel");onDone(inp.value.trim());};
+    b.onclick=go;inp.addEventListener("keydown",e=>{if(e.key==="Enter")go();});
+    m.appendChild(inp);m.appendChild(b);setTimeout(()=>inp.focus(),60);});
+}
+function emailPurpose(pp){EFLOW.purpose=pp;emailName();}
+function emailName(){
+  inputStep("¿Cómo se llama el estudiante? (lo agrego al correo)","Nombre y apellido del estudiante",v=>{EFLOW.name=v;emailCourse();});
+}
+function emailCourse(){
+  selectStep("¿De qué curso es el estudiante?",CURSOS,"Selecciona el curso…",v=>{EFLOW.course=v;emailAsig();});
 }
 function emailAsig(){
-  selectStep("¿De qué asignatura se trata?",ASIGNATURAS,"Selecciona la asignatura…",v=>{EFLOW.asig=v;emailTone();});
+  selectStep("¿De qué asignatura se trata?",ASIGNATURAS,"Selecciona la asignatura…",v=>{EFLOW.asig=v;if(EFLOW.purpose.ex)emailDetail();else emailTone();});
+}
+function emailDetail(){
+  const ex=EFLOW.purpose.ex||[];
+  const choices=ex.map(x=>({t:x.charAt(0).toUpperCase()+x.slice(1),fn:()=>{EFLOW.detail=x;emailTone();}}));
+  choices.push({t:"✏️ Otro (lo escribo)",fn:()=>inputStep("Describe brevemente lo ocurrido:","Ej: no entregó su trabajo a tiempo",v=>{EFLOW.detail=v||"[describa brevemente lo ocurrido]";emailTone();})});
+  botCard(m=>choiceRow(m,"¿Qué ocurrió? Elige un ejemplo o escríbelo:",choices));
 }
 function emailTone(){
   botCard(m=>choiceRow(m,"¿En qué tono quieres redactarlo?",TONES.map(tn=>({t:tn.t,fn:()=>emailBuild(tn.id)}))));
@@ -1784,17 +1804,21 @@ function emailTone(){
 function emailBuild(tone){EFLOW.tone=tone;
   const to=EFLOW.to,purpose=EFLOW.purpose,course=EFLOW.course;
   const cursoTxt=course?(" del curso "+course):"";
+  const asig=EFLOW.asig||"[asignatura]";
+  const nombre=EFLOW.name||"[nombre del estudiante]";
+  const detalle=EFLOW.detail||"[describa brevemente lo ocurrido]";
   const saludo = to==="jefe" ? "Estimado/a profesor/a jefe:"
-    : to==="apoderado" ? "Estimado/a apoderado/a de [nombre del estudiante]:"
-    : (tone==="cercano" ? "Hola [nombre del estudiante]:" : "Estimado/a estudiante [nombre del estudiante]:");
+    : to==="apoderado" ? ("Estimado/a apoderado/a de "+nombre+":")
+    : (tone==="cercano" ? ("Hola "+nombre+":") : ("Estimado/a estudiante "+nombre+":"));
   const cierre = to==="jefe" ? "Quedo atento/a para coordinar los pasos a seguir."
     : tone==="cercano" ? "Quedo atenta/o a su respuesta. Un cordial saludo,"
     : tone==="academico" ? "Le saluda atentamente," : "Atentamente,";
-  const cuerpo = purpose.motivo.replace("{curso}",cursoTxt).replace("{asig}",EFLOW.asig||"[asignatura]");
-  const body = saludo+"\n\n"+cuerpo+"\n\n"+cierre+"\n[Su nombre], [asignatura o cargo]";
+  const cuerpo = purpose.motivo.replace("{curso}",cursoTxt).replace("{asig}",asig).replace("{nombre}",nombre).replace("{detalle}",detalle);
+  const firma = (CURRENT.name||"[Su nombre]")+(EFLOW.asig?(", profesor/a de "+EFLOW.asig):", docente");
+  const body = saludo+"\n\n"+cuerpo+"\n\n"+cierre+"\n"+firma;
   const subject = purpose.subject+(course?(" · "+course):"");
   const tName=(TONES.find(t=>t.id===tone)||{}).t||"";
-  const reply = "Listo. Este es tu borrador en tono "+tName.toLowerCase()+", basado en "+purpose.art+". Revisa los campos entre [corchetes] y ábrelo en Gmail:\n\n"+body;
+  const reply = "Listo. Este es tu borrador en tono "+tName.toLowerCase()+", basado en "+purpose.art+". Revísalo y ábrelo en Gmail con el botón:\n\n"+body;
   add(reply,"bot",{mail:{url:gmailComposeUrl(subject,body)}});
   speak("Tu borrador está listo. Puedes abrirlo en Gmail con el botón de abajo.");
   EFLOW=null;
