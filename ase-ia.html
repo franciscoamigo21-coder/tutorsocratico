@@ -794,6 +794,18 @@ const AI_PROXY_URL = "https://ase-ia.franciscoamigo21.workers.dev";
  * ========================================================================== */
 const GOOGLE_CLIENT_ID = "";
 
+/* ============================================================================
+ *  PLANILLA DE MATRÍCULAS 2026 (opcional, para vincular nombre y correo)
+ *  Deja "" y el redactor de correos pedirá el nombre del estudiante a mano.
+ *  Para vincularlo automáticamente: en la planilla de Google Sheets ve a
+ *  Archivo → Compartir → Publicar en la web → elige la hoja → formato "CSV"
+ *  → Publicar, y pega aquí ese enlace (termina en output=csv). ASE-IA leerá
+ *  las columnas cuyo encabezado contenga "nombre", "curso", "correo" del
+ *  estudiante y, si existe, "correo apoderado". Nada de esto viaja a terceros:
+ *  la lectura ocurre en el navegador del docente.
+ * ========================================================================== */
+const MATRICULA_CSV_URL = "";
+
 /* ============ LOGOS DE PLATAFORMAS (SVG oficiales por marca) ============ */
 const ICONS={
  gmail:'<svg viewBox="0 0 48 48"><path fill="#4caf50" d="M45 16.2l-5 2.75-5 4.75V40h7a3 3 0 0 0 3-3z"/><path fill="#1e88e5" d="M3 16.2l3.6 1.7L13 23.7V40H6a3 3 0 0 1-3-3z"/><path fill="#e53935" d="M35 11.2L24 19.45 13 11.2 12 17l1 6.7 11 8.25 11-8.25 1-6.7z"/><path fill="#c62828" d="M3 12.3V16.2l10 7.5V11.2L9.9 8.86A4.3 4.3 0 0 0 3 12.3z"/><path fill="#fbc02d" d="M45 12.3V16.2l-10 7.5V11.2l3.1-2.34A4.3 4.3 0 0 1 45 12.3z"/></svg>',
@@ -1662,11 +1674,52 @@ function workspaceCards(query,role){
 /* ============ REDACTAR CORREOS · borrador humano + acceso a Gmail ============ */
 const GMAIL_ICON='<svg viewBox="0 0 24 24" fill="none"><rect x="2.5" y="4.5" width="19" height="15" rx="2.5" fill="#fff"/><path d="M3 6l9 6 9-6" stroke="#ea4335" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 /* URL de Gmail que abre la ventana de redacción con el asunto y el CUERPO ya insertados. */
-function gmailComposeUrl(subject,body){
+function gmailComposeUrl(subject,body,to){
   return "https://mail.google.com/mail/u/0/?view=cm&fs=1&tf=1"
+    +(to?("&to="+encodeURIComponent(to)):"")
     +"&su="+encodeURIComponent(subject||"")
     +"&body="+encodeURIComponent(body||"");
 }
+/* ---- Planilla de Matrículas: lectura del CSV publicado (opcional) ---- */
+let STUDENTS=[];
+function parseCSV(text){
+  const rows=[];let row=[],f="",q=false;
+  text=text.replace(/\r\n/g,"\n").replace(/\r/g,"\n");
+  for(let i=0;i<text.length;i++){const c=text[i];
+    if(q){ if(c==='"'){ if(text[i+1]==='"'){f+='"';i++;} else q=false; } else f+=c; }
+    else { if(c==='"')q=true; else if(c===','){row.push(f);f="";}
+      else if(c==='\n'){row.push(f);rows.push(row);row=[];f="";} else f+=c; }
+  }
+  if(f.length||row.length){row.push(f);rows.push(row);}
+  return rows;
+}
+function nrmH(s){return (s||"").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"").trim();}
+async function loadMatricula(){
+  if(!MATRICULA_CSV_URL) return;
+  try{
+    const r=await fetch(MATRICULA_CSV_URL);
+    if(!r.ok) return;
+    const rows=parseCSV(await r.text());
+    if(rows.length<2) return;
+    const H=rows[0].map(nrmH);
+    const ci=(...names)=>{for(const n of names){const i=H.findIndex(h=>h.includes(n));if(i>=0)return i;}return -1;};
+    const iN=ci("nombre","estudiante","alumno");
+    const iC=ci("curso");
+    const iAE=ci("correo apoderado","email apoderado","mail apoderado");
+    let iE=-1;
+    for(let i=0;i<H.length;i++){if(i!==iAE&&/correo|email|mail/.test(H[i])){iE=i;break;}}
+    if(iN<0) return;
+    STUDENTS=rows.slice(1).filter(r=>(r[iN]||"").trim()).map(r=>({
+      name:(r[iN]||"").trim(),
+      course:iC>=0?(r[iC]||"").trim():"",
+      email:iE>=0?(r[iE]||"").trim():"",
+      apEmail:iAE>=0?(r[iAE]||"").trim():""
+    }));
+  }catch(e){ /* silencioso: se mantiene el modo manual (escribir el nombre) */ }
+}
+loadMatricula();
+function nrmC(s){return (s||"").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"").replace(/basico|medio|[°º.\s-]/g,"");}
+function sameCourse(a,b){a=nrmC(a);b=nrmC(b);return !!a&&!!b&&(a===b||a.includes(b)||b.includes(a));}
 /* Detecta la intención de redactar un correo y a quién va dirigido. */
 function emailIntent(q){
   const n=normalize(q);
@@ -1782,12 +1835,29 @@ function inputStep(label,placeholder,onDone){
     b.onclick=go;inp.addEventListener("keydown",e=>{if(e.key==="Enter")go();});
     m.appendChild(inp);m.appendChild(b);setTimeout(()=>inp.focus(),60);});
 }
-function emailPurpose(pp){EFLOW.purpose=pp;emailName();}
-function emailName(){
-  inputStep("¿Cómo se llama el estudiante? (lo agrego al correo)","Nombre y apellido del estudiante",v=>{EFLOW.name=v;emailCourse();});
-}
+function emailPurpose(pp){EFLOW.purpose=pp;emailCourse();}
 function emailCourse(){
-  selectStep("¿De qué curso es el estudiante?",CURSOS,"Selecciona el curso…",v=>{EFLOW.course=v;emailAsig();});
+  selectStep("¿De qué curso es el estudiante?",CURSOS,"Selecciona el curso…",v=>{EFLOW.course=v;emailStudent();});
+}
+/* Paso de estudiante: dropdown desde la Planilla de Matrículas (nombre + correo);
+   si la planilla no está configurada, se escribe el nombre a mano. */
+function studentStep(list,onDone){
+  botCard(m=>{m.appendChild(el("div","mtext","¿Quién es el estudiante? Lo tomo de la Planilla de Matrículas (agrego su nombre y correo)."));
+    const sel=document.createElement("select");sel.className="ecurso";
+    const o0=document.createElement("option");o0.value="";o0.textContent="Selecciona al estudiante…";sel.appendChild(o0);
+    list.forEach((s,i)=>{const o=document.createElement("option");o.value=String(i);o.textContent=s.name+(s.course?(" · "+s.course):"");sel.appendChild(o);});
+    const b=el("button","echoice");b.type="button";b.style.marginTop="8px";b.textContent="Continuar";
+    b.onclick=()=>{const s=list[sel.value];sel.disabled=true;b.disabled=true;b.classList.add("sel");onDone(s||null);};
+    m.appendChild(sel);m.appendChild(b);});
+}
+function emailStudent(){
+  if(STUDENTS.length){
+    let list=STUDENTS.filter(s=>sameCourse(s.course,EFLOW.course));
+    if(!list.length)list=STUDENTS.slice();
+    studentStep(list,s=>{if(s){EFLOW.name=s.name;EFLOW.stEmail=s.email;EFLOW.apEmail=s.apEmail;}emailAsig();});
+  }else{
+    inputStep("¿Cómo se llama el estudiante? (lo agrego al correo)","Nombre y apellido del estudiante",v=>{EFLOW.name=v;emailAsig();});
+  }
 }
 function emailAsig(){
   selectStep("¿De qué asignatura se trata?",ASIGNATURAS,"Selecciona la asignatura…",v=>{EFLOW.asig=v;if(EFLOW.purpose.ex)emailDetail();else emailTone();});
@@ -1818,8 +1888,9 @@ function emailBuild(tone){EFLOW.tone=tone;
   const body = saludo+"\n\n"+cuerpo+"\n\n"+cierre+"\n"+firma;
   const subject = purpose.subject+(course?(" · "+course):"");
   const tName=(TONES.find(t=>t.id===tone)||{}).t||"";
+  const toEmail = to==="estudiante" ? (EFLOW.stEmail||"") : to==="apoderado" ? (EFLOW.apEmail||"") : "";
   const reply = "Listo. Este es tu borrador en tono "+tName.toLowerCase()+", basado en "+purpose.art+". Revísalo y ábrelo en Gmail con el botón:\n\n"+body;
-  add(reply,"bot",{mail:{url:gmailComposeUrl(subject,body)}});
+  add(reply,"bot",{mail:{url:gmailComposeUrl(subject,body,toEmail)}});
   speak("Tu borrador está listo. Puedes abrirlo en Gmail con el botón de abajo.");
   EFLOW=null;
 }
