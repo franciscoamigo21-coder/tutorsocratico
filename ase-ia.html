@@ -743,7 +743,7 @@
       <div class="myp-head">
         <div class="myp-av" id="mypAv">🎓</div>
         <div class="myp-id"><div class="myp-name" id="mypName"></div><div class="myp-sub" id="mypSub"></div></div>
-        <button class="myp-change" type="button" onclick="changeStudent()" title="Cambiar de estudiante">Cambiar</button>
+        <button class="myp-change" id="mypChange" type="button" onclick="changeStudent()" title="Cambiar de estudiante" hidden>Cambiar</button>
       </div>
       <div class="myp-grid" id="mypGrid"></div>
     </section>
@@ -1811,34 +1811,33 @@ loadMatricula();
 /* Directorio de estudiantes servido por el Worker (privado, no queda en la web).
    Solo se pide para funcionarios, tras iniciar sesión. Si el Worker no lo tiene
    configurado, se mantiene el modo manual (se escribe el nombre a mano). */
-async function loadDirectory(){
-  if(STUDENTS.length) return;                 // ya cargado (p. ej. desde CSV)
-  if(!AI_PROXY_URL) return;
+let ROSTER=[];let AUTH_TOKEN="";let CURRENT_PUPILS=[];
+/* Llamada POST autenticada al Worker (envía el token de Google verificado). */
+async function apiPost(resource,payload){
+  if(!AI_PROXY_URL) return {__err:"noproxy"};
   try{
     const sep=AI_PROXY_URL.includes("?")?"&":"?";
-    const r=await fetch(AI_PROXY_URL+sep+"resource=directory",{method:"GET"});
-    if(!r.ok) return;
-    const d=await r.json();
-    const arr=Array.isArray(d)?d:(d.students||d.directory||[]);
-    if(arr.length) STUDENTS=arr.map(x=>({name:x.n||x.name||"",course:x.c||x.course||"",email:x.e||x.email||"",apEmail:x.ae||x.apEmail||""})).filter(s=>s.name);
-  }catch(e){ /* silencioso: se mantiene el modo manual */ }
+    const r=await fetch(AI_PROXY_URL+sep+"resource="+resource,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload||{})});
+    const d=await r.json().catch(()=>({}));
+    if(!r.ok) return {__err:r.status,...d};
+    return d;
+  }catch(e){ return {__err:"net"}; }
 }
-/* Nómina liviana (solo nombre y curso) para elegir perfil de apoderado/estudiante
-   al iniciar sesión. No trae correos. Se pide una sola vez al Worker. */
-let ROSTER=[];let ROSTER_TRIED=false;
-async function loadRoster(){
-  if(ROSTER.length||ROSTER_TRIED) return ROSTER;
-  ROSTER_TRIED=true;
-  if(!AI_PROXY_URL) return ROSTER;
-  try{
-    const sep=AI_PROXY_URL.includes("?")?"&":"?";
-    const r=await fetch(AI_PROXY_URL+sep+"resource=roster",{method:"GET"});
-    if(!r.ok) return ROSTER;
-    const d=await r.json();
-    const arr=Array.isArray(d)?d:(d.students||[]);
-    ROSTER=arr.map(x=>({name:x.n||x.name||"",course:x.c||x.course||""})).filter(s=>s.name);
-  }catch(e){ /* silencioso: si falla, se escribe el nombre a mano */ }
-  return ROSTER;
+/* Directorio completo (con correos): el Worker solo lo entrega a docentes/
+   administrativos con token válido. Alimenta el redactor de correos y, para el
+   perfil maestro, la selección manual de estudiantes. */
+async function loadDirectory(){
+  if(STUDENTS.length||!AUTH_TOKEN) return;
+  const d=await apiPost("directory",{credential:AUTH_TOKEN});
+  const arr=(d&&d.students)||[];
+  if(arr.length){
+    STUDENTS=arr.map(x=>({name:x.n||"",course:x.c||"",email:x.e||"",apEmail:x.ae||""})).filter(s=>s.name);
+    ROSTER=STUDENTS.map(s=>({name:s.name,course:s.course}));
+  }
+}
+function profFromMatch(m){
+  const cc=(m&&m.course)||"";const cl=(COURSES.find(c=>c.c===cc)||{}).l||cc;
+  return {courseCode:cc,courseLabel:cl,student:(m&&m.name)||""};
 }
 function nrmC(s){return (s||"").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"").replace(/basico|medio|[°º.\s-]/g,"");}
 function sameCourse(a,b){a=nrmC(a);b=nrmC(b);return !!a&&!!b&&(a===b||a.includes(b)||b.includes(a));}
@@ -2379,6 +2378,9 @@ function renderMyPanel(){
     const l=el("div","l",c.l);if(c.sub){const s=document.createElement("small");s.textContent=c.sub;l.appendChild(s);}
     card.appendChild(l);card.onclick=c.fn;grid.appendChild(card);
   });
+  // "Cambiar" solo para el perfil maestro o apoderados con más de un pupilo/a
+  const ch=document.getElementById("mypChange");
+  if(ch)ch.hidden=!(isDev(CURRENT.email)||(ROLE==="guardian"&&CURRENT_PUPILS&&CURRENT_PUPILS.length>1));
   panel.style.display="";
 }
 function openHorario(){
@@ -2398,19 +2400,24 @@ function openDoc(kind){
   aseToast("Muy pronto","El "+lbl.charAt(0).toUpperCase()+lbl.slice(1)+" estará disponible aquí","El colegio carga este documento "+quien+" cada semestre.",8000);
 }
 /* ---- Selección de curso y estudiante (modal de login) ---- */
-let SEL_CTX=null;
-async function openSel(role,email,name,prev){
+let SEL_CTX=null, SEL_POOL=null;
+/* pool opcional: lista restringida [{name,course}] (p. ej. los pupilos del apoderado).
+   Si no se pasa, usa el directorio completo (ROSTER, solo para el perfil maestro). */
+function openSel(role,email,name,prev,pool){
   SEL_CTX={role,email,name};
+  SEL_POOL=(pool&&pool.length)?pool.map(x=>({name:x.student||x.name,course:x.courseCode||x.course})):null;
   document.getElementById("selErr").textContent="";
   const selC=document.getElementById("selCurso"),selE=document.getElementById("selEst");
-  selC.innerHTML='<option value="">Selecciona el curso…</option>'+COURSES.map(c=>'<option value="'+c.c+'">'+c.l+'</option>').join("");
+  const courses=SEL_POOL?COURSES.filter(c=>SEL_POOL.some(s=>s.course===c.c)):COURSES;
+  selC.innerHTML='<option value="">Selecciona el curso…</option>'+courses.map(c=>'<option value="'+c.c+'">'+c.l+'</option>').join("");
   selE.innerHTML='<option value="">Primero elige el curso…</option>';selE.disabled=true;
-  document.getElementById("selTitle").textContent=role==="guardian"?"¿De qué curso y estudiante eres apoderado/a?":"¿Cuál es tu curso y tu nombre?";
-  document.getElementById("selSub").textContent=role==="guardian"?"Puedes elegir a tu pupilo/a ahora o más tarde con el botón Cambiar":"Elige tu curso y selecciona tu nombre en la lista";
-  document.getElementById("selLblCurso").textContent=role==="guardian"?"Curso de su pupilo/a":"Tu curso";
-  document.getElementById("selLblEst").textContent=role==="guardian"?"Su pupilo/a (opcional)":"Tu nombre";
+  const guard=(role==="guardian");
+  document.getElementById("selTitle").textContent=SEL_POOL?"¿Cuál de tus pupilos/as?":(guard?"Elige curso y estudiante":"Elige tu curso y estudiante");
+  document.getElementById("selSub").textContent=SEL_POOL?"Selecciona a quién quieres ver":"Selecciona el curso y luego el estudiante";
+  document.getElementById("selLblCurso").textContent=guard?"Curso":"Curso";
+  document.getElementById("selLblEst").textContent=guard?"Pupilo/a":"Estudiante";
   document.getElementById("selmodal").classList.add("open");
-  await loadRoster();
+  if(SEL_POOL&&courses.length===1){selC.value=courses[0].c;selCourseChanged();}
   if(prev&&prev.courseCode){selC.value=prev.courseCode;selCourseChanged();selE.value=prev.student||"";}
 }
 /* Nombres chilenos: normalmente 1-2 nombres + 2 apellidos. Ordenamos y mostramos
@@ -2427,7 +2434,8 @@ function selCourseChanged(){
   const cc=document.getElementById("selCurso").value;
   const selE=document.getElementById("selEst");
   if(!cc){selE.innerHTML='<option value="">Primero elige el curso…</option>';selE.disabled=true;return;}
-  const list=ROSTER.filter(s=>s.course===cc).sort((a,b)=>apellidoKey(a.name).localeCompare(apellidoKey(b.name),"es"));
+  const src=SEL_POOL||ROSTER;
+  const list=src.filter(s=>s.course===cc).sort((a,b)=>apellidoKey(a.name).localeCompare(apellidoKey(b.name),"es"));
   if(!list.length){
     selE.innerHTML='<option value="">Nómina no disponible (revisa la conexión)</option>';selE.disabled=true;return;
   }
@@ -2449,16 +2457,16 @@ function selConfirm(){
   try{const users=loadUsers();if(SEL_CTX.email&&users[SEL_CTX.email]){users[SEL_CTX.email].profile=prof;saveUsers(users);}}catch(_){}
   closeSel();
   const ctx=SEL_CTX;SEL_CTX=null;
-  setTimeout(()=>enter(ctx.role,ctx.email,ctx.name,"",prof),160);
+  setTimeout(()=>enter(ctx.role,ctx.email,ctx.name,CURRENT.photo||"",prof),160);
 }
-function changeStudent(){ openSel(ROLE,CURRENT.email,CURRENT.name,CURRENT.prof); }
-/* Tras autenticar: apoderado/estudiante pasan por la selección; el resto entra. */
-function afterAuth(role,email,name,photo){
-  if(role==="guardian"||role==="student"){
-    let prev=null;try{const u=loadUsers();prev=(u[email]&&u[email].profile)||null;}catch(_){}
-    openSel(role,email,name,prev);
-  }else enter(role,email,name,photo);
+function changeStudent(){
+  if(CURRENT_PUPILS&&CURRENT_PUPILS.length>1){ openSel("guardian",CURRENT.email,CURRENT.name,CURRENT.prof,CURRENT_PUPILS); return; }
+  if(isDev(CURRENT.email)){ openSel(ROLE,CURRENT.email,CURRENT.name,CURRENT.prof); return; }
+  aseToast("Tu perfil","Estás vinculado a "+((CURRENT.prof&&CURRENT.prof.student)||"tu pupilo/a"),"Si necesitas otro estudiante, contacta al colegio.",6000);
 }
+/* Acceso LOCAL (respaldo sin Google): entra en modo limitado, sin datos
+   personales (esos solo se entregan tras verificar la cuenta con Google). */
+function afterAuth(role,email,name,photo){ enter(role,email,name,photo,null); }
 document.addEventListener("keydown",e=>{if(e.key==="Escape")closeSel();});
 
 /* ============ MENÚ DE PERFIL · búsquedas, acciones y preferencias ============ */
@@ -2676,7 +2684,6 @@ function pick(role){
   document.getElementById("loginT").textContent=i.t;
   document.getElementById("loginD").textContent=i.d;
   gDom(i.dom,false);
-  if(role==="guardian"||role==="student")loadRoster();   // precarga la nómina para elegir estudiante
   const oauth=!!GOOGLE_CLIENT_ID;
   const gbtn=document.getElementById("gbtn"), greal=document.getElementById("gbtnReal"), gnote=document.getElementById("gnote"), glink=document.getElementById("glocalLink");
   if(gbtn)gbtn.style.display=oauth?"none":"";
@@ -2772,14 +2779,39 @@ function loadGIS(cb){
   s.onerror=()=>{gDom("No se pudo cargar Google. Revisa tu conexión e intenta de nuevo.",true);};
   document.head.appendChild(s);
 }
-function googleCallback(resp){
-  const p=decodeJwt(resp&&resp.credential);
-  const email=(p.email||"").toLowerCase();
-  const need=DOMAIN[PENDING];
-  if(!email){gDom("No se pudo leer el correo de Google.",true);return;}
-  if(need&&email.split("@")[1]!==need&&!isDev(email)){gDom("Este perfil requiere una cuenta @"+need+". Elige otra cuenta.",true);return;}
+async function googleCallback(resp){
+  const cred=resp&&resp.credential;
+  if(!cred){gDom("No se pudo leer la respuesta de Google.",true);return;}
+  gDom("Verificando tu cuenta…",false);
+  const me=await apiPost("me",{credential:cred});   // el Worker VERIFICA el token
+  if(!me||me.__err||!me.role){gDom("No pudimos verificar tu cuenta. Intenta de nuevo.",true);return;}
+  AUTH_TOKEN=cred;
+  const email=me.email||"", name=me.name||"", pic=me.picture||"";
   gDom("",false);
-  afterAuth(PENDING,email,p.name||"",p.picture||"");   // apoderado/estudiante luego eligen curso y estudiante
+  // El rol lo decide el CORREO VERIFICADO en el servidor (no lo que se eligió):
+  if(me.role==="staff"){                       // @sip.cl -> docente o administrativo
+    enter(PENDING==="admin"?"admin":"teacher",email,name,pic); loadDirectory(); return;
+  }
+  if(me.role==="student"){                      // @alumnos.sip.cl -> su propio perfil (documento Cuentas)
+    const prof=me.student?profFromMatch(me.student):null;
+    enter("student",email,name,pic,prof);
+    if(!prof)aseToast("Cuenta sin curso vinculado","No encontramos tu curso","Puedes usar el chat igual. Avisa al colegio para vincular tu correo.",9000);
+    return;
+  }
+  if(me.role==="dev"){                          // correo maestro: elige rol y estudiante manualmente
+    if(PENDING==="teacher"||PENDING==="admin"){ enter(PENDING,email,name,pic); loadDirectory(); }
+    else { await loadDirectory(); enter(PENDING,email,name,pic,null); setTimeout(()=>openSel(PENDING,email,name,null),200); }
+    return;
+  }
+  // Apoderado: solo su(s) pupilo(s), según la Planilla de Matrículas
+  CURRENT_PUPILS=(me.pupils||[]).map(profFromMatch);
+  if(!CURRENT_PUPILS.length){
+    enter("guardian",email,name,pic,null);
+    aseToast("Sin estudiantes vinculados","No encontramos pupilos ligados a tu correo","Verifica que sea el correo registrado en el colegio o contáctalos.",10000);
+  }else{
+    enter("guardian",email,name,pic,CURRENT_PUPILS[0]);
+    if(CURRENT_PUPILS.length>1)aseToast("Tienes "+CURRENT_PUPILS.length+" pupilos/as","Mostrando a "+CURRENT_PUPILS[0].student,"Cámbialo con el botón Cambiar.",8000);
+  }
 }
 function initGIS(){
   if(!GIS_READY||GIS_INITED)return;
@@ -2849,7 +2881,7 @@ function skipIntro(){const i=document.getElementById("intro");if(!i||i.classList
   let k=0;
   function nextMsg(){ if(!msg)return; msg.classList.remove("on");
     setTimeout(()=>{ msg.textContent="« "+FRASES[k%FRASES.length]+" »"; msg.classList.add("on"); k++; },240); }
-  nextMsg(); introTimer=setInterval(nextMsg,1650);
+  nextMsg(); introTimer=setInterval(nextMsg,4200);   // más lento, para alcanzar a leer cada frase
   // Sonido: intenta sonar de inmediato; si el navegador lo bloquea, suena con el primer toque.
   const a=getIntroAudio();
   playIntroSound();
