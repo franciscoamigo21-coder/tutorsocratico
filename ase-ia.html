@@ -2371,8 +2371,9 @@ function renderMyPanel(){
   const p=CURRENT.prof;
   if((ROLE!=="guardian"&&ROLE!=="student")||!p){panel.style.display="none";return;}
   document.getElementById("mypAv").textContent=(ROLE==="guardian"?"👪":"🎓");
-  document.getElementById("mypName").textContent=p.student||"";
-  document.getElementById("mypSub").textContent=(ROLE==="guardian"?"Apoderado/a · ":"Estudiante · ")+(p.courseLabel||"");
+  document.getElementById("mypName").textContent=p.student||(ROLE==="guardian"?(CURRENT.name||"Apoderado/a"):(CURRENT.name||"Estudiante"));
+  const rol=(ROLE==="guardian"?"Apoderado/a":"Estudiante");
+  document.getElementById("mypSub").textContent=p.courseLabel?(rol+" · "+p.courseLabel):rol;
   const grid=document.getElementById("mypGrid");grid.innerHTML="";
   const cards=[
     {e:"🗓️",l:"Horario",sub:"Ver mi horario",fn:openHorario,soon:!(HORARIOS_GRID[p.courseCode]||HOR_IMG[p.courseCode])},
@@ -2415,9 +2416,9 @@ async function openSel(role,email,name,prev){
   selC.innerHTML='<option value="">Selecciona el curso…</option>'+COURSES.map(c=>'<option value="'+c.c+'">'+c.l+'</option>').join("");
   selE.innerHTML='<option value="">Primero elige el curso…</option>';selE.disabled=true;
   document.getElementById("selTitle").textContent=role==="guardian"?"¿De qué curso y estudiante eres apoderado/a?":"¿Cuál es tu curso y tu nombre?";
-  document.getElementById("selSub").textContent=role==="guardian"?"Personalizamos tu perfil con la información del colegio":"Elige tu curso y selecciona tu nombre en la lista";
+  document.getElementById("selSub").textContent=role==="guardian"?"Puedes elegir a tu pupilo/a ahora o más tarde con el botón Cambiar":"Elige tu curso y selecciona tu nombre en la lista";
   document.getElementById("selLblCurso").textContent=role==="guardian"?"Curso de su pupilo/a":"Tu curso";
-  document.getElementById("selLblEst").textContent=role==="guardian"?"Su pupilo/a":"Tu nombre";
+  document.getElementById("selLblEst").textContent=role==="guardian"?"Su pupilo/a (opcional)":"Tu nombre";
   document.getElementById("selmodal").classList.add("open");
   await loadRoster();
   if(prev&&prev.courseCode){selC.value=prev.courseCode;selCourseChanged();selE.value=prev.student||"";}
@@ -2438,9 +2439,11 @@ function selConfirm(){
   const cc=document.getElementById("selCurso").value;
   const student=document.getElementById("selEst").value.trim();
   const err=document.getElementById("selErr");
-  if(!cc){err.textContent="Selecciona el curso.";return;}
-  if(!student){err.textContent="Selecciona al estudiante en la lista.";return;}
-  const courseLabel=(COURSES.find(c=>c.c===cc)||{}).l||cc;
+  if(SEL_CTX&&SEL_CTX.role==="student"){   // el estudiante sí debe identificarse
+    if(!cc){err.textContent="Selecciona el curso.";return;}
+    if(!student){err.textContent="Selecciona al estudiante en la lista.";return;}
+  }
+  const courseLabel=(COURSES.find(c=>c.c===cc)||{}).l||"";
   const prof={courseCode:cc,courseLabel,student};
   try{const users=loadUsers();if(SEL_CTX.email&&users[SEL_CTX.email]){users[SEL_CTX.email].profile=prof;saveUsers(users);}}catch(_){}
   closeSel();
