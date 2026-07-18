@@ -70,8 +70,20 @@ function profileFor(u) {
     const s = DIRECTORY.find((x) => (x.e || "").toLowerCase() === email);
     return { role: "student", email, name: u.name, picture: u.picture, student: s ? { name: s.n, course: s.c } : null };
   }
-  const pupils = DIRECTORY.filter((x) => (x.ae || "").toLowerCase() === email).map((x) => ({ name: x.n, course: x.c }));
+  const pupils = DIRECTORY.filter((x) => (x.ae || "").toLowerCase() === email).map((x) => ({ name: x.n, course: x.c, email: x.e }));
   return { role: "guardian", email, name: u.name, picture: u.picture, pupils };
+}
+/* ¿A qué correo(s) de estudiante puede acceder este usuario? (para documentos) */
+function allowedStudentEmails(p) {
+  if (p.role === "staff" || p.role === "dev") return "*";               // todos
+  if (p.role === "student") return [p.email];                            // solo el suyo
+  if (p.role === "guardian") return (p.pupils || []).map((x) => (x.email || "").toLowerCase());
+  return [];
+}
+function bufToB64(buf) {
+  const b = new Uint8Array(buf); let bin = ""; const chunk = 0x8000;
+  for (let i = 0; i < b.length; i += chunk) bin += String.fromCharCode.apply(null, b.subarray(i, i + chunk));
+  return btoa(bin);
 }
 
 function corsHeaders(origin) {
@@ -159,6 +171,26 @@ export default {
       const p = profileFor(u);
       if (p.role !== "staff" && p.role !== "dev") return json({ error: "No autorizado" }, 403, cors);
       return new Response(JSON.stringify({ students: DIRECTORY }), { status: 200, headers: secure });
+    }
+    // ---- Documento de un estudiante (informe de notas/personalidad, certificado) ----
+    // Se guardan en R2 (bucket privado enlazado como DOCS) con clave
+    // "<tipo>__<correo con @ -> _at_>.pdf". Cada quien solo recibe lo autorizado.
+    if (resource === "doc") {
+      const u = await verifyGoogle(body.credential);
+      if (!u) return json({ error: "No pudimos verificar tu cuenta." }, 401, cors);
+      const p = profileFor(u);
+      const kind = String(body.kind || "personalidad").toLowerCase().replace(/[^a-z]/g, "");
+      const target = String(body.student || "").toLowerCase();     // correo del estudiante pedido
+      const allowed = allowedStudentEmails(p);
+      let key = null;
+      if (allowed === "*") key = target;                            // staff: debe indicar el estudiante
+      else if (allowed.length && (!target || allowed.includes(target))) key = target || allowed[0];
+      if (!key) return json({ error: "No autorizado" }, 403, cors);
+      if (!env.DOCS) return new Response(JSON.stringify({ ready: false, reason: "sin-r2" }), { status: 200, headers: secure });
+      const obj = await env.DOCS.get(kind + "__" + key.replace("@", "_at_") + ".pdf");
+      if (!obj) return new Response(JSON.stringify({ ready: false, reason: "sin-doc" }), { status: 200, headers: secure });
+      const b64 = bufToB64(await obj.arrayBuffer());
+      return new Response(JSON.stringify({ ready: true, pdf: b64 }), { status: 200, headers: secure });
     }
 
     // ---- Chat con IA (por defecto) ----
