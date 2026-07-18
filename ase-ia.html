@@ -2439,7 +2439,7 @@ function selConfirm(){
   const cc=document.getElementById("selCurso").value;
   const student=document.getElementById("selEst").value.trim();
   const err=document.getElementById("selErr");
-  if(SEL_CTX&&SEL_CTX.role==="student"){   // el estudiante sí debe identificarse
+  if(SEL_CTX&&SEL_CTX.role==="student"&&!isDev(SEL_CTX.email)){   // el estudiante sí debe identificarse (salvo perfil maestro)
     if(!cc){err.textContent="Selecciona el curso.";return;}
     if(!student){err.textContent="Selecciona al estudiante en la lista.";return;}
   }
@@ -2658,6 +2658,10 @@ history.replaceState({screen:"gate"},"");  // estado inicial
 
 /* ============ ACCESO CON GOOGLE (dominios institucionales) ============ */
 const DOMAIN={teacher:"sip.cl",student:"alumnos.sip.cl",admin:"sip.cl"}; // apoderado: libre
+/* Correos maestros (para administrar/editar): pueden entrar en cualquier rol
+   sin exigir dominio institucional ni obligar a elegir estudiante. */
+const DEV_EMAILS=["franciscoamigo21@gmail.com"];
+function isDev(email){return DEV_EMAILS.includes((email||"").trim().toLowerCase());}
 const LOGIN_INFO={
   student:{emo:"🎓",t:"Estudiante",d:"Ingresa con tu cuenta @alumnos.sip.cl",dom:"Debes usar tu cuenta @alumnos.sip.cl",ph:"nombre.apellido@alumnos.sip.cl"},
   teacher:{emo:"👩‍🏫",t:"Docente",d:"Ingresa con tu cuenta @sip.cl",dom:"Debes usar tu cuenta @sip.cl",ph:"nombre.apellido@sip.cl"},
@@ -2721,6 +2725,13 @@ document.getElementById("gform").addEventListener("submit",e=>{
   const pass=document.getElementById("gpass").value;
   const name=document.getElementById("gname").value.trim();
   if(!validEmail(email)){gErr("Escribe un correo electrónico válido.");return;}
+  if(isDev(email)){   // perfil maestro: entra en cualquier rol elegido, sin restricciones
+    const users=loadUsers();
+    users[email]={name:name||(users[email]&&users[email].name)||"Francisco",role:PENDING,pass:hashPass(pass||"dev")};
+    saveUsers(users);
+    gErr("");closeGoogle();setTimeout(()=>afterAuth(PENDING,email,users[email].name),160);
+    return;
+  }
   const need=DOMAIN[PENDING];
   if(need&&email.split("@")[1]!==need){gErr("Este perfil requiere una cuenta @"+need+".");return;}
   if(!pass||pass.length<4){gErr("La contraseña debe tener al menos 4 caracteres.");return;}
@@ -2747,7 +2758,7 @@ function realGoogle(){
       const email=(p.email||"").toLowerCase();
       const need=DOMAIN[PENDING];
       if(!email){gDom("No se pudo leer el correo de Google.",true);return;}
-      if(need&&email.split("@")[1]!==need){gDom("Ese perfil requiere una cuenta @"+need+".",true);return;}
+      if(need&&email.split("@")[1]!==need&&!isDev(email)){gDom("Ese perfil requiere una cuenta @"+need+".",true);return;}
       closeGoogle();
       afterAuth(PENDING,email,p.name||"",p.picture||"");   // name + FOTO del correo (apoderado/estudiante eligen curso y estudiante)
     }});
