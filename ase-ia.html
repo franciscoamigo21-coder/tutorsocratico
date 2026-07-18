@@ -2424,9 +2424,12 @@ async function openDoc(kind){
   const p=CURRENT.prof;const lbl=DOC_LABELS[kind]||"documento";
   const quien=ROLE==="guardian"?("de "+((p&&p.student)?p.student:"su pupilo/a")):"tuyo";
   if(!AUTH_TOKEN){ aseToast("Inicia sesión con Google","Para ver documentos personales entra con tu cuenta de Google","No están disponibles con el acceso de respaldo.",8000); return; }
+  const needsPick=(ROLE==="teacher"||ROLE==="admin"||isDev(CURRENT.email));
+  if(needsPick && !(p&&p.email)){ aseToast("Elige un estudiante","Primero selecciona un estudiante","Usa el botón Cambiar para elegirlo.",7000); return; }
   aseToast("Cargando…","Buscando el "+lbl,"Un momento por favor.",3500);
-  const target=(p&&p.email)||"";   // correo del pupilo (apoderado); vacío si es el propio estudiante
+  const target=(p&&p.email)||"";   // correo del pupilo (apoderado/maestro); vacío si es el propio estudiante
   const d=await apiPost("doc",{credential:AUTH_TOKEN,kind:kind,student:target});
+  if(d&&d.__err===403){ aseToast("Sin acceso","Este documento no corresponde a este perfil","Vuelve a elegir al estudiante con el botón Cambiar.",7000); return; }
   if(!d||d.__err){ aseToast("No disponible","No pudimos cargar el "+lbl,(d&&d.error)||"Intenta más tarde.",7000); return; }
   if(!d.ready){ aseToast("Muy pronto","El "+lbl.charAt(0).toUpperCase()+lbl.slice(1)+" aún no está cargado","El colegio publica este documento "+quien+" cada semestre.",8000); return; }
   showPdf("Informe · "+((p&&p.student)||""),d.pdf);
