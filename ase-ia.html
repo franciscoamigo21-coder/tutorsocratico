@@ -2431,7 +2431,12 @@ async function openDoc(kind){
   const d=await apiPost("doc",{credential:AUTH_TOKEN,kind:kind,student:target});
   if(d&&d.__err===403){ aseToast("Sin acceso","Este documento no corresponde a este perfil","Vuelve a elegir al estudiante con el botón Cambiar.",7000); return; }
   if(!d||d.__err){ aseToast("No disponible","No pudimos cargar el "+lbl,(d&&d.error)||"Intenta más tarde.",7000); return; }
-  if(!d.ready){ aseToast("Muy pronto","El "+lbl.charAt(0).toUpperCase()+lbl.slice(1)+" aún no está cargado","El colegio publica este documento "+quien+" cada semestre.",8000); return; }
+  if(!d.ready){
+    if(d.reason==="sin-r2"){ aseToast("Falta conectar R2","El bucket no está enlazado al Worker","En Cloudflare agrega el binding llamado DOCS y vuelve a Deploy.",12000); }
+    else{ const fn=kind+"__"+target.toLowerCase().replace("@","_at_")+".pdf";
+      aseToast("Documento no encontrado en R2","Sube a R2 (en la raíz) un archivo con este nombre exacto:",fn,15000); }
+    return;
+  }
   showPdf("Informe · "+((p&&p.student)||""),d.pdf);
 }
 /* ---- Selección de curso y estudiante (modal de login) ---- */
