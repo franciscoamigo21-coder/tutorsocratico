@@ -306,11 +306,16 @@
   /* ===== Modal de horario ===== */
   #hormodal{position:fixed;inset:0;z-index:1200;display:none;align-items:center;justify-content:center;padding:20px;background:rgba(8,22,52,.55);backdrop-filter:blur(3px);}
   #hormodal.open{display:flex;animation:fadeUp .2s ease both;}
+  #pdmodal{position:fixed;inset:0;z-index:1210;display:none;align-items:center;justify-content:center;padding:20px;background:rgba(8,22,52,.55);backdrop-filter:blur(3px);}
+  #pdmodal.open{display:flex;animation:fadeUp .2s ease both;}
+  #pdmodal .gcard2{max-height:88vh;overflow:auto;}
+  #pdBody{margin:6px 0 2px;text-align:left;}
   #hormodal .horcard{max-width:820px;}
   #horBody{margin-top:14px;}
   #horBody img.horimg{width:100%;height:auto;border-radius:12px;border:1px solid #e5eefc;display:block;}
   #horBody .soonbox{padding:26px 18px;text-align:center;color:var(--muted);background:#f6f9ff;border:1px dashed #cfe0ff;border-radius:14px;}
   #horBody .soonbox .big{font-size:34px;margin-bottom:8px;}
+  #horBody iframe.docframe{width:100%;height:72vh;border:1px solid #e5eefc;border-radius:12px;background:#fff;display:block;}
   .hortab-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;}
   .hortab{border-collapse:separate;border-spacing:5px;width:100%;min-width:520px;}
   .hortab th{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:var(--azul,#1157c9);padding:6px 4px;text-align:center;}
@@ -844,6 +849,20 @@
   </div>
 </div>
 
+<!-- Modal: completar los datos de mi perfil -->
+<div id="pdmodal" onclick="if(event.target===this)closeProfileData()">
+  <div class="gcard2">
+    <div class="gbrand"><img alt="ASE-IA" src="assets/ase-ia-badge.png" onerror="this.outerHTML='<svg viewBox=\'0 0 120 120\'><use href=\'#mascot\'/></svg>'"><span>ASE<b>-IA</b></span></div>
+    <h3>Completa los datos de mi perfil</h3>
+    <p>Se guardan solo en este dispositivo, de forma privada.</p>
+    <div id="pdBody"></div>
+    <div class="grow">
+      <button type="button" class="glink" onclick="closeProfileData()">Cancelar</button>
+      <button type="button" class="gnext" onclick="saveProfileData()">Guardar</button>
+    </div>
+  </div>
+</div>
+
 <!-- Modal: vista previa del horario del curso -->
 <div id="hormodal" onclick="if(event.target===this)closeHorario()">
   <div class="card horcard">
@@ -1099,10 +1118,8 @@ function closeAllPops(){
 }
 document.addEventListener("click",()=>closeAllPops());
 window.addEventListener("resize",()=>closeAllPops());
-// Solo cierra si el scroll es de la PÁGINA; si es dentro del desplegable, se puede mover libremente.
-window.addEventListener("scroll",(e)=>{const t=e.target;
-  if(t&&t.nodeType===1&&t.closest&&t.closest(".qpop"))return;
-  closeAllPops();},true);
+// El desplegable NO se cierra al mover la página (queda fijo). Solo se cierra con
+// la X, al elegir una opción, o al tocar fuera.
 function runQuickAction(a){
   if(a==="weekcal")openCalendar("WEEK");
   else if(a==="monthcal")openCalendar("MONTH");
@@ -1837,7 +1854,7 @@ async function loadDirectory(){
 }
 function profFromMatch(m){
   const cc=(m&&m.course)||"";const cl=(COURSES.find(c=>c.c===cc)||{}).l||cc;
-  return {courseCode:cc,courseLabel:cl,student:(m&&m.name)||""};
+  return {courseCode:cc,courseLabel:cl,student:(m&&m.name)||"",email:(m&&m.email)||""};
 }
 function nrmC(s){return (s||"").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"").replace(/basico|medio|[°º.\s-]/g,"");}
 function sameCourse(a,b){a=nrmC(a);b=nrmC(b);return !!a&&!!b&&(a===b||a.includes(b)||b.includes(a));}
@@ -2368,7 +2385,7 @@ function renderMyPanel(){
   const cards=[
     {e:"🗓️",l:"Horario",sub:"Ver mi horario",fn:openHorario,soon:!HOR_IMG[p.courseCode]},
     {e:"📊",l:"Informe de notas",sub:"Por semestre",fn:()=>openDoc("notas"),soon:true},
-    {e:"🧭",l:"Informe de personalidad",sub:"Por semestre",fn:()=>openDoc("personalidad"),soon:true},
+    {e:"🧭",l:"Informe de personalidad",sub:"Ver documento",fn:()=>openDoc("personalidad"),soon:false},
     {e:"📄",l:"Certificado alumno regular",sub:"",fn:()=>openDoc("certificado"),soon:true},
   ];
   cards.forEach(c=>{
@@ -2394,10 +2411,25 @@ function openHorario(){
 }
 function closeHorario(){document.getElementById("hormodal").classList.remove("open");}
 const DOC_LABELS={notas:"informe de notas",personalidad:"informe de personalidad",certificado:"certificado de alumno regular"};
-function openDoc(kind){
+function showPdf(title,b64){
+  document.getElementById("horTitle").textContent=title;
+  const body=document.getElementById("horBody");body.innerHTML="";
+  const src="data:application/pdf;base64,"+b64;
+  const fr=document.createElement("iframe");fr.className="docframe";fr.src=src;body.appendChild(fr);
+  const a=document.createElement("a");a.href=src;a.download=title.replace(/[^\wáéíóúñ .-]/gi,"_")+".pdf";
+  a.className="sc-m";a.style.display="inline-block";a.style.marginTop="10px";a.textContent="Descargar PDF ↓";body.appendChild(a);
+  document.getElementById("hormodal").classList.add("open");
+}
+async function openDoc(kind){
   const p=CURRENT.prof;const lbl=DOC_LABELS[kind]||"documento";
   const quien=ROLE==="guardian"?("de "+((p&&p.student)?p.student:"su pupilo/a")):"tuyo";
-  aseToast("Muy pronto","El "+lbl.charAt(0).toUpperCase()+lbl.slice(1)+" estará disponible aquí","El colegio carga este documento "+quien+" cada semestre.",8000);
+  if(!AUTH_TOKEN){ aseToast("Inicia sesión con Google","Para ver documentos personales entra con tu cuenta de Google","No están disponibles con el acceso de respaldo.",8000); return; }
+  aseToast("Cargando…","Buscando el "+lbl,"Un momento por favor.",3500);
+  const target=(p&&p.email)||"";   // correo del pupilo (apoderado); vacío si es el propio estudiante
+  const d=await apiPost("doc",{credential:AUTH_TOKEN,kind:kind,student:target});
+  if(!d||d.__err){ aseToast("No disponible","No pudimos cargar el "+lbl,(d&&d.error)||"Intenta más tarde.",7000); return; }
+  if(!d.ready){ aseToast("Muy pronto","El "+lbl.charAt(0).toUpperCase()+lbl.slice(1)+" aún no está cargado","El colegio publica este documento "+quien+" cada semestre.",8000); return; }
+  showPdf("Informe · "+((p&&p.student)||""),d.pdf);
 }
 /* ---- Selección de curso y estudiante (modal de login) ---- */
 let SEL_CTX=null, SEL_POOL=null;
@@ -2587,11 +2619,53 @@ function pmAbout(){
   const b1=document.createElement("button");b1.type="button";b1.className="pm-item";
   b1.appendChild(el("span","em","❓"));b1.appendChild(el("span",null,"¿Cómo funciona ASE-IA?"));
   b1.onclick=()=>{closeProfileMenu();add("Soy ASE-IA, tu Asistente Escolar. Respondo solo con información oficial del colegio (Reglamento Interno, Reglamento de Evaluación, PEI, protocolos y calendario). No mantengo conversaciones cotidianas: pregúntame por normas, evaluación, convivencia, tareas o fechas. 🙂","bot");};
-  const b2=document.createElement("a");b2.className="pm-item";b2.href="https://www.josejoaquinprieto.cl";b2.target="_blank";b2.rel="noopener";
-  b2.appendChild(el("span","em","🌐"));b2.appendChild(el("span",null,"Sitio del colegio"));
-  wrap.appendChild(b1);wrap.appendChild(b2);
+  const b2=document.createElement("button");b2.type="button";b2.className="pm-item";
+  b2.appendChild(el("span","em","✉️"));b2.appendChild(el("span",null,"Ayuda o requerimiento"));
+  b2.onclick=()=>{closeProfileMenu();openHelpMail();};
+  const b3=document.createElement("button");b3.type="button";b3.className="pm-item";
+  b3.appendChild(el("span","em","📝"));b3.appendChild(el("span",null,"Completa los datos de mi perfil"));
+  b3.onclick=()=>{closeProfileMenu();openProfileData();};
+  wrap.appendChild(b1);wrap.appendChild(b3);wrap.appendChild(b2);
   d.appendChild(wrap);return d;
 }
+const HELP_TO="francisco.amigo@sip.cl";
+function openHelpMail(){
+  const who=CURRENT.name||niceName(CURRENT.email,"");
+  const subject="Ayuda o requerimiento · ASE-IA"+(who?(" · "+who):"");
+  const body="Hola, escribo desde ASE-IA.\n\nMi solicitud o requerimiento es:\n\n\n\nPerfil: "+((LOGIN_INFO[ROLE]||{}).t||ROLE)+"\nCorreo: "+(CURRENT.email||"")+"\n";
+  const url=gmailComposeUrl(subject,body,HELP_TO);
+  window.open(url,"_blank","noopener");
+  aseToast("Ayuda","Te abrimos un correo a Coordinación","Escribe tu requerimiento y pulsa Enviar. Llega a "+HELP_TO+".",8000);
+}
+/* ---- Datos del perfil (se guardan en este dispositivo) ---- */
+const PDATA_KEY="aseia_pdata_v1";
+function loadPData(){try{return JSON.parse(localStorage.getItem(PDATA_KEY))||{};}catch(_){return {};}}
+const PDATA_FIELDS=[
+  {k:"nombre",l:"Nombre completo",t:"text"},
+  {k:"nac",l:"Fecha de nacimiento",t:"date"},
+  {k:"tel",l:"Teléfono de contacto",t:"tel"},
+  {k:"dir",l:"Dirección",t:"text"},
+  {k:"comuna",l:"Comuna",t:"text"},
+  {k:"emergencia",l:"Contacto de emergencia (nombre y teléfono)",t:"text"},
+];
+function openProfileData(){
+  const all=loadPData();const mine=all[CURRENT.email||"anon"]||{};
+  const box=document.getElementById("pdBody");box.innerHTML="";
+  PDATA_FIELDS.forEach(f=>{
+    box.appendChild(el("label","sellbl",f.l));
+    const inp=document.createElement("input");inp.className="selsel";inp.type=f.t;inp.id="pd_"+f.k;
+    inp.value=(f.k==="nombre"&&!mine[f.k])?(CURRENT.name||""):(mine[f.k]||"");
+    box.appendChild(inp);
+  });
+  document.getElementById("pdmodal").classList.add("open");
+}
+function saveProfileData(){
+  const all=loadPData();const key=CURRENT.email||"anon";const rec={};
+  PDATA_FIELDS.forEach(f=>{rec[f.k]=(document.getElementById("pd_"+f.k)||{}).value||"";});
+  all[key]=rec;try{localStorage.setItem(PDATA_KEY,JSON.stringify(all));}catch(_){}
+  closeProfileData();aseToast("Perfil","Tus datos se guardaron","Quedan en este dispositivo, de forma privada.",6000);
+}
+function closeProfileData(){document.getElementById("pdmodal").classList.remove("open");}
 function toggleProfileMenu(e){if(e)e.stopPropagation();
   const w=document.getElementById("rolewrap");const open=w.classList.toggle("open");
   document.getElementById("roleBtn").setAttribute("aria-expanded",open?"true":"false");}
@@ -2786,14 +2860,15 @@ async function googleCallback(resp){
   const me=await apiPost("me",{credential:cred});   // el Worker VERIFICA el token
   if(!me||me.__err||!me.role){gDom("No pudimos verificar tu cuenta. Intenta de nuevo.",true);return;}
   AUTH_TOKEN=cred;
-  const email=me.email||"", name=me.name||"", pic=me.picture||"";
+  const email=me.email||"", name=me.name||"";
+  const pic=me.picture||(decodeJwt(cred).picture)||"";   // foto de Google (respaldo desde el token)
   gDom("",false);
   // El rol lo decide el CORREO VERIFICADO en el servidor (no lo que se eligió):
   if(me.role==="staff"){                       // @sip.cl -> docente o administrativo
     enter(PENDING==="admin"?"admin":"teacher",email,name,pic); loadDirectory(); return;
   }
   if(me.role==="student"){                      // @alumnos.sip.cl -> su propio perfil (documento Cuentas)
-    const prof=me.student?profFromMatch(me.student):null;
+    const prof=me.student?Object.assign(profFromMatch(me.student),{email:email}):null;
     enter("student",email,name,pic,prof);
     if(!prof)aseToast("Cuenta sin curso vinculado","No encontramos tu curso","Puedes usar el chat igual. Avisa al colegio para vincular tu correo.",9000);
     return;
