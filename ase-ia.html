@@ -1849,7 +1849,7 @@ async function loadDirectory(){
   const arr=(d&&d.students)||[];
   if(arr.length){
     STUDENTS=arr.map(x=>({name:x.n||"",course:x.c||"",email:x.e||"",apEmail:x.ae||""})).filter(s=>s.name);
-    ROSTER=STUDENTS.map(s=>({name:s.name,course:s.course}));
+    ROSTER=STUDENTS.map(s=>({name:s.name,course:s.course,email:s.email}));
   }
 }
 function profFromMatch(m){
@@ -2437,7 +2437,7 @@ let SEL_CTX=null, SEL_POOL=null;
    Si no se pasa, usa el directorio completo (ROSTER, solo para el perfil maestro). */
 function openSel(role,email,name,prev,pool){
   SEL_CTX={role,email,name};
-  SEL_POOL=(pool&&pool.length)?pool.map(x=>({name:x.student||x.name,course:x.courseCode||x.course})):null;
+  SEL_POOL=(pool&&pool.length)?pool.map(x=>({name:x.student||x.name,course:x.courseCode||x.course,email:x.email||""})):null;
   document.getElementById("selErr").textContent="";
   const selC=document.getElementById("selCurso"),selE=document.getElementById("selEst");
   const courses=SEL_POOL?COURSES.filter(c=>SEL_POOL.some(s=>s.course===c.c)):COURSES;
@@ -2485,7 +2485,9 @@ function selConfirm(){
     if(!student){err.textContent="Selecciona al estudiante en la lista.";return;}
   }
   const courseLabel=(COURSES.find(c=>c.c===cc)||{}).l||"";
-  const prof={courseCode:cc,courseLabel,student};
+  const src=SEL_POOL||ROSTER;
+  const match=src.find(s=>s.name===student&&s.course===cc)||src.find(s=>s.name===student);
+  const prof={courseCode:cc,courseLabel,student,email:(match&&match.email)||""};
   try{const users=loadUsers();if(SEL_CTX.email&&users[SEL_CTX.email]){users[SEL_CTX.email].profile=prof;saveUsers(users);}}catch(_){}
   closeSel();
   const ctx=SEL_CTX;SEL_CTX=null;
