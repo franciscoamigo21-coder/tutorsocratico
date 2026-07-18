@@ -316,6 +316,23 @@
   #horBody .soonbox{padding:26px 18px;text-align:center;color:var(--muted);background:#f6f9ff;border:1px dashed #cfe0ff;border-radius:14px;}
   #horBody .soonbox .big{font-size:34px;margin-bottom:8px;}
   #horBody iframe.docframe{width:100%;height:72vh;border:1px solid #e5eefc;border-radius:12px;background:#fff;display:block;}
+  /* ===== Visor de documentos (alineado al diseño de la página) ===== */
+  #docmodal{position:fixed;inset:0;z-index:1300;display:none;align-items:center;justify-content:center;padding:18px;background:rgba(8,22,52,.6);backdrop-filter:blur(4px);}
+  #docmodal.open{display:flex;animation:fadeUp .22s ease both;}
+  .doccard{background:#fff;border-radius:22px;width:100%;max-width:900px;max-height:92vh;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 44px 90px -26px rgba(6,20,48,.7);}
+  .dochead{display:flex;align-items:center;gap:12px;padding:15px 18px;background:var(--grad-azul);color:#fff;}
+  .dochead .doctag{flex:none;font-size:10.5px;font-weight:800;text-transform:uppercase;letter-spacing:1px;background:rgba(255,255,255,.22);padding:5px 10px;border-radius:8px;}
+  .dochead h4{margin:0;flex:1;min-width:0;font-family:'Montserrat',sans-serif;font-weight:800;font-size:16px;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .dochead .docx{flex:none;width:34px;height:34px;border-radius:11px;border:none;background:rgba(255,255,255,.18);color:#fff;font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.15s;}
+  .dochead .docx:hover{background:rgba(255,255,255,.34);}
+  .docbody{flex:1;min-height:0;padding:14px;background:#eaf1fb;display:flex;}
+  .docbody iframe{width:100%;height:100%;min-height:58vh;border:none;border-radius:12px;background:#fff;box-shadow:0 10px 26px -14px rgba(6,20,48,.5);}
+  .docbody .soonbox{margin:auto;padding:26px 18px;text-align:center;color:var(--muted);background:#fff;border:1px dashed #cfe0ff;border-radius:14px;}
+  .docfoot{display:flex;justify-content:flex-end;gap:10px;padding:12px 16px;border-top:1px solid #eef2f8;background:#fff;}
+  .docbtn{display:inline-flex;align-items:center;gap:6px;background:var(--grad-azul);color:#fff;border:none;border-radius:12px;padding:11px 18px;font-weight:700;font-family:inherit;font-size:14px;cursor:pointer;text-decoration:none;transition:.15s;}
+  .docbtn:hover{filter:brightness(1.06);transform:translateY(-1px);}
+  .docbtn.ghost{background:#eef2f8;color:var(--azul-ink,#0b3d91);}
+  @media(max-width:640px){ .doccard{max-height:94vh;border-radius:16px;} .docbody{padding:10px;} .docbody iframe{min-height:64vh;} .dochead h4{font-size:14px;} .docbtn{padding:10px 14px;font-size:13px;} }
   .hortab-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;}
   .hortab{border-collapse:separate;border-spacing:5px;width:100%;min-width:520px;}
   .hortab th{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:var(--azul,#1157c9);padding:6px 4px;text-align:center;}
@@ -859,6 +876,22 @@
     <div class="grow">
       <button type="button" class="glink" onclick="closeProfileData()">Cancelar</button>
       <button type="button" class="gnext" onclick="saveProfileData()">Guardar</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: visor de documentos (informes, certificados) -->
+<div id="docmodal" onclick="if(event.target===this)closeDoc()">
+  <div class="doccard">
+    <div class="dochead">
+      <span class="doctag" id="docTag">Documento</span>
+      <h4 id="docTitle"></h4>
+      <button class="docx" type="button" onclick="closeDoc()" aria-label="Cerrar">✕</button>
+    </div>
+    <div class="docbody" id="docBody"></div>
+    <div class="docfoot">
+      <a id="docDownload" class="docbtn" download>⬇ Descargar PDF</a>
+      <button class="docbtn ghost" type="button" onclick="closeDoc()">Cerrar</button>
     </div>
   </div>
 </div>
@@ -2411,15 +2444,18 @@ function openHorario(){
 }
 function closeHorario(){document.getElementById("hormodal").classList.remove("open");}
 const DOC_LABELS={notas:"informe de notas",personalidad:"informe de personalidad",certificado:"certificado de alumno regular"};
-function showPdf(title,b64){
-  document.getElementById("horTitle").textContent=title;
-  const body=document.getElementById("horBody");body.innerHTML="";
+function showPdf(tag,student,b64){
+  document.getElementById("docTag").textContent=tag;
+  document.getElementById("docTitle").textContent=student;
+  const body=document.getElementById("docBody");body.innerHTML="";
   const src="data:application/pdf;base64,"+b64;
-  const fr=document.createElement("iframe");fr.className="docframe";fr.src=src;body.appendChild(fr);
-  const a=document.createElement("a");a.href=src;a.download=title.replace(/[^\wáéíóúñ .-]/gi,"_")+".pdf";
-  a.className="sc-m";a.style.display="inline-block";a.style.marginTop="10px";a.textContent="Descargar PDF ↓";body.appendChild(a);
-  document.getElementById("hormodal").classList.add("open");
+  const fr=document.createElement("iframe");fr.src=src;fr.title=tag+" "+student;body.appendChild(fr);
+  const dl=document.getElementById("docDownload");dl.href=src;
+  dl.download=(tag+" "+student).replace(/[^\wáéíóúñ .-]/gi,"_").trim()+".pdf";
+  document.getElementById("docmodal").classList.add("open");
 }
+function closeDoc(){document.getElementById("docmodal").classList.remove("open");}
+document.addEventListener("keydown",e=>{if(e.key==="Escape")closeDoc();});
 async function openDoc(kind){
   const p=CURRENT.prof;const lbl=DOC_LABELS[kind]||"documento";
   const quien=ROLE==="guardian"?("de "+((p&&p.student)?p.student:"su pupilo/a")):"tuyo";
@@ -2437,7 +2473,7 @@ async function openDoc(kind){
       aseToast("Documento no encontrado en R2","Sube a R2 (en la raíz) un archivo con este nombre exacto:",fn,15000); }
     return;
   }
-  showPdf("Informe · "+((p&&p.student)||""),d.pdf);
+  showPdf(lbl.charAt(0).toUpperCase()+lbl.slice(1),(p&&p.student)||"",d.pdf);
 }
 /* ---- Selección de curso y estudiante (modal de login) ---- */
 let SEL_CTX=null, SEL_POOL=null;
