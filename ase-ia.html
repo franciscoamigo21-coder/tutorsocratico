@@ -421,6 +421,11 @@
     font-weight:700;font-size:15px;cursor:pointer;transition:.15s;box-shadow:0 12px 30px -12px rgba(0,0,0,.5);}
   .gbtn:hover{background:#f8fbff;transform:translateY(-1px);box-shadow:0 18px 38px -14px rgba(0,0,0,.55);}
   .gbtn .gg{width:22px;height:22px;display:flex;}.gbtn .gg svg{width:22px;height:22px;}
+  .gbtnreal{display:flex;justify-content:center;margin-top:4px;min-height:44px;}
+  .gbtnreal[hidden]{display:none;}
+  .glocallink{display:block;margin:12px auto 0;background:none;border:none;color:#9fc2ff;font-size:12px;font-family:inherit;text-decoration:underline;cursor:pointer;opacity:.85;}
+  .glocallink[hidden]{display:none;}
+  .glocallink:hover{color:#cfe0ff;}
   .gdom{font-size:12.5px;color:#cfe0ff;min-height:16px;line-height:1.4;margin-top:12px;text-align:center;}
   .gdom.err{color:#ffd0d0;font-weight:600;}
   .gback{margin-top:16px;background:transparent;border:none;color:#9fb6e6;font-family:inherit;font-weight:600;font-size:12.5px;cursor:pointer;}
@@ -676,7 +681,9 @@
           </span>
           <span>Ingresar con mi correo institucional</span>
         </button>
-        <div class="gnote">Ingresa con los datos de tu correo institucional del colegio.</div>
+        <div class="gbtnreal" id="gbtnReal" hidden></div>
+        <div class="gnote" id="gnote">Ingresa con los datos de tu correo institucional del colegio.</div>
+        <button type="button" class="glocallink" id="glocalLink" hidden onclick="openLocalLogin()">¿No aparece el botón de Google? Entrar con correo</button>
         <div class="gdom" id="gdom"></div>
         <button type="button" class="gback" onclick="backToStep1()">← Elegir otro perfil</button>
       </div>
@@ -875,7 +882,7 @@ const AI_PROXY_URL = "https://ase-ia.franciscoamigo21.workers.dev";
  *  agrega tu dominio (https://franciscoamigo21-coder.github.io) a los "Orígenes
  *  autorizados de JavaScript" y pega aquí el ID (…apps.googleusercontent.com).
  * ========================================================================== */
-const GOOGLE_CLIENT_ID = "";
+const GOOGLE_CLIENT_ID = "195849212680-sjfflsv7f96o6742l67ihj5kllitpvj4.apps.googleusercontent.com";
 
 /* ============================================================================
  *  PLANILLA DE MATRÍCULAS 2026 (opcional, para vincular nombre y correo)
@@ -2670,6 +2677,13 @@ function pick(role){
   document.getElementById("loginD").textContent=i.d;
   gDom(i.dom,false);
   if(role==="guardian"||role==="student")loadRoster();   // precarga la nómina para elegir estudiante
+  const oauth=!!GOOGLE_CLIENT_ID;
+  const gbtn=document.getElementById("gbtn"), greal=document.getElementById("gbtnReal"), gnote=document.getElementById("gnote"), glink=document.getElementById("glocalLink");
+  if(gbtn)gbtn.style.display=oauth?"none":"";
+  if(greal)greal.hidden=!oauth;
+  if(glink)glink.hidden=!oauth;
+  if(gnote)gnote.textContent=oauth?"Inicia sesión con tu cuenta de Google del colegio.":"Ingresa con los datos de tu correo institucional del colegio.";
+  if(oauth)setTimeout(renderGoogleButton,30);
   history.pushState({screen:"login"},"");
   showScreen("login");
 }
@@ -2702,7 +2716,11 @@ function toggleAuthMode(){ setAuthMode(AUTH_MODE==="login"?"signup":"login"); re
 
 /* Abre el acceso. Con GOOGLE_CLIENT_ID usa OAuth real; sin él, usa el perfil local. */
 function startGoogle(){
-  if(GOOGLE_CLIENT_ID){realGoogle();return;}
+  if(GOOGLE_CLIENT_ID){realGoogle();return;}   // fallback local si el botón de Google no cargó
+  openLocalLogin();
+}
+/* Acceso con correo local (respaldo o modo demo sin OAuth). */
+function openLocalLogin(){
   const i=LOGIN_INFO[PENDING];
   const em=document.getElementById("gemail");em.value="";em.placeholder=i.ph;
   document.getElementById("gname").value="";document.getElementById("gpass").value="";
@@ -2743,24 +2761,44 @@ document.getElementById("gform").addEventListener("submit",e=>{
 });
 document.addEventListener("keydown",e=>{if(e.key==="Escape")closeGoogle();});
 
-/* OAuth REAL con Google Identity Services (si defines GOOGLE_CLIENT_ID). */
+/* ===== OAuth REAL con Google Identity Services (si hay GOOGLE_CLIENT_ID) ===== */
 function decodeJwt(t){try{return JSON.parse(decodeURIComponent(atob(t.split(".")[1].replace(/-/g,"+").replace(/_/g,"/")).split("").map(c=>"%"+("00"+c.charCodeAt(0).toString(16)).slice(-2)).join("")));}catch(_){return {};}}
+let GIS_READY=false, GIS_INITED=false;
+function loadGIS(cb){
+  if(window.google&&window.google.accounts&&window.google.accounts.id){GIS_READY=true;cb&&cb();return;}
+  if(document.getElementById("gis-sdk")){setTimeout(()=>loadGIS(cb),200);return;}
+  const s=document.createElement("script");s.id="gis-sdk";s.src="https://accounts.google.com/gsi/client";s.async=true;s.defer=true;
+  s.onload=()=>{GIS_READY=true;cb&&cb();};
+  s.onerror=()=>{gDom("No se pudo cargar Google. Revisa tu conexión e intenta de nuevo.",true);};
+  document.head.appendChild(s);
+}
+function googleCallback(resp){
+  const p=decodeJwt(resp&&resp.credential);
+  const email=(p.email||"").toLowerCase();
+  const need=DOMAIN[PENDING];
+  if(!email){gDom("No se pudo leer el correo de Google.",true);return;}
+  if(need&&email.split("@")[1]!==need&&!isDev(email)){gDom("Este perfil requiere una cuenta @"+need+". Elige otra cuenta.",true);return;}
+  gDom("",false);
+  afterAuth(PENDING,email,p.name||"",p.picture||"");   // apoderado/estudiante luego eligen curso y estudiante
+}
+function initGIS(){
+  if(!GIS_READY||GIS_INITED)return;
+  google.accounts.id.initialize({client_id:GOOGLE_CLIENT_ID,callback:googleCallback,auto_select:false,cancel_on_tap_outside:true,ux_mode:"popup"});
+  GIS_INITED=true;
+}
+/* Dibuja el botón oficial "Iniciar sesión con Google" en la pantalla del perfil. */
+function renderGoogleButton(){
+  const box=document.getElementById("gbtnReal");if(!box)return;
+  loadGIS(()=>{ try{
+    initGIS();
+    box.innerHTML="";
+    const w=Math.min(320,Math.max(240,box.clientWidth||300));
+    google.accounts.id.renderButton(box,{type:"standard",theme:"filled_blue",size:"large",text:"signin_with",shape:"pill",logo_alignment:"left",locale:"es",width:w});
+  }catch(_){ gDom("No se pudo iniciar Google. Intenta de nuevo.",true); } });
+}
+/* Compatibilidad: si el botón no cargó, este acceso lanza el One Tap de Google. */
 function realGoogle(){
-  const done=()=>{try{
-    google.accounts.id.initialize({client_id:GOOGLE_CLIENT_ID,callback:r=>{
-      const p=decodeJwt(r.credential);
-      const email=(p.email||"").toLowerCase();
-      const need=DOMAIN[PENDING];
-      if(!email){gDom("No se pudo leer el correo de Google.",true);return;}
-      if(need&&email.split("@")[1]!==need&&!isDev(email)){gDom("Ese perfil requiere una cuenta @"+need+".",true);return;}
-      closeGoogle();
-      afterAuth(PENDING,email,p.name||"",p.picture||"");   // name + FOTO del correo (apoderado/estudiante eligen curso y estudiante)
-    }});
-    google.accounts.id.prompt();
-  }catch(_){gDom("No se pudo iniciar Google. Intenta de nuevo.",true);}};
-  if(window.google&&window.google.accounts){done();return;}
-  const s=document.createElement("script");s.src="https://accounts.google.com/gsi/client";s.async=true;s.defer=true;
-  s.onload=done;s.onerror=()=>gDom("No se pudo cargar Google.",true);document.head.appendChild(s);
+  loadGIS(()=>{ try{ initGIS(); google.accounts.id.prompt(); }catch(_){ gDom("No se pudo iniciar Google.",true); } });
 }
 
 /* ============ INTRO · se cierra sola (o al tocar) y muestra el acceso ============ */
