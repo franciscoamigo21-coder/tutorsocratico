@@ -325,9 +325,13 @@
   .dochead h4{margin:0;flex:1;min-width:0;font-family:'Montserrat',sans-serif;font-weight:800;font-size:16px;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
   .dochead .docx{flex:none;width:34px;height:34px;border-radius:11px;border:none;background:rgba(255,255,255,.18);color:#fff;font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.15s;}
   .dochead .docx:hover{background:rgba(255,255,255,.34);}
-  .docbody{flex:1;min-height:0;padding:14px;background:#eaf1fb;display:flex;}
+  .docbody{flex:1;min-height:0;padding:14px;background:#eaf1fb;overflow:auto;-webkit-overflow-scrolling:touch;}
   .docbody iframe{width:100%;height:100%;min-height:58vh;border:none;border-radius:12px;background:#fff;box-shadow:0 10px 26px -14px rgba(6,20,48,.5);}
   .docbody .soonbox{margin:auto;padding:26px 18px;text-align:center;color:var(--muted);background:#fff;border:1px dashed #cfe0ff;border-radius:14px;}
+  .docbody .pdfpages{display:flex;flex-direction:column;gap:12px;align-items:center;}
+  .docbody canvas.pdfpage{width:100%;max-width:820px;height:auto;border-radius:10px;background:#fff;box-shadow:0 10px 26px -14px rgba(6,20,48,.5);}
+  .docbody .pdfloading{text-align:center;color:var(--muted);padding:44px 16px;font-size:14px;}
+  .docbody .pdfnote{margin-top:10px;text-align:center;color:var(--muted);font-size:12.5px;}
   .docfoot{display:flex;justify-content:flex-end;gap:10px;padding:12px 16px;border-top:1px solid #eef2f8;background:#fff;}
   .docbtn{display:inline-flex;align-items:center;gap:6px;background:var(--grad-azul);color:#fff;border:none;border-radius:12px;padding:11px 18px;font-weight:700;font-family:inherit;font-size:14px;cursor:pointer;text-decoration:none;transition:.15s;}
   .docbtn:hover{filter:brightness(1.06);transform:translateY(-1px);}
@@ -2444,17 +2448,53 @@ function openHorario(){
 }
 function closeHorario(){document.getElementById("hormodal").classList.remove("open");}
 const DOC_LABELS={notas:"informe de notas",personalidad:"informe de personalidad",certificado:"certificado de alumno regular"};
+/* Visor de PDF con PDF.js: dibuja cada página como imagen, para que se vea IGUAL
+   en computador y en celular (los móviles no muestran PDF en un iframe). */
+const PDFJS_VER="3.11.174", PDFJS_CDN="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/"+PDFJS_VER;
+function loadPdfJs(cb){
+  if(window.pdfjsLib){cb(true);return;}
+  if(document.getElementById("pdfjs-lib")){let t=0;const iv=setInterval(()=>{if(window.pdfjsLib){clearInterval(iv);cb(true);}else if(++t>40){clearInterval(iv);cb(false);}},150);return;}
+  const s=document.createElement("script");s.id="pdfjs-lib";s.src=PDFJS_CDN+"/pdf.min.js";
+  s.onload=()=>{ if(window.pdfjsLib){try{pdfjsLib.GlobalWorkerOptions.workerSrc=PDFJS_CDN+"/pdf.worker.min.js";}catch(_){} cb(true);} else cb(false); };
+  s.onerror=()=>cb(false);
+  document.head.appendChild(s);
+}
+function b64ToBytes(b64){const bin=atob(b64);const a=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)a[i]=bin.charCodeAt(i);return a;}
+async function renderPdf(container,bytes){
+  const pdf=await pdfjsLib.getDocument({data:bytes}).promise;
+  container.innerHTML="";
+  const wrap=document.createElement("div");wrap.className="pdfpages";container.appendChild(wrap);
+  const boxW=Math.max(280,(container.clientWidth||600)-4), dpr=Math.min(2,window.devicePixelRatio||1);
+  for(let n=1;n<=pdf.numPages;n++){
+    const page=await pdf.getPage(n), base=page.getViewport({scale:1});
+    const vp=page.getViewport({scale:(boxW/base.width)*dpr});
+    const c=document.createElement("canvas");c.className="pdfpage";c.width=vp.width;c.height=vp.height;
+    wrap.appendChild(c);
+    await page.render({canvasContext:c.getContext("2d"),viewport:vp}).promise;
+  }
+}
 function showPdf(tag,student,b64){
   document.getElementById("docTag").textContent=tag;
   document.getElementById("docTitle").textContent=student;
-  const body=document.getElementById("docBody");body.innerHTML="";
+  const body=document.getElementById("docBody");
+  body.innerHTML='<div class="pdfloading">Cargando documento…</div>';
   const src="data:application/pdf;base64,"+b64;
-  const fr=document.createElement("iframe");fr.src=src;fr.title=tag+" "+student;body.appendChild(fr);
   const dl=document.getElementById("docDownload");dl.href=src;
   dl.download=(tag+" "+student).replace(/[^\wáéíóúñ .-]/gi,"_").trim()+".pdf";
   document.getElementById("docmodal").classList.add("open");
+  loadPdfJs(async(ok)=>{
+    if(document.getElementById("docTitle").textContent!==student)return;   // se cerró/cambió
+    if(ok&&window.pdfjsLib){
+      try{ await renderPdf(body,b64ToBytes(b64)); return; }catch(_){}
+    }
+    // Respaldo: iframe (funciona en computador) + aviso para descargar en celular
+    body.innerHTML="";
+    const fr=document.createElement("iframe");fr.src=src;fr.title=tag+" "+student;body.appendChild(fr);
+    const note=el("div","pdfnote","Si no ves el documento aquí, toca «Descargar PDF» para abrirlo.");
+    body.appendChild(note);
+  });
 }
-function closeDoc(){document.getElementById("docmodal").classList.remove("open");}
+function closeDoc(){document.getElementById("docmodal").classList.remove("open");const b=document.getElementById("docBody");if(b)b.innerHTML="";}
 document.addEventListener("keydown",e=>{if(e.key==="Escape")closeDoc();});
 async function openDoc(kind){
   const p=CURRENT.prof;const lbl=DOC_LABELS[kind]||"documento";
