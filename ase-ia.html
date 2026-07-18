@@ -2417,9 +2417,9 @@ function renderMyPanel(){
   const grid=document.getElementById("mypGrid");grid.innerHTML="";
   const cards=[
     {e:"🗓️",l:"Horario",sub:"Ver mi horario",fn:openHorario,soon:!HOR_IMG[p.courseCode]},
-    {e:"📊",l:"Informe de notas",sub:"Por semestre",fn:()=>openDoc("notas"),soon:true},
+    {e:"📊",l:"Informe de notas",sub:"Ver documento",fn:()=>openDoc("notas"),soon:false},
     {e:"🧭",l:"Informe de personalidad",sub:"Ver documento",fn:()=>openDoc("personalidad"),soon:false},
-    {e:"📄",l:"Certificado alumno regular",sub:"",fn:()=>openDoc("certificado"),soon:true},
+    {e:"📄",l:"Certificado alumno regular",sub:"Ver documento",fn:()=>openDoc("certificado"),soon:false},
   ];
   cards.forEach(c=>{
     const card=el("div","myp-card"+(c.soon?" soon":""));
