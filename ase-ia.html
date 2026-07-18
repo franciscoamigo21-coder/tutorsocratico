@@ -279,6 +279,39 @@
   #srcModal .x{margin-top:20px;display:flex;justify-content:flex-end;}
   #srcModal .x button{background:var(--grad-azul);color:#fff;border:none;border-radius:12px;padding:10px 20px;font-weight:700;font-family:inherit;cursor:pointer;}
 
+  /* ===== Panel personalizado (apoderado / estudiante) ===== */
+  .myp{margin:0 0 16px;background:linear-gradient(160deg,#ffffff,#eef4ff);border:1px solid #dbe7ff;border-radius:20px;padding:14px 16px;box-shadow:0 16px 34px -24px rgba(17,87,201,.45);}
+  .myp-head{display:flex;align-items:center;gap:12px;}
+  .myp-av{width:44px;height:44px;flex:none;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:22px;background:var(--grad-azul);color:#fff;box-shadow:0 8px 18px -8px rgba(17,87,201,.6);}
+  .myp-id{flex:1;min-width:0;}
+  .myp-name{font-weight:800;color:var(--azul-ink,#0b3d91);font-size:15px;line-height:1.15;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .myp-sub{font-size:12px;color:var(--muted);margin-top:1px;}
+  .myp-change{flex:none;background:#fff;border:1px solid #cfe0ff;color:var(--azul,#1157c9);border-radius:10px;padding:7px 12px;font-size:12px;font-weight:700;font-family:inherit;cursor:pointer;}
+  .myp-change:hover{background:#f2f7ff;}
+  .myp-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin-top:13px;}
+  .myp-card{position:relative;display:flex;flex-direction:column;align-items:center;gap:6px;background:#fff;border:1px solid #e5eefc;border-radius:14px;padding:12px 6px;cursor:pointer;transition:transform .15s,box-shadow .15s,border-color .15s;text-align:center;}
+  .myp-card:hover{transform:translateY(-3px);box-shadow:0 14px 30px -16px rgba(11,61,145,.4);border-color:#cfe0ff;}
+  .myp-card .e{font-size:24px;line-height:1;}
+  .myp-card .l{font-size:11px;font-weight:700;color:var(--text);line-height:1.15;}
+  .myp-card .l small{display:block;font-weight:600;color:var(--muted);font-size:9px;margin-top:2px;}
+  .myp-card.soon{opacity:.72;}
+  .myp-card .badge-soon{position:absolute;top:5px;right:5px;background:#ffb020;color:#3a2a00;font-size:8px;font-weight:800;letter-spacing:.4px;padding:2px 5px;border-radius:6px;text-transform:uppercase;}
+  /* ===== Modal de selección de perfil ===== */
+  #selmodal{position:fixed;inset:0;z-index:220;display:none;align-items:center;justify-content:center;padding:20px;background:rgba(8,22,52,.55);backdrop-filter:blur(3px);}
+  #selmodal.open{display:flex;animation:fadeUp .2s ease both;}
+  .sellbl{display:block;text-align:left;font-size:12px;font-weight:700;color:#5f6368;margin:12px 2px 5px;}
+  .selsel{width:100%;padding:12px 12px;border:1px solid #dadce0;border-radius:12px;font-size:14.5px;font-family:inherit;background:#fff;color:#202124;outline:none;box-sizing:border-box;}
+  .selsel:focus{border-color:#1157c9;box-shadow:0 0 0 3px rgba(17,87,201,.15);}
+  .selsel:disabled{background:#f1f3f4;color:#9aa0a6;}
+  /* ===== Modal de horario ===== */
+  #hormodal{position:fixed;inset:0;z-index:1200;display:none;align-items:center;justify-content:center;padding:20px;background:rgba(8,22,52,.55);backdrop-filter:blur(3px);}
+  #hormodal.open{display:flex;animation:fadeUp .2s ease both;}
+  #hormodal .horcard{max-width:820px;}
+  #horBody{margin-top:14px;}
+  #horBody img{width:100%;height:auto;border-radius:12px;border:1px solid #e5eefc;display:block;}
+  #horBody .soonbox{padding:26px 18px;text-align:center;color:var(--muted);background:#f6f9ff;border:1px dashed #cfe0ff;border-radius:14px;}
+  #horBody .soonbox .big{font-size:34px;margin-bottom:8px;}
+
   /* ============ MÓVIL ============ */
   @media(max-width:640px){
     #gate{justify-content:flex-start;padding:24px 18px 36px;}
@@ -293,6 +326,7 @@
     .hero{padding:18px 0 2px;} .hero h1{font-size:21px;} .hero p{font-size:13px;}
     .qgrid{grid-template-columns:repeat(4,1fr);gap:7px;}
     .qcard{padding:8px 4px;border-radius:12px;} .qcard .ic{width:34px;height:34px;} .qcard .ic svg,.qcard .ic img{width:22px;height:22px;} .qcard .lb{font-size:10px;} .qcard .lb small{font-size:8.5px;}
+    .myp-grid{grid-template-columns:repeat(2,1fr);gap:7px;}
     .chat{height:auto;min-height:0;border-radius:20px;} #log{height:54vh;flex:none;} .msg{max-width:88%;}
     form{gap:8px;padding:11px 12px;}
     input[type=text]{padding:12px 14px;min-width:0;}
@@ -687,6 +721,15 @@
 
     <div class="helpbox" id="helpbox" style="display:none"></div>
 
+    <section class="myp" id="myPanel" style="display:none">
+      <div class="myp-head">
+        <div class="myp-av" id="mypAv">🎓</div>
+        <div class="myp-id"><div class="myp-name" id="mypName"></div><div class="myp-sub" id="mypSub"></div></div>
+        <button class="myp-change" type="button" onclick="changeStudent()" title="Cambiar de estudiante">Cambiar</button>
+      </div>
+      <div class="myp-grid" id="mypGrid"></div>
+    </section>
+
     <section class="quick">
       <div class="quickhead">
         <h3 id="quickTitle">Accesos rápidos</h3>
@@ -761,6 +804,36 @@
       </div>
     </form>
     <div class="gfoot">🔒 Tu perfil se guarda solo en este dispositivo. ASE-IA valida el dominio de tu correo institucional.</div>
+  </div>
+</div>
+
+<!-- Modal: elegir curso y estudiante (perfil de apoderado / estudiante) -->
+<div id="selmodal" onclick="if(event.target===this)closeSel()">
+  <div class="gcard2">
+    <div class="gbrand"><img alt="ASE-IA" src="assets/ase-ia-badge.png" onerror="this.outerHTML='<svg viewBox=\'0 0 120 120\'><use href=\'#mascot\'/></svg>'"><span>ASE<b>-IA</b></span></div>
+    <h3 id="selTitle">Elige tu curso y estudiante</h3>
+    <p id="selSub">Personalizamos tu perfil con la información del colegio</p>
+    <label class="sellbl" id="selLblCurso">Curso</label>
+    <select id="selCurso" class="selsel" onchange="selCourseChanged()"><option value="">Selecciona el curso…</option></select>
+    <label class="sellbl" id="selLblEst">Estudiante</label>
+    <input id="selEst" class="selsel" list="selEstList" placeholder="Primero elige el curso…" autocomplete="off" disabled>
+    <datalist id="selEstList"></datalist>
+    <div class="gerr" id="selErr"></div>
+    <div class="grow">
+      <button type="button" class="glink" onclick="closeSel()">Cancelar</button>
+      <button type="button" class="gnext" id="selGo" onclick="selConfirm()">Continuar</button>
+    </div>
+    <div class="gfoot">🔒 Solo se usa para mostrarte tu horario y documentos. Los datos provienen del colegio y no se publican.</div>
+  </div>
+</div>
+
+<!-- Modal: vista previa del horario del curso -->
+<div id="hormodal" onclick="if(event.target===this)closeHorario()">
+  <div class="card horcard">
+    <div class="tag">Horario del curso</div>
+    <h4 id="horTitle"></h4>
+    <div id="horBody"></div>
+    <div class="x"><button onclick="closeHorario()">Cerrar</button></div>
   </div>
 </div>
 
@@ -1733,6 +1806,23 @@ async function loadDirectory(){
     if(arr.length) STUDENTS=arr.map(x=>({name:x.n||x.name||"",course:x.c||x.course||"",email:x.e||x.email||"",apEmail:x.ae||x.apEmail||""})).filter(s=>s.name);
   }catch(e){ /* silencioso: se mantiene el modo manual */ }
 }
+/* Nómina liviana (solo nombre y curso) para elegir perfil de apoderado/estudiante
+   al iniciar sesión. No trae correos. Se pide una sola vez al Worker. */
+let ROSTER=[];let ROSTER_TRIED=false;
+async function loadRoster(){
+  if(ROSTER.length||ROSTER_TRIED) return ROSTER;
+  ROSTER_TRIED=true;
+  if(!AI_PROXY_URL) return ROSTER;
+  try{
+    const sep=AI_PROXY_URL.includes("?")?"&":"?";
+    const r=await fetch(AI_PROXY_URL+sep+"resource=roster",{method:"GET"});
+    if(!r.ok) return ROSTER;
+    const d=await r.json();
+    const arr=Array.isArray(d)?d:(d.students||[]);
+    ROSTER=arr.map(x=>({name:x.n||x.name||"",course:x.c||x.course||""})).filter(s=>s.name);
+  }catch(e){ /* silencioso: si falla, se escribe el nombre a mano */ }
+  return ROSTER;
+}
 function nrmC(s){return (s||"").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"").replace(/basico|medio|[°º.\s-]/g,"");}
 function sameCourse(a,b){a=nrmC(a);b=nrmC(b);return !!a&&!!b&&(a===b||a.includes(b)||b.includes(a));}
 /* Detecta la intención de redactar un correo y a quién va dirigido. */
@@ -2223,14 +2313,14 @@ function avatarInto(elId,photo,fallback){
     img.onerror=()=>{e.textContent=fallback||"A";};e.textContent="";e.appendChild(img);}
   else e.textContent=fallback||"A";
 }
-function enter(role,email,name,photo){
+function enter(role,email,name,photo,prof){
   ROLE=role;convo.length=0;log.innerHTML="";
-  CURRENT={role,email:email||"",name:name||"",photo:photo||""};
+  CURRENT={role,email:email||"",name:name||"",photo:photo||"",prof:prof||null};
   const disp=niceName(email,name);
   document.getElementById("whoLabel").textContent=disp;
   document.getElementById("mailLabel").textContent=email||"";
   avatarInto("rbAv",CURRENT.photo,(disp.trim()[0]||"A").toUpperCase());
-  renderQuick(role);renderSugs();buildProfileMenu();renderHelp(role);
+  renderQuick(role);renderSugs();buildProfileMenu();renderHelp(role);renderMyPanel();
   if(STAFF(role))loadDirectory();   // carga el directorio de estudiantes desde el Worker (privado)
   const wb=document.getElementById("weekbtn");if(wb)wb.style.display=STAFF(role)?"":"none";  // Calendario JJP: solo funcionarios
   const saludo=name?("¡Hola, "+name.split(" ")[0]+"! 👋"):"¡Hola! 👋";
@@ -2241,6 +2331,103 @@ function enter(role,email,name,photo){
 }
 function showGate(){ closeProfileMenu(); if(history.state&&history.state.screen==="app") history.back(); else showScreen("gate"); }
 document.getElementById("f").addEventListener("submit",e=>{e.preventDefault();ask(document.getElementById("q").value);});
+
+/* ============ PERFIL PERSONALIZADO · apoderado y estudiante ============
+   Al iniciar sesión eligen curso y estudiante; su perfil muestra el horario del
+   curso y sus documentos (informe de notas, de personalidad y certificado de
+   alumno regular). Los documentos se cargan por semestre. */
+/* HORARIOS por curso: código de curso -> imagen del horario. Vacío por ahora;
+   al cargar el documento "Horario Cursos" se completa aquí y la vista previa
+   aparece de inmediato. Ejemplo: {"2 B":"assets/horarios/2B.png"} */
+const HORARIOS={};
+function renderMyPanel(){
+  const panel=document.getElementById("myPanel");if(!panel)return;
+  const p=CURRENT.prof;
+  if((ROLE!=="guardian"&&ROLE!=="student")||!p){panel.style.display="none";return;}
+  document.getElementById("mypAv").textContent=(ROLE==="guardian"?"👪":"🎓");
+  document.getElementById("mypName").textContent=p.student||"";
+  document.getElementById("mypSub").textContent=(ROLE==="guardian"?"Apoderado/a · ":"Estudiante · ")+(p.courseLabel||"");
+  const grid=document.getElementById("mypGrid");grid.innerHTML="";
+  const cards=[
+    {e:"🗓️",l:"Horario",sub:"Ver mi horario",fn:openHorario,soon:!HORARIOS[p.courseCode]},
+    {e:"📊",l:"Informe de notas",sub:"Por semestre",fn:()=>openDoc("notas"),soon:true},
+    {e:"🧭",l:"Informe de personalidad",sub:"Por semestre",fn:()=>openDoc("personalidad"),soon:true},
+    {e:"📄",l:"Certificado alumno regular",sub:"",fn:()=>openDoc("certificado"),soon:true},
+  ];
+  cards.forEach(c=>{
+    const card=el("div","myp-card"+(c.soon?" soon":""));
+    if(c.soon)card.appendChild(el("span","badge-soon","Pronto"));
+    card.appendChild(el("div","e",c.e));
+    const l=el("div","l",c.l);if(c.sub){const s=document.createElement("small");s.textContent=c.sub;l.appendChild(s);}
+    card.appendChild(l);card.onclick=c.fn;grid.appendChild(card);
+  });
+  panel.style.display="";
+}
+function openHorario(){
+  const p=CURRENT.prof;if(!p)return;
+  document.getElementById("horTitle").textContent="Horario · "+(p.courseLabel||"");
+  const body=document.getElementById("horBody");body.innerHTML="";
+  const src=HORARIOS[p.courseCode];
+  if(src){const img=new Image();img.src=src;img.alt="Horario "+(p.courseLabel||"");body.appendChild(img);}
+  else body.innerHTML='<div class="soonbox"><div class="big">🗓️</div>El horario de '+(p.courseLabel||"tu curso")+' estará disponible muy pronto. El colegio lo cargará en los próximos días.</div>';
+  document.getElementById("hormodal").classList.add("open");
+}
+function closeHorario(){document.getElementById("hormodal").classList.remove("open");}
+const DOC_LABELS={notas:"informe de notas",personalidad:"informe de personalidad",certificado:"certificado de alumno regular"};
+function openDoc(kind){
+  const p=CURRENT.prof;const lbl=DOC_LABELS[kind]||"documento";
+  const quien=ROLE==="guardian"?("de "+((p&&p.student)?p.student:"su pupilo/a")):"tuyo";
+  aseToast("Muy pronto","El "+lbl.charAt(0).toUpperCase()+lbl.slice(1)+" estará disponible aquí","El colegio carga este documento "+quien+" cada semestre.",8000);
+}
+/* ---- Selección de curso y estudiante (modal de login) ---- */
+let SEL_CTX=null;
+async function openSel(role,email,name,prev){
+  SEL_CTX={role,email,name};
+  document.getElementById("selErr").textContent="";
+  const selC=document.getElementById("selCurso"),selE=document.getElementById("selEst");
+  selC.innerHTML='<option value="">Selecciona el curso…</option>'+COURSES.map(c=>'<option value="'+c.c+'">'+c.l+'</option>').join("");
+  selE.value="";selE.disabled=true;selE.placeholder="Primero elige el curso…";
+  document.getElementById("selEstList").innerHTML="";
+  document.getElementById("selTitle").textContent=role==="guardian"?"¿De qué curso y estudiante eres apoderado/a?":"¿Cuál es tu curso y tu nombre?";
+  document.getElementById("selSub").textContent=role==="guardian"?"Personalizamos tu perfil con la información del colegio":"Elige tu curso y busca tu nombre en la lista";
+  document.getElementById("selLblCurso").textContent=role==="guardian"?"Curso de su pupilo/a":"Tu curso";
+  document.getElementById("selLblEst").textContent=role==="guardian"?"Su pupilo/a":"Tu nombre";
+  document.getElementById("selmodal").classList.add("open");
+  await loadRoster();
+  if(prev&&prev.courseCode){selC.value=prev.courseCode;selCourseChanged();selE.value=prev.student||"";}
+}
+function selCourseChanged(){
+  const cc=document.getElementById("selCurso").value;
+  const selE=document.getElementById("selEst"),dl=document.getElementById("selEstList");
+  if(!cc){selE.value="";selE.disabled=true;selE.placeholder="Primero elige el curso…";dl.innerHTML="";return;}
+  const list=ROSTER.filter(s=>s.course===cc).sort((a,b)=>a.name.localeCompare(b.name,"es"));
+  selE.disabled=false;selE.value="";
+  selE.placeholder=list.length?"Elige o escribe el nombre…":"Escribe el nombre del estudiante";
+  dl.innerHTML=list.map(s=>'<option value="'+s.name.replace(/"/g,"&quot;")+'"></option>').join("");
+}
+function closeSel(){document.getElementById("selmodal").classList.remove("open");}
+function selConfirm(){
+  const cc=document.getElementById("selCurso").value;
+  const student=document.getElementById("selEst").value.trim();
+  const err=document.getElementById("selErr");
+  if(!cc){err.textContent="Selecciona el curso.";return;}
+  if(!student){err.textContent="Selecciona o escribe el estudiante.";return;}
+  const courseLabel=(COURSES.find(c=>c.c===cc)||{}).l||cc;
+  const prof={courseCode:cc,courseLabel,student};
+  try{const users=loadUsers();if(SEL_CTX.email&&users[SEL_CTX.email]){users[SEL_CTX.email].profile=prof;saveUsers(users);}}catch(_){}
+  closeSel();
+  const ctx=SEL_CTX;SEL_CTX=null;
+  setTimeout(()=>enter(ctx.role,ctx.email,ctx.name,"",prof),160);
+}
+function changeStudent(){ openSel(ROLE,CURRENT.email,CURRENT.name,CURRENT.prof); }
+/* Tras autenticar: apoderado/estudiante pasan por la selección; el resto entra. */
+function afterAuth(role,email,name,photo){
+  if(role==="guardian"||role==="student"){
+    let prev=null;try{const u=loadUsers();prev=(u[email]&&u[email].profile)||null;}catch(_){}
+    openSel(role,email,name,prev);
+  }else enter(role,email,name,photo);
+}
+document.addEventListener("keydown",e=>{if(e.key==="Escape")closeSel();});
 
 /* ============ MENÚ DE PERFIL · búsquedas, acciones y preferencias ============ */
 const PREFS_KEY="aseia_prefs_v1";
@@ -2453,6 +2640,7 @@ function pick(role){
   document.getElementById("loginT").textContent=i.t;
   document.getElementById("loginD").textContent=i.d;
   gDom(i.dom,false);
+  if(role==="guardian"||role==="student")loadRoster();   // precarga la nómina para elegir estudiante
   history.pushState({screen:"login"},"");
   showScreen("login");
 }
@@ -2510,11 +2698,11 @@ document.getElementById("gform").addEventListener("submit",e=>{
     if(!name){gErr("Escribe tu nombre y apellido.");return;}
     if(existing){gErr("Ya existe un perfil con este correo. Inicia sesión.");return;}
     users[email]={name,role:PENDING,pass:hashPass(pass)};saveUsers(users);
-    gErr("");closeGoogle();setTimeout(()=>enter(PENDING,email,name),180);
+    gErr("");closeGoogle();setTimeout(()=>afterAuth(PENDING,email,name),180);
   }else{
     if(!existing){gErr("No hay un perfil con este correo. Crea tu perfil primero.");return;}
     if(existing.pass!==hashPass(pass)){gErr("Contraseña incorrecta.");return;}
-    gErr("");closeGoogle();setTimeout(()=>enter(PENDING,email,existing.name),180);
+    gErr("");closeGoogle();setTimeout(()=>afterAuth(PENDING,email,existing.name),180);
   }
 });
 document.addEventListener("keydown",e=>{if(e.key==="Escape")closeGoogle();});
@@ -2530,7 +2718,7 @@ function realGoogle(){
       if(!email){gDom("No se pudo leer el correo de Google.",true);return;}
       if(need&&email.split("@")[1]!==need){gDom("Ese perfil requiere una cuenta @"+need+".",true);return;}
       closeGoogle();
-      enter(PENDING,email,p.name||"",p.picture||"");   // name + FOTO del correo
+      afterAuth(PENDING,email,p.name||"",p.picture||"");   // name + FOTO del correo (apoderado/estudiante eligen curso y estudiante)
     }});
     google.accounts.id.prompt();
   }catch(_){gDom("No se pudo iniciar Google. Intenta de nuevo.",true);}};

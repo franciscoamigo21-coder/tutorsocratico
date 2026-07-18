@@ -107,6 +107,16 @@ export default {
         headers: { "Content-Type": "application/json", "Cache-Control": "no-store", ...cors },
       });
     }
+    // Nómina liviana (solo nombre y curso, SIN correos) para elegir perfil al
+    // iniciar sesión el apoderado o el estudiante. También restringida por origen.
+    if (request.method === "GET" && url.searchParams.get("resource") === "roster") {
+      if (!ALLOWED_ORIGINS.includes(origin)) return json({ error: "Origen no autorizado" }, 403, cors);
+      const roster = DIRECTORY.map((x) => ({ n: x.n, c: x.c }));
+      return new Response(JSON.stringify({ students: roster }), {
+        status: 200,
+        headers: { "Content-Type": "application/json", "Cache-Control": "no-store", ...cors },
+      });
+    }
 
     if (request.method === "GET") {
       return json({ ok: true, servicio: "ASE-IA Worker", claveConfigurada: !!env.ANTHROPIC_API_KEY, modelo: MODEL }, 200, cors);
