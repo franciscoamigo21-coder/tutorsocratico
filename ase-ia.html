@@ -635,6 +635,12 @@
     background:radial-gradient(circle,rgba(255,255,255,.95),rgba(150,205,255,.55) 34%,rgba(120,180,255,0) 68%);
     opacity:0;animation:iFlash 1s ease-out both;mix-blend-mode:screen;}
   @keyframes iFlash{0%{opacity:0;transform:scale(.2);}10%{opacity:1;transform:scale(.9);}28%{opacity:.9;transform:scale(1.1);}100%{opacity:0;transform:scale(1.9);}}
+  /* El logo, el destello y los textos aparecen recién con la "explosión" del sonido:
+     sus animaciones quedan pausadas hasta que el audio llega a su clímax (clase .reveal,
+     que se agrega desde JS según el tiempo real de reproducción). El aro y el halo
+     siguen visibles antes para dar la sensación de "carga". */
+  #intro .ilogo,#intro .iflash,#intro .iname,#intro .ilema,#intro .isub,#intro .icol,#intro .ibar,#intro .ibar i{animation-play-state:paused;}
+  #intro.reveal .ilogo,#intro.reveal .iflash,#intro.reveal .iname,#intro.reveal .ilema,#intro.reveal .isub,#intro.reveal .icol,#intro.reveal .ibar,#intro.reveal .ibar i{animation-play-state:running;}
   @keyframes iSpin{to{transform:rotate(360deg);}}
   @keyframes iHalo{0%,100%{transform:scale(.9);opacity:.55;}50%{transform:scale(1.12);opacity:1;}}
   #intro .iname{margin-top:22px;font-family:'Montserrat',sans-serif;font-weight:800;font-size:56px;line-height:1;color:#fff;letter-spacing:1px;
@@ -2816,9 +2822,10 @@ function openHelpMail(){
 /* ---- Datos del perfil (se guardan en este dispositivo) ---- */
 const PDATA_KEY="aseia_pdata_v1";
 function loadPData(){try{return JSON.parse(localStorage.getItem(PDATA_KEY))||{};}catch(_){return {};}}
-/* Predicados de visibilidad por perfil (se evalúan al abrir el modal). */
-const isStaffRole=()=>STAFF(ROLE)||isDev(CURRENT.email);
-const isTeacherRole=()=>ROLE==="teacher"||isDev(CURRENT.email);
+/* Predicados de visibilidad por perfil (según el ROL con el que se está usando la app,
+   no según si el correo es maestro): así cada perfil ve solo sus propias preguntas. */
+const isStaffRole=()=>ROLE==="teacher"||ROLE==="admin";
+const isTeacherRole=()=>ROLE==="teacher";
 const ROLES_COLEGIO=["Docente de asignatura","Profesor/a jefe","Directivo/a","Jefe/a de UTP (Coordinación)","Inspector/a General","Orientador/a","Psicólogo/a","Educador/a diferencial (PIE)","Asistente de la educación","Administrativo/a","Auxiliar de servicios","Otro"];
 const PDATA_FIELDS=[
   {k:"nombre",l:"Nombre completo",t:"text"},
@@ -3199,6 +3206,13 @@ function skipIntro(){const i=document.getElementById("intro");if(!i||i.classList
   // Sonido: intenta sonar de inmediato; si el navegador lo bloquea, suena con el primer toque.
   const a=getIntroAudio();
   playIntroSound();
+  /* El destello + logo aparecen justo con el clímax del sonido (~2,4 s de reproducción).
+     Se sincroniza con el TIEMPO REAL del audio; si está bloqueado, se revela por respaldo. */
+  let revealed=false;
+  function revealIntro(){ if(revealed)return; revealed=true; i.classList.add("reveal"); }
+  const REVEAL_AT=2.35;
+  a.addEventListener("timeupdate",function onT(){ if(a.currentTime>=REVEAL_AT){ revealIntro(); a.removeEventListener("timeupdate",onT); } });
+  setTimeout(revealIntro,2800);   // respaldo si el audio no avanza (autoplay bloqueado)
   ["pointerdown","touchstart","keydown"].forEach(ev=>window.addEventListener(ev,unlockAudioOnce,{once:true,capture:true}));
   // La intro dura lo que dure el audio (recortada, tope 7.5 s); 5.5 s si no hay metadatos.
   // La barra se sincroniza para llenarse justo al final (así nunca parece pegada).
