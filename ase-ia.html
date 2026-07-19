@@ -48,12 +48,25 @@
   #gate .lema{color:#ffdd8a;font-weight:700;font-size:13.5px;letter-spacing:.4px;}
   #gate p{color:#d3e0fb;margin:14px auto 24px;font-size:14.5px;line-height:1.6;max-width:520px;}
   .picker{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;}
-  .pick{background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.22);border-radius:20px;padding:24px 16px;cursor:pointer;
-    color:#fff;transition:.18s cubic-bezier(.2,.7,.3,1);display:flex;flex-direction:column;align-items:center;gap:9px;font-family:inherit;backdrop-filter:blur(8px);}
-  .pick:hover{background:#fff;color:var(--azul);transform:translateY(-4px);box-shadow:0 20px 40px -14px rgba(0,0,0,.45);border-color:#fff;}
-  .pick .emo{font-size:36px;line-height:1;}
-  .pick .t{font-weight:800;font-size:16.5px;font-family:'Montserrat',sans-serif;}
-  .pick .d{font-size:12px;opacity:.9;font-weight:500;}
+  .pick{position:relative;overflow:hidden;background:linear-gradient(160deg,rgba(255,255,255,.14),rgba(255,255,255,.05));
+    border:1px solid rgba(255,255,255,.26);border-radius:20px;padding:22px 16px 20px;cursor:pointer;
+    color:#fff;transition:.2s cubic-bezier(.2,.7,.3,1);display:flex;flex-direction:column;align-items:center;gap:10px;
+    font-family:inherit;backdrop-filter:blur(10px) saturate(1.1);box-shadow:0 10px 30px -18px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.18);}
+  /* Filo superior luminoso (acabado profesional). */
+  .pick::before{content:"";position:absolute;top:0;left:14%;right:14%;height:1px;
+    background:linear-gradient(90deg,transparent,rgba(255,255,255,.75),transparent);opacity:.7;}
+  /* Brillo diagonal que recorre la tarjeta al pasar el cursor. */
+  .pick::after{content:"";position:absolute;top:-60%;left:-30%;width:55%;height:220%;transform:rotate(20deg);
+    background:linear-gradient(90deg,transparent,rgba(255,255,255,.28),transparent);opacity:0;transition:.5s;pointer-events:none;}
+  .pick:hover{background:#fff;color:var(--azul);transform:translateY(-5px);box-shadow:0 26px 48px -16px rgba(0,0,0,.5);border-color:#fff;}
+  .pick:hover::after{opacity:1;left:130%;}
+  .pick:active{transform:translateY(-1px) scale(.985);}
+  .pick .emo{display:flex;align-items:center;justify-content:center;width:58px;height:58px;border-radius:16px;font-size:30px;line-height:1;
+    background:linear-gradient(160deg,rgba(255,255,255,.22),rgba(255,255,255,.06));border:1px solid rgba(255,255,255,.28);
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.35);transition:.2s;}
+  .pick:hover .emo{background:linear-gradient(160deg,#eef4ff,#dfeaff);border-color:#cfe0ff;transform:scale(1.05);}
+  .pick .t{font-weight:800;font-size:16.5px;font-family:'Montserrat',sans-serif;letter-spacing:.2px;}
+  .pick .d{font-size:11.5px;opacity:.85;font-weight:600;letter-spacing:.2px;}
   #gate .foot{margin-top:26px;font-size:11.5px;color:#9fb6e6;}
 
   /* ============ APP ============ */
@@ -89,18 +102,19 @@
   .quick{margin-top:12px;animation:fadeOnly .6s ease both;position:relative;z-index:40;}
   @keyframes fadeOnly{from{opacity:0;}to{opacity:1;}}
   .quick h3{font-size:11px;text-transform:uppercase;letter-spacing:1.2px;color:var(--muted);margin:0 0 8px;font-weight:700;}
-  .qgrid{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;}
-  @media(max-width:900px){.qgrid{grid-template-columns:repeat(4,1fr);}}
-  @media(max-width:460px){.qgrid{grid-template-columns:repeat(3,1fr);}}
-  .qcard{position:relative;display:flex;flex-direction:column;align-items:center;gap:6px;background:var(--card);
-    border:1px solid var(--border);border-radius:13px;padding:9px 5px;transition:.18s cubic-bezier(.2,.7,.3,1);text-align:center;box-shadow:var(--shadow-sm);}
+  /* Iconos compactos (la mitad del ancho anterior) → el chat queda más arriba. */
+  .qgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(84px,1fr));gap:7px;}
+  @media(max-width:460px){.qgrid{grid-template-columns:repeat(auto-fill,minmax(72px,1fr));gap:6px;}}
+  .qcard{position:relative;display:flex;flex-direction:column;align-items:center;gap:5px;background:var(--card);
+    border:1px solid var(--border);border-radius:12px;padding:8px 4px;transition:.18s cubic-bezier(.2,.7,.3,1);text-align:center;box-shadow:var(--shadow-sm);}
   .qcard:hover{transform:translateY(-3px);box-shadow:0 14px 30px -16px rgba(11,61,145,.4);border-color:#cfe0ff;}
-  .qcard .ic{width:36px;height:36px;display:flex;align-items:center;justify-content:center;border-radius:11px;
+  .qcard .ic{width:32px;height:32px;display:flex;align-items:center;justify-content:center;border-radius:10px;
     background:linear-gradient(160deg,#f6f9ff,#eef3fc);overflow:hidden;}
-  .qcard .ic img{width:24px;height:24px;object-fit:contain;}
-  .qcard .ic svg{width:24px;height:24px;display:block;}
-  .qcard .lb{font-size:11px;font-weight:700;line-height:1.15;color:var(--text);}
-  .qcard .lb small{display:block;font-weight:500;color:var(--muted);font-size:9px;margin-top:1px;}
+  .qcard .ic img{width:21px;height:21px;object-fit:contain;}
+  .qcard .ic svg{width:21px;height:21px;display:block;}
+  .qcard .lb{font-size:10.5px;font-weight:700;line-height:1.14;color:var(--text);max-width:100%;
+    display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;word-break:break-word;}
+  .qcard .lb .cv{font-size:9px;color:var(--muted);margin-left:2px;}
   /* Cabecera de accesos + botón Vista semanal */
   .quickhead{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:0 0 8px;}
   .quickhead h3{margin:0;}
@@ -303,6 +317,12 @@
   .selsel{width:100%;padding:12px 12px;border:1px solid #dadce0;border-radius:12px;font-size:14.5px;font-family:inherit;background:#fff;color:#202124;outline:none;box-sizing:border-box;}
   .selsel:focus{border-color:#1157c9;box-shadow:0 0 0 3px rgba(17,87,201,.15);}
   .selsel:disabled{background:#f1f3f4;color:#9aa0a6;}
+  .pdchecks{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:6px;max-height:180px;overflow-y:auto;
+    padding:8px;border:1px solid #dadce0;border-radius:12px;background:#fbfcff;}
+  .pdchk{display:flex;align-items:center;gap:7px;font-size:12.5px;color:#202124;text-align:left;cursor:pointer;
+    padding:5px 7px;border-radius:8px;transition:.12s;}
+  .pdchk:hover{background:#eef4ff;}
+  .pdchk input{width:16px;height:16px;accent-color:#1157c9;flex-shrink:0;cursor:pointer;}
   /* ===== Modal de horario ===== */
   #hormodal{position:fixed;inset:0;z-index:1200;display:none;align-items:center;justify-content:center;padding:20px;background:rgba(8,22,52,.55);backdrop-filter:blur(3px);}
   #hormodal.open{display:flex;animation:fadeUp .2s ease both;}
@@ -361,8 +381,8 @@
     .instbar .t1{font-size:11px;line-height:1.2;} .instbar .t2{font-size:9.5px;} .instbar a.web{display:none;}
     .app-h .in{padding:10px 15px;} .brand .name{font-size:19px;} .brand .sub{display:none;}
     .hero{padding:18px 0 2px;} .hero h1{font-size:21px;} .hero p{font-size:13px;}
-    .qgrid{grid-template-columns:repeat(4,1fr);gap:7px;}
-    .qcard{padding:8px 4px;border-radius:12px;} .qcard .ic{width:34px;height:34px;} .qcard .ic svg,.qcard .ic img{width:22px;height:22px;} .qcard .lb{font-size:10px;} .qcard .lb small{font-size:8.5px;}
+    .qgrid{grid-template-columns:repeat(auto-fill,minmax(70px,1fr));gap:6px;}
+    .qcard{padding:7px 3px;border-radius:11px;} .qcard .ic{width:30px;height:30px;} .qcard .ic svg,.qcard .ic img{width:19px;height:19px;} .qcard .lb{font-size:9.5px;}
     .myp-grid{grid-template-columns:repeat(2,1fr);gap:7px;}
     .chat{height:auto;min-height:0;border-radius:20px;} #log{height:54vh;flex:none;} .msg{max-width:88%;}
     form{gap:8px;padding:11px 12px;}
@@ -515,6 +535,13 @@
     display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;}
   details.pm-sec>summary .cx{margin-left:auto;color:var(--muted);font-size:12px;transition:.2s;}
   details.pm-sec[open]>summary .cx{transform:rotate(180deg);}
+  .pm-solo{width:calc(100% - 4px);margin:4px 2px;cursor:pointer;display:flex;align-items:center;gap:10px;padding:11px 12px;
+    border-radius:11px;font-weight:700;font-size:13px;color:var(--azul-ink);font-family:inherit;
+    background:linear-gradient(160deg,#f2f7ff,#e9f1ff);border:1px solid #dce8ff;transition:.12s;}
+  .pm-solo:hover{background:#e4eeff;border-color:#cfe0ff;transform:translateX(2px);}
+  .pm-solo .ci{width:26px;height:26px;border-radius:8px;background:#fff;
+    display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;}
+  .pm-solo .cx{margin-left:auto;color:var(--muted);font-size:14px;font-weight:800;}
   .pm-list{padding:2px 6px 8px;display:flex;flex-direction:column;gap:4px;}
   .pm-item{text-align:left;background:#f7faff;border:1px solid #eef2fb;border-radius:9px;padding:9px 11px;font-size:12.5px;
     color:var(--text);cursor:pointer;font-family:inherit;transition:.12s;display:flex;align-items:center;gap:8px;text-decoration:none;}
@@ -597,8 +624,17 @@
     background:radial-gradient(circle, rgba(34,195,230,.45), rgba(245,179,1,.14) 46%, transparent 70%);
     filter:blur(8px);animation:iHalo 3.2s ease-in-out infinite;}
   #intro .ilogo{position:relative;z-index:1;width:150px;height:150px;object-fit:contain;filter:drop-shadow(0 16px 34px rgba(0,0,0,.5));
-    animation:iLogo 1.5s cubic-bezier(.2,.8,.2,1) both;transform-style:preserve-3d;}
-  @keyframes iLogo{0%{opacity:0;transform:scale(.3) rotateY(-560deg);}55%{opacity:1;}100%{opacity:1;transform:scale(1) rotateY(0);}}
+    animation:iLogo 1s cubic-bezier(.16,1,.3,1) both;transform-style:preserve-3d;}
+  /* El logo aparece de golpe, como un destello, junto a la "explosión" del sonido. */
+  @keyframes iLogo{0%{opacity:0;transform:scale(.18);filter:blur(16px) brightness(2.6) drop-shadow(0 16px 34px rgba(0,0,0,.5));}
+    38%{opacity:1;}
+    62%{transform:scale(1.14);filter:blur(0) brightness(1.4) drop-shadow(0 16px 34px rgba(0,0,0,.5));}
+    100%{opacity:1;transform:scale(1);filter:blur(0) brightness(1) drop-shadow(0 16px 34px rgba(0,0,0,.5));}}
+  /* Destello/flash inicial sincronizado con el logo. */
+  #intro .iflash{position:absolute;z-index:2;width:280px;height:280px;border-radius:50%;pointer-events:none;
+    background:radial-gradient(circle,rgba(255,255,255,.95),rgba(150,205,255,.55) 34%,rgba(120,180,255,0) 68%);
+    opacity:0;animation:iFlash 1s ease-out both;mix-blend-mode:screen;}
+  @keyframes iFlash{0%{opacity:0;transform:scale(.2);}10%{opacity:1;transform:scale(.9);}28%{opacity:.9;transform:scale(1.1);}100%{opacity:0;transform:scale(1.9);}}
   @keyframes iSpin{to{transform:rotate(360deg);}}
   @keyframes iHalo{0%,100%{transform:scale(.9);opacity:.55;}50%{transform:scale(1.12);opacity:1;}}
   #intro .iname{margin-top:22px;font-family:'Montserrat',sans-serif;font-weight:800;font-size:56px;line-height:1;color:#fff;letter-spacing:1px;
@@ -647,6 +683,7 @@
   <div class="introC">
     <div class="ilogoWrap">
       <span class="ihalo"></span>
+      <span class="iflash"></span>
       <span class="iring"></span>
       <img class="ilogo" alt="ASE-IA" src="assets/ase-ia-badge.png"
            onerror="this.outerHTML='<svg class=\'ilogo\' viewBox=\'0 0 120 120\'><use href=\'#mascot\'/></svg>'">
@@ -1094,7 +1131,7 @@ function renderQuick(role){
     else{
       const a=document.createElement("a");a.className="qcard";a.href=b.url;a.target="_blank";a.rel="noopener";a.title=b.lb;
       const ic=document.createElement("span");ic.className="ic";ic.innerHTML=iconMarkup(b);
-      const lb=document.createElement("span");lb.className="lb";lb.innerHTML=b.lb+"<small>"+b.sub+"</small>";
+      const lb=document.createElement("span");lb.className="lb";lb.textContent=b.lb;
       a.appendChild(ic);a.appendChild(lb);g.appendChild(a);
     }
   });
@@ -1117,7 +1154,7 @@ function popItem(it){
 function qcardMenu(b){
   const wrap=document.createElement("div");wrap.className="qcard qcardm";wrap.tabIndex=0;wrap.title=b.lb;
   const ic=document.createElement("span");ic.className="ic";ic.innerHTML=iconMarkup(b);
-  const lb=document.createElement("span");lb.className="lb";lb.innerHTML=b.lb+"<small>"+b.sub+" ▾</small>";
+  const lb=document.createElement("span");lb.className="lb";lb.innerHTML=b.lb+'<span class="cv">▾</span>';
   wrap.appendChild(ic);wrap.appendChild(lb);
   const pop=document.createElement("div");pop.className="qpop";
   const ph=document.createElement("div");ph.className="qpop-h";
@@ -2521,8 +2558,15 @@ function showPdf(tag,student,b64){
   document.getElementById("docTitle").textContent=student;
   const body=document.getElementById("docBody");
   body.innerHTML='<div class="pdfloading">Cargando documento…</div>';
-  const src="data:application/pdf;base64,"+b64;
+  // Blob URL (no data:) para que la descarga funcione también en iPhone/iPad (Safari iOS).
+  let src="data:application/pdf;base64,"+b64;
+  try{
+    const bytes=b64ToBytes(b64);const blob=new Blob([bytes],{type:"application/pdf"});
+    if(window._docBlobUrl){try{URL.revokeObjectURL(window._docBlobUrl);}catch(_){}}
+    src=window._docBlobUrl=URL.createObjectURL(blob);
+  }catch(_){}
   const dl=document.getElementById("docDownload");dl.href=src;
+  dl.target="_blank";dl.rel="noopener";   // iOS ignora "download"; abrir en pestaña permite guardar/compartir
   dl.download=(tag+" "+student).replace(/[^\wáéíóúñ .-]/gi,"_").trim()+".pdf";
   document.getElementById("docmodal").classList.add("open");
   loadPdfJs(async(ok)=>{
@@ -2734,10 +2778,16 @@ function buildProfileMenu(){
   if(ROLE!=="guardian")acts.push({em:"🔔",t:"Probar recordatorio",action:"testremind"});
   acts.push.apply(acts,ACTIONS[ROLE]||[]);
   body.appendChild(pmSection("⚡","Acciones frecuentes",acts,true));
-  const docsVis=DOCS_IMPORTANTES.filter(d=>!d.staff||STAFF(ROLE));
-  if(docsVis.length)body.appendChild(pmSection("📂","Documentos importantes",docsVis,false));
   body.appendChild(pmPrefs());
+  // "Completa los datos de mi perfil" como opción por sí sola.
+  body.appendChild(pmSolo("📝","Completa los datos de mi perfil",()=>{closeProfileMenu();openProfileData();}));
   body.appendChild(pmAbout());
+}
+/* Opción destacada e independiente (no va dentro de una sección desplegable). */
+function pmSolo(icon,label,onclick){
+  const b=document.createElement("button");b.type="button";b.className="pm-solo";
+  b.innerHTML='<span class="ci">'+icon+'</span><span>'+label+'</span><span class="cx">→</span>';
+  b.onclick=onclick;return b;
 }
 function pmAbout(){
   const d=el("details","pm-sec");
@@ -2751,10 +2801,7 @@ function pmAbout(){
   const b2=document.createElement("button");b2.type="button";b2.className="pm-item";
   b2.appendChild(el("span","em","✉️"));b2.appendChild(el("span",null,"Ayuda o requerimiento"));
   b2.onclick=()=>{closeProfileMenu();openHelpMail();};
-  const b3=document.createElement("button");b3.type="button";b3.className="pm-item";
-  b3.appendChild(el("span","em","📝"));b3.appendChild(el("span",null,"Completa los datos de mi perfil"));
-  b3.onclick=()=>{closeProfileMenu();openProfileData();};
-  wrap.appendChild(b1);wrap.appendChild(b3);wrap.appendChild(b2);
+  wrap.appendChild(b1);wrap.appendChild(b2);
   d.appendChild(wrap);return d;
 }
 const HELP_TO="francisco.amigo@sip.cl";
@@ -2769,28 +2816,56 @@ function openHelpMail(){
 /* ---- Datos del perfil (se guardan en este dispositivo) ---- */
 const PDATA_KEY="aseia_pdata_v1";
 function loadPData(){try{return JSON.parse(localStorage.getItem(PDATA_KEY))||{};}catch(_){return {};}}
+/* Predicados de visibilidad por perfil (se evalúan al abrir el modal). */
+const isStaffRole=()=>STAFF(ROLE)||isDev(CURRENT.email);
+const isTeacherRole=()=>ROLE==="teacher"||isDev(CURRENT.email);
+const ROLES_COLEGIO=["Docente de asignatura","Profesor/a jefe","Directivo/a","Jefe/a de UTP (Coordinación)","Inspector/a General","Orientador/a","Psicólogo/a","Educador/a diferencial (PIE)","Asistente de la educación","Administrativo/a","Auxiliar de servicios","Otro"];
 const PDATA_FIELDS=[
   {k:"nombre",l:"Nombre completo",t:"text"},
   {k:"nac",l:"Fecha de nacimiento",t:"date"},
   {k:"tel",l:"Teléfono de contacto",t:"tel"},
+  {k:"rol",l:"Rol principal dentro del colegio",t:"select",opts:ROLES_COLEGIO,show:isStaffRole},
+  {k:"asig",l:"Asignatura(s) que imparto",t:"multi",opts:ASIGNATURAS,show:isTeacherRole},
+  {k:"cursos",l:"Hago clases en los siguientes cursos",t:"multi",opts:CURSOS,show:isStaffRole},
   {k:"dir",l:"Dirección",t:"text"},
   {k:"comuna",l:"Comuna",t:"text"},
   {k:"emergencia",l:"Contacto de emergencia (nombre y teléfono)",t:"text"},
 ];
+function pdVisibleFields(){return PDATA_FIELDS.filter(f=>!f.show||f.show());}
 function openProfileData(){
   const all=loadPData();const mine=all[CURRENT.email||"anon"]||{};
   const box=document.getElementById("pdBody");box.innerHTML="";
-  PDATA_FIELDS.forEach(f=>{
+  pdVisibleFields().forEach(f=>{
     box.appendChild(el("label","sellbl",f.l));
-    const inp=document.createElement("input");inp.className="selsel";inp.type=f.t;inp.id="pd_"+f.k;
-    inp.value=(f.k==="nombre"&&!mine[f.k])?(CURRENT.name||""):(mine[f.k]||"");
-    box.appendChild(inp);
+    if(f.t==="select"){
+      const sel=document.createElement("select");sel.className="selsel";sel.id="pd_"+f.k;
+      sel.appendChild(new Option("Selecciona…",""));
+      f.opts.forEach(o=>sel.appendChild(new Option(o,o)));
+      sel.value=mine[f.k]||"";box.appendChild(sel);
+    }else if(f.t==="multi"){
+      const cur=Array.isArray(mine[f.k])?mine[f.k]:(mine[f.k]?String(mine[f.k]).split(", "):[]);
+      const wrap=el("div","pdchecks");wrap.id="pd_"+f.k;
+      f.opts.forEach(o=>{
+        const lab=document.createElement("label");lab.className="pdchk";
+        const cb=document.createElement("input");cb.type="checkbox";cb.value=o;if(cur.includes(o))cb.checked=true;
+        lab.appendChild(cb);lab.appendChild(document.createTextNode(o));wrap.appendChild(lab);
+      });
+      box.appendChild(wrap);
+    }else{
+      const inp=document.createElement("input");inp.className="selsel";inp.type=f.t;inp.id="pd_"+f.k;
+      inp.value=(f.k==="nombre"&&!mine[f.k])?(CURRENT.name||""):(mine[f.k]||"");
+      box.appendChild(inp);
+    }
   });
   document.getElementById("pdmodal").classList.add("open");
 }
 function saveProfileData(){
-  const all=loadPData();const key=CURRENT.email||"anon";const rec={};
-  PDATA_FIELDS.forEach(f=>{rec[f.k]=(document.getElementById("pd_"+f.k)||{}).value||"";});
+  const all=loadPData();const key=CURRENT.email||"anon";const rec=all[key]||{};
+  pdVisibleFields().forEach(f=>{
+    const node=document.getElementById("pd_"+f.k);if(!node)return;
+    if(f.t==="multi"){rec[f.k]=[...node.querySelectorAll("input:checked")].map(c=>c.value);}
+    else rec[f.k]=node.value||"";
+  });
   all[key]=rec;try{localStorage.setItem(PDATA_KEY,JSON.stringify(all));}catch(_){}
   closeProfileData();aseToast("Perfil","Tus datos se guardaron","Quedan en este dispositivo, de forma privada.",6000);
 }
@@ -2874,14 +2949,43 @@ const DOMAIN={teacher:"sip.cl",student:"alumnos.sip.cl",admin:"sip.cl"}; // apod
    sin exigir dominio institucional ni obligar a elegir estudiante. */
 const DEV_EMAILS=["franciscoamigo21@gmail.com","paulina.devia@sip.cl","jcid@sip.cl","camila.ortiz@sip.cl"];
 function isDev(email){return DEV_EMAILS.includes((email||"").trim().toLowerCase());}
+/* El perfil de estudiante solo está disponible desde 4° Básico en adelante
+   (PK, K, 1°, 2° y 3° Básico quedan bajo el perfil del apoderado/a). */
+function studentAllowed(course){
+  if(!course)return true;                 // sin curso conocido: no bloquear el chat
+  const c=String(course).trim().toUpperCase();
+  if(/^(PK|K)\b/.test(c))return false;     // prekínder / kínder
+  const m=c.match(/^(\d+)/);
+  if(m)return parseInt(m[1],10)>=4;        // básica: solo 4°..8°
+  return true;                             // enseñanza media (P/S/T/C): permitido
+}
 const LOGIN_INFO={
   student:{emo:"🎓",t:"Estudiante",d:"Ingresa con tu cuenta @alumnos.sip.cl",dom:"Debes usar tu cuenta @alumnos.sip.cl",ph:"nombre.apellido@alumnos.sip.cl"},
   teacher:{emo:"👩‍🏫",t:"Docente",d:"Ingresa con tu cuenta @sip.cl",dom:"Debes usar tu cuenta @sip.cl",ph:"nombre.apellido@sip.cl"},
   admin:{emo:"🗂️",t:"Administrativo",d:"Ingresa con tu cuenta @sip.cl",dom:"Debes usar tu cuenta @sip.cl",ph:"nombre.apellido@sip.cl"},
   guardian:{emo:"👪",t:"Apoderado",d:"Ingresa con tu correo personal",dom:"Puedes usar tu correo personal",ph:"tu.correo@gmail.com"},
 };
+/* Sonido sutil de interfaz (al elegir perfil). Usa WebAudio; se activa con el gesto del clic. */
+let _uiCtx=null;
+function uiSound(){
+  try{
+    const AC=window.AudioContext||window.webkitAudioContext;if(!AC)return;
+    _uiCtx=_uiCtx||new AC();if(_uiCtx.state==="suspended")_uiCtx.resume();
+    const t=_uiCtx.currentTime, notes=[523.25,783.99];  // do-sol, breve y agradable
+    notes.forEach((f,idx)=>{
+      const o=_uiCtx.createOscillator(),g=_uiCtx.createGain();
+      o.type="sine";o.frequency.value=f;o.connect(g);g.connect(_uiCtx.destination);
+      const s=t+idx*0.085;
+      g.gain.setValueAtTime(0.0001,s);
+      g.gain.exponentialRampToValueAtTime(0.06,s+0.012);
+      g.gain.exponentialRampToValueAtTime(0.0001,s+0.16);
+      o.start(s);o.stop(s+0.18);
+    });
+  }catch(_){}
+}
 let PENDING=null;
 function pick(role){
+  uiSound();
   PENDING=role;const i=LOGIN_INFO[role];
   document.getElementById("loginEmo").textContent=i.emo;
   document.getElementById("loginT").textContent=i.t;
@@ -2997,6 +3101,12 @@ async function googleCallback(resp){
     enter(PENDING==="admin"?"admin":"teacher",email,name,pic); loadDirectory(); return;
   }
   if(me.role==="student"){                      // @alumnos.sip.cl -> su propio perfil (documento Cuentas)
+    const scourse=me.student&&me.student.course;
+    if(scourse && !studentAllowed(scourse)){    // el perfil de estudiante existe solo desde 4° Básico
+      AUTH_TOKEN=null;gDom("",false);
+      aseToast("Perfil de estudiante desde 4° Básico","Tu curso aún no tiene perfil de estudiante","Pídele a tu apoderado/a que ingrese con su perfil para ver esta información. 🙂",13000);
+      return;
+    }
     const prof=me.student?Object.assign(profFromMatch(me.student),{email:email}):null;
     enter("student",email,name,pic,prof);
     if(!prof)aseToast("Cuenta sin curso vinculado","No encontramos tu curso","Puedes usar el chat igual. Avisa al colegio para vincular tu correo.",9000);
@@ -3085,7 +3195,7 @@ function skipIntro(){const i=document.getElementById("intro");if(!i||i.classList
   let k=0;
   function nextMsg(){ if(!msg)return; msg.classList.remove("on");
     setTimeout(()=>{ msg.textContent="« "+FRASES[k%FRASES.length]+" »"; msg.classList.add("on"); k++; },240); }
-  nextMsg(); introTimer=setInterval(nextMsg,4200);   // más lento, para alcanzar a leer cada frase
+  nextMsg(); introTimer=setInterval(nextMsg,2500);   // 2,5 s por frase
   // Sonido: intenta sonar de inmediato; si el navegador lo bloquea, suena con el primer toque.
   const a=getIntroAudio();
   playIntroSound();
