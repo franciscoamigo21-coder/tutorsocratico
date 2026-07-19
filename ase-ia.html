@@ -774,6 +774,16 @@
       <div class="myp-grid" id="mypGrid"></div>
     </section>
 
+    <section class="myp" id="jefPanel" style="display:none">
+      <div class="myp-head">
+        <div class="myp-av">🧑‍🏫</div>
+        <div class="myp-id"><div class="myp-name">Jefatura de curso</div><div class="myp-sub" id="jefSub"></div></div>
+      </div>
+      <label class="sellbl" style="margin:10px 2px 5px">Estudiante del curso</label>
+      <select id="jefStudent" class="selsel" onchange="jefStudentChanged()"><option value="">Selecciona un estudiante…</option></select>
+      <div class="myp-grid" id="jefGrid" style="margin-top:12px"></div>
+    </section>
+
     <section class="quick">
       <div class="quickhead">
         <h3 id="quickTitle">Accesos rápidos</h3>
@@ -1887,6 +1897,7 @@ async function loadDirectory(){
   if(arr.length){
     STUDENTS=arr.map(x=>({name:x.n||"",course:x.c||"",email:x.e||"",apEmail:x.ae||""})).filter(s=>s.name);
     ROSTER=STUDENTS.map(s=>({name:s.name,course:s.course,email:s.email}));
+    renderJefatura();   // ya hay nómina: llena el selector de jefatura si corresponde
   }
 }
 function profFromMatch(m){
@@ -2390,7 +2401,7 @@ function enter(role,email,name,photo,prof){
   document.getElementById("whoLabel").textContent=disp;
   document.getElementById("mailLabel").textContent=email||"";
   avatarInto("rbAv",CURRENT.photo,(disp.trim()[0]||"A").toUpperCase());
-  renderQuick(role);renderSugs();buildProfileMenu();renderHelp(role);renderMyPanel();
+  renderQuick(role);renderSugs();buildProfileMenu();renderHelp(role);renderMyPanel();renderJefatura();
   if(STAFF(role))loadDirectory();   // carga el directorio de estudiantes desde el Worker (privado)
   const wb=document.getElementById("weekbtn");if(wb)wb.style.display=STAFF(role)?"":"none";  // Calendario JJP: solo funcionarios
   const saludo=name?("¡Hola, "+name.split(" ")[0]+"! 👋"):"¡Hola! 👋";
@@ -2410,6 +2421,38 @@ document.getElementById("f").addEventListener("submit",e=>{e.preventDefault();as
    "Horarios Cursos 2026"). Básica 1° a 8° y media I° a IV°. Pre-Kínder y
    Kínder aún sin horario -> muestran "muy pronto". No es dato personal. */
 const HOR_IMG={"1 A":"assets/horarios/1A.jpg","1 B":"assets/horarios/1B.jpg","1 C":"assets/horarios/1C.jpg","2 A":"assets/horarios/2A.jpg","2 B":"assets/horarios/2B.jpg","2 C":"assets/horarios/2C.jpg","3 A":"assets/horarios/3A.jpg","3 B":"assets/horarios/3B.jpg","3 C":"assets/horarios/3C.jpg","4 A":"assets/horarios/4A.jpg","4 B":"assets/horarios/4B.jpg","4 C":"assets/horarios/4C.jpg","5 A":"assets/horarios/5A.jpg","5 B":"assets/horarios/5B.jpg","5 C":"assets/horarios/5C.jpg","6 A":"assets/horarios/6A.jpg","6 B":"assets/horarios/6B.jpg","6 C":"assets/horarios/6C.jpg","7 A":"assets/horarios/7A.jpg","7 B":"assets/horarios/7B.jpg","7 C":"assets/horarios/7C.jpg","8 A":"assets/horarios/8A.jpg","8 B":"assets/horarios/8B.jpg","8 C":"assets/horarios/8C.jpg","P A":"assets/horarios/PA.jpg","P B":"assets/horarios/PB.jpg","P C":"assets/horarios/PC.jpg","S A":"assets/horarios/SA.jpg","S B":"assets/horarios/SB.jpg","S C":"assets/horarios/SC.jpg","T A":"assets/horarios/TA.jpg","T B":"assets/horarios/TB.jpg","T C":"assets/horarios/TC.jpg","C A":"assets/horarios/CA.jpg","C B":"assets/horarios/CB.jpg","C C":"assets/horarios/CC.jpg"};
+/* Jefaturas de curso: correo del profesor/a jefe -> código de curso. */
+const JEFATURAS={"francisco.amigo@sip.cl":"8 C","camila.ortiz@sip.cl":"1 B","paulina.devia@sip.cl":"7 B"};
+function renderJefatura(){
+  const panel=document.getElementById("jefPanel");if(!panel)return;
+  const course=JEFATURAS[(CURRENT.email||"").toLowerCase()];
+  if(!course||!(ROLE==="teacher"||ROLE==="admin")){panel.style.display="none";return;}
+  const label=(COURSES.find(c=>c.c===course)||{}).l||course;
+  document.getElementById("jefSub").textContent="Profesor/a jefe · "+label;
+  const sel=document.getElementById("jefStudent");const prev=sel.value;
+  const list=STUDENTS.filter(s=>s.course===course).sort((a,b)=>apellidoKey(a.name).localeCompare(apellidoKey(b.name),"es"));
+  const esc=s=>s.replace(/</g,"&lt;").replace(/"/g,"&quot;");
+  sel.innerHTML='<option value="">'+(list.length?"Selecciona un estudiante…":"Cargando nómina…")+'</option>'+list.map(s=>'<option value="'+esc(s.email)+'">'+esc(apellidoFirst(s.name))+'</option>').join("");
+  if(prev)sel.value=prev;
+  panel.style.display="";
+}
+function jefStudentChanged(){
+  const email=document.getElementById("jefStudent").value;
+  const grid=document.getElementById("jefGrid");grid.innerHTML="";
+  if(!email){CURRENT.prof=null;return;}
+  const s=STUDENTS.find(x=>x.email===email);if(!s)return;
+  const label=(COURSES.find(c=>c.c===s.course)||{}).l||s.course;
+  CURRENT.prof={courseCode:s.course,courseLabel:label,student:s.name,email:s.email};
+  const cards=[
+    {e:"🗓️",l:"Horario",sub:"Ver horario",fn:openHorario,soon:!HOR_IMG[s.course]},
+    {e:"📊",l:"Informe de notas",sub:"Ver documento",fn:()=>openDoc("notas"),soon:false},
+    {e:"🧭",l:"Informe de personalidad",sub:"Ver documento",fn:()=>openDoc("personalidad"),soon:false},
+    {e:"📄",l:"Certificado alumno regular",sub:"Ver documento",fn:()=>openDoc("certificado"),soon:false},
+  ];
+  cards.forEach(c=>{const card=el("div","myp-card"+(c.soon?" soon":""));if(c.soon)card.appendChild(el("span","badge-soon","Pronto"));
+    card.appendChild(el("div","e",c.e));const l=el("div","l",c.l);if(c.sub){const sm=document.createElement("small");sm.textContent=c.sub;l.appendChild(sm);}
+    card.appendChild(l);card.onclick=c.fn;grid.appendChild(card);});
+}
 function renderMyPanel(){
   const panel=document.getElementById("myPanel");if(!panel)return;
   const p=CURRENT.prof;
