@@ -2671,9 +2671,10 @@ function openSel(role,email,name,prev,pool){
   document.getElementById("selErr").textContent="";
   const selC=document.getElementById("selCurso"),selE=document.getElementById("selEst");
   let courses=SEL_POOL?COURSES.filter(c=>SEL_POOL.some(s=>s.course===c.c)):COURSES;
-  // El perfil de estudiante solo existe desde 4° Básico: no se pueden ni seleccionar
-  // los cursos PK a 3° (esos niveles los manejan solo los apoderados).
-  if(role==="student") courses=courses.filter(c=>studentAllowed(c.c));
+  // El perfil de estudiante solo existe desde 4° Básico para estudiantes reales
+  // (se bloquea al iniciar sesión). El maestro/dev sí puede seleccionar cualquier
+  // curso para revisar/gestionar documentos de todos los niveles.
+  if(role==="student" && !isDev(email)) courses=courses.filter(c=>studentAllowed(c.c));
   selC.innerHTML='<option value="">Selecciona el curso…</option>'+courses.map(c=>'<option value="'+c.c+'">'+c.l+'</option>').join("");
   selE.innerHTML='<option value="">Primero elige el curso…</option>';selE.disabled=true;
   const guard=(role==="guardian");
