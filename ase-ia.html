@@ -103,7 +103,7 @@
   @keyframes fadeOnly{from{opacity:0;}to{opacity:1;}}
   .quick h3{font-size:11px;text-transform:uppercase;letter-spacing:1.2px;color:var(--muted);margin:0 0 8px;font-weight:700;}
   /* Iconos compactos (la mitad del ancho anterior) → el chat queda más arriba. */
-  .qgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(84px,1fr));gap:7px;}
+  .qgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(94px,1fr));gap:7px;}
   @media(max-width:460px){.qgrid{grid-template-columns:repeat(auto-fill,minmax(72px,1fr));gap:6px;}}
   .qcard{position:relative;display:flex;flex-direction:column;align-items:center;gap:5px;background:var(--card);
     border:1px solid var(--border);border-radius:12px;padding:8px 4px;transition:.18s cubic-bezier(.2,.7,.3,1);text-align:center;box-shadow:var(--shadow-sm);}
@@ -112,8 +112,9 @@
     background:linear-gradient(160deg,#f6f9ff,#eef3fc);overflow:hidden;}
   .qcard .ic img{width:21px;height:21px;object-fit:contain;}
   .qcard .ic svg{width:21px;height:21px;display:block;}
-  .qcard .lb{font-size:10.5px;font-weight:700;line-height:1.14;color:var(--text);max-width:100%;
-    display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;word-break:break-word;}
+  .qcard .lb{font-size:8.7px;font-weight:700;line-height:1.2;color:var(--text);max-width:100%;letter-spacing:-.1px;
+    display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;
+    white-space:normal;word-break:normal;overflow-wrap:break-word;}
   .qcard .lb .cv{font-size:9px;color:var(--muted);margin-left:2px;}
   /* Cabecera de accesos + botón Vista semanal */
   .quickhead{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:0 0 8px;}
@@ -381,8 +382,8 @@
     .instbar .t1{font-size:11px;line-height:1.2;} .instbar .t2{font-size:9.5px;} .instbar a.web{display:none;}
     .app-h .in{padding:10px 15px;} .brand .name{font-size:19px;} .brand .sub{display:none;}
     .hero{padding:18px 0 2px;} .hero h1{font-size:21px;} .hero p{font-size:13px;}
-    .qgrid{grid-template-columns:repeat(auto-fill,minmax(70px,1fr));gap:6px;}
-    .qcard{padding:7px 3px;border-radius:11px;} .qcard .ic{width:30px;height:30px;} .qcard .ic svg,.qcard .ic img{width:19px;height:19px;} .qcard .lb{font-size:9.5px;}
+    .qgrid{grid-template-columns:repeat(auto-fill,minmax(78px,1fr));gap:6px;}
+    .qcard{padding:7px 3px;border-radius:11px;} .qcard .ic{width:30px;height:30px;} .qcard .ic svg,.qcard .ic img{width:19px;height:19px;} .qcard .lb{font-size:8.3px;}
     .myp-grid{grid-template-columns:repeat(2,1fr);gap:7px;}
     .chat{height:auto;min-height:0;border-radius:20px;} #log{height:54vh;flex:none;} .msg{max-width:88%;}
     form{gap:8px;padding:11px 12px;}
