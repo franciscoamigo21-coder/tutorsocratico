@@ -436,19 +436,22 @@
         }
 
         .tips-list li {
-            background: rgba(0, 0, 0, 0.22);
+            background: #f4f8ff;
             margin-bottom: 0.8rem;
             padding: 1.1rem 1.2rem;
             border-radius: 10px;
             border-left: 3px solid var(--accent-gold);
             font-size: 1rem;
-            color: #d1d5db;
+            color: #33415c;
             line-height: 1.6;
         }
         
         .defense-list li {
-            border-left: 3px solid var(--accent-blue-bright);
+            border-left: 4px solid var(--accent-gold);
+            background: linear-gradient(135deg, #0b3d91 0%, #1157c9 100%);
+            color: #ffffff;
         }
+        .defense-list li strong { color: #FFD54F !important; }
 
         /* Cierre Socrático Contextual (Glassmorphism) */
         .glass-card {
@@ -2139,7 +2142,7 @@
                     </div>
                     <p style="color:#5f6f8a;font-size:.9rem;margin-bottom:.8rem;">Haz estas preguntas al estudiante de forma presencial para validar autoría y comprensión real:</p>
                     <ul class="tips-list defense-list">
-                        ${preguntasDefensa.map((q,i)=>`<li><strong style="color:var(--accent-blue-bright);">P${i+1}.</strong> ${q}</li>`).join('')}
+                        ${preguntasDefensa.map((q,i)=>`<li><strong style="color:#FFD54F;">P${i+1}.</strong> ${q}</li>`).join('')}
                     </ul>
                 </div>
 
