@@ -13,28 +13,28 @@
         /* --- SISTEMA DE DISEÑO --- */
         :root {
             /* Paleta Institucional Azul Profundo (Modernizada) */
-            --bg-body: #060b18;
-            --bg-card: #101d36;
-            --bg-card-2: #142845;
-            --primary-blue: #1b3a66;
-            --border-soft: rgba(255, 255, 255, 0.06);
+            --bg-body: #eef2fb;
+            --bg-card: #ffffff;
+            --bg-card-2: #f6f9ff;
+            --primary-blue: #0b3d91;
+            --border-soft: rgba(11, 36, 65, 0.12);
 
             /* Acentos Dorados e Institucionales */
-            --accent-gold: #FFC107;
-            --accent-gold-hover: #FFD54F;
-            --accent-blue-bright: #4fc3f7;
+            --accent-gold: #f5b301;
+            --accent-gold-hover: #d99e00;
+            --accent-blue-bright: #1157c9;
             --accent-magic: #b388ff;
             --accent-magic-hover: #d1c4e9;
 
             /* Tipografía y Textos */
-            --text-main: #ffffff;
-            --text-muted: #9fb0c8;
+            --text-main: #132441;
+            --text-muted: #5f6f8a;
 
             /* Feedback */
-            --alert-color: #ff9800;
-            --error-color: #f44336;
-            --success-color: #00e676;
-            --strict-color: #ff4d7e;
+            --alert-color: #e08600;
+            --error-color: #d93025;
+            --success-color: #12a150;
+            --strict-color: #d6336c;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -110,7 +110,7 @@
             background-image: 
                 radial-gradient(circle at 15% 10%, rgba(79, 195, 247, 0.08) 0%, transparent 40%),
                 radial-gradient(circle at 85% 0%, rgba(255, 193, 7, 0.06) 0%, transparent 35%),
-                radial-gradient(circle at 50% 0%, #16335e 0%, var(--bg-body) 65%);
+                radial-gradient(circle at 50% 0%, #dbe7ff 0%, var(--bg-body) 70%);
         }
 
         .container {
@@ -194,7 +194,7 @@
             font-weight: 800; 
             font-size: 2.9rem;
             letter-spacing: 1px;
-            background: linear-gradient(120deg, #ffffff 0%, #cfe4ff 50%, var(--accent-gold) 100%);
+            background: linear-gradient(120deg, #0b3d91 0%, #1157c9 45%, #d99e00 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
@@ -1141,6 +1141,33 @@
         .shutter::after { content:''; position:absolute; inset:6px; border-radius:50%; background:#fff; border:2px solid var(--primary-blue,#1b3a66); }
         .shutter:active { transform:scale(0.92); }
         .shutter:disabled { opacity:0.5; cursor:default; }
+
+        /* ============================================================
+           TEMA CLARO ASE-IA (solo pantalla). La guía impresa .pgi-* NO se toca.
+        ============================================================ */
+        .card { box-shadow: 0 10px 30px rgba(11,36,65,0.10); }
+        .card-icon-wrapper { background:#f4f8ff; box-shadow:0 4px 14px rgba(11,36,65,0.12); }
+        #loading-text { color: var(--primary-blue) !important; }
+        .modo-titulo { color: var(--primary-blue); }
+        textarea::placeholder { color:#8090a8; }
+        .dropzone { background:#f6f9ff; }
+        .btn-volver { background:#ffffff; }
+        .modo-card.active { background:#0b3d91; }
+        .modo-card.active .modo-nombre, .modo-card.active .modo-desc { color:#ffffff; }
+        .modo-card.active i { color: var(--accent-gold); }
+        /* Modal claro */
+        .modal-cloud { background:#ffffff !important; border-color:#dbe6ff !important; color:var(--text-main); box-shadow:0 20px 50px rgba(11,36,65,0.25) !important; }
+        .modal-cloud h2 { color: var(--primary-blue) !important; }
+        .modal-cloud p, .modal-cloud .step-list li { color:#3c4a63 !important; }
+        .modal-cloud .step-list li { border-bottom-color:#e4e9f3 !important; }
+        .modal-cloud .modal-close { background:#eef2fb !important; border-color:#dbe6ff !important; color:#0b3d91 !important; }
+        /* Banner normativo claro */
+        .plagio-banner { background:linear-gradient(135deg,#eef4ff 0%,#f6f9ff 100%) !important; border-color:#dbe6ff !important; border-left-color:#0b3d91 !important; }
+        .plagio-banner .plagio-icon, .plagio-banner .plagio-text strong, .plagio-banner .plagio-text a { color:#0b3d91 !important; }
+        .plagio-banner .plagio-text p { color:#4a5a74 !important; }
+        /* Strip institucional claro */
+        .institutional-strip { background:linear-gradient(135deg,#eef4ff 0%,#f6f9ff 100%) !important; }
+        .strip-quote { color:#3c4a63 !important; }
     </style>
 </head>
 <body>
@@ -2067,13 +2094,13 @@
                         </div>
                         <div>
                             <div class="card-title" style="color:${titleColor};">${titleText}</div>
-                            <div style="margin-top:0.5rem;background:rgba(0,0,0,.25);border-radius:99px;height:8px;overflow:hidden;width:100%;max-width:320px;">
+                            <div style="margin-top:0.5rem;background:#e4e9f3;border-radius:99px;height:8px;overflow:hidden;width:100%;max-width:320px;">
                                 <div style="width:${barWidth}%;height:100%;background:${barColor};border-radius:99px;transition:width 1.2s ease;"></div>
                             </div>
                         </div>
                     </div>
-                    <p style="color:#ccd;font-size:1rem;line-height:1.7;">${analisis}</p>
-                    ${clicheList && clicheList.length > 0 ? `<div style="margin-top:.5rem;padding:.7rem 1rem;background:rgba(0,0,0,.18);border-radius:8px;font-size:.82rem;color:#aab;"><strong style="color:var(--strict-color);">Clichés detectados:</strong> ${clicheList.slice(0,8).join(' · ')}</div>` : ''}
+                    <p style="color:#33415c;font-size:1rem;line-height:1.7;">${analisis}</p>
+                    ${clicheList && clicheList.length > 0 ? `<div style="margin-top:.5rem;padding:.7rem 1rem;background:#f4f8ff;border-radius:8px;font-size:.82rem;color:#5f6f8a;"><strong style="color:var(--strict-color);">Clichés detectados:</strong> ${clicheList.slice(0,8).join(' · ')}</div>` : ''}
                 </div>
 
                 <!-- PREGUNTAS DE DEFENSA -->
@@ -2087,7 +2114,7 @@
                             ${badgeIA}
                         </div>
                     </div>
-                    <p style="color:#aab;font-size:.9rem;margin-bottom:.8rem;">Haz estas preguntas al estudiante de forma presencial para validar autoría y comprensión real:</p>
+                    <p style="color:#5f6f8a;font-size:.9rem;margin-bottom:.8rem;">Haz estas preguntas al estudiante de forma presencial para validar autoría y comprensión real:</p>
                     <ul class="tips-list defense-list">
                         ${preguntasDefensa.map((q,i)=>`<li><strong style="color:var(--accent-blue-bright);">P${i+1}.</strong> ${q}</li>`).join('')}
                     </ul>
