@@ -447,11 +447,12 @@
         }
         
         .defense-list li {
-            border-left: 4px solid var(--accent-gold);
-            background: linear-gradient(135deg, #0b3d91 0%, #1157c9 100%);
-            color: #ffffff;
+            border: 2px solid #1157c9;
+            border-left: 5px solid #0b3d91;
+            background: #ffffff;
+            color: #1e3a66;
         }
-        .defense-list li strong { color: #FFD54F !important; }
+        .defense-list li strong { color: #1157c9 !important; }
 
         /* Cierre Socrático Contextual (Glassmorphism) */
         .glass-card {
@@ -1165,7 +1166,9 @@
         .modal-cloud .step-list li { border-bottom-color:#e4e9f3 !important; }
         .modal-cloud .modal-close { background:#eef2fb !important; border-color:#dbe6ff !important; color:#0b3d91 !important; }
         /* Banner normativo claro */
-        .plagio-banner { background:linear-gradient(135deg,#eef4ff 0%,#f6f9ff 100%) !important; border-color:#dbe6ff !important; border-left-color:#0b3d91 !important; }
+        .plagio-banner { background:#e6f0ff !important; border:2px solid #1157c9 !important; border-left:6px solid #0b3d91 !important; }
+        .btn-print-guide { background:linear-gradient(135deg,#0b3d91 0%,#1157c9 100%) !important; color:#ffffff !important; border:1px solid #0b3d91 !important; }
+        .btn-print-guide:hover { background:linear-gradient(135deg,#0d4aad 0%,#1a6ae0 100%) !important; color:#ffffff !important; box-shadow:0 6px 18px rgba(11,61,145,0.3) !important; }
         .plagio-banner .plagio-icon, .plagio-banner .plagio-text strong, .plagio-banner .plagio-text a { color:#0b3d91 !important; }
         .plagio-banner .plagio-text p { color:#4a5a74 !important; }
         /* Strip institucional claro */
@@ -2142,7 +2145,7 @@
                     </div>
                     <p style="color:#5f6f8a;font-size:.9rem;margin-bottom:.8rem;">Haz estas preguntas al estudiante de forma presencial para validar autoría y comprensión real:</p>
                     <ul class="tips-list defense-list">
-                        ${preguntasDefensa.map((q,i)=>`<li><strong style="color:#FFD54F;">P${i+1}.</strong> ${q}</li>`).join('')}
+                        ${preguntasDefensa.map((q,i)=>`<li><strong style="color:#1157c9;">P${i+1}.</strong> ${q}</li>`).join('')}
                     </ul>
                 </div>
 
