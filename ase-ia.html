@@ -2638,10 +2638,13 @@ function renderMyPanel(){
   const grid=document.getElementById("mypGrid");grid.innerHTML="";
   const cards=[
     {e:"🗓️",l:"Horario",sub:"Ver mi horario",fn:openHorario,soon:!HOR_IMG[p.courseCode]},
-    {e:"📊",l:"Informe de notas",sub:"Ver documento",fn:()=>openDoc("notas"),soon:false},
+  ];
+  // El informe de notas es SOLO para apoderados (no se muestra en el perfil del estudiante).
+  if(ROLE==="guardian") cards.push({e:"📊",l:"Informe de notas",sub:"Ver documento",fn:()=>openDoc("notas"),soon:false});
+  cards.push(
     {e:"🧭",l:"Informe de personalidad",sub:"Ver documento",fn:()=>openDoc("personalidad"),soon:false},
     {e:"📄",l:"Certificado alumno regular",sub:"Ver documento",fn:()=>openDoc("certificado"),soon:false},
-  ];
+  );
   cards.forEach(c=>{
     const card=el("div","myp-card"+(c.soon?" soon":""));
     if(c.soon)card.appendChild(el("span","badge-soon","Pronto"));
@@ -2755,6 +2758,8 @@ function closeDoc(){document.getElementById("docmodal").classList.remove("open")
 document.addEventListener("keydown",e=>{if(e.key==="Escape")closeDoc();});
 async function openDoc(kind){
   const p=CURRENT.prof;const lbl=DOC_LABELS[kind]||"documento";
+  // El informe de notas es exclusivo de apoderados (y perfiles con nómina: docente/admin/maestro).
+  if(kind==="notas" && ROLE==="student"){ aseToast("Solo para apoderados","El informe de notas está disponible para el apoderado/a","Pídeselo a tu apoderado/a, que puede verlo desde su perfil.",8000); return; }
   const quien=ROLE==="guardian"?("de "+((p&&p.student)?p.student:"su pupilo/a")):"tuyo";
   if(!AUTH_TOKEN){ aseToast("Inicia sesión con Google","Para ver documentos personales entra con tu cuenta de Google","No están disponibles con el acceso de respaldo.",8000); return; }
   const needsPick=(ROLE==="teacher"||ROLE==="admin"||isDev(CURRENT.email));
@@ -3125,7 +3130,7 @@ history.replaceState({screen:"gate"},"");  // estado inicial
 const DOMAIN={teacher:"sip.cl",student:"alumnos.sip.cl",admin:"sip.cl"}; // apoderado: libre
 /* Correos maestros (para administrar/editar): pueden entrar en cualquier rol
    sin exigir dominio institucional ni obligar a elegir estudiante. */
-const DEV_EMAILS=["franciscoamigo21@gmail.com","paulina.devia@sip.cl","jcid@sip.cl","camila.ortiz@sip.cl"];
+const DEV_EMAILS=["franciscoamigo21@gmail.com","paulina.devia@sip.cl","jcid@sip.cl","camila.ortiz@sip.cl","cesar.cid@sip.cl"];
 function isDev(email){return DEV_EMAILS.includes((email||"").trim().toLowerCase());}
 /* El perfil de estudiante solo está disponible desde 4° Básico en adelante
    (PK, K, 1°, 2° y 3° Básico quedan bajo el perfil del apoderado/a). */
