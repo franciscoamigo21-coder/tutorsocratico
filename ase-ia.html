@@ -3303,12 +3303,13 @@ async function googleCallback(resp){
   // Apoderado: solo su(s) pupilo(s), según la Planilla de Matrículas
   CURRENT_PUPILS=(me.pupils||[]).map(profFromMatch);
   if(!CURRENT_PUPILS.length){
-    enter("guardian",email,name,pic,null);
-    aseToast("Sin estudiantes vinculados","No encontramos pupilos ligados a tu correo","Verifica que sea el correo registrado en el colegio o contáctalos.",10000);
-  }else{
-    enter("guardian",email,name,pic,CURRENT_PUPILS[0]);
-    if(CURRENT_PUPILS.length>1)aseToast("Tienes "+CURRENT_PUPILS.length+" pupilos/as","Mostrando a "+CURRENT_PUPILS[0].student,"Cámbialo con el botón Cambiar.",8000);
+    // Sin estudiante vinculado NO se permite el ingreso: nadie entra sin el acceso correspondiente.
+    AUTH_TOKEN=null; CURRENT_PUPILS=[]; gDom("",false);
+    aseToast("Acceso no autorizado","No hay estudiantes vinculados a tu correo","Nadie puede ingresar sin un/a estudiante asociado/a. Verifica que sea el correo que registraste en el colegio como apoderado/a, o contáctalos para vincularlo. 🙂",14000);
+    return;   // se mantiene en la pantalla de acceso, fuera de la plataforma
   }
+  enter("guardian",email,name,pic,CURRENT_PUPILS[0]);
+  if(CURRENT_PUPILS.length>1)aseToast("Tienes "+CURRENT_PUPILS.length+" pupilos/as","Mostrando a "+CURRENT_PUPILS[0].student,"Cámbialo con el botón Cambiar.",8000);
 }
 function initGIS(){
   if(!GIS_READY||GIS_INITED)return;
