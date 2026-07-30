@@ -2024,16 +2024,30 @@ async function apiPost(resource,payload){
 /* Directorio completo (con correos): el Worker solo lo entrega a docentes/
    administrativos con token válido. Alimenta el redactor de correos y, para el
    perfil maestro, la selección manual de estudiantes. */
-async function loadDirectory(){
+let DIR_STATE="idle", DIR_BUSY=false;   // idle | loading | done | error
+async function loadDirectory(retries){
   if(STUDENTS.length||!AUTH_TOKEN) return;
+  if(retries==null && DIR_BUSY) return;   // ya hay una carga en curso (evita cadenas duplicadas)
+  DIR_BUSY=true; DIR_STATE="loading"; renderJefatura();
   const d=await apiPost("directory",{credential:AUTH_TOKEN});
   const arr=(d&&d.students)||[];
   if(arr.length){
     STUDENTS=arr.map(x=>({name:x.n||"",course:x.c||"",email:x.e||"",apEmail:x.ae||""})).filter(s=>s.name);
     ROSTER=STUDENTS.map(s=>({name:s.name,course:s.course,email:s.email}));
-    renderJefatura();   // ya hay nómina: llena el selector de jefatura si corresponde
+    DIR_BUSY=false; DIR_STATE="done"; renderJefatura();   // ya hay nómina: llena el selector de jefatura si corresponde
+    return;
   }
+  // Falló o vino vacía: reintenta con backoff (red / 5xx) antes de mostrar error.
+  const left=(retries==null?3:retries);
+  const failed=!d || d.__err!=null;
+  if(failed && left>0){
+    DIR_STATE="loading"; renderJefatura();
+    setTimeout(()=>loadDirectory(left-1), 1600);
+    return;
+  }
+  DIR_BUSY=false; DIR_STATE="error"; renderJefatura();
 }
+function retryDirectory(){ STUDENTS=[]; DIR_BUSY=false; DIR_STATE="idle"; loadDirectory(); }
 function profFromMatch(m){
   const cc=(m&&m.course)||"";const cl=(COURSES.find(c=>c.c===cc)||{}).l||cc;
   return {courseCode:cc,courseLabel:cl,student:(m&&m.name)||"",email:(m&&m.email)||""};
@@ -2693,8 +2707,20 @@ function renderJefatura(){
   const sel=document.getElementById("jefStudent");const prev=sel.value;
   const list=STUDENTS.filter(s=>s.course===course).sort((a,b)=>apellidoKey(a.name).localeCompare(apellidoKey(b.name),"es"));
   const esc=s=>s.replace(/</g,"&lt;").replace(/"/g,"&quot;");
-  sel.innerHTML='<option value="">'+(list.length?"Selecciona un estudiante…":"Cargando nómina…")+'</option>'+list.map(s=>'<option value="'+esc(s.email)+'">'+esc(apellidoFirst(s.name))+'</option>').join("");
+  let ph;
+  if(list.length) ph="Selecciona un estudiante…";
+  else if(DIR_STATE==="error") ph="No se pudo cargar la nómina";
+  else ph="Cargando nómina…";
+  sel.innerHTML='<option value="">'+ph+'</option>'+list.map(s=>'<option value="'+esc(s.email)+'">'+esc(apellidoFirst(s.name))+'</option>').join("");
+  sel.disabled=!list.length;
   if(prev)sel.value=prev;
+  // Aviso + botón "Reintentar" cuando la nómina no cargó
+  let msg=document.getElementById("jefRetry");
+  if(DIR_STATE==="error" && !list.length){
+    if(!msg){ msg=document.createElement("div"); msg.id="jefRetry"; msg.style.cssText="margin:8px 2px 0;font-size:12.5px;color:#5b6b85;";
+      sel.parentNode.insertBefore(msg, sel.nextSibling); }
+    msg.innerHTML='No pudimos cargar la nómina del curso. <button type="button" onclick="retryDirectory()" style="background:var(--grad-azul);color:#fff;border:none;border-radius:9px;padding:6px 12px;font-weight:700;font-family:inherit;font-size:12.5px;cursor:pointer;margin-left:4px">Reintentar</button>';
+  } else if(msg){ msg.remove(); }
   panel.style.display="";
 }
 function jefStudentChanged(){
