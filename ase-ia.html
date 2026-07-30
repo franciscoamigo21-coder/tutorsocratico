@@ -402,6 +402,7 @@
   .plangen{background:var(--grad-azul);color:#fff;border:none;border-radius:12px;padding:12px 18px;font-weight:800;font-family:inherit;font-size:14px;cursor:pointer;transition:.15s;}
   .plangen:hover{filter:brightness(1.06);}
   .plangen:disabled{opacity:.6;cursor:default;}
+  .plangen.alt{background:linear-gradient(135deg,#0f8a8a,#0b6b6b);}
   @media(max-width:760px){ .planwrap{grid-template-columns:1fr;} .planresult{min-height:34vh;} }
   .hortab-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;}
   .hortab{border-collapse:separate;border-spacing:5px;width:100%;min-width:520px;}
@@ -2845,48 +2846,54 @@ function planFormHTML(){
     +'<div class="planfield"><label>Asignatura</label><select id="plAsig">'+opt(PLAN_ASIGS)+'</select></div>'
     +'<div class="planfield"><label>Nivel / Curso</label><select id="plNivel">'+opt(PLAN_NIVELES)+'</select></div>'
     +'<div class="planfield"><label>Tema u objetivo</label><textarea id="plTema" placeholder="Ej: fracciones equivalentes; comprensión de textos argumentativos; independencia de Chile…"></textarea></div>'
-    +'<div class="planfield"><label>Duración / N° de clases <span style="font-weight:600;text-transform:none;color:#8a97ad">(opcional)</span></label><input id="plDur" placeholder="Ej: 2 clases de 90 min"></div>'
-    +'<div class="planfield"><label>Consideraciones <span style="font-weight:600;text-transform:none;color:#8a97ad">(opcional)</span></label><textarea id="plCons" placeholder="Ej: curso numeroso, estudiantes con NEE, enfoque lúdico, recursos limitados…"></textarea></div>'
-    +'<button class="plangen" id="plGo" onclick="generarPlanifica()">✨ Generar con IA</button>'
-    +'</div><div class="planresult" id="plResult"><div class="ph">Completa el formulario y presiona <b>Generar con IA</b>.<br>ASE-IA propondrá el material alineado al currículum nacional (MINEDUC). Luego podrás copiarlo o imprimirlo.</div></div></div>';
+    +'<div class="planfield"><label>Duración / N° de clases <span style="font-weight:600;text-transform:none;color:#8a97ad">(opcional)</span></label><input id="plDur" placeholder="Ej: 2 clases de 45 min"></div>'
+    +'<div class="planfield"><label>Háblame en qué consiste la clase</label><textarea id="plDesc" style="min-height:96px" placeholder="Cuéntame con tus palabras de qué se trata la clase, qué quieres lograr, las actividades o ideas que tienes en mente, los materiales, y cómo es tu curso (tamaño, NEE, intereses…). Mientras más me cuentes, mejor será el material. 🙂"></textarea></div>'
+    +'<div style="display:flex;gap:8px;flex-wrap:wrap">'
+      +'<button class="plangen" id="plGo" onclick="generarPlanifica()">✨ Generar material</button>'
+      +'<button class="plangen alt" id="plGoPres" onclick="generarPlanifica(\'presentacion\')">🖥️ Crear presentación</button>'
+    +'</div>'
+    +'</div><div class="planresult" id="plResult"><div class="ph">Cuéntame en qué consiste tu clase y presiona <b>Generar material</b> o <b>Crear presentación</b>.<br>ASE-IA creará el contenido alineado al currículum nacional (MINEDUC). Luego podrás copiarlo o imprimirlo.</div></div></div>';
 }
 function openPlanifica(){ document.getElementById("planBody").innerHTML=planFormHTML(); PLAN_LAST=""; document.getElementById("planCopy").style.display="none"; document.getElementById("planPrint").style.display="none"; document.getElementById("planmodal").classList.add("open"); document.body.style.overflow="hidden"; }
 function closePlanifica(){ document.getElementById("planmodal").classList.remove("open"); document.body.style.overflow=""; }
-function planPrompt(tipo,asig,nivel,tema,dur,cons){
-  const nombres={planificacion:"una planificación de clase",guia:"una guía de trabajo para estudiantes",rubrica:"una rúbrica de evaluación",oa:"un conjunto de objetivos de aprendizaje (OA) con actividades"};
+function planPrompt(tipo,asig,nivel,tema,dur,desc){
+  const nombres={planificacion:"una planificación de clase",guia:"una guía de trabajo para estudiantes",rubrica:"una rúbrica de evaluación",oa:"un conjunto de objetivos de aprendizaje (OA) con actividades",presentacion:"el guion de una presentación de diapositivas para proyectar en clase"};
   const formatos={
    planificacion:"Estructura: (1) Objetivo(s) de Aprendizaje (OA) del nivel según las Bases Curriculares chilenas; (2) habilidades y actitudes; (3) Inicio, Desarrollo y Cierre con tiempos estimados; (4) recursos; (5) indicadores de evaluación.",
    guia:"Incluye: título, instrucciones claras, entre 6 y 10 actividades progresivas (de lo simple a lo complejo) y una breve sección de metacognición. Lenguaje adecuado a la edad del nivel.",
    rubrica:"Entrega la rúbrica en formato de TABLA Markdown: 4 a 6 criterios en las filas y 4 niveles de logro en las columnas (Destacado, Competente, En desarrollo, Inicial), con un descriptor concreto en cada celda.",
-   oa:"Lista los OA pertinentes del nivel según las Bases Curriculares y, para cada uno, propone 2 a 3 actividades y un indicador de evaluación."
+   oa:"Lista los OA pertinentes del nivel según las Bases Curriculares y, para cada uno, propone 2 a 3 actividades y un indicador de evaluación.",
+   presentacion:"Crea entre 8 y 12 diapositivas listas para armar en PowerPoint, Canva o Google Slides. Usa para cada una el formato '### Diapositiva N — Título' y debajo viñetas breves con el contenido y, cuando ayude, una línea 'Nota para el docente:'. Incluye diapositiva de portada, de objetivo/OA, de desarrollo del contenido, al menos una actividad y una de cierre."
   };
-  return "Eres un asesor pedagógico experto en el currículum nacional de Chile (MINEDUC, Bases Curriculares). "
-   +"Genera "+nombres[tipo]+" para la asignatura de "+asig+", nivel "+nivel+". "
-   +"Tema u objetivo central: "+tema+". "
+  const asunto = tema ? ("Tema u objetivo central: "+tema+". ") : "";
+  const cuenta = desc ? ("El o la docente lo describe así: \""+desc+"\". ") : "";
+  return "Genera "+nombres[tipo]+" para la asignatura de "+asig+", nivel "+nivel+". "
+   +asunto+cuenta
    +(dur?("Duración/alcance: "+dur+". "):"")
-   +(cons?("Considera especialmente: "+cons+". "):"")
    +formatos[tipo]+" "
-   +"Alinea todo a los Objetivos de Aprendizaje del nivel indicado. Responde en español de Chile, de forma clara y lista para usar, con encabezados (##), viñetas y tablas en Markdown cuando corresponda. Sé concreto y práctico.";
+   +"Alinea todo a los Objetivos de Aprendizaje del nivel indicado. Responde en español de Chile, claro y listo para usar. Sé concreto, práctico y creativo.";
 }
-async function generarPlanifica(){
+async function generarPlanifica(forceTipo){
   const g=id=>document.getElementById(id);
-  const tipo=g("plTipo").value, asig=g("plAsig").value, nivel=g("plNivel").value;
-  const tema=(g("plTema").value||"").trim(), dur=(g("plDur").value||"").trim(), cons=(g("plCons").value||"").trim();
+  const tipo=forceTipo||g("plTipo").value, asig=g("plAsig").value, nivel=g("plNivel").value;
+  const tema=(g("plTema").value||"").trim(), dur=(g("plDur").value||"").trim(), desc=(g("plDesc").value||"").trim();
   const res=g("plResult");
-  if(!tema){ res.innerHTML='<div class="ph" style="color:#c0392b">Escribe primero el <b>tema u objetivo</b> para generar el material. 🙂</div>'; return; }
-  const btn=g("plGo"); btn.disabled=true; const oldTxt=btn.textContent; btn.textContent="Generando…";
-  res.innerHTML='<div class="ph">✨ ASE-IA está preparando tu material…<br>Esto puede tomar unos segundos.</div>';
-  const prompt=planPrompt(tipo,asig,nivel,tema,dur,cons);
-  let out="";
+  if(!tema && !desc){ res.innerHTML='<div class="ph" style="color:#c0392b">Cuéntame primero el <b>tema</b> o <b>en qué consiste la clase</b> para crear el material. 🙂</div>'; return; }
+  if(!AUTH_TOKEN){ res.innerHTML='<div class="ph" style="color:#c0392b">Inicia sesión con tu cuenta institucional de Google para crear material con IA. 🙂</div>'; return; }
+  const btnG=g("plGo"), btnP=g("plGoPres"); [btnG,btnP].forEach(b=>{if(b)b.disabled=true;});
+  const usado=(forceTipo==="presentacion")?btnP:btnG; const oldTxt=usado?usado.textContent:""; if(usado)usado.textContent="Creando…";
+  res.innerHTML='<div class="ph">✨ ASE-IA está creando tu '+(forceTipo==="presentacion"?"presentación":"material")+'…<br>Esto puede tomar unos segundos.</div>';
+  const prompt=planPrompt(tipo,asig,nivel,tema,dur,desc);
+  let out="",err="";
   try{
     if(!AI_PROXY_URL) throw new Error("sin-ia");
-    const r=await fetch(AI_PROXY_URL,{method:"POST",headers:{"Content-Type":"application/json"},
-      body:JSON.stringify({question:prompt,role:"teacher",context:[],history:[]})});
+    const r=await fetch(AI_PROXY_URL+"?resource=crear",{method:"POST",headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({credential:AUTH_TOKEN,prompt:prompt})});
     const data=await r.json();
-    out=(data&&data.reply)||"";
+    out=(data&&data.reply)||""; if(!out&&data&&data.error)err=data.error;
   }catch(e){ out=""; }
-  btn.disabled=false; btn.textContent=oldTxt;
-  if(!out){ res.innerHTML='<div class="ph" style="color:#c0392b">No pudimos generar el material en línea en este momento.<br>Revisa tu conexión e inténtalo nuevamente en unos minutos.</div>'; return; }
+  [btnG,btnP].forEach(b=>{if(b)b.disabled=false;}); if(usado)usado.textContent=oldTxt;
+  if(!out){ res.innerHTML='<div class="ph" style="color:#c0392b">No pudimos crear el material en línea en este momento'+(err?(" ("+err+")"):"")+'.<br>Revisa tu conexión e inténtalo nuevamente en unos minutos.</div>'; return; }
   PLAN_LAST=out; res.innerHTML=mdToHtml(out);
   document.getElementById("planCopy").style.display=""; document.getElementById("planPrint").style.display="";
 }

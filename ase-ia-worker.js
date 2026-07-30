@@ -193,6 +193,57 @@ export default {
       return new Response(JSON.stringify({ ready: true, pdf: b64 }), { status: 200, headers: secure });
     }
 
+    // ---- CREACIÓN de material pedagógico con IA (PLANIFICA · solo docentes/admin) ----
+    // Modo de CREACIÓN libre (no depende de fuentes autorizadas): genera
+    // planificaciones, guías, rúbricas, objetivos y presentaciones.
+    if (resource === "crear") {
+      const u = await verifyGoogle(body.credential);
+      if (!u) return json({ error: "No pudimos verificar tu cuenta." }, 401, cors);
+      const p = profileFor(u);
+      if (p.role !== "staff" && p.role !== "dev") return json({ error: "No autorizado" }, 403, cors);
+      if (!env.ANTHROPIC_API_KEY) return json({ error: "Falta configurar ANTHROPIC_API_KEY" }, 500, cors);
+      const prompt = (body.prompt || body.question || "").toString().slice(0, 4000);
+      if (prompt.trim().length < 3) return json({ error: "Solicitud vacía" }, 400, cors);
+      const sysCrear =
+        `Eres un asesor pedagógico experto en el currículum nacional de Chile ` +
+        `(MINEDUC, Bases Curriculares) del Colegio Presidente José Joaquín Prieto. ` +
+        `Tu tarea es CREAR material educativo de alta calidad para docentes: ` +
+        `planificaciones de clase, guías de trabajo, rúbricas de evaluación, ` +
+        `objetivos de aprendizaje (OA) y guiones de presentación. ` +
+        `IMPORTANTE: siempre CREAS el material solicitado; nunca pides datos al ` +
+        `usuario ni lo derives a terceros. Alinea todo a los OA del nivel indicado. ` +
+        `Escribe en español de Chile, claro, concreto y listo para usar. Usa formato ` +
+        `Markdown: encabezados con ##, subtítulos con ###, listas con - o números, ` +
+        `negritas con **texto** y tablas con | y fila separadora |---|---| cuando ` +
+        `ayude (por ejemplo, en rúbricas). Sé práctico y pertinente al nivel.`;
+      let aiC;
+      try {
+        aiC = await fetch("https://api.anthropic.com/v1/messages", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "x-api-key": env.ANTHROPIC_API_KEY,
+            "anthropic-version": "2023-06-01",
+          },
+          body: JSON.stringify({
+            model: MODEL,
+            max_tokens: 2400,
+            system: sysCrear,
+            messages: [{ role: "user", content: prompt }],
+          }),
+        });
+      } catch {
+        return json({ error: "No se pudo contactar a la IA" }, 502, cors);
+      }
+      if (!aiC.ok) {
+        let d = ""; try { d = (await aiC.text()).slice(0, 300); } catch {}
+        return json({ error: `Error IA ${aiC.status}`, detalle: d }, 502, cors);
+      }
+      const dc = await aiC.json();
+      const bc = (dc.content || []).find((b) => b.type === "text");
+      return new Response(JSON.stringify({ reply: (bc?.text || "").trim() }), { status: 200, headers: secure });
+    }
+
     // ---- Chat con IA (por defecto) ----
     if (!env.ANTHROPIC_API_KEY) return json({ error: "Falta configurar ANTHROPIC_API_KEY" }, 500, cors);
     const question = (body.question || "").toString().slice(0, 1000);
