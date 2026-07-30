@@ -2850,7 +2850,7 @@ function planFormHTML(){
     +'<div class="planfield"><label>Háblame en qué consiste la clase</label><textarea id="plDesc" style="min-height:96px" placeholder="Cuéntame con tus palabras de qué se trata la clase, qué quieres lograr, las actividades o ideas que tienes en mente, los materiales, y cómo es tu curso (tamaño, NEE, intereses…). Mientras más me cuentes, mejor será el material. 🙂"></textarea></div>'
     +'<div style="display:flex;gap:8px;flex-wrap:wrap">'
       +'<button class="plangen" id="plGo" onclick="generarPlanifica()">✨ Generar material</button>'
-      +'<button class="plangen alt" id="plGoPres" onclick="generarPlanifica(\'presentacion\')">🖥️ Crear presentación</button>'
+      +'<button class="plangen alt" id="plGoPres" onclick="crearPresentacion()">🖥️ Crear presentación (PPTX)</button>'
     +'</div>'
     +'</div><div class="planresult" id="plResult"><div class="ph">Cuéntame en qué consiste tu clase y presiona <b>Generar material</b> o <b>Crear presentación</b>.<br>ASE-IA creará el contenido alineado al currículum nacional (MINEDUC). Luego podrás copiarlo o imprimirlo.</div></div></div>';
 }
@@ -2955,6 +2955,131 @@ function loadPdfLib(){
     sc=document.createElement("script");sc.id="pdflib-lib";sc.src=PDFLIB_CDN;
     sc.onload=done;sc.onerror=()=>res(false);document.head.appendChild(sc);
   });
+}
+/* PptxGenJS (para PLANIFICA · descargar presentación .pptx con diseño). */
+const PPTX_CDN="https://cdn.jsdelivr.net/npm/pptxgenjs@3.12.0/dist/pptxgen.bundle.js";
+function loadPptxLib(){
+  return new Promise(res=>{
+    if(window.PptxGenJS){res(true);return;}
+    let sc=document.getElementById("pptx-lib");
+    if(sc){let t=0;const iv=setInterval(()=>{if(window.PptxGenJS){clearInterval(iv);res(true);}else if(++t>60){clearInterval(iv);res(false);}},150);return;}
+    sc=document.createElement("script");sc.id="pptx-lib";sc.src=PPTX_CDN;
+    sc.onload=()=>res(!!window.PptxGenJS);sc.onerror=()=>res(false);document.head.appendChild(sc);
+  });
+}
+let PLAN_DECK=null, PLAN_DECK_META=null;
+function deckPrompt(asig,nivel,tema,dur,desc){
+  return "Diseña el contenido de una presentación de diapositivas para proyectar en clase, "
+   +"de la asignatura de "+asig+", nivel "+nivel+". "
+   +(tema?("Tema u objetivo: "+tema+". "):"")
+   +(desc?("El o la docente lo describe así: \""+desc+"\". "):"")
+   +(dur?("Duración/alcance: "+dur+". "):"")
+   +"Alinea el contenido a los Objetivos de Aprendizaje (OA) del nivel según el currículum chileno (MINEDUC). "
+   +"Responde EXCLUSIVAMENTE con un objeto JSON válido (sin ``` ni texto antes o después), con esta forma exacta: "
+   +'{"titulo":"título breve de la clase","subtitulo":"subtítulo o gran idea","slides":[{"tipo":"contenido","titulo":"...","puntos":["punto breve","punto breve"],"nota":"nota corta para el docente"}]}. '
+   +"Reglas: crea entre 8 y 11 objetos en \"slides\" (sin contar la portada, que se arma con titulo/subtitulo). "
+   +"Incluye 1 o 2 slides con \"tipo\":\"seccion\" como divisores (solo titulo, sin puntos). "
+   +"Los slides de \"tipo\":\"contenido\" deben tener de 3 a 5 puntos concisos (máx ~12 palabras cada uno). "
+   +"Empieza con un slide de objetivos de la clase y termina con uno de cierre o síntesis. "
+   +"Todo en español de Chile, claro y adecuado al nivel.";
+}
+function parseDeck(txt){
+  if(!txt)return null;
+  let s=txt.trim().replace(/^```(json)?/i,"").replace(/```$/,"").trim();
+  const a=s.indexOf("{"), b=s.lastIndexOf("}");
+  if(a<0||b<0)return null;
+  try{ const d=JSON.parse(s.slice(a,b+1)); if(!d||!Array.isArray(d.slides))return null; return d; }catch(e){ return null; }
+}
+function planPreviewHTML(deck){
+  const esc=s=>(s||"").replace(/</g,"&lt;").replace(/"/g,"&quot;");
+  let h='<div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:8px"><h3 style="margin:0">🖥️ '+esc(deck.titulo||"Presentación")+'</h3>'
+   +'<button class="docbtn" style="padding:8px 14px" onclick="descargarDeckPPTX()">⬇ Descargar PPTX</button></div>';
+  if(deck.subtitulo)h+='<p style="margin:0 0 12px;color:#5b6b85">'+esc(deck.subtitulo)+'</p>';
+  h+='<p style="color:#5b6b85;font-size:12.5px;margin:0 0 10px">'+deck.slides.length+' diapositivas + portada · listo para PowerPoint, Canva o Google Slides.</p><ol style="margin:0 0 0 18px;padding:0">';
+  deck.slides.forEach(sl=>{
+    if(sl.tipo==="seccion") h+='<li style="margin:8px 0 4px;list-style:none;font-weight:800;color:#0f8a8a;text-transform:uppercase;font-size:12px;letter-spacing:.6px">§ '+esc(sl.titulo)+'</li>';
+    else{ h+='<li style="margin:5px 0"><b style="color:#0b3d91">'+esc(sl.titulo)+'</b>';
+      if(Array.isArray(sl.puntos)&&sl.puntos.length)h+='<ul style="margin:3px 0 0 2px">'+sl.puntos.map(pt=>'<li>'+esc(pt)+'</li>').join("")+'</ul>';
+      h+='</li>'; }
+  });
+  h+='</ol>';
+  return h;
+}
+async function crearPresentacion(){
+  const g=id=>document.getElementById(id);
+  const asig=g("plAsig").value, nivel=g("plNivel").value;
+  const tema=(g("plTema").value||"").trim(), dur=(g("plDur").value||"").trim(), desc=(g("plDesc").value||"").trim();
+  const res=g("plResult");
+  if(!tema && !desc){ res.innerHTML='<div class="ph" style="color:#c0392b">Cuéntame primero el <b>tema</b> o <b>en qué consiste la clase</b> para crear la presentación. 🙂</div>'; return; }
+  if(!AUTH_TOKEN){ res.innerHTML='<div class="ph" style="color:#c0392b">Inicia sesión con tu cuenta institucional de Google para crear la presentación. 🙂</div>'; return; }
+  const btnG=g("plGo"), btnP=g("plGoPres"); [btnG,btnP].forEach(b=>{if(b)b.disabled=true;});
+  const old=btnP?btnP.textContent:""; if(btnP)btnP.textContent="Creando…";
+  document.getElementById("planCopy").style.display="none"; document.getElementById("planPrint").style.display="none";
+  res.innerHTML='<div class="ph">✨ ASE-IA está diseñando tu presentación…<br>Esto puede tomar unos segundos.</div>';
+  let deck=null,err="";
+  try{
+    if(!AI_PROXY_URL) throw new Error("sin-ia");
+    const r=await fetch(AI_PROXY_URL+"?resource=crear",{method:"POST",headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({credential:AUTH_TOKEN,prompt:deckPrompt(asig,nivel,tema,dur,desc)})});
+    const data=await r.json();
+    if(data&&data.reply)deck=parseDeck(data.reply);
+    if(!deck&&data&&data.error)err=data.error;
+  }catch(e){}
+  [btnG,btnP].forEach(b=>{if(b)b.disabled=false;}); if(btnP)btnP.textContent=old;
+  if(!deck){ res.innerHTML='<div class="ph" style="color:#c0392b">No pudimos crear la presentación en línea en este momento'+(err?(" ("+err+")"):"")+'.<br>Inténtalo nuevamente en unos minutos.</div>'; return; }
+  PLAN_DECK=deck; PLAN_DECK_META={asig,nivel};
+  res.innerHTML=planPreviewHTML(deck);
+  const ok=await descargarDeckPPTX();
+  if(!ok) aseToast("Presentación lista","No se pudo iniciar la descarga automática","Usa el botón ⬇ Descargar PPTX del panel. 🙂",7000);
+}
+async function descargarDeckPPTX(){
+  if(!PLAN_DECK)return false;
+  const ok=await loadPptxLib();
+  if(!ok||!window.PptxGenJS){ return false; }
+  try{ buildDeckPPTX(PLAN_DECK,PLAN_DECK_META||{}); return true; }catch(e){ return false; }
+}
+/* Construye el .pptx con un diseño limpio y moderno (estilo NotebookLM). */
+function buildDeckPPTX(deck,meta){
+  const NAVY="0B3D91", DEEP="0A2A63", INK="1B2A4A", TEAL="17A9C6", MUTE="6B7A93", SOFT="EEF4FF", WHITE="FFFFFF";
+  const p=new PptxGenJS(); p.defineLayout({name:"AW",width:13.333,height:7.5}); p.layout="AW";
+  const foot=(meta.asig||"")+(meta.nivel?("  ·  "+meta.nivel):"");
+  // Portada
+  const c=p.addSlide(); c.background={color:NAVY};
+  c.addShape(p.ShapeType.rect,{x:0,y:6.85,w:13.333,h:0.65,fill:{color:DEEP},line:{type:"none"}});
+  c.addShape(p.ShapeType.rect,{x:0.9,y:2.15,w:0.55,h:0.55,fill:{color:TEAL},line:{type:"none"}});
+  c.addText((deck.titulo||"Presentación de clase"),{x:0.9,y:2.75,w:11.5,h:1.7,fontFace:"Calibri",fontSize:40,bold:true,color:WHITE,lineSpacingMultiple:1.02});
+  if(deck.subtitulo)c.addText(deck.subtitulo,{x:0.92,y:4.5,w:11,h:0.9,fontFace:"Calibri",fontSize:20,color:"BFD4F5"});
+  c.addText([{text:"ASE-IA",options:{bold:true,color:WHITE}},{text:foot?("   ·   "+foot):"",options:{color:"9FC0EC"}}],{x:0.92,y:6.9,w:11.5,h:0.55,fontFace:"Calibri",fontSize:12,valign:"middle"});
+  // Slides
+  let n=0;
+  (deck.slides||[]).forEach(sl=>{
+    const s=p.addSlide();
+    if(sl.tipo==="seccion"){
+      s.background={color:DEEP};
+      s.addShape(p.ShapeType.rect,{x:0.9,y:3.05,w:0.9,h:0.14,fill:{color:TEAL},line:{type:"none"}});
+      s.addText("SECCIÓN",{x:0.9,y:2.55,w:10,h:0.4,fontFace:"Calibri",fontSize:14,bold:true,color:TEAL,charSpacing:3});
+      s.addText((sl.titulo||""),{x:0.9,y:3.35,w:11.5,h:1.6,fontFace:"Calibri",fontSize:34,bold:true,color:WHITE,lineSpacingMultiple:1.03});
+    }else{
+      s.background={color:WHITE}; n++;
+      s.addShape(p.ShapeType.rect,{x:0.75,y:0.72,w:0.34,h:0.34,fill:{color:TEAL},line:{type:"none"}});
+      s.addText((sl.titulo||""),{x:1.25,y:0.6,w:11.3,h:0.9,fontFace:"Calibri",fontSize:27,bold:true,color:NAVY,valign:"middle"});
+      const pts=(Array.isArray(sl.puntos)?sl.puntos:[]).filter(x=>x&&(""+x).trim());
+      if(pts.length){
+        s.addText(pts.map((t,i)=>({text:(""+t),options:{bullet:{code:"2022"},breakLine:true,paraSpaceAfter:i<pts.length-1?10:0}})),
+          {x:0.95,y:1.75,w:11.6,h:5.0,fontFace:"Calibri",fontSize:18,color:INK,lineSpacingMultiple:1.08,valign:"top"});
+      }
+      s.addText("ASE-IA  ·  Colegio José Joaquín Prieto",{x:0.75,y:7.0,w:8,h:0.4,fontFace:"Calibri",fontSize:9.5,color:MUTE});
+      s.addText(String(n),{x:12.35,y:7.0,w:0.55,h:0.4,fontFace:"Calibri",fontSize:9.5,color:MUTE,align:"right"});
+      if(sl.nota) s.addNotes(""+sl.nota);
+    }
+  });
+  // Cierre
+  const z=p.addSlide(); z.background={color:NAVY};
+  z.addShape(p.ShapeType.rect,{x:0.9,y:3.0,w:0.55,h:0.55,fill:{color:TEAL},line:{type:"none"}});
+  z.addText("¡A trabajar!",{x:0.9,y:3.6,w:11.5,h:1.1,fontFace:"Calibri",fontSize:36,bold:true,color:WHITE});
+  z.addText("Presentación creada con ASE-IA  ·  "+(foot||"Colegio José Joaquín Prieto"),{x:0.92,y:4.7,w:11.5,h:0.5,fontFace:"Calibri",fontSize:13,color:"BFD4F5"});
+  const fname=("Presentacion-"+((deck.titulo||"clase").replace(/[^\wáéíóúñ ]/gi,"").trim().replace(/\s+/g,"-").slice(0,50))||"clase")+".pptx";
+  p.writeFile({fileName:fname});
 }
 const MESES_ES=["enero","febrero","marzo","abril","mayo","junio","julio","agosto","septiembre","octubre","noviembre","diciembre"];
 function fechaLargaES(d){d=d||new Date();return d.getDate()+" de "+MESES_ES[d.getMonth()]+" de "+d.getFullYear();}
