@@ -1060,6 +1060,10 @@
  *  Ej: const AI_PROXY_URL = "https://ase-ia.TU-CUENTA.workers.dev";
  * ========================================================================== */
 const AI_PROXY_URL = "https://ase-ia.franciscoamigo21.workers.dev";
+/* Worker aparte SOLO para crear material con IA (PLANIFICA). No usa el directorio,
+   por eso es independiente y no afecta los datos del colegio. Nómbralo en Cloudflare
+   exactamente "ase-ia-planifica" para que coincida esta URL. */
+const AI_CREATE_URL = "https://ase-ia-planifica.franciscoamigo21.workers.dev";
 
 /* ============================================================================
  *  AUTENTICACIÓN CON GOOGLE (opcional)
@@ -2912,8 +2916,8 @@ async function generarPlanifica(forceTipo){
   const prompt=planPrompt(tipo,asig,nivel,tema,dur,desc);
   let out="",err="";
   try{
-    if(!AI_PROXY_URL) throw new Error("sin-ia");
-    const r=await fetch(AI_PROXY_URL+"?resource=crear",{method:"POST",headers:{"Content-Type":"application/json"},
+    if(!AI_CREATE_URL) throw new Error("sin-ia");
+    const r=await fetch(AI_CREATE_URL+"?resource=crear",{method:"POST",headers:{"Content-Type":"application/json"},
       body:JSON.stringify({credential:AUTH_TOKEN,prompt:prompt})});
     const data=await r.json();
     out=(data&&data.reply)||""; if(!out&&data&&data.error)err=data.error;
@@ -3044,8 +3048,8 @@ async function crearPresentacion(){
   res.innerHTML='<div class="ph">✨ ASE-IA está diseñando tu presentación…<br>Esto puede tomar unos segundos.</div>';
   let deck=null,err="";
   try{
-    if(!AI_PROXY_URL) throw new Error("sin-ia");
-    const r=await fetch(AI_PROXY_URL+"?resource=crear",{method:"POST",headers:{"Content-Type":"application/json"},
+    if(!AI_CREATE_URL) throw new Error("sin-ia");
+    const r=await fetch(AI_CREATE_URL+"?resource=crear",{method:"POST",headers:{"Content-Type":"application/json"},
       body:JSON.stringify({credential:AUTH_TOKEN,prompt:deckPrompt(asig,nivel,tema,dur,desc)})});
     const data=await r.json();
     if(data&&data.reply)deck=parseDeck(data.reply);
