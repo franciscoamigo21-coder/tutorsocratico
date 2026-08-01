@@ -110,7 +110,7 @@ export default {
         },
         body: JSON.stringify({
           model: MODEL,
-          max_tokens: 2400,
+          max_tokens: 6000,
           system: sysCrear,
           messages: [{ role: "user", content: prompt }],
         }),
