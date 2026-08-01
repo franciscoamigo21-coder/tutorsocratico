@@ -109,7 +109,8 @@
   .qgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(94px,1fr));gap:7px;}
   @media(max-width:460px){.qgrid{grid-template-columns:repeat(auto-fill,minmax(72px,1fr));gap:6px;}}
   .qcard{position:relative;display:flex;flex-direction:column;align-items:center;gap:5px;background:var(--card);
-    border:1px solid var(--border);border-radius:12px;padding:8px 4px;transition:.18s cubic-bezier(.2,.7,.3,1);text-align:center;box-shadow:var(--shadow-sm);}
+    border:1px solid var(--border);border-radius:12px;padding:8px 4px;transition:.18s cubic-bezier(.2,.7,.3,1);text-align:center;box-shadow:var(--shadow-sm);
+    cursor:pointer;font-family:inherit;}
   .qcard:hover{transform:translateY(-3px);box-shadow:0 14px 30px -16px rgba(11,61,145,.4);border-color:#cfe0ff;}
   .qcard .ic{width:32px;height:32px;display:flex;align-items:center;justify-content:center;border-radius:10px;
     background:linear-gradient(160deg,#f6f9ff,#eef3fc);overflow:hidden;}
@@ -2868,7 +2869,8 @@ function closeBeneficios(){ document.getElementById("benmodal").classList.remove
 const PLAN_NIVELES=["1° Básico","2° Básico","3° Básico","4° Básico","5° Básico","6° Básico","7° Básico","8° Básico","I° Medio","II° Medio","III° Medio","IV° Medio"];
 const PLAN_ASIGS=["Lenguaje y Comunicación","Matemática","Historia, Geografía y Cs. Sociales","Ciencias Naturales","Biología","Física","Química","Inglés","Artes Visuales","Música","Educación Física y Salud","Tecnología","Orientación","Religión","Otra"];
 const PLAN_TIPOS=[{v:"planificacion",l:"Planificación de clase"},{v:"guia",l:"Guía de trabajo para estudiantes"},{v:"rubrica",l:"Rúbrica de evaluación"},{v:"oa",l:"Objetivos (OA) y actividades"}];
-let PLAN_LAST="";
+const PLAN_TIPO_MAP=Object.fromEntries(PLAN_TIPOS.map(t=>[t.v,t.l]));
+let PLAN_LAST="", PLAN_META=null;
 function planFormHTML(){
   const opt=arr=>arr.map(x=>'<option>'+x+'</option>').join("");
   return '<div class="planwrap"><div class="planform">'
@@ -2884,7 +2886,7 @@ function planFormHTML(){
     +'</div>'
     +'</div><div class="planresult" id="plResult"><div class="ph">Cuéntame en qué consiste tu clase y presiona <b>Generar material</b> o <b>Crear presentación</b>.<br>ASE-IA creará el contenido alineado al currículum nacional (MINEDUC). Luego podrás copiarlo o imprimirlo.</div></div></div>';
 }
-function openPlanifica(){ document.getElementById("planBody").innerHTML=planFormHTML(); PLAN_LAST=""; document.getElementById("planCopy").style.display="none"; document.getElementById("planPrint").style.display="none"; document.getElementById("planmodal").classList.add("open"); document.body.style.overflow="hidden"; }
+function openPlanifica(){ document.getElementById("planBody").innerHTML=planFormHTML(); PLAN_LAST=""; PLAN_META=null; document.getElementById("planCopy").style.display="none"; document.getElementById("planPrint").style.display="none"; document.getElementById("planmodal").classList.add("open"); document.body.style.overflow="hidden"; }
 function closePlanifica(){ document.getElementById("planmodal").classList.remove("open"); document.body.style.overflow=""; }
 function planPrompt(tipo,asig,nivel,tema,dur,desc){
   const nombres={planificacion:"una planificación de clase",guia:"una guía de trabajo para estudiantes",rubrica:"una rúbrica de evaluación",oa:"un conjunto de objetivos de aprendizaje (OA) con actividades",presentacion:"el guion de una presentación de diapositivas para proyectar en clase"};
@@ -2901,7 +2903,8 @@ function planPrompt(tipo,asig,nivel,tema,dur,desc){
    +asunto+cuenta
    +(dur?("Duración/alcance: "+dur+". "):"")
    +formatos[tipo]+" "
-   +"Alinea todo a los Objetivos de Aprendizaje del nivel indicado. Responde en español de Chile, claro y listo para usar. Sé concreto, práctico y creativo.";
+   +"Alinea todo a los Objetivos de Aprendizaje del nivel indicado. Responde en español de Chile, claro y listo para usar. Sé concreto, práctico y creativo. "
+   +"Usa un lenguaje simple e institucional, propio del Colegio Presidente José Joaquín Prieto (SIP Red de Colegios): formal, cercano y fácil de entender para un colegio, nunca con frases genéricas de inteligencia artificial ni de internet.";
 }
 async function generarPlanifica(forceTipo){
   const g=id=>document.getElementById(id);
@@ -2924,13 +2927,66 @@ async function generarPlanifica(forceTipo){
   }catch(e){ out=""; }
   [btnG,btnP].forEach(b=>{if(b)b.disabled=false;}); if(usado)usado.textContent=oldTxt;
   if(!out){ res.innerHTML='<div class="ph" style="color:#c0392b">No pudimos crear el material en línea en este momento'+(err?(" ("+err+")"):"")+'.<br>Revisa tu conexión e inténtalo nuevamente en unos minutos.</div>'; return; }
-  PLAN_LAST=out; res.innerHTML=mdToHtml(out);
+  PLAN_LAST=out; PLAN_META={tipo:tipo,asig:asig,nivel:nivel,tema:tema}; res.innerHTML=mdToHtml(out);
   document.getElementById("planCopy").style.display=""; document.getElementById("planPrint").style.display="";
 }
 function copyPlanifica(){ if(!PLAN_LAST)return; navigator.clipboard.writeText(PLAN_LAST).then(()=>aseToast("Copiado","El material se copió al portapapeles","Pégalo donde lo necesites. 🙂",4000)).catch(()=>{}); }
-function printPlanifica(){ if(!PLAN_LAST)return; const w=window.open("","_blank"); if(!w)return;
-  w.document.write('<html><head><meta charset="utf-8"><title>ASE-IA · Planifica</title><style>body{font-family:Calibri,Arial,sans-serif;max-width:800px;margin:32px auto;padding:0 20px;color:#1f2b45;line-height:1.6}h3,h4{color:#0b3d91}table{border-collapse:collapse;width:100%}th,td{border:1px solid #999;padding:6px 9px;text-align:left}th{background:#eef4ff}</style></head><body>'+mdToHtml(PLAN_LAST)+'</body></html>');
-  w.document.close(); setTimeout(()=>{try{w.print();}catch(_){}},350);
+/* Plantilla institucional de impresión (Colegio Presidente José Joaquín Prieto · SIP Red de Colegios).
+   Se imprime con un <iframe> oculto en la misma página: nunca abre otra pestaña/ventana que
+   luego haya que cerrar. Márgenes superior/inferior amplios + reglas de salto de página para
+   que ninguna pregunta, actividad o fila de rúbrica quede cortada entre hojas. */
+const PLAN_PRINT_CSS=
+   '@page{size:letter;margin:20mm 16mm}'
+  +'*{box-sizing:border-box}html,body{margin:0;padding:0}'
+  +'body{font-family:Arial,Helvetica,sans-serif;font-size:11pt;line-height:1.55;color:#16233d}'
+  +'.lh{display:flex;align-items:center;justify-content:space-between;gap:6mm;padding-bottom:3mm;margin-bottom:5mm;border-bottom:.6mm solid #0b3d91;break-inside:avoid;page-break-inside:avoid}'
+  +'.lh img{display:block;object-fit:contain}.lh-word{height:11mm}.lh-seal{height:16mm;width:16mm}'
+  +'.lh-tx{flex:1;text-align:center;color:#0b3d91}'
+  +'.lh-tx b{display:block;font-size:12.5pt;letter-spacing:.2px}'
+  +'.lh-tx span{display:block;font-size:10pt;color:#33507c;font-weight:600}'
+  +'.doctitle{text-align:center;margin:0 0 6mm;padding-bottom:3mm;border-bottom:.4mm solid #dbe4f5;break-after:avoid;break-inside:avoid;page-break-after:avoid;page-break-inside:avoid}'
+  +'.doctitle h1{margin:0 0 1mm;font-size:15pt;color:#0b3d91;text-transform:uppercase;letter-spacing:.3px}'
+  +'.doctitle p{margin:0;font-size:10.5pt;color:#33507c;font-weight:700}'
+  +'.doctitle .dfecha{font-weight:400;color:#5b6b85;font-size:9.5pt;margin-top:.8mm}'
+  +'.doccontent h3,.doccontent h4{color:#0b3d91;margin:5mm 0 2mm;break-after:avoid;break-inside:avoid;page-break-after:avoid;page-break-inside:avoid}'
+  +'.doccontent p{margin:0 0 3mm;orphans:3;widows:3}'
+  +'.doccontent ul,.doccontent ol{margin:0 0 3mm;padding-left:5mm}'
+  +'.doccontent li{margin:0 0 1.6mm;break-inside:avoid;page-break-inside:avoid}'
+  +'.doccontent table{width:100%;border-collapse:collapse;margin:0 0 5mm;break-inside:auto}'
+  +'.doccontent thead{display:table-header-group}'
+  +'.doccontent tr,.doccontent td,.doccontent th{break-inside:avoid;page-break-inside:avoid}'
+  +'.doccontent th,.doccontent td{border:.3mm solid #9fb2d6;padding:2.4mm 3mm;text-align:left;vertical-align:top;font-size:10.5pt}'
+  +'.doccontent th{background:#0b3d91;color:#fff;font-weight:700}'
+  +'.doccontent table.tbl-rubrica{border:.5mm solid #0b3d91}'
+  +'.doccontent table.tbl-rubrica td{border:.3mm solid #b9c9ec}'
+  +'.doccontent table.tbl-rubrica tbody tr:nth-child(even) td{background:#eef4ff}'
+  +'.pf{margin-top:8mm;padding-top:3mm;border-top:.4mm solid #dbe4f5;text-align:center;font-size:8.5pt;color:#5b6b85;break-inside:avoid;page-break-inside:avoid}'
+  +'@media print{.lh,.pf,.doccontent th{-webkit-print-color-adjust:exact;print-color-adjust:exact}}';
+function printPlanifica(){
+  if(!PLAN_LAST) return;
+  const esc=s=>(s==null?"":String(s)).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+  const meta=PLAN_META||{};
+  const tipoLbl=PLAN_TIPO_MAP[meta.tipo]||"Material pedagógico";
+  const sub=[meta.asig,meta.nivel].filter(Boolean).join(" · ");
+  const fecha=new Date().toLocaleDateString("es-CL",{day:"2-digit",month:"long",year:"numeric"});
+  const sealUrl=new URL("assets/logo-sip.png",document.baseURI).href;
+  const wordUrl=new URL("assets/logo-sip-170.png",document.baseURI).href;
+  let bodyHtml=mdToHtml(PLAN_LAST);
+  if(meta.tipo==="rubrica") bodyHtml=bodyHtml.replace(/<table>/g,'<table class="tbl-rubrica">');
+  const html='<!doctype html><html><head><meta charset="utf-8"><title>ASE-IA · '+esc(tipoLbl)+'</title>'
+    +'<style>'+PLAN_PRINT_CSS+'</style></head><body>'
+    +'<div class="lh"><img class="lh-word" src="'+wordUrl+'" alt=""><div class="lh-tx"><b>SIP Red de Colegios</b><span>Colegio Presidente José Joaquín Prieto</span></div><img class="lh-seal" src="'+sealUrl+'" alt=""></div>'
+    +'<div class="doctitle"><h1>'+esc(tipoLbl)+'</h1>'+(sub?'<p>'+esc(sub)+'</p>':'')+'<p class="dfecha">'+esc(fecha)+'</p></div>'
+    +'<div class="doccontent">'+bodyHtml+'</div>'
+    +'<div class="pf">SIP Red de Colegios · Colegio Presidente José Joaquín Prieto</div>'
+    +'</body></html>';
+  let f=document.getElementById("planPrintFrame");
+  if(!f){ f=document.createElement("iframe"); f.id="planPrintFrame";
+    f.style.cssText="position:fixed;right:0;bottom:0;width:0;height:0;border:0;visibility:hidden;";
+    document.body.appendChild(f); }
+  const doc=f.contentWindow.document;
+  doc.open(); doc.write(html); doc.close();
+  setTimeout(()=>{ try{ f.contentWindow.focus(); f.contentWindow.print(); }catch(_){ } },400);
 }
 /* Mini conversor Markdown -> HTML (encabezados, negritas, listas y tablas simples). */
 function mdToHtml(md){
@@ -3011,7 +3067,7 @@ function deckPrompt(asig,nivel,tema,dur,desc){
    +"Incluye 1 o 2 slides con \"tipo\":\"seccion\" como divisores (solo titulo, sin puntos). "
    +"Los slides de \"tipo\":\"contenido\" deben tener de 3 a 5 puntos concisos (máx ~12 palabras cada uno). "
    +"Empieza con un slide de objetivos de la clase y termina con uno de cierre o síntesis. "
-   +"Todo en español de Chile, claro y adecuado al nivel.";
+   +"Todo en español de Chile, claro y adecuado al nivel, con un lenguaje simple e institucional propio del Colegio Presidente José Joaquín Prieto (SIP Red de Colegios), nunca genérico de inteligencia artificial.";
 }
 function parseDeck(txt){
   if(!txt)return null;
