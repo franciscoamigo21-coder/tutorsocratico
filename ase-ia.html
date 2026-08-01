@@ -3442,65 +3442,84 @@ async function descargarDeckPPTX(){
 }
 /* Construye el .pptx con un diseño limpio y moderno (estilo NotebookLM). */
 function buildDeckPPTX(deck,meta){
-  const NAVY="0B3D91", DEEP="081E4A", INK="1B2A4A", WHITE="FFFFFF", CLOUD="F4F8FE", MUTE="8090A8";
-  // Paleta vibrante (inspirada en la plantilla): se rota por diapositiva.
-  const ACCENTS=[["0097A7","E4F7F9"],["1A73E8","E8F0FE"],["F5A623","FFF4E0"],["7B2FBE","F2E9FB"],["E5484D","FDEAEA"],["0F9D58","E6F5EC"]];
+  /* Sistema de diseño editorial estilo NotebookLM: un solo acento coherente,
+     mucho aire, tipografía grande, número fantasma de fondo y viñetas con marcador. */
+  const NAVY="0B2E63", INK="17233D", BODY="33415C", MUTE="7C89A3", WHITE="FFFFFF",
+        HAIR="E4E9F2", GHOST="EEF3F8", ACCENT="0E7C86", ATINT="E7F3F4", ATINT2="D3EBEC",
+        NGHOST="163B77"; // número fantasma sobre fondo navy
   const p=new PptxGenJS(); p.defineLayout({name:"AW",width:13.333,height:7.5}); p.layout="AW";
-  const foot=(meta.asig||"")+(meta.nivel?("  ·  "+meta.nivel):"");
-  const esc=s=>(""+(s||""));
-  // ---- Portada ----
+  const foot=(meta.asig||"")+(meta.nivel?("   ·   "+meta.nivel):"");
+  const kicker=((meta.asig||"")+(meta.nivel?("  ·  "+meta.nivel):"")).toUpperCase();
+  const T=s=>(""+(s||""));
+  const MARGIN=0.95, RIGHT=13.333-0.95;
+  const emoji=e=>({text:T(e),options:{fontFace:"Segoe UI Emoji"}});
+  // ===== Portada =====
   const c=p.addSlide(); c.background={color:NAVY};
-  c.addShape(p.ShapeType.ellipse,{x:9.7,y:-2.2,w:6,h:6,fill:{color:"0E2E6B"},line:{type:"none"}});
-  c.addShape(p.ShapeType.ellipse,{x:11.4,y:4.4,w:3.4,h:3.4,fill:{color:"0097A7"},line:{type:"none"},transparency:35});
-  c.addShape(p.ShapeType.rect,{x:0.9,y:2.2,w:1.1,h:0.16,fill:{color:"F5A623"},line:{type:"none"}});
-  c.addText(esc(deck.titulo)||"Presentación de clase",{x:0.9,y:2.55,w:11.2,h:1.9,fontFace:"Calibri",fontSize:42,bold:true,color:WHITE,lineSpacingMultiple:1.02});
-  if(deck.subtitulo)c.addText(esc(deck.subtitulo),{x:0.92,y:4.55,w:10.8,h:1.0,fontFace:"Calibri",fontSize:21,italic:true,color:"9FD8E4"});
-  c.addText([{text:"ASE-IA",options:{bold:true,color:WHITE}},{text:foot?("   ·   "+foot):"",options:{color:"9FC0EC"}}],{x:0.92,y:6.75,w:11.5,h:0.5,fontFace:"Calibri",fontSize:12,valign:"middle"});
-  // ---- Slides ----
-  let n=0, ci=0;
+  c.addShape(p.ShapeType.ellipse,{x:8.9,y:-3.1,w:8,h:8,fill:{color:"0E387A"},line:{type:"none"}});
+  c.addShape(p.ShapeType.ellipse,{x:10.6,y:3.7,w:4.6,h:4.6,fill:{color:ACCENT},line:{type:"none"},transparency:62});
+  c.addShape(p.ShapeType.ellipse,{x:11.9,y:5.2,w:2.4,h:2.4,fill:{type:"none"},line:{color:"6FB9BE",width:1.25,transparency:40}});
+  if(kicker) c.addText(kicker,{x:MARGIN,y:1.85,w:11,h:0.4,fontFace:"Calibri",fontSize:13,bold:true,color:"7FD3DA",charSpacing:4});
+  c.addShape(p.ShapeType.rect,{x:MARGIN,y:2.42,w:0.85,h:0.09,fill:{color:ACCENT},line:{type:"none"}});
+  c.addText(T(deck.titulo)||"Presentación de clase",{x:MARGIN,y:2.68,w:10.9,h:2.0,fontFace:"Georgia",fontSize:44,bold:true,color:WHITE,lineSpacingMultiple:1.0});
+  if(deck.subtitulo)c.addText(T(deck.subtitulo),{x:MARGIN+0.02,y:4.72,w:10.4,h:1.0,fontFace:"Calibri",fontSize:20,color:"C7D6EC",lineSpacingMultiple:1.1});
+  c.addShape(p.ShapeType.line,{x:MARGIN,y:6.62,w:0.5,h:0,line:{color:"5C79A6",width:1.25}});
+  c.addText("Colegio Presidente José Joaquín Prieto  ·  Creado con ASE-IA",{x:MARGIN,y:6.75,w:11.4,h:0.4,fontFace:"Calibri",fontSize:12,color:"9FB4D6",valign:"middle"});
+  // ===== Diapositivas =====
+  let n=0;
   (deck.slides||[]).forEach(sl=>{
     const s=p.addSlide();
     if(sl.tipo==="seccion"){
-      const ac=ACCENTS[ci%ACCENTS.length]; ci++;
+      n++;
       s.background={color:NAVY};
-      s.addShape(p.ShapeType.rect,{x:0,y:0,w:0.35,h:7.5,fill:{color:ac[0]},line:{type:"none"}});
-      if(sl.icono) s.addText(esc(sl.icono),{x:0.9,y:2.0,w:2,h:1.4,fontFace:"Segoe UI Emoji",fontSize:64,color:WHITE});
-      s.addText("SECCIÓN",{x:0.95,y:3.5,w:10,h:0.4,fontFace:"Calibri",fontSize:14,bold:true,color:ac[0],charSpacing:3});
-      s.addText(esc(sl.titulo),{x:0.9,y:3.9,w:11.5,h:1.7,fontFace:"Calibri",fontSize:36,bold:true,color:WHITE,lineSpacingMultiple:1.03});
-    }else{
-      const ac=ACCENTS[ci%ACCENTS.length]; ci++; n++;
-      s.background={color:WHITE};
-      // Panel lateral con acento + índice + ícono
-      s.addShape(p.ShapeType.rect,{x:0,y:0,w:3.55,h:7.5,fill:{color:ac[1]},line:{type:"none"}});
-      s.addShape(p.ShapeType.rect,{x:0,y:0,w:0.28,h:7.5,fill:{color:ac[0]},line:{type:"none"}});
-      s.addShape(p.ShapeType.ellipse,{x:0.85,y:0.95,w:1.9,h:1.9,fill:{color:ac[0]},line:{type:"none"}});
-      s.addText(esc(sl.icono)||"•",{x:0.85,y:1.02,w:1.9,h:1.75,fontFace:"Segoe UI Emoji",fontSize:52,color:WHITE,align:"center",valign:"middle"});
-      s.addText(String(n).padStart(2,"0"),{x:0.85,y:3.15,w:1.9,h:0.6,fontFace:"Calibri",fontSize:30,bold:true,color:ac[0],align:"center"});
-      s.addText(foot,{x:0.4,y:6.85,w:3,h:0.4,fontFace:"Calibri",fontSize:9,color:MUTE,align:"center"});
-      // Título
-      s.addText(esc(sl.titulo),{x:4.0,y:0.7,w:8.6,h:1.1,fontFace:"Calibri",fontSize:26,bold:true,color:NAVY,valign:"middle"});
-      let y=1.95;
-      // Destacado (idea clave)
-      if(sl.destacado){
-        s.addShape(p.ShapeType.roundRect,{x:4.0,y:y,w:8.6,h:0.95,rectRadius:0.08,fill:{color:ac[1]},line:{color:ac[0],width:1}});
-        s.addText([{text:"IDEA CLAVE   ",options:{bold:true,color:ac[0],fontSize:11}},{text:esc(sl.destacado),options:{color:INK,fontSize:14,bold:true}}],{x:4.25,y:y+0.06,w:8.15,h:0.83,fontFace:"Calibri",valign:"middle",lineSpacingMultiple:1.05});
-        y+=1.2;
-      }
-      const pts=(Array.isArray(sl.puntos)?sl.puntos:[]).filter(x=>x&&(""+x).trim());
-      if(pts.length){
-        s.addText(pts.map((t,i)=>({text:esc(t),options:{bullet:{code:"2022",indent:14},breakLine:true,paraSpaceAfter:i<pts.length-1?11:0}})),
-          {x:4.05,y:y,w:8.55,h:6.6-y,fontFace:"Calibri",fontSize:17,color:INK,lineSpacingMultiple:1.1,valign:"top"});
-      }
-      s.addText(String(n),{x:12.35,y:6.95,w:0.55,h:0.4,fontFace:"Calibri",fontSize:10,color:MUTE,align:"right"});
-      if(sl.nota) s.addNotes(esc(sl.nota));
+      s.addText(String(n).padStart(2,"0"),{x:7.4,y:0.1,w:6.4,h:7.3,fontFace:"Georgia",fontSize:340,bold:true,color:NGHOST,align:"right",valign:"middle"});
+      s.addText([emoji(sl.icono),{text:"   SECCIÓN",options:{bold:true}}],{x:MARGIN,y:2.55,w:9,h:0.5,fontFace:"Calibri",fontSize:15,color:"7FD3DA",charSpacing:2,valign:"middle"});
+      s.addShape(p.ShapeType.rect,{x:MARGIN,y:3.22,w:0.85,h:0.09,fill:{color:ACCENT},line:{type:"none"}});
+      s.addText(T(sl.titulo),{x:MARGIN,y:3.5,w:10.6,h:2.0,fontFace:"Georgia",fontSize:40,bold:true,color:WHITE,lineSpacingMultiple:1.02,valign:"top"});
+      if(sl.nota) s.addNotes(T(sl.nota));
+      return;
     }
+    n++;
+    s.background={color:WHITE};
+    // Número fantasma de fondo (marca de agua)
+    s.addText(String(n).padStart(2,"0"),{x:8.0,y:-0.7,w:5.6,h:5.2,fontFace:"Georgia",fontSize:250,bold:true,color:GHOST,align:"right",valign:"top"});
+    // Cabecera: chip con ícono + kicker
+    s.addShape(p.ShapeType.roundRect,{x:MARGIN,y:0.62,w:0.62,h:0.62,rectRadius:0.12,fill:{color:ATINT},line:{type:"none"}});
+    s.addText([emoji(sl.icono||"•")],{x:MARGIN,y:0.62,w:0.62,h:0.62,fontSize:22,align:"center",valign:"middle"});
+    if(kicker) s.addText(kicker,{x:MARGIN+0.82,y:0.62,w:9.5,h:0.62,fontFace:"Calibri",fontSize:12.5,bold:true,color:ACCENT,charSpacing:3,valign:"middle"});
+    // Título + subrayado de acento
+    s.addText(T(sl.titulo),{x:MARGIN,y:1.5,w:11.1,h:1.15,fontFace:"Georgia",fontSize:29,bold:true,color:INK,lineSpacingMultiple:1.0,valign:"top"});
+    s.addShape(p.ShapeType.rect,{x:MARGIN,y:2.62,w:0.72,h:0.075,fill:{color:ACCENT},line:{type:"none"}});
+    let y=2.95;
+    // Idea clave
+    if(sl.destacado){
+      s.addShape(p.ShapeType.roundRect,{x:MARGIN,y:y,w:RIGHT-MARGIN,h:0.98,rectRadius:0.06,fill:{color:ATINT},line:{type:"none"}});
+      s.addShape(p.ShapeType.rect,{x:MARGIN,y:y,w:0.09,h:0.98,fill:{color:ACCENT},line:{type:"none"}});
+      s.addText([{text:"IDEA CLAVE\n",options:{bold:true,color:ACCENT,fontSize:10.5,charSpacing:2}},{text:T(sl.destacado),options:{color:INK,fontSize:15,bold:true}}],{x:MARGIN+0.35,y:y+0.05,w:RIGHT-MARGIN-0.6,h:0.88,fontFace:"Calibri",valign:"middle",lineSpacingMultiple:1.06});
+      y+=1.28;
+    }
+    // Viñetas con marcador de acento (una fila por punto)
+    const pts=(Array.isArray(sl.puntos)?sl.puntos:[]).filter(x=>x&&(""+x).trim()).slice(0,6);
+    if(pts.length){
+      const bottom=6.55, avail=bottom-y, rowH=Math.max(0.5,Math.min(1.02,avail/pts.length));
+      pts.forEach((t,i)=>{
+        const yy=y+i*rowH;
+        s.addShape(p.ShapeType.rect,{x:MARGIN+0.02,y:yy+0.11,w:0.16,h:0.16,fill:{color:ACCENT},line:{type:"none"}});
+        s.addText(T(t),{x:MARGIN+0.42,y:yy,w:RIGHT-MARGIN-0.42,h:rowH,fontFace:"Calibri",fontSize:16.5,color:BODY,valign:"top",lineSpacingMultiple:1.08});
+      });
+    }
+    // Pie: hairline + establecimiento + número
+    s.addShape(p.ShapeType.line,{x:MARGIN,y:6.92,w:RIGHT-MARGIN,h:0,line:{color:HAIR,width:1}});
+    s.addText("Colegio Presidente José Joaquín Prieto"+(foot?("   ·   "+foot):""),{x:MARGIN,y:7.0,w:9.5,h:0.35,fontFace:"Calibri",fontSize:9.5,color:MUTE,valign:"middle"});
+    s.addText(String(n).padStart(2,"0"),{x:RIGHT-0.8,y:7.0,w:0.8,h:0.35,fontFace:"Calibri",fontSize:10,bold:true,color:ACCENT,align:"right",valign:"middle"});
+    if(sl.nota) s.addNotes(T(sl.nota));
   });
-  // ---- Cierre ----
+  // ===== Cierre =====
   const z=p.addSlide(); z.background={color:NAVY};
-  z.addShape(p.ShapeType.ellipse,{x:-1.8,y:4.2,w:5,h:5,fill:{color:"0097A7"},line:{type:"none"},transparency:45});
-  z.addShape(p.ShapeType.rect,{x:0.9,y:2.85,w:1.1,h:0.16,fill:{color:"F5A623"},line:{type:"none"}});
-  z.addText("¡A trabajar!",{x:0.9,y:3.2,w:11.5,h:1.3,fontFace:"Calibri",fontSize:40,bold:true,color:WHITE});
-  z.addText("Presentación creada con ASE-IA  ·  "+(foot||"Colegio Presidente José Joaquín Prieto"),{x:0.92,y:4.6,w:11.5,h:0.5,fontFace:"Calibri",fontSize:13,color:"9FD8E4"});
+  z.addShape(p.ShapeType.ellipse,{x:-2.4,y:3.6,w:6,h:6,fill:{color:ACCENT},line:{type:"none"},transparency:66});
+  z.addShape(p.ShapeType.ellipse,{x:10.9,y:-2.2,w:5,h:5,fill:{color:"0E387A"},line:{type:"none"}});
+  z.addShape(p.ShapeType.rect,{x:MARGIN,y:2.98,w:0.85,h:0.09,fill:{color:ACCENT},line:{type:"none"}});
+  z.addText("Síntesis y cierre",{x:MARGIN,y:3.22,w:11.4,h:1.2,fontFace:"Georgia",fontSize:40,bold:true,color:WHITE});
+  z.addText("Colegio Presidente José Joaquín Prieto  ·  Presentación creada con ASE-IA"+(foot?("  ·  "+foot):""),{x:MARGIN+0.02,y:4.62,w:11.4,h:0.5,fontFace:"Calibri",fontSize:13,color:"C7D6EC"});
   const fname=("Presentacion-"+((deck.titulo||"clase").replace(/[^\wáéíóúñ ]/gi,"").trim().replace(/\s+/g,"-").slice(0,50))||"clase")+".pptx";
   p.writeFile({fileName:fname});
 }
