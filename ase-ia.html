@@ -428,6 +428,11 @@
   .planhero .ph-logos img.ph-mce{height:30px;border-radius:5px;box-shadow:0 4px 10px -4px rgba(41,32,110,.5);}
   .planhero .ph-chips{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:14px;}
   .planhero .ph-chips span{font-size:11.5px;font-weight:700;color:#0b3d91;background:#eaf1ff;border:1px solid #d5e3fb;border-radius:999px;padding:6px 12px;}
+  .planhero .ph-best{margin-top:16px;font-size:12.5px;color:#7a5a12;background:#fff7e4;border:1px solid #f3dca0;border-radius:999px;padding:7px 15px;}
+  .planhero .ph-best b{color:#c78200;}
+  .dochead-sip{background:#fff;border-radius:9px;padding:4px 9px;display:flex;align-items:center;flex:none;box-shadow:0 2px 8px rgba(0,0,0,.18);}
+  .dochead-sip img{height:22px;width:auto;display:block;}
+  @media(max-width:640px){ .dochead-sip{display:none;} }
   /* Historial de creaciones */
   .ph-hist{width:100%;max-width:440px;margin-top:20px;text-align:left;}
   .ph-hist-h{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.6px;color:#8a97ad;margin-bottom:7px;}
@@ -1074,6 +1079,7 @@
     <div class="dochead">
       <span class="doctag">Docentes</span>
       <h4>Planifica · Copiloto pedagógico con IA</h4>
+      <span class="dochead-sip"><img id="planHeadSip" alt="SIP Red de Colegios"></span>
       <button class="docx" type="button" onclick="closePlanifica()" aria-label="Cerrar">✕</button>
     </div>
     <div class="docbody" id="planBody" style="background:#fff"></div>
@@ -2923,6 +2929,7 @@ function planHeroHTML(){
     +'<div class="ph-s">Crea material profesional para tu clase, listo para imprimir con la hoja institucional del colegio.</div>'
     +'<div class="ph-logos"><img src="'+mem+'" alt="SIP"><img src="'+mce+'" alt="Modelo de Clase Efectiva" class="ph-mce"><img src="'+sel+'" alt="Sello"></div>'
     +'<div class="ph-chips"><span>Modelo de Clase Efectiva SIP</span><span>Currículum MINEDUC</span><span>Colegio Pdte. José Joaquín Prieto</span></div>'
+    +'<div class="ph-best">🏆 Tu mejor puntaje en el mini-juego de carga: <b>'+planBest()+'</b></div>'
     +planHistHTML()
     +'</div>';
 }
@@ -3007,7 +3014,7 @@ async function planLoadFile(e){
     setUp("⚠️ No se pudo leer el archivo. Pega el texto a mano.");
   }
 }
-function openPlanifica(){ document.getElementById("planBody").innerHTML=planFormHTML(); planTipoChanged(); PLAN_LAST=""; planShowDocButtons(false); document.getElementById("planmodal").classList.add("open"); document.body.style.overflow="hidden"; }
+function openPlanifica(){ const hs=document.getElementById("planHeadSip"); if(hs&&!hs.src)hs.src="data:image/png;base64,"+MEMBRETE_B64; document.getElementById("planBody").innerHTML=planFormHTML(); planTipoChanged(); PLAN_LAST=""; planShowDocButtons(false); document.getElementById("planmodal").classList.add("open"); document.body.style.overflow="hidden"; }
 /* Descarga en PDF real (rasteriza el documento institucional con html2pdf). */
 const HTML2PDF_CDN="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js";
 function loadHtml2Pdf(){ return new Promise(res=>{ if(window.html2pdf){res(true);return;} let s=document.getElementById("h2p-lib"); if(s){let t=0;const iv=setInterval(()=>{if(window.html2pdf){clearInterval(iv);res(true);}else if(++t>60){clearInterval(iv);res(false);}},150);return;} s=document.createElement("script");s.id="h2p-lib";s.src=HTML2PDF_CDN;s.onload=()=>res(!!window.html2pdf);s.onerror=()=>res(false);document.head.appendChild(s); }); }
@@ -3049,7 +3056,13 @@ function planPrompt(tipo,asig,nivel,tema,dur,desc,dif,planBase){
    rubrica:"Entrega la rúbrica en una TABLA Markdown: 4 a 6 criterios en las filas y 4 niveles de logro en las columnas (Destacado, Competente, En desarrollo, Inicial), con un descriptor concreto en cada celda. Alinéala a los OA.",
    actividades:"Entrega entre 5 y 8 sugerencias de actividades concretas basadas en el Modelo de Clase Efectiva SIP (por ejemplo: activación, modelaje, práctica guiada, 'Gira y discute', trabajo colaborativo estructurado, chequeo de comprensión, 'Ticket de salida' y metacognición). Para cada actividad indica: el momento del MCE, su propósito, en qué consiste (paso a paso breve) y el tiempo estimado."
   };
-  const dificultad = (tipo==="guia" && dif) ? ("Ajusta la exigencia de la guía a un nivel de dificultad "+dif+" en una escala de 1 (básica) a 4 (avanzada). ") : "";
+  const DIFTXT={
+    "1":"NIVEL 1 (BÁSICO): actividades de reconocer y comprender lo esencial, con mucho andamiaje, ejemplos resueltos, vocabulario simple y pasos guiados. Baja demanda cognitiva.",
+    "2":"NIVEL 2 (INTERMEDIO): comprender y aplicar de forma directa lo aprendido, con apoyo moderado y algunos ejemplos.",
+    "3":"NIVEL 3 (DESAFIANTE): aplicar y analizar en situaciones nuevas, con menos andamiaje y preguntas de mayor exigencia (comparar, relacionar, justificar).",
+    "4":"NIVEL 4 (AVANZADO): analizar, evaluar y crear; tareas abiertas, de transferencia y argumentación, con mínima ayuda. Alta demanda cognitiva."
+  };
+  const dificultad = (tipo==="guia" && dif) ? ("La guía debe corresponder claramente a este nivel de dificultad: "+(DIFTXT[dif]||DIFTXT["2"])+" Ajusta el vocabulario, la cantidad de apoyo y la exigencia de las preguntas para que la diferencia de nivel se note con claridad. ") : "";
   const base = planBase ? ("Toma como base esta planificación entregada por el o la docente y crea el material en total coherencia con ella: \""+planBase+"\". ") : "";
   return "Genera "+nombres[tipo]+" para la asignatura de "+asig+", nivel "+nivel+". "
    +(tema?("Tema u objetivo central: "+tema+". "):"")
@@ -3226,9 +3239,11 @@ function planDocHTML(bodyHtml, titulo, tipo){
     +'@page{ size:A4; margin:15mm 15mm 16mm 15mm; }'
     +'*{ box-sizing:border-box; } html,body{ margin:0; padding:0; }'
     +'body{ font-family:Arial,Helvetica,sans-serif; font-size:11pt; color:#000; line-height:1.5; }'
-    +'.lh{ display:flex; align-items:center; justify-content:space-between; gap:8mm; }'
-    +'.lh img.mem{ height:20mm; width:auto; } .lh img.sel{ height:18mm; width:auto; }'
-    +'.lh .ctr{ text-align:center; font-size:10.5pt; line-height:1.35; flex:1; color:#000; } .lh .ctr b{ display:block; font-size:11pt; }'
+    +'.lh{ width:100%; border-collapse:collapse; margin:0; }'
+    +'.lh td{ border:none !important; padding:0; vertical-align:middle; background:none; }'
+    +'.lh .lh-l{ width:33%; text-align:left; } .lh .lh-r{ width:33%; text-align:right; }'
+    +'.lh .lh-c{ width:34%; text-align:center; font-size:10.5pt; line-height:1.35; color:#000; } .lh .lh-c b{ display:block; font-size:11pt; }'
+    +'.lh img.mem{ height:72px; width:auto; } .lh img.sel{ height:66px; width:auto; }'
     +'.rule{ border:none; border-top:1.2pt solid #333; margin:2.5mm 0 3.5mm; }'
     +'.doctit{ text-align:center; font-size:14pt; color:#000; margin:0 0 3mm; text-transform:uppercase; text-decoration:underline; page-break-after:avoid; }'
     +'.stbox{ border-collapse:collapse; width:100%; margin:0 0 4mm; }'
@@ -3245,7 +3260,7 @@ function planDocHTML(bodyHtml, titulo, tipo){
     +'td{ border:0.75pt solid #999; padding:2mm 2.5mm; vertical-align:top; font-size:10.5pt; color:#000; }'
     +'tbody tr:nth-child(even){ background:#f2f2f2; }'
     +'</style></head><body>'
-    +'<div class="lh"><img class="mem" src="'+mem+'" alt="SIP"><div class="ctr"><b>SIP Red de Colegios</b><span>Colegio Presidente José Joaquín Prieto</span></div><img class="sel" src="'+sel+'" alt="Sello"></div>'
+    +'<table class="lh"><tr><td class="lh-l"><img class="mem" src="'+mem+'" alt="SIP" height="72"></td><td class="lh-c"><b>SIP Red de Colegios</b>Colegio Presidente José Joaquín Prieto</td><td class="lh-r"><img class="sel" src="'+sel+'" alt="Sello" height="66"></td></tr></table>'
     +'<hr class="rule">'+titHTML+stbox
     +'<div class="content">'+bodyHtml+'</div>'
     +'</body></html>';
