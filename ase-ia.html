@@ -401,6 +401,14 @@
   .planresult table{border-collapse:collapse;width:100%;margin:9px 0;font-size:12.5px;}
   .planresult th,.planresult td{border:1px solid #d7e0ef;padding:6px 9px;text-align:left;vertical-align:top;}
   .planresult th{background:#ededed;color:#111;font-weight:800;}
+  .planresult .drawbox{width:100%;border:1.6px dashed #9db4d8 !important;border-radius:10px;background:#fbfdff;margin:12px 0;border-collapse:separate;}
+  .planresult .drawbox td{border:none !important;padding:9px 12px;background:none !important;}
+  .planresult .drawbox td.drawcap{font-weight:800;color:#0b3d91;font-size:12.5px;}
+  .planresult .drawbox td.drawspace{height:118px;}
+  .planresult .matchtable{border-collapse:collapse;width:100%;margin:10px 0;}
+  .planresult .matchtable td{border:none !important;padding:7px 12px;background:none !important;font-size:13.5px;}
+  .planresult .matchtable td.ml{text-align:right;width:50%;} .planresult .matchtable td.mr{text-align:left;width:50%;}
+  .planresult .matchtable .mo{color:#0b3d91;font-weight:800;font-size:15px;}
   .plangen{background:var(--grad-azul);color:#fff;border:none;border-radius:12px;padding:12px 18px;font-weight:800;font-family:inherit;font-size:14px;cursor:pointer;transition:.15s;}
   .plangen:hover{filter:brightness(1.06);}
   .plangen:disabled{opacity:.6;cursor:default;}
@@ -3091,7 +3099,11 @@ function planPrompt(tipo,asig,nivel,tema,dur,desc,dif,planBase){
   };
   const base = planBase ? ("Toma como base esta planificación entregada por el o la docente y crea el material en total coherencia con ella: \""+planBase+"\". ") : "";
   const ctx = (tema?("Tema u objetivo central: "+tema+". "):"")+(desc?("El o la docente lo describe así: \""+desc+"\". "):"")+(dur?("Duración/alcance: "+dur+". "):"")+base;
-  const cierre = "Alinea todo a los Objetivos de Aprendizaje del nivel según las Bases Curriculares (MINEDUC). Voz institucional del Colegio Presidente José Joaquín Prieto (SIP). Prioriza el marco institucional y el currículum nacional por sobre información genérica de internet. NO uses ningún emoji ni ícono. Responde en español de Chile.";
+  const largo = (tipo==="planificacion" && /secuencia|varias|didáctica|didactica|[2-9]\s*clases/i.test((dur||"")+" "+(tema||"")));
+  const brev = largo
+    ? "Por tratarse de una secuencia de varias clases, la planificación PUEDE ser más extensa y detallada, desarrollando cada clase de la secuencia. "
+    : "IMPORTANTE: mantén el documento BREVE, acotado y directo (idealmente 1 a 2 páginas). Evita relleno, repeticiones e introducciones largas; incluye solo lo esencial y de calidad. ";
+  const cierre = brev+"Alinea todo a los Objetivos de Aprendizaje del nivel según las Bases Curriculares (MINEDUC). Voz institucional del Colegio Presidente José Joaquín Prieto (SIP). Prioriza el marco institucional y el currículum nacional por sobre información genérica de internet. NO uses ningún emoji ni ícono. Responde en español de Chile.";
 
   if(tipo==="guia"){
     // GUÍA = solo actividades del estudiante, breve y adecuada al nivel. NO es una planificación.
@@ -3099,7 +3111,10 @@ function planPrompt(tipo,asig,nivel,tema,dur,desc,dif,planBase){
      +ctx
      +"REGLAS ESTRICTAS DE LA GUÍA: 1) Es SOLO para el estudiante: incluye únicamente actividades que el o la estudiante debe resolver. NO es una planificación; NO incluyas objetivos redactados como planificación, ni momentos del docente (inicio/desarrollo/cierre, modelaje, práctica guiada), ni indicaciones para el profesor, ni tiempos, ni evaluación. "
      +"2) BREVE y PRÁCTICA: extensión máxima 1 página (2 solo en enseñanza media). Frases cortas y claras, adecuadas a la edad. "
-     +"3) Estructura simple: un título breve; una línea '¿Qué voy a aprender?' en lenguaje de estudiante (una sola frase); y las actividades numeradas, de más fácil a un poco más difícil. Cuando corresponda deja líneas o espacios para responder, unir, dibujar o completar. "
+     +"3) Estructura simple: un título breve; una línea '¿Qué voy a aprender?' en lenguaje de estudiante (una sola frase); y las actividades numeradas, de más fácil a un poco más difícil. "
+     +"4) LÍNEAS PARA ESCRIBIR: cuando el estudiante deba responder, deja una línea de escritura con guiones bajos largos, exactamente así: "+PLAN_BLANK+" . NUNCA uses barras, diagonales ni combinaciones como '/_' o '\\_'. "
+     +"5) ACTIVIDADES DE UNIR/RELACIONAR: cuando una actividad sea de unir o relacionar dos columnas, escribe una línea con [[UNIR]] y a continuación una tabla Markdown de EXACTAMENTE 2 columnas con los elementos desordenados (el sistema agrega los puntos para trazar las líneas). "
+     +"6) IMAGEN DEL TEMA: incluye SIEMPRE al menos un espacio visual relacionado con el tema; para ello escribe una línea sola con [[DIBUJO: breve instrucción de qué dibujar, relacionada al tema]] y el sistema dibujará el recuadro (muy recomendable en los primeros niveles). "
      +planNivelGuia(nivel)+" "
      +(dif?("Dificultad solicitada: "+(DIFTXT[dif]||DIFTXT["2"])+" "):"")
      +"Adecua SIEMPRE el contenido y el vocabulario a la edad del nivel: para los primeros básicos las guías deben ser muy fáciles, concretas y cortas, y la exigencia aumenta a medida que sube el nivel. "
@@ -3107,12 +3122,24 @@ function planPrompt(tipo,asig,nivel,tema,dur,desc,dif,planBase){
   }
   const formatos={
    planificacion:"Estructura según el Modelo de Clase Efectiva SIP: (1) Objetivo(s) de Aprendizaje (OA); (2) INICIO (activación y comunicación del objetivo); (3) DESARROLLO (modelaje, práctica guiada, un momento de alta participación como 'Gira y discute', práctica independiente y chequeo de comprensión); (4) CIERRE (síntesis, 'Ticket de salida' y metacognición); (5) recursos e indicadores. Indica tiempos estimados. "+MCE_REF,
-   rubrica:"Entrega la rúbrica en una TABLA Markdown: 4 a 6 criterios en filas y 4 niveles de logro en columnas (Destacado, Competente, En desarrollo, Inicial), con un descriptor concreto en cada celda. Alinéala a los OA.",
+   rubrica:"Entrega la rúbrica en UNA sola TABLA Markdown BREVE que quepa en MÁXIMO 2 páginas: 4 a 5 criterios en filas y 4 niveles de logro en columnas (Destacado, Competente, En desarrollo, Inicial). Usa descriptores MUY ACOTADOS: máximo ~12 a 15 palabras por celda, en lenguaje claro y directo. No agregues introducciones ni instrucciones largas: ve directo a la tabla, con a lo más una línea de contexto. Alinéala a los OA.",
    actividades:"Entrega entre 5 y 8 sugerencias de actividades concretas basadas en el Modelo de Clase Efectiva SIP (activación, modelaje, práctica guiada, 'Gira y discute', trabajo colaborativo, chequeo de comprensión, 'Ticket de salida', metacognición). Para cada actividad: momento del MCE, propósito, en qué consiste (paso a paso breve) y tiempo estimado. "+MCE_REF
   };
   return "Actúa como un experto en educación y didáctica. Genera "+nombres[tipo]+" para la asignatura de "+asig+", nivel "+nivel+". "+ctx
    +(formatos[tipo]||formatos.planificacion)+" "+cierre
    +" Usa encabezados (##), viñetas y tablas Markdown cuando corresponda.";
+}
+/* Línea de escritura estándar para las guías. */
+const PLAN_BLANK="______________________";
+/* Normaliza las líneas donde escribe el estudiante: convierte \_ /_ ._ y runs de
+   guiones/puntos en una línea limpia de guiones bajos (evita el feo "/_"). */
+function normBlanks(s){
+  return (s||"")
+    .replace(/\\_/g,"_").replace(/_\\/g,"_")     // \_ -> _
+    .replace(/\/_/g,"_").replace(/_\//g,"_")     // /_ -> _
+    .replace(/·/g,"")                             // puntos medios sueltos
+    .replace(/_{2,}/g,PLAN_BLANK)                 // runs de guiones bajos -> línea estándar
+    .replace(/\.{5,}/g,PLAN_BLANK);               // runs de puntos -> línea estándar
 }
 /* Quita cualquier emoji/ícono de los documentos (deben verse institucionales). */
 function stripEmojis(s){
@@ -3309,6 +3336,16 @@ function planDocHTML(bodyHtml, titulo, tipo){
     +'th{ background:#e6e6e6; color:#000; font-weight:bold; border:0.75pt solid #333; padding:2mm 2.5mm; text-align:left; font-size:10.5pt; }'
     +'td{ border:0.75pt solid #999; padding:2mm 2.5mm; vertical-align:top; font-size:10.5pt; color:#000; }'
     +'tbody tr:nth-child(even){ background:#f2f2f2; }'
+    +'.drawbox{ width:100%; border:0.9pt dashed #555 !important; border-collapse:collapse; margin:3.5mm 0; }'
+    +'.drawbox td{ border:none !important; padding:2mm 3mm; background:none !important; }'
+    +'.drawbox td.drawcap{ font-weight:bold; color:#000; font-size:10.5pt; }'
+    +'.drawbox td.drawspace{ height:34mm; }'
+    +'.drawbox tr{ background:none !important; }'
+    +'.matchtable{ width:100%; border-collapse:collapse; margin:2.5mm 0; }'
+    +'.matchtable td{ border:none !important; padding:1.8mm 4mm; background:none !important; font-size:11pt; }'
+    +'.matchtable tr{ background:none !important; }'
+    +'.matchtable td.ml{ text-align:right; width:50%; } .matchtable td.mr{ text-align:left; width:50%; }'
+    +'.matchtable .mo{ font-weight:bold; }'
     +'</style></head><body>'
     +'<table class="lh"><tr><td class="lh-l"><img class="mem" src="'+mem+'" alt="SIP" height="60"></td><td class="lh-c">SIP Red de Colegios<br>Colegio Presidente José Joaquín Prieto</td><td class="lh-r"><img class="sel" src="'+sel+'" alt="Sello" height="64"></td></tr></table>'
     +'<hr class="rule">'+titHTML+stbox
@@ -3330,14 +3367,28 @@ function printPlanifica(){
 function mdToHtml(md){
   const esc=s=>s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
   const inline=s=>esc(s).replace(/\*\*(.+?)\*\*/g,"<b>$1</b>").replace(/\*(.+?)\*/g,"<i>$1</i>").replace(/`(.+?)`/g,"<code>$1</code>");
-  const lines=(md||"").replace(/\r/g,"").split("\n"); let html="",i=0;
+  const lines=normBlanks(md||"").replace(/\r/g,"").split("\n"); let html="",i=0,matchNext=false;
   const isRow=l=>/^\s*\|.*\|\s*$/.test(l);
+  const cells=r=>r.trim().replace(/^\||\|$/g,"").split("|").map(c=>c.trim());
   while(i<lines.length){
     const l=lines[i];
+    // Recuadro para dibujar (imagen que el estudiante crea sobre el tema)
+    let dm;
+    if(dm=l.match(/^\s*\[\[\s*DIBUJO\s*:?\s*(.*?)\s*\]\]\s*$/i)){
+      const cap=dm[1]?inline(dm[1]):"Dibuja aquí lo que aprendiste sobre el tema.";
+      html+='<table class="drawbox"><tr><td class="drawcap">'+cap+'</td></tr><tr><td class="drawspace">&nbsp;</td></tr></table>'; i++; continue;
+    }
+    // Marca de actividad de unir/relacionar (la tabla siguiente se dibuja con puntos)
+    if(/^\s*\[\[\s*UNIR\s*\]\]\s*$/i.test(l)){ matchNext=true; i++; continue; }
     if(isRow(l) && i+1<lines.length && /^\s*\|?[\s:|-]+\|?\s*$/.test(lines[i+1])){
       const rows=[]; while(i<lines.length && isRow(lines[i])){ rows.push(lines[i]); i++; }
-      const cells=r=>r.trim().replace(/^\||\|$/g,"").split("|").map(c=>c.trim());
       const head=cells(rows[0]), body=rows.slice(2);
+      if(matchNext){
+        matchNext=false;
+        html+='<table class="matchtable"><tbody>';
+        body.forEach(r=>{ const cs=cells(r); html+='<tr><td class="ml">'+inline(cs[0]||"")+' <span class="mo">&#9675;</span></td><td class="mr"><span class="mo">&#9675;</span> '+inline(cs[1]||"")+'</td></tr>'; });
+        html+='</tbody></table>'; continue;
+      }
       html+='<table><thead><tr>'+head.map(c=>"<th>"+inline(c)+"</th>").join("")+'</tr></thead><tbody>';
       body.forEach(r=>{ html+="<tr>"+cells(r).map(c=>"<td>"+inline(c)+"</td>").join("")+"</tr>"; });
       html+='</tbody></table>'; continue;
