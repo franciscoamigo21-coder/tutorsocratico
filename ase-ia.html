@@ -423,8 +423,20 @@
   .planhero{display:flex;flex-direction:column;align-items:center;justify-content:flex-start;height:100%;min-height:52vh;text-align:center;padding:8px 18px 18px;}
   .planhero .ph-robot{position:relative;margin:0 0 6px;}
   .planhero .ph-robot img{width:118px;height:118px;object-fit:contain;image-rendering:auto;filter:drop-shadow(0 12px 22px rgba(11,61,145,.28));}
-  .planhero .ph-t{font-family:'Montserrat',sans-serif;font-weight:800;font-size:20px;color:#0b3d91;margin-top:2px;}
-  .planhero .ph-s{font-size:13px;color:#5b6b85;max-width:370px;line-height:1.45;margin-top:6px;}
+  .planhero .ph-t{font-family:'Montserrat',sans-serif;font-weight:800;font-size:23px;color:#0b3d91;margin-top:2px;letter-spacing:.3px;}
+  .planhero .ph-t span{font-weight:600;color:#0f8a8a;}
+  .planhero .ph-s{font-size:13px;color:#5b6b85;max-width:380px;line-height:1.45;margin-top:6px;}
+  /* Tarjeta institucional: rueda MCE + alineación curricular */
+  .planhero .ph-align{display:flex;align-items:center;gap:20px;margin-top:20px;background:linear-gradient(135deg,#f7faff 0%,#eef4ff 100%);border:1px solid #e0eaff;border-radius:20px;padding:18px 22px;box-shadow:0 18px 40px -28px rgba(11,61,145,.5);max-width:520px;flex-wrap:wrap;justify-content:center;}
+  .planhero .ph-wheel{flex:none;width:158px;height:158px;filter:drop-shadow(0 10px 22px rgba(41,32,110,.22));}
+  .planhero .ph-wheel svg{width:100%;height:100%;display:block;}
+  .planhero .ph-align-txt{flex:1;min-width:210px;text-align:left;}
+  .planhero .ph-align-k{font-size:10.5px;font-weight:800;letter-spacing:2px;color:#0f8a8a;text-transform:uppercase;}
+  .planhero .ph-align-h{font-family:'Montserrat',sans-serif;font-size:15px;color:#22314f;line-height:1.4;margin-top:5px;}
+  .planhero .ph-align-h b{color:#0b3d91;font-weight:800;}
+  .planhero .ph-align-logos{display:flex;align-items:center;gap:14px;margin-top:12px;flex-wrap:wrap;}
+  .planhero .ph-align-logos img{height:30px;width:auto;}
+  .planhero .ph-align-logos img.ph-mce{height:26px;border-radius:5px;box-shadow:0 4px 10px -4px rgba(41,32,110,.5);}
   .planhero .ph-logos{display:flex;align-items:center;justify-content:center;gap:16px;margin-top:18px;flex-wrap:wrap;}
   .planhero .ph-logos img{height:34px;width:auto;}
   .planhero .ph-logos img.ph-mce{height:30px;border-radius:5px;box-shadow:0 4px 10px -4px rgba(41,32,110,.5);}
@@ -1080,7 +1092,7 @@
   <div class="doccard" style="max-width:1080px">
     <div class="dochead">
       <span class="doctag">Docentes</span>
-      <h4>Planifica · Copiloto pedagógico con IA</h4>
+      <h4>PLANIFICA con ASE-IA</h4>
       <span class="dochead-sip"><img id="planHeadSip" alt="SIP Red de Colegios"></span>
       <button class="docx" type="button" onclick="closePlanifica()" aria-label="Cerrar">✕</button>
     </div>
@@ -2925,13 +2937,22 @@ let PLAN_UPLOADED="";
 const PLAN_DUR=["1 clase (45 minutos)","1 clase (90 minutos)","2 clases","3 clases","4 clases","Secuencia didáctica (varias clases)"];
 const PPT_ICON='<svg viewBox="0 0 48 48" width="34" height="34"><rect x="7" y="7" width="34" height="34" rx="5" fill="#C43E1C"/><path fill="#fff" d="M16 14h9c4.4 0 7.5 2.7 7.5 6.9S29.4 28 25 28h-4v7h-5V14zm5 4v6h3.4c1.9 0 3.1-1.1 3.1-3s-1.2-3-3.1-3H21z"/></svg>';
 /* Ilustración institucional del panel derecho (logos + marcos de referencia). */
+/* Rueda del Modelo de Clase Efectiva SIP, recreada en SVG vectorial (nítida a cualquier tamaño). */
+const MCE_WHEEL_SVG='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 420" role="img" aria-label="Modelo de Clase Efectiva SIP"><defs><linearGradient id="mceRing" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#E4326E"/><stop offset="0.35" stop-color="#F6921E"/><stop offset="0.65" stop-color="#27B0A6"/><stop offset="1" stop-color="#2E8BC9"/></linearGradient><path id="mceArc" d="M 54.23 147.07 A 168 168 0 0 1 365.77 147.07"/></defs><circle cx="210" cy="210" r="168" fill="none" stroke="url(#mceRing)" stroke-width="30"/><text font-family="Montserrat,Arial,sans-serif" font-size="15" font-weight="700" fill="#fff" letter-spacing="1"><textPath href="#mceArc" startOffset="50%" text-anchor="middle">PLANIFICACIÓN Y REFLEXIÓN PEDAGÓGICA</textPath></text><path d="M 85.64 126.12 A 150 150 0 0 1 334.36 126.12 L 277.98 164.15 A 82 82 0 0 0 142.02 164.15 Z" fill="#1C9AD6"/><path d="M 344.82 144.24 A 150 150 0 0 1 220.46 359.63 L 215.72 291.80 A 82 82 0 0 0 283.70 174.05 Z" fill="#8CC63F"/><path d="M 199.54 359.63 A 150 150 0 0 1 75.18 144.24 L 136.30 174.05 A 82 82 0 0 0 204.28 291.80 Z" fill="#F7941E"/><g font-family="Montserrat,Arial,sans-serif" fill="#fff" text-anchor="middle"><text x="210" y="100" font-size="15" font-weight="800">AMBIENTE</text><text x="210" y="118" font-size="15" font-weight="800">PROPICIO</text><text x="210" y="135" font-size="11" font-style="italic">para el aprendizaje</text><text x="326" y="250" font-size="11.5" font-weight="800">ENSEÑANZA</text><text x="326" y="266" font-size="11.5" font-weight="800">para el</text><text x="326" y="282" font-size="10.5" font-style="italic">aprendizaje</text><text x="94" y="250" font-size="11.5" font-weight="800">MONITOREO</text><text x="94" y="266" font-size="11.5" font-weight="800">Y EVALUACIÓN</text><text x="94" y="282" font-size="10.5" font-style="italic">continua</text></g><circle cx="210" cy="210" r="70" fill="#0B2E63"/><circle cx="210" cy="210" r="70" fill="none" stroke="#fff" stroke-width="4"/><g fill="#fff" transform="translate(210 205)"><path d="M 0 -20 L 34 -6 L 0 8 L -34 -6 Z"/><path d="M -20 0 v 14 c 0 8 40 8 40 0 v -14 l -20 8 z"/><path d="M 34 -6 v 18" stroke="#fff" stroke-width="2.4" fill="none"/><circle cx="34" cy="13" r="3.4"/></g></svg>';
 function planHeroHTML(){
   const mem="data:image/png;base64,"+MEMBRETE_B64, sel="data:image/png;base64,"+SELLO_B64, mce="data:image/png;base64,"+MCE_B64;
   return '<div class="planhero">'
     +'<div class="ph-robot"><img src="assets/ase-ia-badge.png" alt="ASE-IA" onerror="this.style.display=\'none\'"></div>'
-    +'<div class="ph-t">Copiloto pedagógico ASE-IA</div>'
+    +'<div class="ph-t">PLANIFICA <span>con ASE-IA</span></div>'
     +'<div class="ph-s">Crea material profesional para tu clase, listo para imprimir con la hoja institucional del colegio.</div>'
-    +'<div class="ph-logos"><img src="'+mem+'" alt="SIP"><img src="'+mce+'" alt="Modelo de Clase Efectiva" class="ph-mce"><img src="'+sel+'" alt="Sello"></div>'
+    +'<div class="ph-align">'
+      +'<div class="ph-wheel">'+MCE_WHEEL_SVG+'</div>'
+      +'<div class="ph-align-txt">'
+        +'<div class="ph-align-k">Diseñado sobre</div>'
+        +'<div class="ph-align-h">Alineado al <b>Modelo de Clase Efectiva SIP</b> y al <b>Currículum Nacional</b> de Chile (MINEDUC).</div>'
+        +'<div class="ph-align-logos"><img src="'+mem+'" alt="SIP Red de Colegios"><img src="'+mce+'" alt="Modelo de Clase Efectiva" class="ph-mce"><img src="'+sel+'" alt="Colegio Pdte. José Joaquín Prieto"></div>'
+      +'</div>'
+    +'</div>'
     +'<div class="ph-chips"><span>Modelo de Clase Efectiva SIP</span><span>Currículum MINEDUC</span><span>Colegio Pdte. José Joaquín Prieto</span></div>'
     +planHistHTML()
     +'</div>';
@@ -3106,8 +3127,15 @@ function stripEmojis(s){
 /* Pantalla de carga entretenida: mini-juego del robot ASE-IA (estilo dinosaurio). */
 let ASEIA_SPRITE=null;
 (function(){ try{ const im=new Image(); im.onload=()=>{ASEIA_SPRITE=im;}; im.src="assets/ase-ia-badge.png"; }catch(_){} })();
-function planBest(){ try{ return parseInt(localStorage.getItem("aseia_gamebest")||"0",10)||0; }catch(e){ return 0; } }
-function planSetBest(v){ try{ localStorage.setItem("aseia_gamebest",String(v)); }catch(e){} }
+/* Récord del mini-juego guardado por PERFIL (correo), no por sesión: persiste siempre. */
+function planBestKey(){ return "aseia_gamebest_"+((CURRENT&&CURRENT.email)||"anon").toLowerCase(); }
+function planBest(){ try{
+    let v=parseInt(localStorage.getItem(planBestKey())||"0",10)||0;
+    const old=parseInt(localStorage.getItem("aseia_gamebest")||"0",10)||0; // migra récord antiguo global
+    if(old>v){ v=old; try{ localStorage.setItem(planBestKey(),String(v)); }catch(e){} }
+    return v;
+  }catch(e){ return 0; } }
+function planSetBest(v){ try{ localStorage.setItem(planBestKey(),String(v)); }catch(e){} }
 function startPlanLoader(container,label){
   container.innerHTML='<div class="plgame">'
     +'<canvas id="plCanvas" width="460" height="150"></canvas>'
@@ -3263,9 +3291,9 @@ function planDocHTML(bodyHtml, titulo, tipo){
     +'body{ font-family:Arial,Helvetica,sans-serif; font-size:11pt; color:#000; line-height:1.5; }'
     +'.lh{ width:100%; border-collapse:collapse; margin:0; }'
     +'.lh td{ border:none !important; padding:0; vertical-align:middle; background:none; }'
-    +'.lh .lh-l{ width:33%; text-align:left; } .lh .lh-r{ width:33%; text-align:right; }'
-    +'.lh .lh-c{ width:34%; text-align:center; font-size:10.5pt; line-height:1.35; color:#000; } .lh .lh-c b{ display:block; font-size:11pt; }'
-    +'.lh img.mem{ height:72px; width:auto; } .lh img.sel{ height:66px; width:auto; }'
+    +'.lh .lh-l{ width:30%; text-align:left; } .lh .lh-r{ width:30%; text-align:right; }'
+    +'.lh .lh-c{ width:40%; text-align:center; font-size:12pt; line-height:1.45; color:#000; font-weight:normal; }'
+    +'.lh img.mem{ height:60px; width:auto; } .lh img.sel{ height:64px; width:auto; }'
     +'.rule{ border:none; border-top:1.2pt solid #333; margin:2.5mm 0 3.5mm; }'
     +'.doctit{ text-align:center; font-size:14pt; color:#000; margin:0 0 3mm; text-transform:uppercase; text-decoration:underline; page-break-after:avoid; }'
     +'.stbox{ border-collapse:collapse; width:100%; margin:0 0 4mm; }'
@@ -3282,7 +3310,7 @@ function planDocHTML(bodyHtml, titulo, tipo){
     +'td{ border:0.75pt solid #999; padding:2mm 2.5mm; vertical-align:top; font-size:10.5pt; color:#000; }'
     +'tbody tr:nth-child(even){ background:#f2f2f2; }'
     +'</style></head><body>'
-    +'<table class="lh"><tr><td class="lh-l"><img class="mem" src="'+mem+'" alt="SIP" height="72"></td><td class="lh-c"><b>SIP Red de Colegios</b>Colegio Presidente José Joaquín Prieto</td><td class="lh-r"><img class="sel" src="'+sel+'" alt="Sello" height="66"></td></tr></table>'
+    +'<table class="lh"><tr><td class="lh-l"><img class="mem" src="'+mem+'" alt="SIP" height="60"></td><td class="lh-c">SIP Red de Colegios<br>Colegio Presidente José Joaquín Prieto</td><td class="lh-r"><img class="sel" src="'+sel+'" alt="Sello" height="64"></td></tr></table>'
     +'<hr class="rule">'+titHTML+stbox
     +'<div class="content">'+bodyHtml+'</div>'
     +'</body></html>';
@@ -3374,15 +3402,17 @@ function deckPrompt(asig,nivel,tema,dur,desc,planBase,matTipo){
    +(planBase?(tipoNom
        ?("La presentación debe reflejar fielmente esta "+tipoNom+" ya elaborada por el docente; convierte su contenido en diapositivas coherentes y ordenadas: \""+planBase+"\". ")
        :("Basándote en este material del docente: \""+planBase+"\". ")):"")
-   +"Alinea el contenido a los Objetivos de Aprendizaje (OA) del nivel según el currículum chileno (MINEDUC) y al Modelo de Clase Efectiva SIP. "
+   +"MUY IMPORTANTE: la presentación debe seguir la MISMA ESTRUCTURA de una PLANIFICACIÓN DE CLASE completa, siguiendo el Modelo de Clase Efectiva (MCE) de la SIP, con sus tres momentos: INICIO, DESARROLLO y CIERRE. No es un cuestionario: la mayoría de las diapositivas deben ENTREGAR CONTENIDO de valor (explicaciones, definiciones, ejemplos, procedimientos, esquemas), no hacer preguntas. Incluye preguntas solo donde corresponde a una técnica del MCE, no en cada slide. "
+   +"Secuencia sugerida de diapositivas: (1) OBJETIVO DE APRENDIZAJE de la clase y su relación con el OA del currículum (MINEDUC); (2) ACTIVACIÓN de conocimientos previos / motivación (INICIO); (3) RUTA DE LA CLASE (qué haremos hoy); (4-8) DESARROLLO con el contenido central bien explicado: conceptos clave, ejemplos resueltos (modelaje 'yo lo hago'), procedimientos paso a paso y una práctica guiada ('lo hacemos juntos'); incluye una técnica MCE de alta participación como 'Gira y discute' en un momento oportuno; (9) PRÁCTICA INDEPENDIENTE ('tú lo haces') con una consigna clara para los estudiantes; (10) CIERRE con síntesis de las ideas clave y un 'Ticket de salida' de metacognición. "
+   +"Alinea SIEMPRE el contenido a los Objetivos de Aprendizaje (OA) del nivel según el currículum nacional chileno (Bases Curriculares MINEDUC) y al Modelo de Clase Efectiva SIP. "
    +"Responde EXCLUSIVAMENTE con un objeto JSON válido (sin ``` ni texto antes o después), con esta forma exacta: "
    +'{"titulo":"título breve de la clase","subtitulo":"subtítulo o gran idea","slides":[{"tipo":"contenido","titulo":"...","icono":"un solo emoji representativo","destacado":"una idea clave para resaltar (frase corta)","puntos":["punto breve","punto breve"],"nota":"nota corta para el docente"}]}. '
-   +"Reglas: crea entre 9 y 12 objetos en \"slides\" (sin contar la portada, que se arma con titulo/subtitulo). "
-   +"Cada slide de \"tipo\":\"contenido\" debe traer: un \"icono\" (un solo emoji pertinente al contenido), un \"destacado\" (la idea más importante, en una frase corta) y de 3 a 5 \"puntos\" concisos (máx ~12 palabras cada uno). "
+   +"Reglas: crea entre 10 y 12 objetos en \"slides\" (sin contar la portada, que se arma con titulo/subtitulo). "
+   +"Cada slide de \"tipo\":\"contenido\" debe traer: un \"icono\" (un solo emoji pertinente al contenido), un \"destacado\" (la idea más importante, en una frase corta) y de 3 a 5 \"puntos\" concisos y con SUSTANCIA (máx ~14 palabras cada uno; que enseñen algo, no que sean genéricos). "
+   +"Marca los momentos MCE en el \"titulo\" cuando aplique (por ejemplo 'Inicio · Activación', 'Desarrollo · Modelaje', 'Cierre · Ticket de salida'). "
    +"Incluye 1 o 2 slides con \"tipo\":\"seccion\" como divisores (con \"titulo\" e \"icono\", sin puntos). "
-   +"Empieza con un slide de OBJETIVOS de la clase; incluye al menos un slide de ACTIVIDAD usando una técnica del Modelo de Clase Efectiva SIP (por ejemplo 'Gira y discute' o 'Ticket de salida'); y termina con un slide de CIERRE o síntesis. "
-   +"Usa un lenguaje simple y escolar, con la voz institucional del Colegio Presidente José Joaquín Prieto (SIP). Prioriza el currículum nacional chileno (Bases Curriculares MINEDUC) y el marco institucional por sobre información genérica de internet. "
-   +"Todo en español de Chile, claro, motivador y adecuado al nivel.";
+   +"Usa un lenguaje simple y escolar, con la voz institucional del Colegio Presidente José Joaquín Prieto (SIP). Prioriza el currículum nacional chileno y el marco institucional por sobre información genérica de internet. "
+   +"El material debe ser de CALIDAD y con VALOR real para quien lo use: contenido correcto, bien secuenciado y listo para enseñar. Todo en español de Chile, claro, motivador y adecuado al nivel.";
 }
 function parseDeck(txt){
   if(!txt)return null;
