@@ -24,6 +24,8 @@
 // Agrega aquí tu URL de GitHub Pages y el dominio del colegio.
 const ALLOWED_ORIGINS = [
   "https://franciscoamigo21-coder.github.io",
+  "https://aseia.cl",
+  "https://www.aseia.cl",
   "https://www.josejoaquinprieto.cl",
   "https://josejoaquinprieto.cl",
 ];
