@@ -362,7 +362,7 @@
   .docbtn{display:inline-flex;align-items:center;gap:6px;background:var(--grad-azul);color:#fff;border:none;border-radius:12px;padding:11px 18px;font-weight:700;font-family:inherit;font-size:14px;cursor:pointer;text-decoration:none;transition:.15s;}
   .docbtn:hover{filter:brightness(1.06);transform:translateY(-1px);}
   .docbtn.ghost{background:#eef2f8;color:var(--azul-ink,#0b3d91);}
-  @media(max-width:640px){ .doccard{max-height:94vh;border-radius:16px;} .docbody{padding:10px;} .docbody iframe{min-height:64vh;} .dochead h4{font-size:14px;} .docbtn{padding:10px 14px;font-size:13px;} }
+  @media(max-width:640px){ .doccard{max-height:94vh;border-radius:16px;} .docbody{padding:10px;} .docbody iframe{min-height:64vh;} .dochead h4{font-size:14px;} .docbtn{padding:10px 14px;font-size:13px;} .docfoot{flex-wrap:wrap;justify-content:center;gap:8px;padding:10px;} .docfoot .docbtn{flex:1 1 40%;min-width:120px;text-align:center;} }
   /* ===== Modales BENEFICIOS y PLANIFICA (reutilizan .doccard/.dochead/.docbody/.docfoot/.docbtn) ===== */
   #benmodal,#planmodal{position:fixed;inset:0;z-index:1300;display:none;align-items:center;justify-content:center;padding:18px;background:rgba(8,22,52,.6);backdrop-filter:blur(4px);}
   #benmodal.open,#planmodal.open{display:flex;animation:fadeUp .22s ease both;}
