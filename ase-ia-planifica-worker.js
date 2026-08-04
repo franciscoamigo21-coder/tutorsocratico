@@ -23,6 +23,8 @@ const ALLOWED_ORIGINS = [
   "https://franciscoamigo21-coder.github.io",
   "https://www.josejoaquinprieto.cl",
   "https://josejoaquinprieto.cl",
+  "https://aseia.cl",
+  "https://www.aseia.cl",
 ];
 const MODEL = "claude-sonnet-4-6";
 const GOOGLE_CLIENT_ID = "195849212680-sjfflsv7f96o6742l67ihj5kllitpvj4.apps.googleusercontent.com";
