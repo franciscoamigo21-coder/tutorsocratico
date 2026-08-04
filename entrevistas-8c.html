@@ -223,7 +223,8 @@ const D=[
    {e:"R",f:"",an:"",pr:"",co:"Firma compromiso repitencia.",mo:"Firma compromiso seguimiento académico",te:"Compromiso académico, riesgo de repitencia.",ac:"Firma de compromiso de seguimiento académico (repitencia)."},
    {e:"R",f:"2026-07-09",an:"Némesis tuvo una situación puntual con el estudiante Agustín Villamán.",pr:"Dar seguimiento a la relación entre ambos estudiantes.",co:"",mo:"Situación con compañero y adaptación al colegio",te:"Situación puntual con Agustín Villamán, quien se mostró dispuesto a pedir disculpas por lo ocurrido. Se entiende que Némesis se encuentra en un período de adaptación al colegio.",ac:"El compañero se compromete a disculparse. Seguimiento del proceso de adaptación de la estudiante al colegio."},
    {e:"N",f:"2026-07-31",an:"",pr:"",co:"",mo:"Firma compromiso académico",te:"",ac:"Apoderada no asiste a la citación."},
-   {e:"N",f:"2026-08-03",an:"",pr:"",co:"",mo:"Firma compromiso académico",te:"",ac:"Apoderada no asiste a la citación."}]},
+   {e:"N",f:"2026-08-03",an:"",pr:"",co:"",mo:"Firma compromiso académico",te:"",ac:"Apoderada no asiste a la citación."},
+   {e:"R",f:"2026-08-04",an:"",pr:"",co:"",mo:"Firma compromiso académico y compromiso de asistencia",te:"Firma de compromiso académico y de compromiso de asistencia, luego de citaciones previas no atendidas.",ac:"Apoderada asiste y firma el compromiso académico y el compromiso de asistencia."}]},
  {mat:1026,n:"Andrade Palma Renato Jeremías",run:"24.018.712-4",dom:"Calle Iquique 1144, Villa Salvador",com:"La Pintana",apo:"Camila Palma Palma",ar:"18.075.723-6",at:"975293633",am:"ppalmacamila27@gmail.com",as:"Jacob Andrade Pereira",ast:"962996848",ii:[],
   ff:[{e:"R",f:"",an:"Renato está en período de crecimiento.",pr:"Continuar seguimiento de notas.",co:"",mo:"Seguimiento general",te:"Comportamiento general, hábitos de sueño, notas.",ac:"Seguimiento. Notas regulares, sueño regularizado."}]},
  {mat:1027,n:"Árevalo Contreras Emilio Gael",run:"24.019.101-6",dom:"Angel Cruchaga n° 10915",com:"La Pintana",apo:"Patricia Contreras",ar:"14.329.273-8",at:"976851760",am:"patriciacontreras637@gmail.com",as:"Javiera Vásquez",ast:"956381251",ii:[],ff:[{e:"",f:"",an:"",pr:"",co:"",mo:"",te:"",ac:""}]},
@@ -236,7 +237,8 @@ const D=[
    {e:"N",f:"",an:"",pr:"",co:"",mo:"Firma compromiso académico",te:"",ac:"Apoderado no asiste."},
    {e:"R",f:"",an:"",pr:"",co:"Firma compromiso repitencia.",mo:"Firma compromiso repitencia",te:"Repitencia académica.",ac:"Apoderado asiste a firmar el compromiso de repitencia académica."},
    {e:"N",f:"2026-07-31",an:"",pr:"",co:"",mo:"Firma compromiso académico",te:"",ac:"Apoderado no asiste a la citación."},
-   {e:"N",f:"2026-08-03",an:"",pr:"",co:"",mo:"Firma compromiso académico",te:"",ac:"Apoderado no asiste a la citación."}]},
+   {e:"N",f:"2026-08-03",an:"",pr:"",co:"",mo:"Firma compromiso académico",te:"",ac:"Apoderado no asiste a la citación."},
+   {e:"R",f:"2026-08-04",an:"",pr:"",co:"",mo:"Firma compromiso académico (2ª firma) y compromiso de asistencia",te:"Firma del segundo compromiso académico y de compromiso de asistencia, luego de citaciones previas no atendidas.",ac:"Apoderado asiste y firma el segundo compromiso académico y el compromiso de asistencia."}]},
  {mat:1031,n:"Caamaño Barrera Iker André",run:"24.079.102-1",dom:"Avda. Gabriela 1202 D. 34",com:"La Pintana",apo:"Marcela Barrera Salazar",ar:"15.563.968-7",at:"954275700",am:"mdpbarrera@gmail.com",as:"Pablo Caamaño Aravena",ast:"954082291",ii:[],
   ff:[{e:"R",f:"",an:"Estudiante con buen desempeño académico.",pr:"",co:"",mo:"Compromiso académico y situación familiar",te:"Firma compromiso académico, viaje familiar septiembre, adaptación, revisión nota Historia.",ac:"Revisar nota en Historia. Seguimiento período de adaptación."}]},
  {mat:1032,n:"Cabello Ayala Maximo Kenai",run:"24.115.421-1",dom:"Santa Aida #2272",com:"La Pintana",apo:"Luis Cabello",ar:"15.443.058-K",at:"992952314",am:"elmaslulsdetodos@gmail.com",as:"Liliana Ayala",ast:"9-75724995",ii:[],ff:[{e:"",f:"",an:"",pr:"",co:"",mo:"",te:"",ac:""}]},
@@ -310,7 +312,7 @@ const D=[
 </script>
 <script>
 // Persistencia local: si el profesor ya guardó cambios antes, se cargan.
-const DATA_VERSION=2;
+const DATA_VERSION=3;
 function freshData(){return D.map(a=>({...a,ff:a.ff.map(f=>({...f}))}));}
 let data;
 try{
