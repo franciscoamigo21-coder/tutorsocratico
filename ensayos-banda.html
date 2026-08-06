@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🎸 Ensayos de la Banda — Coordinador de horarios</title>
+<meta name="description" content="Coordina en un vistazo las horas en que los 4 integrantes de la banda pueden ensayar.">
+<style>
+  :root{
+    --bg:#0e1016;
+    --panel:#171a23;
+    --panel2:#1d2130;
+    --border:#2a2f40;
+    --text:#eef0f6;
+    --muted:#9aa1b6;
+    --accent:#38bdf8;
+    --good:#22c55e;
+    --gold:#facc15;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    background:radial-gradient(circle at 20% -10%, #1a1f30 0%, var(--bg) 55%);
+    color:var(--text);
+    min-height:100vh;
+    padding-bottom:60px;
+  }
+  .app{max-width:980px;margin:0 auto;padding:20px 16px 40px;}
+  header{text-align:center;margin-bottom:20px;}
+  header h1{
+    font-size:clamp(1.5rem,4vw,2.2rem);
+    margin:0 0 6px;
+    background:linear-gradient(90deg,#38bdf8,#c084fc,#f43f5e);
+    -webkit-background-clip:text;
+    background-clip:text;
+    color:transparent;
+    font-weight:800;
+  }
+  header p{color:var(--muted);margin:0;font-size:.95rem;}
+
+  .members-bar{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin:22px 0 8px;}
+  .member-chip{
+    display:flex;align-items:center;gap:8px;
+    background:var(--panel);border:2px solid var(--border);
+    border-radius:999px;padding:8px 14px 8px 8px;cursor:pointer;
+    transition:.15s border-color,.15s transform;
+  }
+  .member-chip:hover{transform:translateY(-1px);}
+  .member-chip.active{border-color:var(--member-color,var(--accent));box-shadow:0 0 0 3px color-mix(in srgb, var(--member-color) 25%, transparent);}
+  .dot-big{width:18px;height:18px;border-radius:50%;flex:none;box-shadow:0 0 8px 1px color-mix(in srgb, var(--member-color) 70%, transparent);}
+  .name-input{
+    background:transparent;border:none;color:var(--text);font-weight:600;
+    font-size:.92rem;width:118px;outline:none;padding:2px 0;
+  }
+  .name-input:focus{border-bottom:1px solid var(--member-color,var(--accent));}
+  .whoami{text-align:center;color:var(--muted);font-size:.85rem;margin-bottom:18px;}
+  .whoami b{color:var(--text);}
+
+  .toolbar{
+    display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:center;
+    background:var(--panel);border:1px solid var(--border);border-radius:14px;
+    padding:12px 14px;margin-bottom:20px;
+  }
+  .toolbar label{display:flex;align-items:center;gap:6px;color:var(--muted);font-size:.85rem;}
+  button.btn{
+    background:var(--panel2);color:var(--text);border:1px solid var(--border);
+    border-radius:10px;padding:9px 14px;font-size:.85rem;cursor:pointer;font-weight:600;
+    transition:.15s background,.15s transform;
+  }
+  button.btn:hover{background:#262c40;transform:translateY(-1px);}
+  button.btn.primary{background:linear-gradient(90deg,#38bdf8,#818cf8);color:#0a0c12;border:none;}
+  button.btn.danger{color:#f87171;border-color:#4a2530;}
+  .import-row{display:flex;gap:6px;align-items:center;}
+  .import-row input{
+    background:var(--panel2);border:1px solid var(--border);color:var(--text);
+    border-radius:8px;padding:8px 10px;font-size:.8rem;width:170px;
+  }
+
+  .calendar-wrap{
+    background:var(--panel);border:1px solid var(--border);border-radius:16px;
+    padding:10px;overflow:auto;max-height:70vh;
+  }
+  #calendar{display:grid;}
+  .hcell{
+    display:flex;align-items:center;justify-content:center;
+    font-size:.78rem;color:var(--muted);font-weight:700;
+    position:sticky;background:var(--panel);z-index:2;
+  }
+  .corner{top:0;left:0;z-index:3;}
+  .day-header{top:0;z-index:2;text-transform:uppercase;letter-spacing:.03em;color:var(--text);}
+  .hour-label{left:0;z-index:1;font-variant-numeric:tabular-nums;}
+  .cell{
+    position:relative;border:1px solid var(--border);border-radius:8px;margin:2px;
+    cursor:pointer;background:rgba(56,189,248, calc(var(--heat,0) * 0.12));
+    display:flex;align-items:center;justify-content:center;
+    transition:.1s transform,.15s background;
+  }
+  .cell:hover{transform:scale(1.06);border-color:var(--accent);}
+  .cell:active{transform:scale(.96);}
+  .cell.perfect{
+    background:linear-gradient(135deg,rgba(250,204,21,.35),rgba(244,63,94,.25));
+    border-color:var(--gold);
+    box-shadow:0 0 10px 0 rgba(250,204,21,.35);
+  }
+  .dots{display:grid;grid-template-columns:1fr 1fr;gap:3px;}
+  .dot{
+    width:9px;height:9px;border-radius:50%;border:1.5px solid rgba(255,255,255,.18);
+    transition:.15s all;
+  }
+
+  .best-hours{margin-top:26px;}
+  .best-hours h2{font-size:1.1rem;margin:0 0 10px;color:var(--text);}
+  .best-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px;}
+  .best-card{
+    background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:12px 14px;
+  }
+  .best-card.full{border-color:var(--gold);box-shadow:0 0 0 1px rgba(250,204,21,.3) inset;}
+  .best-day{font-size:.78rem;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;}
+  .best-time{font-size:1.05rem;font-weight:800;margin:2px 0 8px;}
+  .best-names{display:flex;flex-wrap:wrap;gap:5px;}
+  .name-chip{color:#0a0c12;font-size:.72rem;font-weight:700;padding:2px 8px;border-radius:999px;}
+  .empty{color:var(--muted);font-size:.9rem;}
+
+  .toast{
+    position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(20px);
+    background:var(--panel2);border:1px solid var(--border);color:var(--text);
+    padding:10px 18px;border-radius:999px;font-size:.85rem;opacity:0;pointer-events:none;
+    transition:.25s all;z-index:10;box-shadow:0 6px 20px rgba(0,0,0,.4);
+  }
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+  footer{text-align:center;color:var(--muted);font-size:.78rem;margin-top:28px;}
+</style>
+</head>
+<body>
+<div class="app">
+  <header>
+    <h1>🎸 Ensayos de la Banda</h1>
+    <p>Elige tu nombre, marca las horas en que puedes y encuentra el horario donde todos coinciden.</p>
+  </header>
+
+  <div class="members-bar" id="membersBar">
+    <div class="member-chip" data-id="m1"><span class="dot-big"></span><input class="name-input" maxlength="24"></div>
+    <div class="member-chip" data-id="m2"><span class="dot-big"></span><input class="name-input" maxlength="24"></div>
+    <div class="member-chip" data-id="m3"><span class="dot-big"></span><input class="name-input" maxlength="24"></div>
+    <div class="member-chip" data-id="m4"><span class="dot-big"></span><input class="name-input" maxlength="24"></div>
+  </div>
+  <p class="whoami">Estás marcando disponibilidad como: <b id="whoamiName">—</b>. Toca las horas en el calendario para marcarte / desmarcarte.</p>
+
+  <div class="toolbar">
+    <label><input type="checkbox" id="toggleFullDay"> Mostrar 24 horas</label>
+    <button class="btn primary" id="btnShare">🔗 Copiar enlace para compartir</button>
+    <div class="import-row">
+      <input id="importInput" placeholder="Pegar enlace recibido...">
+      <button class="btn" id="btnImport">Importar</button>
+    </div>
+    <button class="btn danger" id="btnReset">🗑️ Reiniciar todo</button>
+  </div>
+
+  <div class="calendar-wrap">
+    <div id="calendar"></div>
+  </div>
+
+  <section class="best-hours">
+    <h2>🏆 Mejores horarios (donde más gente coincide)</h2>
+    <div class="best-grid" id="bestHours"></div>
+  </section>
+
+  <footer>
+    Cada integrante marca su disponibilidad en su propio celular y comparte el enlace con los demás para juntar todo en un solo calendario.
+  </footer>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+(function(){
+  const STORAGE_KEY = 'banda-ensayos-v1';
+  const DAYS = ['Lunes','Martes','Miércoles','Jueves','Viernes','Sábado','Domingo'];
+  const DAYS_SHORT = ['Lun','Mar','Mié','Jue','Vie','Sáb','Dom'];
+  const PALETTE = ['#f43f5e','#38bdf8','#4ade80','#c084fc'];
+  const DEFAULT_NAMES = ['Integrante 1','Integrante 2','Integrante 3','Integrante 4'];
+  const HOURS_LIMITED = Array.from({length:17},(_,i)=>i+7); // 07:00 - 23:00
+  const HOURS_FULL = Array.from({length:24},(_,i)=>i);
+
+  function defaultState(){
+    return {
+      activeMemberId:'m1',
+      members: PALETTE.map((color,i)=>({
+        id:'m'+(i+1), name:DEFAULT_NAMES[i], color, slots:[], updatedAt:0
+      }))
+    };
+  }
+
+  function loadState(){
+    try{
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if(!raw) return defaultState();
+      const parsed = JSON.parse(raw);
+      if(!parsed.members || parsed.members.length!==4) return defaultState();
+      return parsed;
+    }catch(e){ return defaultState(); }
+  }
+
+  let state = loadState();
+  let fullDay = false;
+
+  function saveState(){ localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
+  function getMember(id){ return state.members.find(m=>m.id===id); }
+  function slotKey(day,hour){ return day+'-'+hour; }
+
+  const calendarEl = document.getElementById('calendar');
+  const bestHoursEl = document.getElementById('bestHours');
+  const toastEl = document.getElementById('toast');
+  const whoamiEl = document.getElementById('whoamiName');
+
+  function showToast(msg){
+    toastEl.textContent = msg;
+    toastEl.classList.add('show');
+    clearTimeout(showToast._t);
+    showToast._t = setTimeout(()=>toastEl.classList.remove('show'), 3400);
+  }
+
+  function toggleSlot(day,hour){
+    const m = getMember(state.activeMemberId);
+    const key = slotKey(day,hour);
+    const idx = m.slots.indexOf(key);
+    if(idx>=0) m.slots.splice(idx,1); else m.slots.push(key);
+    m.updatedAt = Date.now();
+    saveState();
+    updateCell(day,hour);
+    renderBestHours();
+  }
+
+  function countAt(day,hour){
+    const key = slotKey(day,hour);
+    return state.members.filter(m=>m.slots.includes(key));
+  }
+
+  function buildCalendar(){
+    calendarEl.innerHTML='';
+    const hours = fullDay ? HOURS_FULL : HOURS_LIMITED;
+    calendarEl.style.gridTemplateColumns = '58px repeat(7, minmax(60px,1fr))';
+
+    const corner = document.createElement('div');
+    corner.className='hcell corner';
+    corner.textContent='Hora';
+    calendarEl.appendChild(corner);
+
+    DAYS_SHORT.forEach(d=>{
+      const h = document.createElement('div');
+      h.className='hcell day-header';
+      h.style.height='38px';
+      h.textContent = d;
+      calendarEl.appendChild(h);
+    });
+
+    hours.forEach(hour=>{
+      const label = document.createElement('div');
+      label.className='hcell hour-label';
+      label.style.height='46px';
+      label.textContent = String(hour).padStart(2,'0')+':00';
+      calendarEl.appendChild(label);
+
+      for(let day=0; day<7; day++){
+        const cell = document.createElement('div');
+        cell.className='cell';
+        cell.style.height='46px';
+        cell.dataset.day=day;
+        cell.dataset.hour=hour;
+        cell.addEventListener('click', ()=> toggleSlot(day,hour));
+        const dots = document.createElement('div');
+        dots.className='dots';
+        state.members.forEach(()=>{
+          const dot = document.createElement('span');
+          dot.className='dot';
+          dots.appendChild(dot);
+        });
+        cell.appendChild(dots);
+        calendarEl.appendChild(cell);
+        updateCellEl(cell,day,hour);
+      }
+    });
+  }
+
+  function updateCellEl(cell,day,hour){
+    const avail = countAt(day,hour);
+    const count = avail.length;
+    cell.classList.toggle('perfect', count===4);
+    cell.style.setProperty('--heat', count);
+    cell.title = count>0 ? avail.map(m=>m.name).join(', ')+' pueden' : 'Nadie ha marcado esta hora todavía';
+    const dots = cell.querySelectorAll('.dot');
+    state.members.forEach((m,i)=>{
+      const on = m.slots.includes(slotKey(day,hour));
+      dots[i].style.background = on ? m.color : 'transparent';
+      dots[i].style.borderColor = on ? m.color : 'rgba(255,255,255,.18)';
+    });
+  }
+
+  function updateCell(day,hour){
+    const cell = calendarEl.querySelector(`.cell[data-day="${day}"][data-hour="${hour}"]`);
+    if(cell) updateCellEl(cell,day,hour);
+  }
+
+  function renderBestHours(){
+    const hours = fullDay ? HOURS_FULL : HOURS_LIMITED;
+    const rows=[];
+    for(let day=0; day<7; day++){
+      hours.forEach(hour=>{
+        const avail = countAt(day,hour);
+        if(avail.length>=2) rows.push({day,hour,avail});
+      });
+    }
+    rows.sort((a,b)=> b.avail.length - a.avail.length || a.day-b.day || a.hour-b.hour);
+    const top = rows.slice(0,8);
+    bestHoursEl.innerHTML='';
+    if(top.length===0){
+      bestHoursEl.innerHTML = '<p class="empty">Todavía no hay horas donde coincidan 2 o más integrantes. ¡Marquen su disponibilidad!</p>';
+      return;
+    }
+    top.forEach(r=>{
+      const card = document.createElement('div');
+      card.className='best-card'+(r.avail.length===4?' full':'');
+      const namesHtml = r.avail.map(m=>`<span class="name-chip" style="background:${m.color}">${m.name}</span>`).join('');
+      card.innerHTML = `<div class="best-day">${DAYS[r.day]}${r.avail.length===4?' · ¡Todos!':''}</div>
+        <div class="best-time">${String(r.hour).padStart(2,'0')}:00 - ${String(r.hour+1).padStart(2,'0')}:00</div>
+        <div class="best-names">${namesHtml}</div>`;
+      bestHoursEl.appendChild(card);
+    });
+  }
+
+  function renderMembersBar(){
+    document.querySelectorAll('.member-chip').forEach(chip=>{
+      const id = chip.dataset.id;
+      const m = getMember(id);
+      chip.style.setProperty('--member-color', m.color);
+      chip.classList.toggle('active', id===state.activeMemberId);
+      chip.querySelector('.dot-big').style.background = m.color;
+      const input = chip.querySelector('.name-input');
+      if(document.activeElement!==input) input.value = m.name;
+    });
+    whoamiEl.textContent = getMember(state.activeMemberId).name;
+  }
+
+  document.querySelectorAll('.member-chip').forEach(chip=>{
+    const id = chip.dataset.id;
+    chip.addEventListener('click', ()=>{
+      state.activeMemberId = id;
+      saveState();
+      renderMembersBar();
+    });
+    const input = chip.querySelector('.name-input');
+    input.addEventListener('input', ()=>{
+      const m = getMember(id);
+      m.name = input.value.slice(0,24) || DEFAULT_NAMES[Number(id.slice(1))-1];
+      m.updatedAt = Date.now();
+      saveState();
+      renderBestHours();
+      whoamiEl.textContent = getMember(state.activeMemberId).name;
+    });
+  });
+
+  document.getElementById('toggleFullDay').addEventListener('change', (e)=>{
+    fullDay = e.target.checked;
+    buildCalendar();
+    renderBestHours();
+  });
+
+  document.getElementById('btnShare').addEventListener('click', async ()=>{
+    const payload = encodeURIComponent(JSON.stringify(state.members));
+    const encoded = btoa(payload);
+    const url = new URL(location.href);
+    url.hash = 'd='+encoded;
+    try{
+      await navigator.clipboard.writeText(url.toString());
+      showToast('✅ Enlace copiado. Envíalo por WhatsApp a la banda.');
+    }catch(e){
+      window.prompt('Copia este enlace y compártelo:', url.toString());
+    }
+  });
+
+  function tryImport(text){
+    try{
+      let hash = text.trim();
+      const hIdx = hash.indexOf('#d=');
+      if(hIdx>=0) hash = hash.slice(hIdx+3);
+      else if(hash.startsWith('d=')) hash = hash.slice(2);
+      const json = decodeURIComponent(atob(hash));
+      const incoming = JSON.parse(json);
+      return mergeIncoming(incoming);
+    }catch(e){ return false; }
+  }
+
+  function mergeIncoming(incomingMembers){
+    let changed=[];
+    incomingMembers.forEach(im=>{
+      const local = getMember(im.id);
+      if(local && (im.updatedAt||0) > (local.updatedAt||0)){
+        local.name = im.name;
+        local.slots = im.slots;
+        local.updatedAt = im.updatedAt;
+        changed.push(im.name);
+      }
+    });
+    if(changed.length){
+      saveState();
+      buildCalendar();
+      renderBestHours();
+      renderMembersBar();
+    }
+    return changed.length>0;
+  }
+
+  document.getElementById('btnImport').addEventListener('click', ()=>{
+    const field = document.getElementById('importInput');
+    if(!field.value.trim()) return;
+    const ok = tryImport(field.value);
+    if(ok){ field.value=''; showToast('🔄 Disponibilidad importada.'); }
+    else showToast('⚠️ No se pudo leer ese enlace/código.');
+  });
+
+  document.getElementById('btnReset').addEventListener('click', ()=>{
+    if(confirm('¿Seguro que quieres borrar toda la disponibilidad de los 4 integrantes en este dispositivo?')){
+      state = defaultState();
+      saveState();
+      buildCalendar();
+      renderBestHours();
+      renderMembersBar();
+      showToast('🗑️ Todo reiniciado.');
+    }
+  });
+
+  if(location.hash.startsWith('#d=')){
+    const ok = tryImport(location.hash);
+    history.replaceState(null,'',location.pathname+location.search);
+    if(ok) showToast('📥 Disponibilidad importada desde el enlace.');
+  }
+
+  renderMembersBar();
+  buildCalendar();
+  renderBestHours();
+})();
+</script>
+</body>
+</html>
