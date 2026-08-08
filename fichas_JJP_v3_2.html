@@ -260,7 +260,7 @@ body.gate-open .login-gate { display: flex; }
 
 .card-stats {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(2, 1fr);
   gap: 6px;
   margin-bottom: 12px;
 }
@@ -458,12 +458,15 @@ body.gate-open .login-gate { display: flex; }
 
 /* grupo de tutoría */
 .grupo-lista { max-height: 360px; overflow-y: auto; border: 1.5px solid var(--border); border-radius: 8px; }
-.grupo-row { display: flex; align-items: center; gap: 10px; padding: 9px 14px; border-bottom: 1px solid var(--border); font-size: 0.82rem; cursor: pointer; }
+.grupo-row { display: flex; align-items: center; gap: 10px; padding: 9px 14px; border-bottom: 1px solid var(--border); font-size: 0.82rem; }
 .grupo-row:last-child { border-bottom: none; }
 .grupo-row:hover { background: var(--paper); }
-.grupo-row input { flex-shrink: 0; width: 16px; height: 16px; accent-color: var(--sip-navy); cursor: pointer; }
 .grupo-row-name { font-weight: 600; color: var(--text); flex: 1; }
 .grupo-row-curso { font-size: 0.7rem; color: var(--muted); font-weight: 600; }
+.grupo-btn { flex-shrink: 0; border: none; border-radius: 5px; padding: 5px 12px; font-family: 'Montserrat', sans-serif; font-size: 0.7rem; font-weight: 700; cursor: pointer; }
+.grupo-btn-add { background: var(--sip-navy); color: white; }
+.grupo-btn-add:hover { background: var(--sip-navy-mid); }
+.grupo-btn-added { background: var(--success-bg); color: var(--success); }
 .btn-filter#btn-mi-grupo.active { background: var(--sip-gold); color: var(--sip-navy); }
 
 /* careers */
@@ -589,13 +592,10 @@ body.gate-open .login-gate { display: flex; }
     <option value="Indeciso">Indeciso</option>
   </select>
   <select id="sort" onchange="renderGrid()">
-    <option value="ranking">Ordenar: Ranking ↓</option>
     <option value="nombre">Ordenar: Nombre A–Z</option>
     <option value="promedio">Ordenar: Promedio ↓</option>
-    <option value="ranking_asc">Ranking: Más bajo ↑</option>
   </select>
   <button class="btn-filter" id="btn-alert" onclick="toggleAlerta()">⚠ Solo alertas</button>
-  <button class="btn-filter" id="btn-rank-low" onclick="toggleRankBajo()">📉 Ranking bajo</button>
   <button class="btn-filter" id="btn-mi-grupo" onclick="toggleMiGrupo()">👥 Ver solo mis tutorías</button>
   <button class="btn-filter" onclick="abrirGrupoModal()">✏️ Mis Tutorías</button>
   <span class="count-label" id="count"></span>
@@ -670,18 +670,11 @@ const STUDENTS = [{"nombre": "Ayleen Aguilera", "rut": "22.790.933-1", "curso": 
 
 // ── STATE ──
 let showAlerta = false;
-let showRankBajo = false;
 let showMiGrupo = false;
 
 function isAlerta(s) {
   const p = s.notas.promedio;
   return p && p < 5.5;
-}
-
-function toggleRankBajo() {
-  showRankBajo = !showRankBajo;
-  document.getElementById('btn-rank-low').classList.toggle('active', showRankBajo);
-  renderGrid();
 }
 
 function toggleAlerta() {
@@ -690,7 +683,11 @@ function toggleAlerta() {
   renderGrid();
 }
 
-// ── GRUPO DE TUTORÍA (filtro local, guardado en este navegador) ──
+// ── MIS TUTORÍAS (grupo del docente) ──
+// Cada clic en "+" agrega de inmediato (no depende de dejar cuadrados marcados
+// mientras se busca, que era lo que hacía perder la selección al filtrar).
+// Se guarda en este navegador y, si hay sesión + Cloudflare KV configurado,
+// también en la nube (mismo grupo en cualquier computador con esa cuenta).
 function studentKey(s, idx) {
   return s.rut && s.rut !== 'nan' && s.rut.trim() !== '' ? s.rut : ('idx' + idx);
 }
@@ -703,6 +700,26 @@ function getGrupo() {
 function isEnGrupo(s, idx) {
   return getGrupo().includes(studentKey(s, idx));
 }
+function setGrupo(grupo, opts) {
+  localStorage.setItem(grupoKey(), JSON.stringify(grupo));
+  const el = document.getElementById('grupo-count');
+  if (el) el.textContent = `${grupo.length} en tus tutorías`;
+  if (!(opts && opts.skipSync)) sincronizarGrupoNube(grupo);
+}
+function agregarAGrupo(idx) {
+  const s = STUDENTS[idx];
+  const key = studentKey(s, idx);
+  const grupo = getGrupo();
+  if (!grupo.includes(key)) grupo.push(key);
+  setGrupo(grupo);
+  renderGrupoLista();
+}
+function quitarDeGrupo(idx) {
+  const s = STUDENTS[idx];
+  const key = studentKey(s, idx);
+  setGrupo(getGrupo().filter(k => k !== key));
+  renderGrupoLista();
+}
 function toggleMiGrupo() {
   const grupo = getGrupo();
   if (!grupo.length) { alert('Todavía no has creado tus tutorías. Usa el botón "Mis Tutorías" para elegir a tus tutoriados.'); return; }
@@ -710,13 +727,15 @@ function toggleMiGrupo() {
   document.getElementById('btn-mi-grupo').classList.toggle('active', showMiGrupo);
   renderGrid();
 }
-function abrirGrupoModal() {
+async function abrirGrupoModal() {
   document.getElementById('grupo-search').value = '';
+  await cargarGrupoNube();
   renderGrupoLista();
   document.getElementById('grupoModalBg').classList.add('open');
 }
 function cerrarGrupoModal() {
   document.getElementById('grupoModalBg').classList.remove('open');
+  renderGrid();
 }
 function renderGrupoLista() {
   const q = document.getElementById('grupo-search').value.toLowerCase();
@@ -727,30 +746,54 @@ function renderGrupoLista() {
     .filter(({s}) => !q || s.nombre.toLowerCase().includes(q) || (s.curso||'').toLowerCase().includes(q));
   lista.innerHTML = items.map(({s, idx}) => {
     const key = studentKey(s, idx);
-    return `<label class="grupo-row">
-      <input type="checkbox" value="${key}" ${grupo.has(key) ? 'checked' : ''}>
-      <span class="grupo-row-name">${s.nombre}</span>
-      <span class="grupo-row-curso">${s.curso || '—'}</span>
-    </label>`;
+    const en = grupo.has(key);
+    return `<div class="grupo-row">
+      <span class="grupo-row-name">${esc(s.nombre)}</span>
+      <span class="grupo-row-curso">${esc(s.curso || '—')}</span>
+      ${en
+        ? `<button type="button" class="grupo-btn grupo-btn-added" onclick="quitarDeGrupo(${idx})" title="Quitar de tus tutorías">✓ Agregado</button>`
+        : `<button type="button" class="grupo-btn grupo-btn-add" onclick="agregarAGrupo(${idx})" title="Agregar a tus tutorías">+ Agregar</button>`}
+    </div>`;
   }).join('') || '<div style="padding:20px;text-align:center;color:var(--muted);font-size:0.82rem">Sin resultados.</div>';
   document.getElementById('grupo-count').textContent = `${grupo.size} en tus tutorías`;
 }
-function guardarGrupo() {
-  const keys = Array.from(document.querySelectorAll('#grupo-lista input:checked')).map(el => el.value);
-  const resto = getGrupo().filter(k => !document.querySelector(`#grupo-lista input[value="${CSS.escape(k)}"]`));
-  const grupo = Array.from(new Set([...resto, ...keys]));
-  localStorage.setItem(grupoKey(), JSON.stringify(grupo));
-  document.getElementById('grupo-count').textContent = `${grupo.length} en tus tutorías`;
-  cerrarGrupoModal();
-  renderGrid();
-}
 function vaciarGrupo() {
   if (!confirm('¿Vaciar por completo tus tutorías?')) return;
-  localStorage.setItem(grupoKey(), '[]');
+  setGrupo([]);
   showMiGrupo = false;
   document.getElementById('btn-mi-grupo').classList.remove('active');
   renderGrupoLista();
   renderGrid();
+}
+
+/* Sincronización en la nube (Cloudflare KV, vía el Worker de ASE-IA).
+   Best-effort: si falla (sin internet, KV no configurado aún, etc.) el grupo
+   sigue funcionando normalmente guardado solo en este navegador. */
+async function sincronizarGrupoNube(grupo) {
+  try {
+    const credential = GOOGLE_CREDENTIAL;
+    if (!credential) return;
+    await fetch(ASE_IA_API_URL + '?resource=misTutorias', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ credential, action: 'save', grupo }),
+    });
+  } catch(e) { /* sin nube por ahora, no pasa nada — sigue guardado localmente */ }
+}
+async function cargarGrupoNube() {
+  try {
+    const credential = GOOGLE_CREDENTIAL || await pedirCredencialFresca();
+    if (!credential) return;
+    const r = await fetch(ASE_IA_API_URL + '?resource=misTutorias', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ credential, action: 'get' }),
+    });
+    const data = await r.json();
+    if (data && Array.isArray(data.grupo) && data.grupo.length) {
+      setGrupo(data.grupo, { skipSync: true });
+    }
+  } catch(e) { /* sin nube por ahora, sigue con lo que haya local */ }
 }
 
 function setTab(el, val) {
@@ -790,15 +833,12 @@ function renderGrid() {
     if (curso && s.curso !== curso) return false;
     if (area && s.area_interes !== area) return false;
     if (showAlerta && !isAlerta(s)) return false;
-    if (showRankBajo && !(s.ranking && s.ranking < 650)) return false;
     if (showMiGrupo && !isEnGrupo(s, idx)) return false;
     return true;
   });
 
-  if (sort === 'ranking') list.sort((a,b) => (b.ranking||0) - (a.ranking||0));
-  else if (sort === 'nombre') list.sort((a,b) => a.nombre.localeCompare(b.nombre, 'es'));
+  if (sort === 'nombre') list.sort((a,b) => a.nombre.localeCompare(b.nombre, 'es'));
   else if (sort === 'promedio') list.sort((a,b) => (b.notas.promedio||0) - (a.notas.promedio||0));
-  else if (sort === 'ranking_asc') list.sort((a,b) => (a.ranking||9999) - (b.ranking||9999));
 
   document.getElementById('count').textContent = `${list.length} estudiante${list.length !== 1?'s':''}`;
 
@@ -811,13 +851,12 @@ function renderGrid() {
   grid.innerHTML = list.map(s => {
     const idx = STUDENTS.indexOf(s);
     const p = s.notas.promedio;
-    const rankDisplay = s.ranking ? `Ranking ${Math.round(s.ranking)}` : 'Sin ranking';
+    const ov = getOverride(s, idx);
     const alertDot = isAlerta(s) ? ' ⚠' : '';
     return `
     <div class="card" onclick="openModal(${idx})">
       <div class="card-header">
         <span class="card-curso">📚 ${s.curso}${alertDot}</span>
-        <span class="card-rank">${rankDisplay}</span>
       </div>
       <div class="card-body">
         <div class="card-name">${s.nombre}</div>
@@ -828,12 +867,8 @@ function renderGrid() {
             <div class="stat-lbl">Prom. III°</div>
           </div>
           <div class="stat-box">
-            <div class="stat-val ${s.nem && s.nem < 600 ? 'low' : s.nem && s.nem < 750 ? 'mid' : (!s.nem ? 'none' : '')}">${s.nem ? Math.round(s.nem) : '—'}</div>
-            <div class="stat-lbl">NEM</div>
-          </div>
-          <div class="stat-box">
-            <div class="stat-val ${s.ranking && s.ranking < 600 ? 'low' : s.ranking && s.ranking < 800 ? 'mid' : (!s.ranking ? 'none' : '')}">${s.ranking ? Math.round(s.ranking) : '—'}</div>
-            <div class="stat-lbl">Ranking</div>
+            <div class="stat-val ${ov ? '' : 'none'}" style="font-size:${ov ? '1.3rem' : '0.72rem'}">${ov ? '✓ Con IV°' : 'Pendiente IV°'}</div>
+            <div class="stat-lbl">Promedio IV°</div>
           </div>
         </div>
         <div class="card-tags">
@@ -842,7 +877,6 @@ function renderGrid() {
           ${s.carreras.length ? `<span class="tag carreras">${s.carreras.length} carrera${s.carreras.length>1?'s':''}</span>` : ''}
           ${isAlerta(s) ? '<span class="tag" style="background:#fff2d6;border-color:#f5b301;color:#8a5a00">⚠ Alerta</span>' : ''}
         </div>
-        <button class="generate-btn" onclick="event.stopPropagation();generateFicha(${idx},this)">✦ GENERAR FICHA SIP CON IA</button>
       </div>
     </div>`;
   }).join('');
@@ -927,13 +961,11 @@ function saveOverride(idx) {
   const nemInput = document.getElementById('ov-nem-' + idx);
   const prom = parseFloat((document.getElementById('ov-prom-' + idx).value || '').replace(',', '.'));
   const nemV = parseInt(nemInput.value, 10);
-  const rankV = parseInt(document.getElementById('ov-rank-' + idx).value, 10);
   if (!prom || prom < 1 || prom > 7) { alert('Ingresa un promedio de IV° Medio válido, entre 1.0 y 7.0.'); return; }
   const data = {
     promedio_iv: prom,
     nem: Number.isFinite(nemV) ? nemV : null,
     nem_estimado: !nemInput.dataset.userEdited,
-    ranking: Number.isFinite(rankV) ? rankV : null,
     fecha: new Date().toLocaleDateString('es-CL', {day:'numeric', month:'long', year:'numeric'}),
   };
   localStorage.setItem(overrideKey(s, idx), JSON.stringify(data));
@@ -981,8 +1013,7 @@ function renderModalBody(s, idx) {
 
   const promVals = override ? [...vals, override.promedio_iv] : vals;
   const promedioFinal = promVals.length ? promVals.reduce((a,b) => a+b, 0) / promVals.length : n.promedio;
-  const nemFinal = override && override.nem ? override.nem : s.nem;
-  const rankFinal = override && override.ranking ? override.ranking : s.ranking;
+  const nemFinal = override && override.nem ? override.nem : null;
   const promClass = !promedioFinal ? '' : promedioFinal >= 6.0 ? '' : promedioFinal >= 5.5 ? 'mid' : 'low';
 
   const trendNote = (() => {
@@ -1021,34 +1052,32 @@ function renderModalBody(s, idx) {
         <div class="promedio-hero-lbl">Promedio general${override ? ' · I° a IV° Medio' : ' · registrado hasta III° Medio'}</div>
         ${override ? `<div class="promedio-hero-tag">✓ Actualizado en tutoría el ${override.fecha}</div>` : ''}
       </div>
-      <div class="fs-grid three">
+      <div class="fs-grid two">
         <div class="fi"><span class="fi-lbl">Promedio hasta III°</span><span class="fi-val">${n.promedio ? n.promedio.toFixed(2) : '—'}</span></div>
-        <div class="fi"><span class="fi-lbl">NEM${override && override.nem ? (override.nem_estimado ? ' (estimado)' : ' (actualizado)') : ' (hasta III°)'}</span><span class="fi-val" id="nem-fi-${idx}">${nemFinal ? Math.round(nemFinal) : '—'}</span></div>
-        <div class="fi"><span class="fi-lbl">Ranking${override && override.ranking ? ' (actualizado)' : ' (hasta III°)'}</span><span class="fi-val">${rankFinal ? Math.round(rankFinal) : '—'}</span></div>
+        <div class="fi"><span class="fi-lbl">NEM${override && override.nem ? ' (estimado)' : ''}</span><span class="fi-val" id="nem-fi-${idx}">${nemFinal ? Math.round(nemFinal) : 'Aún no estimado'}</span></div>
       </div>
       <div class="trend-wrap">
         <div class="trend-label">Trayectoria I° a III° Medio</div>
         <div class="trend-bars">${bars}${ivBar}</div>
         <div class="trend-note">${trendNote}</div>
       </div>
-      <button class="calc-toggle" onclick="toggleCalc(${idx})">🧮 ${override ? 'Editar' : 'Simular'} promedio y puntajes de IV° Medio</button>
+      <button class="calc-toggle" onclick="toggleCalc(${idx})">🧮 ${override ? 'Editar' : 'Simular'} promedio de IV° Medio</button>
       <div class="calc-box${override ? '' : ''}" id="calc-box-${idx}">
-        <p>Apenas ingreses el promedio de IV° Medio, el NEM se estima automáticamente (referencial). El Ranking no se puede estimar — solo DEMRE tiene esos datos — así que regístralo a mano cuando lo tengan (demre.cl o Plataforma Pedro de Valdivia). Queda guardado en este computador.</p>
+        <p>El NEM oficial de IV° Medio todavía no existe (se calcula recién al egresar) — apenas ingreses el promedio, se estima automáticamente aquí (referencial). Queda guardado en este computador.</p>
         <div class="calc-fields">
           <div class="calc-field"><label>Promedio IV° Medio</label><input type="text" inputmode="decimal" id="ov-prom-${idx}" placeholder="Ej: 6.2" value="${override ? override.promedio_iv : ''}" oninput="livePreviewNEM(${idx})"></div>
           <div class="calc-field">
-            <label>Puntaje NEM</label>
+            <label>Puntaje NEM estimado</label>
             <input type="number" id="ov-nem-${idx}" placeholder="Se estima solo" value="${override && override.nem ? override.nem : ''}" data-user-edited="${override && override.nem ? '1' : ''}" oninput="this.dataset.userEdited='1'">
             <div class="calc-nem-hint" id="nem-hint-${idx}"></div>
             <button type="button" class="calc-use-est" onclick="usarEstimadoNEM(${idx})">Usar estimado</button>
           </div>
-          <div class="calc-field"><label>Puntaje Ranking (manual — no se puede estimar)</label><input type="number" id="ov-rank-${idx}" placeholder="Ej: 820" value="${override && override.ranking ? override.ranking : ''}"></div>
         </div>
         <div class="calc-actions">
           <button class="calc-save" onclick="saveOverride(${idx})">Guardar</button>
           ${override ? `<button class="calc-clear" onclick="clearOverride(${idx})">Quitar actualización</button>` : ''}
         </div>
-        <div class="calc-note">El NEM mostrado aquí es una estimación automática (interpolación de la tabla oficial DEMRE, Grupo A Científico-Humanista diurna) — no es el puntaje oficial, que se recalcula cada proceso según la distribución nacional de notas. Reemplázalo cuando tengan el real de demre.cl o la Plataforma Pedro de Valdivia. El Ranking siempre se ingresa a mano.</div>
+        <div class="calc-note">El NEM mostrado aquí es una estimación automática (interpolación de la tabla oficial DEMRE, Grupo A Científico-Humanista diurna) — no es el puntaje oficial, que se recalcula cada proceso según la distribución nacional de notas. Reemplázalo cuando tengan el real de demre.cl o la Plataforma Pedro de Valdivia.</div>
       </div>
     </div>
 
@@ -1080,6 +1109,8 @@ function renderModalBody(s, idx) {
           <div class="plan-card-icon">🧑‍🏫</div>
           <div class="plan-card-title">Plan de Acción Docente</div>
           <div class="plan-card-desc">Ficha de seguimiento para el profesor jefe/tutor: datos, alertas y próximos pasos.</div>
+          <button class="plan-card-btn" onclick="event.stopPropagation();event.preventDefault();generarDiagnosticoIA(${idx}, this)">${window.__planIA && window.__planIA[idx] ? '✅ Diagnóstico IA listo — regenerar' : '✦ Generar diagnóstico con IA'}</button>
+          <div id="plan-ia-status-${idx}" style="font-size:0.62rem;color:var(--muted);margin-top:4px;min-height:1.4em"></div>
           <button class="plan-card-btn" onclick="event.stopPropagation();imprimirPlanDocente(${idx})">🖨️ Imprimir / PDF</button>
         </div>
         <div class="plan-card">
@@ -1098,125 +1129,7 @@ function renderModalBody(s, idx) {
       <div style="font-size:0.66rem;color:var(--muted);margin-top:8px">Los botones de impresión abren el diálogo de impresión del navegador en esta misma pestaña — ahí puedes imprimir en papel o elegir "Guardar como PDF".</div>
     </div>
 
-    <div class="fs">
-      <div class="fs-title">✦ Análisis Pedagógico — IA SIP</div>
-      <div id="ai-zone-${idx}">
-        <button class="generate-btn" style="max-width:320px" onclick="generateFicha(${idx},this)">Generar análisis completo con IA</button>
-      </div>
-    </div>
-
     <div style="font-size:0.68rem;color:var(--muted);margin-top:4px;font-weight:500;text-align:center">Colegio Presidente José Joaquín Prieto · SIP Red de Colegios · Gestión Curricular 2026 · Confidencial</div>`;
-}
-
-async function generateFicha(idx, btn) {
-  const s = STUDENTS[idx];
-  const zoneId = `ai-zone-${idx}`;
-  const zone = document.getElementById(zoneId);
-  if (!zone) return;
-
-  btn.disabled = true;
-  btn.textContent = 'Confirmando tu cuenta…';
-  zone.innerHTML = `<div class="ai-loading"><div class="dots"><span></span><span></span><span></span></div><span>Confirmando tu cuenta de Google…</span></div>`;
-  const credential = await pedirCredencialFresca();
-  if (!credential) {
-    const boxId = `ai-gbtn-${idx}`;
-    zone.innerHTML = `<div class="ai-out" style="border-left-color:var(--sip-red);color:var(--sip-red)">No pudimos confirmar tu cuenta automáticamente (pasa seguido en navegadores modernos). Haz clic para confirmarla y generar el análisis:</div>
-      <div class="g-btn-box" id="${boxId}" style="margin-top:8px"></div>`;
-    renderInlineGoogleButton(boxId, () => generateFicha(idx, btn));
-    btn.disabled = false;
-    btn.textContent = 'Generar análisis completo con IA';
-    return;
-  }
-  btn.textContent = 'Generando análisis…';
-  zone.innerHTML = `<div class="ai-loading"><div class="dots"><span></span><span></span><span></span></div><span>Analizando perfil estudiantil con IA SIP…</span></div>`;
-
-  const carrerasStr = s.carreras.length ? s.carreras.join(', ') : 'No declaradas';
-  const notasStr = Object.entries(s.notas)
-    .filter(([k,v]) => v !== null && v !== undefined)
-    .map(([k,v]) => `${k.replace('_est',' (est.)')}: ${v}`)
-    .join(' | ');
-
-  const prompt = `Eres un orientador educativo experto del Colegio Presidente José Joaquín Prieto, perteneciente a la SIP Red de Colegios, institución chilena con historia desde 1856, dedicada a educar con excelencia y valores. Tu rol es generar una ficha pedagógica clara, empática y orientadora para el profesor jefe.
-
-DATOS DEL ESTUDIANTE:
-• Nombre: ${s.nombre}
-• Curso: ${s.curso} — SIP Red de Colegios — Año 2026
-• RUT: ${s.rut}
-• Área de interés declarada: ${s.area_interes || 'No declarada'}
-• Trayectoria de calificaciones: ${notasStr || 'Sin datos registrados'}
-• NEM (hasta III°): ${s.nem || 'Sin datos'}
-• Ranking (hasta III°): ${s.ranking || 'Sin datos'}
-• Carreras de interés: ${carrerasStr}
-• Interés declarado en Pedagogía: ${s.quiere_pedagogia || 'No'}
-• Pertenece a pueblo originario: ${s.pueblo_originario || 'No'}
-
-Genera el análisis en texto estructurado SOLO CON ESTAS SECCIONES (en mayúsculas, sin markdown):
-
-ANÁLISIS DE TRAYECTORIA ACADÉMICA
-(4-5 líneas. Interpreta la evolución de notas, identifica tendencias. Menciona NEM y Ranking en contexto PAES. Identifica fortalezas o puntos de atención.)
-
-PERFIL E INTERESES VOCACIONALES
-(3-4 líneas. Comenta el área de interés y las carreras declaradas. Si hay coherencia entre área e interés, señálalo. Si hay dispersión o indefinición, abórdalo con empatía.)
-
-RECOMENDACIONES DE ACOMPAÑAMIENTO TUTORIAL
-(Lista de 3-4 acciones concretas y empáticas que el profesor jefe puede implementar. Formato: "1. …", "2. …", etc.)
-
-ALERTAS O ASPECTOS PRIORITARIOS
-(2-3 líneas. Si hay riesgos académicos, señálalos con tacto. Si el/la estudiante tiene buen desempeño, sugiere cómo potenciarlo. Mencionar si aplica el enfoque de equidad SIP para pueblos originarios u otras consideraciones.)
-
-Mantén un tono profesional, cálido y esperanzador, acorde a la misión de la SIP de creer en el potencial de cada estudiante.`;
-
-  try {
-    const ac = new AbortController();
-    const to = setTimeout(() => ac.abort(), 30000);
-    let res;
-    try {
-      res = await fetch(ASE_IA_API_URL + '?resource=crear', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ credential, prompt }),
-        signal: ac.signal,
-      });
-    } finally { clearTimeout(to); }
-    let data;
-    try { data = await res.json(); } catch(e) { throw new Error('El servidor respondió algo inesperado (HTTP ' + res.status + ').'); }
-    if (!res.ok || data.error) throw new Error(data.error || ('HTTP ' + res.status));
-    const text = (data.reply || data.text || '').toString().trim() || 'Error al generar el análisis.';
-    const safe = text.replace(/`/g,'\\`').replace(/\$/g,'\\$');
-    window.__aiFichaText = window.__aiFichaText || {};
-    window.__aiFichaText[idx] = text;
-    zone.innerHTML = `
-      <div class="ai-out">${esc(text)}</div>
-      <div class="ai-actions">
-        <button class="btn-copy" onclick="copyAI(this, \`${safe}\`)">📋 Copiar texto</button>
-        <button class="btn-print" onclick="imprimirAnalisisIA(${idx})">🖨️ Imprimir / PDF</button>
-      </div>`;
-  } catch(e) {
-    const msg = e.name === 'AbortError' ? 'el servidor tardó demasiado en responder' : (e.message || 'error de conexión');
-    zone.innerHTML = `<div class="ai-out" style="border-left-color:var(--sip-red);color:var(--sip-red)">Error al generar el análisis (${esc(msg)}). Intenta de nuevo.</div>`;
-  } finally {
-    btn.disabled = false;
-    btn.textContent = 'Generar análisis completo con IA';
-  }
-}
-
-function imprimirAnalisisIA(idx) {
-  const s = STUDENTS[idx];
-  const text = (window.__aiFichaText && window.__aiFichaText[idx]) || '';
-  const body = `<div class="plan-page">
-    ${sipHeaderHTML('ANÁLISIS PEDAGÓGICO · IA SIP', esc(s.curso || 'IV° Medio') + ' · ' + new Date().toLocaleDateString('es-CL', {day:'numeric', month:'long', year:'numeric'}))}
-    <div class="plan-name">${esc(s.nombre)}</div>
-    <div class="ai-print-out">${esc(text)}</div>
-    <div class="plan-footer">Colegio Presidente José Joaquín Prieto · SIP Red de Colegios · Análisis generado con IA · Confidencial — uso interno docente · Parte del ecosistema ASE-IA</div>
-  </div>`;
-  imprimirEnPagina('Análisis IA — ' + s.nombre, body);
-}
-
-function copyAI(btn, text) {
-  navigator.clipboard.writeText(text).then(() => {
-    btn.textContent = '✅ Copiado';
-    setTimeout(() => btn.textContent = '📋 Copiar texto', 2500);
-  });
 }
 
 /* ═══════════════ PLAN DE ACCIÓN — ADMISIÓN 2027 ═══════════════ */
@@ -1469,6 +1382,7 @@ function buildPlanEstudianteHTML(s) {
 
 function buildPlanDocenteHTML(s, idx) {
   const n = s.notas || {};
+  const override = getOverride(s, idx);
   const notasStr = ['2023','2024','2025','2026_est'].map(y => n[y]).filter(v => v !== undefined && v !== null).join(' / ');
 
   const datos = [
@@ -1479,10 +1393,9 @@ function buildPlanDocenteHTML(s, idx) {
     ['Correo', s.correo || '—'],
     ['Género', s.genero || '—'],
     ['% Ficha Social', s.ficha_social_pct || '—'],
-    ['NEM (I°-III°)', notasStr || '—'],
-    ['Promedio', n.promedio ? n.promedio.toFixed(2) : '—'],
-    ['NEM (puntaje)', s.nem ? Math.round(s.nem) : '—'],
-    ['Ranking', s.ranking ? Math.round(s.ranking) : '—'],
+    ['Notas anuales (I° a IV° est.)', notasStr || '—'],
+    ['Promedio hasta III°', n.promedio ? n.promedio.toFixed(2) : '—'],
+    ['NEM estimado (referencial, no oficial)', override && override.nem ? Math.round(override.nem) : 'Aún no estimado — falta el promedio de IV°'],
     ['¿Interés en Pedagogía?', s.quiere_pedagogia || 'No declarado'],
     ['Pertenece a pueblo originario / etnia', s.etnia_detalle || s.pueblo_originario || 'No declarado'],
   ];
@@ -1527,6 +1440,13 @@ function buildPlanDocenteHTML(s, idx) {
     ? `<ul class="plan-ul">${s.carreras.map(c => `<li>${esc(c)}</li>`).join('')}</ul>`
     : '<p class="plan-p" style="font-style:italic">Sin carreras de preferencia registradas todavía.</p>';
 
+  const aiText = window.__planIA && window.__planIA[idx];
+  const aiHTML = aiText
+    ? `<div class="plan-section-title">🧑‍🏫 Diagnóstico y recomendaciones personalizadas</div>
+       <div class="plan-ai-box">${esc(aiText).split(/\n{2,}/).map(p => `<p class="plan-p">${p.replace(/\n/g,'<br>')}</p>`).join('')}</div>
+       <p style="font-size:10.5px;color:#8892a6;font-style:italic;margin-top:-4px">Generado con apoyo de IA a partir de los datos reales de este estudiante — revísalo antes de compartirlo.</p>`
+    : '';
+
   return `
   <div class="plan-page">
     ${sipHeaderHTML('PLAN DE ACCIÓN DOCENTE · Seguimiento individual — Admisión 2027', 'Elaborado para: ' + esc(tutorDisplayName()) + ' · ' + new Date().toLocaleDateString('es-CL', {day:'numeric', month:'long', year:'numeric'}))}
@@ -1542,6 +1462,8 @@ function buildPlanDocenteHTML(s, idx) {
 
     <div class="plan-section-title">Situación actual (registrada por el propio estudiante)</div>
     ${situacion.length ? `<ul class="plan-ul">${situacion.join('')}</ul>` : '<p class="plan-p" style="font-style:italic">Sin respuestas registradas todavía en Hito 1 / Hito 2.</p>'}
+
+    ${aiHTML}
 
     <div class="plan-section-title">Plan de acción — próximas semanas</div>
     <ul class="plan-ul">${planDocente.map(p => `<li>${esc(p)}</li>`).join('')}</ul>
@@ -1580,6 +1502,7 @@ const PRINT_STYLES = `
   #print-root .plan-etapa { font-family: Arial, sans-serif; font-size: 11.5px; font-weight: 700; color: #C8921A; margin: 10px 0 4px; text-transform: uppercase; }
   #print-root .plan-check { font-size: 12.5px; margin: 3px 0 3px 4px; }
   #print-root .plan-alert-box { background: #fff8e6; border: 1px solid #C8921A; border-radius: 6px; padding: 10px 14px; margin: 12px 0; }
+  #print-root .plan-ai-box { background: #f7f8fc; border-left: 3px solid #1B2B4B; border-radius: 4px; padding: 4px 14px; margin: 6px 0 2px; }
   #print-root .plan-footer { font-family: Arial, sans-serif; font-size: 9.5px; color: #888; margin-top: 18px; border-top: 1px solid #d8dde8; padding-top: 6px; }
   #print-root .ai-print-out { font-size: 13px; line-height: 1.6; white-space: pre-wrap; }
   @media print { #print-root .plan-page { padding: 6px 4px; } }
@@ -1604,6 +1527,85 @@ function imprimirEnPagina(titulo, bodyHTML) {
 function imprimirPlanDocente(idx) {
   const s = STUDENTS[idx];
   imprimirEnPagina('Plan de Acción Docente — ' + s.nombre, buildPlanDocenteHTML(s, idx));
+}
+
+/* Diagnóstico personalizado con IA para el Plan de Acción Docente. Si falla
+   por cualquier motivo, el plan sigue funcionando igual con la plantilla
+   normal (nunca queda un documento roto o vacío) — esto solo agrega una
+   sección extra cuando funciona. */
+async function generarDiagnosticoIA(idx, btn) {
+  const s = STUDENTS[idx];
+  const statusEl = document.getElementById('plan-ia-status-' + idx);
+  btn.disabled = true;
+  const setStatus = (t, isErr) => { if (statusEl) { statusEl.textContent = t; statusEl.style.color = isErr ? 'var(--sip-red)' : 'var(--muted)'; } };
+  setStatus('Confirmando tu cuenta de Google…');
+  const credential = await pedirCredencialFresca();
+  if (!credential) {
+    const boxId = 'plan-ia-gbtn-' + idx;
+    setStatus('');
+    if (statusEl) statusEl.innerHTML = `No pudimos confirmar tu cuenta automáticamente. Haz clic para confirmarla: <div class="g-btn-box" id="${boxId}" style="margin-top:6px"></div>`;
+    renderInlineGoogleButton(boxId, () => generarDiagnosticoIA(idx, btn));
+    btn.disabled = false;
+    return;
+  }
+  setStatus('Generando diagnóstico personalizado…');
+  btn.textContent = 'Generando…';
+
+  const n = s.notas || {};
+  const notasStr = Object.entries(n).filter(([k,v]) => v !== null && v !== undefined).map(([k,v]) => `${k.replace('_est',' (est.)')}: ${v}`).join(' | ');
+  const override = getOverride(s, idx);
+  const via = detectarVia(s);
+  const cp = s.conocimiento_personal || {};
+  const contextoPersonal = [
+    cp.intereses_futuro && `Intereses a futuro: "${cp.intereses_futuro}"`,
+    cp.dificultades_logros && `Dificultades y logros: "${cp.dificultades_logros}"`,
+    cp.expectativas_futuras && `Expectativas al salir del colegio: "${cp.expectativas_futuras}"`,
+    s.ayuda_especifica && `Ayuda específica solicitada: "${s.ayuda_especifica}"`,
+  ].filter(Boolean).join('\n');
+
+  const prompt = `Eres el orientador educativo institucional del Colegio Presidente José Joaquín Prieto (SIP Red de Colegios, Chile). Vas a redactar la sección "Diagnóstico y recomendaciones personalizadas" del Plan de Acción Docente de UN estudiante específico de IV° Medio, de cara a la Admisión 2027. Es para uso interno del profesor/a jefe — sé concreto, profesional y accionable, no genérico.
+
+DATOS REALES DE ESTE ESTUDIANTE:
+• Nombre: ${s.nombre} — ${s.curso}
+• Vía de postulación: ${via === 'pdi' ? 'Policía de Investigaciones (PDI)' : via === 'fach' ? 'Fuerza Aérea de Chile (FACH)' : 'Admisión a la educación superior (vía regular PAES/NEM/Ranking)'}
+• Trayectoria de notas: ${notasStr || 'Sin datos registrados'}
+• Promedio de IV° Medio: ${override ? override.promedio_iv : 'Aún no registrado'}
+• Área de interés: ${s.area_interes || 'No declarada'}
+• Carreras de interés: ${(s.carreras||[]).join(', ') || 'No declaradas'}
+• Interés en Pedagogía: ${s.quiere_pedagogia || 'No declarado'}
+• Pertenece a pueblo originario: ${s.pueblo_originario || 'No'}
+${contextoPersonal ? `• Contexto personal registrado por el propio estudiante:\n${contextoPersonal}` : ''}
+
+Escribe 3-4 párrafos breves, en español de Chile, tono profesional y cálido, SIN encabezados ni markdown, SIN inventar datos que no están arriba (si falta información, dilo con naturalidad en vez de inventar). Cubre: (1) lectura de su trayectoria y momento actual, (2) coherencia o brechas entre su perfil vocacional y sus opciones declaradas, (3) 2-3 acciones concretas y específicas para este estudiante en particular (no genéricas) que el profesor jefe puede tomar antes de fin de año, (4) si aplica, un llamado de atención empático sobre algún riesgo o urgencia.`;
+
+  try {
+    const ac = new AbortController();
+    const to = setTimeout(() => ac.abort(), 30000);
+    let res;
+    try {
+      res = await fetch(ASE_IA_API_URL + '?resource=crear', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ credential, prompt }),
+        signal: ac.signal,
+      });
+    } finally { clearTimeout(to); }
+    let data;
+    try { data = await res.json(); } catch(e) { throw new Error('El servidor respondió algo inesperado (HTTP ' + res.status + ').'); }
+    if (!res.ok || data.error) throw new Error(data.error || ('HTTP ' + res.status));
+    const text = (data.reply || data.text || '').toString().trim();
+    if (!text) throw new Error('Respuesta vacía');
+    window.__planIA = window.__planIA || {};
+    window.__planIA[idx] = text;
+    setStatus('✅ Listo — se incluirá al imprimir el Plan de Acción Docente.');
+    btn.textContent = '✅ Diagnóstico IA listo — regenerar';
+  } catch(e) {
+    const msg = e.name === 'AbortError' ? 'el servidor tardó demasiado en responder' : (e.message || 'error de conexión');
+    setStatus('No se pudo generar (' + msg + '). El Plan de Acción sigue funcionando normal, sin esta sección.', true);
+    btn.textContent = '✦ Generar diagnóstico con IA';
+  } finally {
+    btn.disabled = false;
+  }
 }
 
 function imprimirTareasEstudiante(idx) {

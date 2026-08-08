@@ -252,6 +252,25 @@ export default {
       return new Response(JSON.stringify({ reply: (bc?.text || "").trim() }), { status: 200, headers: secure });
     }
 
+    // ---- Mis Tutorías (grupo de tutoriados guardado por cada docente) ----
+    // Cada docente ve su propio grupo desde cualquier navegador con solo
+    // iniciar sesión. Requiere un KV namespace enlazado como TUTORIAS.
+    if (resource === "misTutorias") {
+      const u = await verifyGoogle(body.credential);
+      if (!u) return json({ error: "No pudimos verificar tu cuenta." }, 401, cors);
+      const p = profileFor(u);
+      if (p.role !== "staff" && p.role !== "dev") return json({ error: "No autorizado" }, 403, cors);
+      if (!env.TUTORIAS) return json({ error: "Falta configurar el almacenamiento (KV TUTORIAS)" }, 500, cors);
+      const key = "tutorias:" + u.email;
+      if (body.action === "save") {
+        const grupo = Array.isArray(body.grupo) ? body.grupo.slice(0, 500).map(String) : [];
+        await env.TUTORIAS.put(key, JSON.stringify(grupo));
+        return new Response(JSON.stringify({ ok: true, grupo }), { status: 200, headers: secure });
+      }
+      const raw = await env.TUTORIAS.get(key);
+      return new Response(JSON.stringify({ ok: true, grupo: raw ? JSON.parse(raw) : [] }), { status: 200, headers: secure });
+    }
+
     // ---- Chat con IA (por defecto) ----
     if (!env.ANTHROPIC_API_KEY) return json({ error: "Falta configurar ANTHROPIC_API_KEY" }, 500, cors);
     const question = (body.question || "").toString().slice(0, 1000);
