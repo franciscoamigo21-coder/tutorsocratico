@@ -56,6 +56,27 @@ vuelve automáticamente al modo local.
 
 ---
 
+## 🎓 Conectar el botón "Generar Ficha SIP con IA" (fichas de tutoría)
+
+Mismo proceso, con su propio Worker (así cada herramienta tiene su propia clave
+y sus propios límites, aunque puedes reutilizar la misma cuenta de Cloudflare
+y la misma API key):
+
+1. Crea un Worker nuevo (ej. **`fichas-tutoria`**) y pega el contenido de
+   [`fichas-worker.js`](./fichas-worker.js).
+2. Agrega el secreto `ANTHROPIC_API_KEY` igual que arriba. Deploy.
+3. Copia la URL del Worker y pégala en [`fichas_JJP_v3_2.html`](./fichas_JJP_v3_2.html),
+   en la constante:
+   ```js
+   const AI_PROXY_URL = "";
+   ```
+   reemplazándola por `"https://fichas-tutoria.TU-CUENTA.workers.dev"`.
+
+Mientras `AI_PROXY_URL` esté vacía, el botón "Generar Ficha SIP con IA" muestra
+un aviso claro en vez de fallar en silencio.
+
+---
+
 ## 🔎 Cómo probar que quedó bien
 1. Abre ASE-IA y pregunta *“¿Cuál es la nota mínima de aprobación?”*.
    - La respuesta será más natural y seguirá citando la fuente **[1]**.
