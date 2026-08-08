@@ -397,21 +397,21 @@ body.gate-open .login-gate { display: flex; }
 /* trend chart */
 .trend-wrap { margin-top: 16px; background: var(--paper); border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px 16px; }
 .trend-label { font-size: 0.62rem; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 14px; }
-.trend-bars { display: flex; align-items: flex-end; gap: 5px; height: 56px; }
+.trend-bars { display: flex; align-items: flex-end; gap: 8px; height: 92px; }
 .tbar-col { flex: 1; display: flex; flex-direction: column; align-items: center; }
 .tbar {
-  width: 100%; border-radius: 3px 3px 0 0;
-  display: flex; align-items: flex-start; justify-content: center;
-  padding-top: 4px;
+  width: 100%; min-height: 46px; border-radius: 6px 6px 0 0;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: inset 0 -3px 8px rgba(0,0,0,0.08);
 }
-.tbar-v { font-size: 0.65rem; font-weight: 700; color: white; }
-.tbar-lbl { font-size: 0.6rem; color: var(--muted); margin-top: 4px; font-weight: 600; }
+.tbar-v { font-size: 1.35rem; font-weight: 800; color: white; line-height: 1; text-shadow: 0 1px 3px rgba(0,0,0,0.25); }
+.tbar-lbl { font-size: 0.66rem; color: var(--muted); margin-top: 8px; font-weight: 700; }
 .tbar-empty {
-  height: 30px !important; border: 2px dashed #aab; background: #f0f2f8 !important;
-  cursor: pointer; align-items: center !important; transition: border-color 0.2s, background 0.2s;
+  border: 2px dashed #aab; background: #f0f2f8 !important;
+  cursor: pointer; transition: border-color 0.2s, background 0.2s;
 }
 .tbar-empty:hover { border-color: var(--sip-gold); background: var(--sip-gold-light) !important; }
-.tbar-plus { font-size: 1.1rem; font-weight: 800; color: #99a3bb; }
+.tbar-plus { font-size: 1.6rem; font-weight: 800; color: #99a3bb; line-height: 1; }
 .tbar-empty:hover .tbar-plus { color: var(--sip-gold); }
 .trend-note { font-size: 0.72rem; color: var(--muted); font-weight: 500; margin-top: 6px; }
 
@@ -903,7 +903,7 @@ function renderModalBody(s, idx) {
   const bars = years.map(y => {
     const v = n[y];
     if (!v) return '';
-    const h = Math.max(8, Math.round((v/maxV)*52));
+    const h = Math.max(46, Math.round((v/maxV)*88));
     const bg = v >= 6.0 ? '#16b981' : v >= 5.5 ? '#f5b301' : '#c0392b';
     return `<div class="tbar-col">
       <div class="tbar" style="height:${h}px;background:${bg}"><span class="tbar-v">${v.toFixed(1)}</span></div>
@@ -914,7 +914,7 @@ function renderModalBody(s, idx) {
   const ivBar = (() => {
     if (override) {
       const v = override.promedio_iv;
-      const h = Math.max(8, Math.round((v/maxV)*52));
+      const h = Math.max(46, Math.round((v/maxV)*88));
       const bg = v >= 6.0 ? '#16b981' : v >= 5.5 ? '#f5b301' : '#c0392b';
       return `<div class="tbar-col">
         <div class="tbar" style="height:${h}px;background:${bg}"><span class="tbar-v">${v.toFixed(1)}</span></div>
@@ -1264,7 +1264,7 @@ const CALENDARIO_2027 = [
 const FUAS_TEXT = 'El FUAS (Formulario Único de Acreditación Socioeconómica) es un trámite del Estado, gratuito y separado de la PAES. Ahí se entregan los datos de la situación del estudiante y su familia para revisar a qué beneficios puede acceder: Gratuidad (no paga arancel), Becas (cubren parte del arancel) y el CAE, Crédito con Aval del Estado. Se completa una vez al año en www.fuas.cl, con la Clave Única del estudiante y la de su apoderado. Aunque no esté seguro de calificar, siempre conviene hacerlo: es el único trámite que da acceso a esos beneficios, y no completarlo es la única forma segura de quedar fuera de ellos.';
 
 const PAES_DAY_INFO = [
-  'La PAES se rinde en 3 jornadas: 30 de noviembre, 1 y 2 de diciembre de 2026. No todas las pruebas son obligatorias para todos — depende de las carreras a las que se quiera postular, así que conviene confirmar cuáles corresponde rendir con el profesor Francisco Amigo.',
+  'La PAES se rinde en 3 jornadas: 30 de noviembre, 1 y 2 de diciembre de 2026. No todas las pruebas son obligatorias para todos — depende de las carreras a las que se quiera postular, así que conviene confirmar cuáles corresponde rendir con tu tutor/a.',
   'Debe llevar su cédula de identidad vigente (no sirve una vencida).',
   'Antes de la fecha, en www.demre.cl se puede ver en qué local corresponde rendir cada prueba.',
   'Se debe llegar con harta anticipación: una vez que cierran la sala, no se puede entrar a rendir esa prueba.',
@@ -1273,6 +1273,18 @@ const PAES_DAY_INFO = [
 
 function esc(str) {
   return (str || '').toString().replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+}
+
+function tutorDisplayName() {
+  if (typeof CURRENT_USER !== 'undefined' && CURRENT_USER) {
+    if (CURRENT_USER.name) return CURRENT_USER.name;
+    if (CURRENT_USER.email) {
+      const local = CURRENT_USER.email.split('@')[0];
+      const parts = local.split('.').filter(Boolean);
+      if (parts.length) return parts.map(p => p.charAt(0).toUpperCase() + p.slice(1)).join(' ');
+    }
+  }
+  return 'Tutor/a';
 }
 
 function detectarVia(s) {
@@ -1293,13 +1305,13 @@ function buildPlanEstudianteHTML(s) {
   let intro, loQueSaber, pasos;
 
   if (via === 'pdi') {
-    intro = `Tu meta es ingresar a la Policía de Investigaciones (PDI). Este plan te ayuda a preparar, junto al profesor Francisco Amigo, todo lo necesario para postular apenas se abra el próximo proceso.`;
+    intro = `Tu meta es ingresar a la Policía de Investigaciones (PDI). Este plan te ayuda a preparar, junto a tu tutor/a, todo lo necesario para postular apenas se abra el próximo proceso.`;
     loQueSaber = `<li>La PDI tiene dos caminos: Oficial Policial (4 años) y Agente Policial / Cecapro (técnico, 2 años). Revisa con tiempo las fechas de postulación en <strong>www.escuelapdi.cl/admision</strong> y <strong>www.cecapro.cl</strong>, ya que suelen cerrar sin mucho aviso previo.</li>
       <li>Debes rendir la PAES igual, aunque el proceso PDI no la exija como puntaje competitivo: se pide como requisito de "vigencia" (rendida en los últimos 2 años).</li>
       <li>Tu NEM (tus notas) pondera un 20% del puntaje final — cada nota de este semestre cuenta.</li>`;
     pasos = [
       ['AHORA', ['Pregunta en Secretaría si ya estás inscrito en la PAES Regular.',
-        'Reúnete con el profesor Francisco Amigo para revisar el estado exacto del proceso PDI y armar tu plan de preparación.',
+        'Reúnete con tu tutor/a para revisar el estado exacto del proceso PDI y armar tu plan de preparación.',
         'Si eres varón, averigua con tiempo tu situación militar (Ley de Reclutamiento).']],
       ['SEGUNDO SEMESTRE 2026', ['Refuerza Matemáticas e Inglés (pesan en el proceso PDI).',
         'Crea un correo Gmail exclusivo para tus trámites, idealmente nombre.apellido@gmail.com.',
@@ -1309,7 +1321,7 @@ function buildPlanEstudianteHTML(s) {
         'Revisa periódicamente escuelapdi.cl/admision y cecapro.cl para no perderte la apertura del próximo proceso, y postula apenas abra.']],
     ];
   } else if (via === 'fach') {
-    intro = `Tu meta es ingresar a la Fuerza Aérea de Chile (FACH). Este plan te ayuda a preparar, junto al profesor Francisco Amigo, todo lo necesario para tu proceso de postulación.`;
+    intro = `Tu meta es ingresar a la Fuerza Aérea de Chile (FACH). Este plan te ayuda a preparar, junto a tu tutor/a, todo lo necesario para tu proceso de postulación.`;
     loQueSaber = `<li>El proceso CEFPS y la Escuela de Especialidades tienen requisitos propios (edad, licencia de enseñanza media, situación militar, salud, estatura, sin tatuajes/piercing visibles) — revísalos con tiempo en <strong>admision.fach.mil.cl</strong>.</li>
       <li>Conviene llamar directamente al Departamento de Promoción y Admisión FACH (+56 2 2976 0000, cefps@fach.mil.cl) para confirmar fechas exactas de tu proceso específico.</li>
       <li>Aunque tu proceso no pondere PAES ni NEM de la misma forma que una carrera tradicional, rendir la PAES y completar el FUAS te dan una alternativa civil de respaldo.</li>`;
@@ -1324,19 +1336,19 @@ function buildPlanEstudianteHTML(s) {
     ];
   } else {
     intro = carrerasTxt
-      ? `Tienes interés en el área de <strong>${esc(s.area_interes || 'tu vocación')}</strong>, con opciones como ${esc(carrerasTxt)}. Este plan te ayuda a avanzar, junto al profesor Francisco Amigo, en transformar ese interés en una postulación concreta.`
-      : `Este plan te ayuda a avanzar, junto al profesor Francisco Amigo, en definir y confirmar tus opciones de carrera de cara a la Admisión 2027.`;
+      ? `Tienes interés en el área de <strong>${esc(s.area_interes || 'tu vocación')}</strong>, con opciones como ${esc(carrerasTxt)}. Este plan te ayuda a avanzar, junto a tu tutor/a, en transformar ese interés en una postulación concreta.`
+      : `Este plan te ayuda a avanzar, junto a tu tutor/a, en definir y confirmar tus opciones de carrera de cara a la Admisión 2027.`;
     loQueSaber = carrerasTxt
       ? `<li>Ya has conversado sobre algunas opciones (${esc(carrerasTxt)}). El siguiente paso es confirmar mallas, puntajes de corte e instituciones junto a tu tutor.</li>
         <li>Usa el Buscador de Carreras de <strong>demre.cl</strong> y <strong>mifuturo.cl</strong> para comparar empleabilidad, sueldos y duración real de cada alternativa.</li>`
-      : `<li>Aún no tienes carreras de preferencia definidas. Es clave agendar una tutoría con el profesor Francisco Amigo para explorar opciones según tus notas, puntajes e intereses.</li>
+      : `<li>Aún no tienes carreras de preferencia definidas. Es clave agendar una tutoría con tu tutor/a para explorar opciones según tus notas, puntajes e intereses.</li>
         <li>Usa el Buscador de Carreras de <strong>demre.cl</strong> y <strong>mifuturo.cl</strong> para comenzar a explorar.</li>`;
     pasos = [
       ['AHORA (agosto 2026)', ['Pregunta en Secretaría si ya estás inscrito/a en la PAES Regular.',
-        `Reúnete con el profesor Francisco Amigo para ${carrerasTxt ? 'revisar juntos las opciones ya vistas: ' + esc(carrerasTxt) : 'definir tus carreras e instituciones de interés'}.`,
+        `Reúnete con tu tutor/a para ${carrerasTxt ? 'revisar juntos las opciones ya vistas: ' + esc(carrerasTxt) : 'definir tus carreras e instituciones de interés'}.`,
         'Entra a www.demre.cl (Buscador de Carreras) para ir familiarizándote con tus opciones.']],
       ['SEPTIEMBRE-OCTUBRE 2026', ['Entra a www.mifuturo.cl y compara tus opciones: sueldos, empleabilidad y duración.',
-        'Junto al profesor Francisco Amigo, deja definida tu lista final de 3-4 carreras/instituciones favoritas.',
+        'Junto a tu tutor/a, deja definida tu lista final de 3-4 carreras/instituciones favoritas.',
         'Entre el 1 y el 22 de octubre, completa el FUAS en www.fuas.cl junto a tu apoderado.']],
       ['NOVIEMBRE-DICIEMBRE 2026', ['Rinde la PAES Regular: 30 de noviembre, 1 y 2 de diciembre.']],
       ['ENERO 2027', ['Revisa tu puntaje PAES (resultados: 4 de enero).',
@@ -1353,7 +1365,7 @@ function buildPlanEstudianteHTML(s) {
   return `
   <div class="plan-page">
     ${sipHeaderHTML('MI PLAN DE ACCIÓN · Camino a la Educación Superior 2027', esc(s.curso || 'IV° Medio') + ' · Agosto 2026')}
-    <p class="plan-p">Este es tu plan personal. Está pensado para que sepas, paso a paso, qué tienes que hacer de aquí a que termines el colegio y postules a la educación superior. No tienes que hacer todo de una vez: ve marcando cada casillero ☐ a medida que completes cada paso. Si tienes dudas, consúltalas con el profesor Francisco Amigo.</p>
+    <p class="plan-p">Este es tu plan personal. Está pensado para que sepas, paso a paso, qué tienes que hacer de aquí a que termines el colegio y postules a la educación superior. No tienes que hacer todo de una vez: ve marcando cada casillero ☐ a medida que completes cada paso. Si tienes dudas, consúltalas con tu tutor/a.</p>
     <div class="plan-name">${esc(s.nombre)}</div>
     <div class="plan-p">${intro}</div>
 
@@ -1374,7 +1386,7 @@ function buildPlanEstudianteHTML(s) {
 
     <div class="plan-section-title">📞 Contactos y páginas que te van a servir</div>
     <ul class="plan-ul">
-      <li>Profesor Francisco Amigo — para revisar y confirmar tus opciones.</li>
+      <li>Tu tutor/a — para revisar y confirmar tus opciones.</li>
       <li>www.demre.cl — información de carreras y puntajes.</li>
       <li>www.mifuturo.cl — empleabilidad e ingresos de cada carrera.</li>
       <li>www.fuas.cl — trámite de becas y gratuidad.</li>
@@ -1445,7 +1457,7 @@ function buildPlanDocenteHTML(s, idx) {
 
   return `
   <div class="plan-page">
-    ${sipHeaderHTML('PLAN DE ACCIÓN DOCENTE · Seguimiento individual — Admisión 2027', 'Elaborado para: Profesor Francisco Amigo M. · ' + new Date().toLocaleDateString('es-CL', {day:'numeric', month:'long', year:'numeric'}))}
+    ${sipHeaderHTML('PLAN DE ACCIÓN DOCENTE · Seguimiento individual — Admisión 2027', 'Elaborado para: ' + esc(tutorDisplayName()) + ' · ' + new Date().toLocaleDateString('es-CL', {day:'numeric', month:'long', year:'numeric'}))}
     <div class="plan-name">${esc(s.nombre)}</div>
 
     ${alertas.length ? `<div class="plan-alert-box">
