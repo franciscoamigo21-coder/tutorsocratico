@@ -438,6 +438,8 @@ body.gate-open .login-gate { display: flex; }
 .calc-save:hover { background: var(--sip-navy-mid); }
 .calc-clear { background: none; border: none; color: var(--sip-red); font-family: 'Montserrat', sans-serif; font-size: 0.72rem; font-weight: 700; cursor: pointer; text-decoration: underline; }
 .calc-note { font-size: 0.66rem; color: var(--muted); margin-top: 4px; }
+.calc-nem-hint { font-size: 0.62rem; color: var(--sip-gold); font-weight: 700; margin-top: 4px; line-height: 1.3; min-height: 1.6em; }
+.calc-use-est { background: none; border: none; color: var(--sip-navy-mid); font-family: 'Montserrat', sans-serif; font-size: 0.64rem; font-weight: 700; cursor: pointer; text-decoration: underline; padding: 0; margin-top: 2px; }
 
 /* sugerencias vocacionales (indecisos) */
 .sug-box { display: none; background: var(--paper); border: 1.5px solid var(--border); border-radius: 8px; padding: 14px 16px; margin-top: 10px; }
@@ -865,15 +867,72 @@ function getOverride(s, idx) {
 function toggleCalc(idx) {
   document.getElementById('calc-box-' + idx).classList.toggle('open');
 }
+
+/* Estimación referencial de puntaje NEM (Grupo A · Científico-Humanista diurna),
+   interpolando puntos reales de la tabla oficial DEMRE (demre.cl/paes/factores-seleccion/
+   tabla-transformacion-nem-grupo-a). Es un cálculo automático hecho por esta página,
+   NO el valor oficial: DEMRE recalcula la tabla cada proceso según la distribución
+   nacional de notas, así que esto es solo referencial hasta tener el puntaje real. */
+const NEM_TABLE_GRUPO_A = [
+  [4.0, 100], [4.2, 163], [4.5, 257], [5.0, 415], [5.5, 572], [5.9, 685],
+  [6.0, 713], [6.2, 771], [6.3, 799], [6.5, 856], [6.6, 886], [6.7, 914],
+  [6.8, 942], [7.0, 1000],
+];
+function estimarNEM(prom) {
+  if (!Number.isFinite(prom)) return null;
+  const t = NEM_TABLE_GRUPO_A;
+  if (prom <= t[0][0]) return t[0][1];
+  if (prom >= t[t.length-1][0]) return t[t.length-1][1];
+  for (let i = 0; i < t.length - 1; i++) {
+    const [p1, v1] = t[i], [p2, v2] = t[i+1];
+    if (prom >= p1 && prom <= p2) return v1 + (prom - p1) / (p2 - p1) * (v2 - v1);
+  }
+  return null;
+}
+function livePreviewNEM(idx) {
+  const s = STUDENTS[idx];
+  const promInput = document.getElementById('ov-prom-' + idx);
+  const nemInput = document.getElementById('ov-nem-' + idx);
+  const hintEl = document.getElementById('nem-hint-' + idx);
+  const heroEl = document.getElementById('prom-hero-' + idx);
+  const nemFiEl = document.getElementById('nem-fi-' + idx);
+  const prom = parseFloat((promInput.value || '').replace(',', '.'));
+
+  if (!Number.isFinite(prom) || prom < 1 || prom > 7) {
+    if (hintEl) hintEl.textContent = '';
+    return;
+  }
+  const years = ['2023','2024','2025'];
+  const vals = years.map(y => s.notas[y]).filter(Boolean);
+  const promedioFinal = [...vals, prom].reduce((a,b) => a+b, 0) / (vals.length + 1);
+  if (heroEl) {
+    heroEl.textContent = promedioFinal.toFixed(2);
+    heroEl.className = 'promedio-hero-val' + (promedioFinal >= 6.0 ? '' : promedioFinal >= 5.5 ? ' mid' : ' low');
+  }
+  const est = estimarNEM(prom);
+  if (est == null) return;
+  if (hintEl) hintEl.textContent = `≈ NEM estimado: ${Math.round(est)} pts (referencial, no oficial — verifica el real en demre.cl)`;
+  if (!nemInput.dataset.userEdited) {
+    nemInput.value = Math.round(est);
+    if (nemFiEl) nemFiEl.textContent = Math.round(est);
+  }
+}
+function usarEstimadoNEM(idx) {
+  const nemInput = document.getElementById('ov-nem-' + idx);
+  delete nemInput.dataset.userEdited;
+  livePreviewNEM(idx);
+}
 function saveOverride(idx) {
   const s = STUDENTS[idx];
+  const nemInput = document.getElementById('ov-nem-' + idx);
   const prom = parseFloat((document.getElementById('ov-prom-' + idx).value || '').replace(',', '.'));
-  const nemV = parseInt(document.getElementById('ov-nem-' + idx).value, 10);
+  const nemV = parseInt(nemInput.value, 10);
   const rankV = parseInt(document.getElementById('ov-rank-' + idx).value, 10);
   if (!prom || prom < 1 || prom > 7) { alert('Ingresa un promedio de IV° Medio válido, entre 1.0 y 7.0.'); return; }
   const data = {
     promedio_iv: prom,
     nem: Number.isFinite(nemV) ? nemV : null,
+    nem_estimado: !nemInput.dataset.userEdited,
     ranking: Number.isFinite(rankV) ? rankV : null,
     fecha: new Date().toLocaleDateString('es-CL', {day:'numeric', month:'long', year:'numeric'}),
   };
@@ -958,13 +1017,13 @@ function renderModalBody(s, idx) {
     <div class="fs">
       <div class="fs-title">📊 Hitos Académicos — NEM & Ranking</div>
       <div class="promedio-hero">
-        <div class="promedio-hero-val ${promClass}">${promedioFinal ? promedioFinal.toFixed(2) : '—'}</div>
+        <div class="promedio-hero-val ${promClass}" id="prom-hero-${idx}">${promedioFinal ? promedioFinal.toFixed(2) : '—'}</div>
         <div class="promedio-hero-lbl">Promedio general${override ? ' · I° a IV° Medio' : ' · registrado hasta III° Medio'}</div>
         ${override ? `<div class="promedio-hero-tag">✓ Actualizado en tutoría el ${override.fecha}</div>` : ''}
       </div>
       <div class="fs-grid three">
         <div class="fi"><span class="fi-lbl">Promedio hasta III°</span><span class="fi-val">${n.promedio ? n.promedio.toFixed(2) : '—'}</span></div>
-        <div class="fi"><span class="fi-lbl">NEM${override && override.nem ? ' (actualizado)' : ' (hasta III°)'}</span><span class="fi-val">${nemFinal ? Math.round(nemFinal) : '—'}</span></div>
+        <div class="fi"><span class="fi-lbl">NEM${override && override.nem ? (override.nem_estimado ? ' (estimado)' : ' (actualizado)') : ' (hasta III°)'}</span><span class="fi-val" id="nem-fi-${idx}">${nemFinal ? Math.round(nemFinal) : '—'}</span></div>
         <div class="fi"><span class="fi-lbl">Ranking${override && override.ranking ? ' (actualizado)' : ' (hasta III°)'}</span><span class="fi-val">${rankFinal ? Math.round(rankFinal) : '—'}</span></div>
       </div>
       <div class="trend-wrap">
@@ -974,17 +1033,22 @@ function renderModalBody(s, idx) {
       </div>
       <button class="calc-toggle" onclick="toggleCalc(${idx})">🧮 ${override ? 'Editar' : 'Simular'} promedio y puntajes de IV° Medio</button>
       <div class="calc-box${override ? '' : ''}" id="calc-box-${idx}">
-        <p>Complétalo junto al estudiante cuando ya tengan el promedio real de IV° Medio, y si ya simularon el puntaje en la Plataforma Pedro de Valdivia o en demre.cl, regístrenlo aquí también. Queda guardado en este computador.</p>
+        <p>Apenas ingreses el promedio de IV° Medio, el NEM se estima automáticamente (referencial). El Ranking no se puede estimar — solo DEMRE tiene esos datos — así que regístralo a mano cuando lo tengan (demre.cl o Plataforma Pedro de Valdivia). Queda guardado en este computador.</p>
         <div class="calc-fields">
-          <div class="calc-field"><label>Promedio IV° Medio</label><input type="text" inputmode="decimal" id="ov-prom-${idx}" placeholder="Ej: 6.2" value="${override ? override.promedio_iv : ''}"></div>
-          <div class="calc-field"><label>Puntaje NEM (opcional)</label><input type="number" id="ov-nem-${idx}" placeholder="Ej: 780" value="${override && override.nem ? override.nem : ''}"></div>
-          <div class="calc-field"><label>Puntaje Ranking (opcional)</label><input type="number" id="ov-rank-${idx}" placeholder="Ej: 820" value="${override && override.ranking ? override.ranking : ''}"></div>
+          <div class="calc-field"><label>Promedio IV° Medio</label><input type="text" inputmode="decimal" id="ov-prom-${idx}" placeholder="Ej: 6.2" value="${override ? override.promedio_iv : ''}" oninput="livePreviewNEM(${idx})"></div>
+          <div class="calc-field">
+            <label>Puntaje NEM</label>
+            <input type="number" id="ov-nem-${idx}" placeholder="Se estima solo" value="${override && override.nem ? override.nem : ''}" data-user-edited="${override && override.nem ? '1' : ''}" oninput="this.dataset.userEdited='1'">
+            <div class="calc-nem-hint" id="nem-hint-${idx}"></div>
+            <button type="button" class="calc-use-est" onclick="usarEstimadoNEM(${idx})">Usar estimado</button>
+          </div>
+          <div class="calc-field"><label>Puntaje Ranking (manual — no se puede estimar)</label><input type="number" id="ov-rank-${idx}" placeholder="Ej: 820" value="${override && override.ranking ? override.ranking : ''}"></div>
         </div>
         <div class="calc-actions">
           <button class="calc-save" onclick="saveOverride(${idx})">Guardar</button>
           ${override ? `<button class="calc-clear" onclick="clearOverride(${idx})">Quitar actualización</button>` : ''}
         </div>
-        <div class="calc-note">Los puntajes NEM y Ranking oficiales se calculan en demre.cl o en la Plataforma Pedro de Valdivia — aquí solo se registran para dejar la ficha al día.</div>
+        <div class="calc-note">El NEM mostrado aquí es una estimación automática (interpolación de la tabla oficial DEMRE, Grupo A Científico-Humanista diurna) — no es el puntaje oficial, que se recalcula cada proceso según la distribución nacional de notas. Reemplázalo cuando tengan el real de demre.cl o la Plataforma Pedro de Valdivia. El Ranking siempre se ingresa a mano.</div>
       </div>
     </div>
 
@@ -1051,10 +1115,16 @@ async function generateFicha(idx, btn) {
   if (!zone) return;
 
   btn.disabled = true;
+  btn.textContent = 'Confirmando tu cuenta…';
+  zone.innerHTML = `<div class="ai-loading"><div class="dots"><span></span><span></span><span></span></div><span>Confirmando tu cuenta de Google…</span></div>`;
   const credential = await pedirCredencialFresca();
   if (!credential) {
-    zone.innerHTML = `<div class="ai-out" style="border-left-color:var(--sip-red);color:var(--sip-red)">No pudimos verificar tu cuenta de Google para generar el análisis. Vuelve a intentarlo (puede pedirte confirmar tu cuenta de nuevo).</div>`;
+    const boxId = `ai-gbtn-${idx}`;
+    zone.innerHTML = `<div class="ai-out" style="border-left-color:var(--sip-red);color:var(--sip-red)">No pudimos confirmar tu cuenta automáticamente (pasa seguido en navegadores modernos). Haz clic para confirmarla y generar el análisis:</div>
+      <div class="g-btn-box" id="${boxId}" style="margin-top:8px"></div>`;
+    renderInlineGoogleButton(boxId, () => generateFicha(idx, btn));
     btn.disabled = false;
+    btn.textContent = 'Generar análisis completo con IA';
     return;
   }
   btn.textContent = 'Generando análisis…';
@@ -1097,12 +1167,19 @@ ALERTAS O ASPECTOS PRIORITARIOS
 Mantén un tono profesional, cálido y esperanzador, acorde a la misión de la SIP de creer en el potencial de cada estudiante.`;
 
   try {
-    const res = await fetch(ASE_IA_API_URL + '?resource=crear', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ credential, prompt })
-    });
-    const data = await res.json();
+    const ac = new AbortController();
+    const to = setTimeout(() => ac.abort(), 30000);
+    let res;
+    try {
+      res = await fetch(ASE_IA_API_URL + '?resource=crear', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ credential, prompt }),
+        signal: ac.signal,
+      });
+    } finally { clearTimeout(to); }
+    let data;
+    try { data = await res.json(); } catch(e) { throw new Error('El servidor respondió algo inesperado (HTTP ' + res.status + ').'); }
     if (!res.ok || data.error) throw new Error(data.error || ('HTTP ' + res.status));
     const text = (data.reply || data.text || '').toString().trim() || 'Error al generar el análisis.';
     const safe = text.replace(/`/g,'\\`').replace(/\$/g,'\\$');
@@ -1115,7 +1192,8 @@ Mantén un tono profesional, cálido y esperanzador, acorde a la misión de la S
         <button class="btn-print" onclick="imprimirAnalisisIA(${idx})">🖨️ Imprimir / PDF</button>
       </div>`;
   } catch(e) {
-    zone.innerHTML = `<div class="ai-out" style="border-left-color:var(--sip-red);color:var(--sip-red)">Error al generar el análisis (${esc(e.message||'error de conexión')}). Intenta de nuevo.</div>`;
+    const msg = e.name === 'AbortError' ? 'el servidor tardó demasiado en responder' : (e.message || 'error de conexión');
+    zone.innerHTML = `<div class="ai-out" style="border-left-color:var(--sip-red);color:var(--sip-red)">Error al generar el análisis (${esc(msg)}). Intenta de nuevo.</div>`;
   } finally {
     btn.disabled = false;
     btn.textContent = 'Generar análisis completo con IA';
@@ -1631,22 +1709,49 @@ function renderGoogleButton() {
 }
 
 /* Pide un credential fresco de Google (silencioso si ya hay sesión) para llamar
-   al Worker en acciones que requieren verificación, ej. generar ficha con IA. */
+   al Worker en acciones que requieren verificación, ej. generar ficha con IA.
+   SIEMPRE se resuelve (nunca se queda pegado): si el intento silencioso de
+   Google (One Tap) no responde en unos segundos —cosa común en navegadores
+   modernos que lo bloquean—, resuelve null para que quien llamó pueda mostrar
+   un botón real de Google en el que hacer clic, en vez de quedar sin avisar nada. */
 function pedirCredencialFresca() {
   return new Promise((resolve) => {
     if (GOOGLE_CREDENTIAL) { resolve(GOOGLE_CREDENTIAL); return; }
+    let settled = false;
+    const finish = (v) => { if (settled) return; settled = true; resolve(v); };
+    const timeoutId = setTimeout(() => finish(null), 6000);
     loadGIS(() => {
       try {
         google.accounts.id.initialize({
           client_id: GOOGLE_CLIENT_ID,
-          callback: (resp) => { GOOGLE_CREDENTIAL = resp && resp.credential || null; resolve(GOOGLE_CREDENTIAL); },
+          callback: (resp) => { clearTimeout(timeoutId); GOOGLE_CREDENTIAL = resp && resp.credential || null; finish(GOOGLE_CREDENTIAL); },
           auto_select: true, cancel_on_tap_outside: false, ux_mode: 'popup',
         });
         google.accounts.id.prompt((notif) => {
-          if (notif.isNotDisplayed && notif.isNotDisplayed() || notif.isSkippedMoment && notif.isSkippedMoment()) resolve(null);
+          if (notif.isNotDisplayed && notif.isNotDisplayed() || notif.isSkippedMoment && notif.isSkippedMoment()) finish(null);
         });
-      } catch(e) { resolve(null); }
+      } catch(e) { finish(null); }
     });
+  });
+}
+
+/* Botón real de Google (no silencioso) para cuando el intento automático de
+   arriba no resultó — un clic real es mucho más confiable que el prompt
+   silencioso, que varios navegadores bloquean sin avisar. */
+function renderInlineGoogleButton(boxId, onOk) {
+  const box = document.getElementById(boxId);
+  if (!box) return;
+  loadGIS(() => {
+    try {
+      google.accounts.id.initialize({
+        client_id: GOOGLE_CLIENT_ID,
+        callback: (resp) => { GOOGLE_CREDENTIAL = resp && resp.credential || null; if (GOOGLE_CREDENTIAL) onOk(); },
+        auto_select: false, cancel_on_tap_outside: true, ux_mode: 'popup',
+      });
+      box.innerHTML = '';
+      const w = Math.min(280, Math.max(220, box.clientWidth || 260));
+      google.accounts.id.renderButton(box, { type: 'standard', theme: 'filled_blue', size: 'medium', text: 'signin_with', shape: 'pill', logo_alignment: 'left', locale: 'es', width: w });
+    } catch(e) {}
   });
 }
 
