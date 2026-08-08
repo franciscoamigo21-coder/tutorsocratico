@@ -2742,6 +2742,9 @@ function avatarInto(elId,photo,fallback){
 function enter(role,email,name,photo,prof){
   ROLE=role;convo.length=0;log.innerHTML="";
   CURRENT={role,email:email||"",name:name||"",photo:photo||"",prof:prof||null};
+  // Sesión compartida con otras apps de ASE-IA en el mismo dominio (ej. Fichas de
+  // Tutoría en /fichastutoria): evita pedir el correo de nuevo en este navegador.
+  try { localStorage.setItem('aseiaSession', JSON.stringify({ role, email: email||'', name: name||'', ts: Date.now() })); } catch(_) {}
   const disp=niceName(email,name);
   document.getElementById("whoLabel").textContent=disp;
   document.getElementById("mailLabel").textContent=email||"";
@@ -2755,7 +2758,11 @@ function enter(role,email,name,photo,prof){
   history.replaceState({screen:"app"},"");  // reemplaza 'login': el botón atrás vuelve a elegir perfil
   showScreen("app");
 }
-function showGate(){ closeProfileMenu(); if(history.state&&history.state.screen==="app") history.back(); else showScreen("gate"); }
+function showGate(){
+  closeProfileMenu();
+  try { localStorage.removeItem('aseiaSession'); } catch(_) {}
+  if(history.state&&history.state.screen==="app") history.back(); else showScreen("gate");
+}
 document.getElementById("f").addEventListener("submit",e=>{e.preventDefault();ask(document.getElementById("q").value);});
 
 /* ============ PERFIL PERSONALIZADO · apoderado y estudiante ============
