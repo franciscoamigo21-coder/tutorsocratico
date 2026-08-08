@@ -1282,6 +1282,9 @@ function enter(role,email){
   ROLE=role;convo.length=0;log.innerHTML="";
   document.getElementById("whoLabel").textContent=ROLE_LABEL[role];
   document.getElementById("mailLabel").textContent=email||"";
+  // Sesión compartida con las demás apps de ASE-IA (ej. Fichas de Tutoría en /fichastutoria)
+  // que viven en el mismo dominio: evita pedir el correo de nuevo en la misma sesión de navegador.
+  try { localStorage.setItem('aseiaSession', JSON.stringify({ role, email: email||'', ts: Date.now() })); } catch(_) {}
   renderQuick(role);renderSugs();
   add("¡Hola! 👋 Soy ASE-IA, tu Asistente Escolar del Colegio Presidente José Joaquín Prieto. Pregúntame por reglamentos, evaluación, el PEI, protocolos, convivencia, tareas o fechas.","bot");
   history.replaceState({screen:"app"},"");  // reemplaza 'login': el botón atrás vuelve a elegir perfil

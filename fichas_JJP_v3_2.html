@@ -4,36 +4,64 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Fichas de Perfil — Colegio Presidente José Joaquín Prieto · SIP · IV° Medio 2026</title>
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Montserrat:ital,wght@0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
 <style>
 :root {
-  --sip-red: #1B2B4B;
-  --sip-red-dark: #0f1d33;
+  /* Paleta alineada con ASE-IA (azul/oro institucional) */
+  --sip-red: #c0392b;
+  --sip-red-dark: #96291d;
   --sip-red-light: #eef1f8;
-  --sip-navy: #1B2B4B;
-  --sip-navy-mid: #2c4070;
-  --sip-navy-light: #eef1f8;
-  --sip-gold: #C8921A;
-  --sip-gold-light: #fdf5e6;
+  --sip-navy: #0b3d91;
+  --sip-navy-mid: #1157c9;
+  --sip-navy-light: #eef2fb;
+  --sip-gold: #f5b301;
+  --sip-gold-light: #fff2d6;
   --white: #ffffff;
-  --paper: #f7f8fc;
-  --cream: #f0f2f8;
-  --muted: #6b7a9a;
-  --border: #d8dde8;
-  --text: #1B2B4B;
-  --success: #1a6b3c;
-  --success-bg: #e9f7ef;
-  --warn-bg: #fff8e6;
+  --paper: #eef2fb;
+  --cream: #e4e9f3;
+  --muted: #657390;
+  --border: #e4e9f3;
+  --text: #132441;
+  --success: #16b981;
+  --success-bg: #e3faf1;
+  --warn-bg: #fff2d6;
   --danger-bg: #eef1f8;
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: 'Montserrat', sans-serif; background: var(--paper); color: var(--text); min-height: 100vh; }
+body { font-family: 'Inter', system-ui, 'Segoe UI', Roboto, sans-serif; background: var(--paper); color: var(--text); min-height: 100vh; -webkit-font-smoothing: antialiased; }
+h1, h2, h3, .font-head { font-family: 'Montserrat', sans-serif; }
 
 #print-root { display: none; }
 @media print {
   body > *:not(#print-root) { display: none !important; }
   #print-root { display: block !important; }
 }
+
+/* portón de acceso (login) */
+body.gate-open > *:not(#loginGate) { display: none !important; }
+.login-gate {
+  display: none; position: fixed; inset: 0; z-index: 500;
+  align-items: center; justify-content: center; padding: 24px;
+  background: radial-gradient(1000px 700px at 50% -10%, #1a63e0, #0b3d91 55%, #06214f);
+}
+body.gate-open .login-gate { display: flex; }
+.login-card { background: white; border-radius: 16px; padding: 34px 30px; max-width: 380px; width: 100%; text-align: center; box-shadow: 0 20px 60px rgba(0,0,0,0.3); }
+.login-logo { width: 56px; height: 56px; border-radius: 50%; margin-bottom: 10px; }
+.login-kicker { font-family: 'Montserrat', sans-serif; font-size: 0.7rem; font-weight: 800; color: var(--sip-gold); text-transform: uppercase; letter-spacing: 0.08em; }
+.login-card h1 { font-family: 'Montserrat', sans-serif; font-size: 1.3rem; font-weight: 800; color: var(--sip-navy); margin: 4px 0 10px; }
+.login-card p { font-size: 0.8rem; color: var(--muted); line-height: 1.5; margin-bottom: 18px; }
+.login-card form { display: flex; flex-direction: column; gap: 10px; }
+.login-card input { padding: 11px 14px; border: 1.5px solid var(--border); border-radius: 8px; font-family: 'Inter', sans-serif; font-size: 0.88rem; text-align: center; }
+.login-card input:focus { outline: none; border-color: var(--sip-navy); box-shadow: 0 0 0 3px rgba(11,61,145,0.15); }
+.login-err { color: var(--sip-red); font-size: 0.74rem; font-weight: 600; min-height: 16px; }
+.login-btn { background: var(--sip-navy); color: white; border: none; padding: 12px 0; border-radius: 8px; font-family: 'Montserrat', sans-serif; font-size: 0.8rem; font-weight: 700; cursor: pointer; letter-spacing: 0.03em; }
+.login-btn:hover { background: var(--sip-navy-mid); }
+.login-foot { font-size: 0.66rem; color: var(--muted); margin-top: 16px; }
+.session-badge { display: flex; align-items: center; gap: 6px; font-size: 0.68rem; color: rgba(255,255,255,0.75); }
+.session-badge button { background: none; border: 1px solid rgba(255,255,255,0.35); color: white; font-size: 0.64rem; font-weight: 700; padding: 3px 9px; border-radius: 12px; cursor: pointer; }
+.session-badge button:hover { background: rgba(255,255,255,0.15); }
 
 /* ─── TOP BAR ─── */
 .top-bar {
@@ -46,6 +74,7 @@ body { font-family: 'Montserrat', sans-serif; background: var(--paper); color: v
   background: var(--sip-navy);
   padding: 0;
   display: flex;
+  flex-wrap: wrap;
   align-items: stretch;
   min-height: 72px;
 }
@@ -63,7 +92,8 @@ body { font-family: 'Montserrat', sans-serif; background: var(--paper); color: v
 .logo-text-main { font-size: 1rem; font-weight: 800; color: var(--sip-navy); letter-spacing: -0.01em; }
 .logo-text-sub { font-size: 0.65rem; font-weight: 600; color: var(--sip-gold); text-transform: uppercase; letter-spacing: 0.08em; }
 .header-info {
-  flex: 1;
+  flex: 1 1 260px;
+  min-width: 0;
   padding: 14px 24px;
   display: flex;
   flex-direction: column;
@@ -73,10 +103,12 @@ body { font-family: 'Montserrat', sans-serif; background: var(--paper); color: v
 .header-info p { font-size: 0.75rem; color: rgba(255,255,255,0.6); margin-top: 3px; }
 .header-badge {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: 8px;
-  padding: 0 24px;
+  padding: 10px 24px;
 }
+.header-badge > * { white-space: nowrap; }
 .badge {
   background: var(--sip-gold);
   color: var(--sip-navy);
@@ -295,7 +327,7 @@ body { font-family: 'Montserrat', sans-serif; background: var(--paper); color: v
 }
 .plan-card-btn:hover { background: var(--sip-navy-mid); }
 .plan-card-btn.gold { background: var(--sip-gold); color: var(--sip-navy); }
-.plan-card-btn.gold:hover { background: #a97614; color: white; }
+.plan-card-btn.gold:hover { background: #d99e00; color: white; }
 
 /* ─── MODAL ─── */
 .modal-bg {
@@ -371,8 +403,13 @@ body { font-family: 'Montserrat', sans-serif; background: var(--paper); color: v
 }
 .tbar-v { font-size: 0.65rem; font-weight: 700; color: white; }
 .tbar-lbl { font-size: 0.6rem; color: var(--muted); margin-top: 4px; font-weight: 600; }
-.tbar.est { border: 2px dashed #aab; background: #f0f2f8 !important; }
-.tbar.est .tbar-v { color: #888; }
+.tbar-empty {
+  height: 30px !important; border: 2px dashed #aab; background: #f0f2f8 !important;
+  cursor: pointer; align-items: center !important; transition: border-color 0.2s, background 0.2s;
+}
+.tbar-empty:hover { border-color: var(--sip-gold); background: var(--sip-gold-light) !important; }
+.tbar-plus { font-size: 1.1rem; font-weight: 800; color: #99a3bb; }
+.tbar-empty:hover .tbar-plus { color: var(--sip-gold); }
 .trend-note { font-size: 0.72rem; color: var(--muted); font-weight: 500; margin-top: 6px; }
 
 /* promedio hero (grande y centrado) */
@@ -397,6 +434,21 @@ body { font-family: 'Montserrat', sans-serif; background: var(--paper); color: v
 .calc-save:hover { background: var(--sip-navy-mid); }
 .calc-clear { background: none; border: none; color: var(--sip-red); font-family: 'Montserrat', sans-serif; font-size: 0.72rem; font-weight: 700; cursor: pointer; text-decoration: underline; }
 .calc-note { font-size: 0.66rem; color: var(--muted); margin-top: 4px; }
+
+/* sugerencias vocacionales (indecisos) */
+.sug-box { display: none; background: var(--paper); border: 1.5px solid var(--border); border-radius: 8px; padding: 14px 16px; margin-top: 10px; }
+.sug-box.open { display: block; }
+.sug-box p { font-size: 0.72rem; color: var(--muted); margin-bottom: 10px; line-height: 1.4; }
+.sug-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
+.sug-tags label { display: flex; align-items: center; gap: 6px; background: var(--white); border: 1.5px solid var(--border); border-radius: 20px; padding: 6px 12px; font-size: 0.74rem; font-weight: 600; cursor: pointer; }
+.sug-tags label:hover { border-color: var(--sip-gold); }
+.sug-tags input { accent-color: var(--sip-navy); cursor: pointer; }
+.sug-resultados { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 10px; margin-top: 12px; }
+.sug-card { background: var(--white); border: 1.5px solid var(--border); border-radius: 8px; padding: 12px; }
+.sug-card-name { font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 0.78rem; color: var(--sip-navy); margin-bottom: 6px; }
+.sug-card-row { display: flex; flex-direction: column; gap: 1px; font-size: 0.68rem; margin-bottom: 5px; }
+.sug-card-row span:first-child { color: var(--muted); font-weight: 700; text-transform: uppercase; letter-spacing: 0.03em; font-size: 0.6rem; }
+.sug-card-row span:last-child { color: var(--text); font-weight: 600; }
 
 /* grupo de tutoría */
 .grupo-lista { max-height: 360px; overflow-y: auto; border: 1.5px solid var(--border); border-radius: 8px; }
@@ -439,7 +491,7 @@ body { font-family: 'Montserrat', sans-serif; background: var(--paper); color: v
 .btn-copy { background: var(--sip-navy); color: white; }
 .btn-copy:hover { background: var(--sip-navy-mid); }
 .btn-print { background: var(--sip-gold); color: var(--sip-navy); }
-.btn-print:hover { background: #a87010; color: white; }
+.btn-print:hover { background: #d99e00; color: white; }
 
 /* ase-ia branding */
 .ase-ia-badge { display: inline-flex; align-items: center; gap: 6px; text-decoration: none; padding: 4px 10px 4px 4px; border: 1px solid rgba(200,146,26,0.5); border-radius: 20px; transition: background 0.2s; }
@@ -468,6 +520,23 @@ body { font-family: 'Montserrat', sans-serif; background: var(--paper); color: v
 </head>
 <body>
 
+<!-- Portón de acceso — rama de ASE-IA: exige correo institucional @sip.cl.
+     Si ya se inició sesión en ASE-IA en este mismo navegador, se salta automáticamente. -->
+<div id="loginGate" class="login-gate">
+  <div class="login-card">
+    <img src="/assets/ase-ia-badge.png" alt="ASE-IA" class="login-logo">
+    <div class="login-kicker">ASE-IA · Fichas de Tutoría</div>
+    <h1>Acceso docente</h1>
+    <p>Esta herramienta contiene datos de estudiantes y es solo para uso del equipo docente/directivo. Ingresa con tu correo institucional.</p>
+    <form id="loginForm" onsubmit="return submitLogin(event)">
+      <input type="email" id="loginEmail" placeholder="nombre.apellido@sip.cl" autocomplete="email" required>
+      <div class="login-err" id="loginErr"></div>
+      <button type="submit" class="login-btn">Ingresar con correo institucional</button>
+    </form>
+    <div class="login-foot">🔒 Solo se valida el dominio del correo en este navegador — no se envía a ningún servidor.</div>
+  </div>
+</div>
+
 <div class="top-bar"></div>
 
 <header class="app-header">
@@ -490,6 +559,10 @@ body { font-family: 'Montserrat', sans-serif; background: var(--paper); color: v
       <img src="/assets/ase-ia-badge.png" alt="ASE-IA">
       <span>Parte de ASE-IA</span>
     </a>
+    <div class="session-badge" id="sessionBadge" style="display:none">
+      <span id="sessionEmail"></span>
+      <button onclick="cerrarSesion()">Cerrar sesión</button>
+    </div>
   </div>
 </header>
 
@@ -520,8 +593,8 @@ body { font-family: 'Montserrat', sans-serif; background: var(--paper); color: v
   </select>
   <button class="btn-filter" id="btn-alert" onclick="toggleAlerta()">⚠ Solo alertas</button>
   <button class="btn-filter" id="btn-rank-low" onclick="toggleRankBajo()">📉 Ranking bajo</button>
-  <button class="btn-filter" id="btn-mi-grupo" onclick="toggleMiGrupo()">👥 Ver solo mi grupo</button>
-  <button class="btn-filter" onclick="abrirGrupoModal()">✏️ Crear grupo de estudiantes</button>
+  <button class="btn-filter" id="btn-mi-grupo" onclick="toggleMiGrupo()">👥 Ver solo mis tutorías</button>
+  <button class="btn-filter" onclick="abrirGrupoModal()">✏️ Mis Tutorías</button>
   <span class="count-label" id="count"></span>
 </div>
 
@@ -557,7 +630,7 @@ body { font-family: 'Montserrat', sans-serif; background: var(--paper); color: v
   </div>
 </div>
 
-<!-- Modal: Crear grupo de estudiantes -->
+<!-- Modal: Mis Tutorías -->
 <div class="modal-bg" id="grupoModalBg" onclick="if(event.target===this) cerrarGrupoModal()">
   <div class="modal" style="max-width:560px">
     <div class="modal-top-bar"></div>
@@ -565,7 +638,7 @@ body { font-family: 'Montserrat', sans-serif; background: var(--paper); color: v
       <div class="modal-header-left">
         <div class="modal-avatar">👥</div>
         <div>
-          <h2>Mi grupo de tutoría</h2>
+          <h2>Mis Tutorías</h2>
           <p>Elige a tus tutoriados para poder filtrar solo por ellos</p>
         </div>
       </div>
@@ -578,7 +651,7 @@ body { font-family: 'Montserrat', sans-serif; background: var(--paper); color: v
       </div>
       <div id="grupo-lista" class="grupo-lista"></div>
       <div class="calc-actions" style="margin-top:14px">
-        <button class="calc-save" onclick="guardarGrupo()">Guardar grupo</button>
+        <button class="calc-save" onclick="guardarGrupo()">Guardar mis tutorías</button>
         <button class="calc-clear" onclick="vaciarGrupo()">Vaciar selección</button>
         <span class="count-label" id="grupo-count" style="margin-left:auto"></span>
       </div>
@@ -623,15 +696,18 @@ function toggleAlerta() {
 function studentKey(s, idx) {
   return s.rut && s.rut !== 'nan' && s.rut.trim() !== '' ? s.rut : ('idx' + idx);
 }
+function grupoKey() {
+  return 'misTutorias_' + ((CURRENT_USER && CURRENT_USER.email) || 'anon');
+}
 function getGrupo() {
-  try { return JSON.parse(localStorage.getItem('miGrupoTutoria') || '[]'); } catch(e) { return []; }
+  try { return JSON.parse(localStorage.getItem(grupoKey()) || '[]'); } catch(e) { return []; }
 }
 function isEnGrupo(s, idx) {
   return getGrupo().includes(studentKey(s, idx));
 }
 function toggleMiGrupo() {
   const grupo = getGrupo();
-  if (!grupo.length) { alert('Todavía no has creado tu grupo de tutoría. Usa el botón "Crear grupo de estudiantes" para elegir a tus tutoriados.'); return; }
+  if (!grupo.length) { alert('Todavía no has creado tus tutorías. Usa el botón "Mis Tutorías" para elegir a tus tutoriados.'); return; }
   showMiGrupo = !showMiGrupo;
   document.getElementById('btn-mi-grupo').classList.toggle('active', showMiGrupo);
   renderGrid();
@@ -659,20 +735,20 @@ function renderGrupoLista() {
       <span class="grupo-row-curso">${s.curso || '—'}</span>
     </label>`;
   }).join('') || '<div style="padding:20px;text-align:center;color:var(--muted);font-size:0.82rem">Sin resultados.</div>';
-  document.getElementById('grupo-count').textContent = `${grupo.size} en tu grupo`;
+  document.getElementById('grupo-count').textContent = `${grupo.size} en tus tutorías`;
 }
 function guardarGrupo() {
   const keys = Array.from(document.querySelectorAll('#grupo-lista input:checked')).map(el => el.value);
   const resto = getGrupo().filter(k => !document.querySelector(`#grupo-lista input[value="${CSS.escape(k)}"]`));
   const grupo = Array.from(new Set([...resto, ...keys]));
-  localStorage.setItem('miGrupoTutoria', JSON.stringify(grupo));
-  document.getElementById('grupo-count').textContent = `${grupo.length} en tu grupo`;
+  localStorage.setItem(grupoKey(), JSON.stringify(grupo));
+  document.getElementById('grupo-count').textContent = `${grupo.length} en tus tutorías`;
   cerrarGrupoModal();
   renderGrid();
 }
 function vaciarGrupo() {
-  if (!confirm('¿Vaciar por completo tu grupo de tutoría?')) return;
-  localStorage.setItem('miGrupoTutoria', '[]');
+  if (!confirm('¿Vaciar por completo tus tutorías?')) return;
+  localStorage.setItem(grupoKey(), '[]');
   showMiGrupo = false;
   document.getElementById('btn-mi-grupo').classList.remove('active');
   renderGrupoLista();
@@ -766,7 +842,7 @@ function renderGrid() {
           ${s.area_interes ? `<span class="tag ${areaTagClass(s.area_interes)}">${s.area_interes}</span>` : ''}
           ${s.pueblo_originario && s.pueblo_originario.toLowerCase() !== '' && s.pueblo_originario.toLowerCase() !== 'nan' ? '<span class="tag pueblo">🪶 Pueblo originario</span>' : ''}
           ${s.carreras.length ? `<span class="tag carreras">${s.carreras.length} carrera${s.carreras.length>1?'s':''}</span>` : ''}
-          ${isAlerta(s) ? '<span class="tag" style="background:#fff8e0;border-color:#C8921A;color:#7a4800">⚠ Alerta</span>' : ''}
+          ${isAlerta(s) ? '<span class="tag" style="background:#fff2d6;border-color:#f5b301;color:#8a5a00">⚠ Alerta</span>' : ''}
         </div>
         <button class="generate-btn" onclick="event.stopPropagation();generateFicha(${idx},this)">✦ GENERAR FICHA SIP CON IA</button>
       </div>
@@ -817,36 +893,34 @@ function renderModalBody(s, idx) {
   const n = s.notas;
   const override = getOverride(s, idx);
   const years = ['2023','2024','2025'];
+  const yearLbl = { '2023':'I° Medio', '2024':'II° Medio', '2025':'III° Medio' };
   const vals = years.map(y => n[y]).filter(Boolean);
-  const maxV = Math.max(...vals, override ? override.promedio_iv : (n['2026_est']||0), 7);
+  const maxV = Math.max(...vals, override ? override.promedio_iv : 0, 7);
 
   const bars = years.map(y => {
     const v = n[y];
     if (!v) return '';
     const h = Math.max(8, Math.round((v/maxV)*52));
-    const bg = v >= 6.0 ? '#1a6b3c' : v >= 5.5 ? '#C8921A' : '#C8102E';
+    const bg = v >= 6.0 ? '#16b981' : v >= 5.5 ? '#f5b301' : '#c0392b';
     return `<div class="tbar-col">
       <div class="tbar" style="height:${h}px;background:${bg}"><span class="tbar-v">${v.toFixed(1)}</span></div>
-      <div class="tbar-lbl">${y}</div>
+      <div class="tbar-lbl">${yearLbl[y]}</div>
     </div>`;
   }).join('');
 
-  const estBar = (() => {
+  const ivBar = (() => {
     if (override) {
       const v = override.promedio_iv;
       const h = Math.max(8, Math.round((v/maxV)*52));
-      const bg = v >= 6.0 ? '#1a6b3c' : v >= 5.5 ? '#C8921A' : '#C8102E';
+      const bg = v >= 6.0 ? '#16b981' : v >= 5.5 ? '#f5b301' : '#c0392b';
       return `<div class="tbar-col">
         <div class="tbar" style="height:${h}px;background:${bg}"><span class="tbar-v">${v.toFixed(1)}</span></div>
-        <div class="tbar-lbl">2026 ✓</div>
+        <div class="tbar-lbl">IV° Medio ✓</div>
       </div>`;
     }
-    if (!n['2026_est']) return '';
-    const v = n['2026_est'];
-    const h = Math.max(8, Math.round((v/maxV)*52));
     return `<div class="tbar-col">
-      <div class="tbar est" style="height:${h}px"><span class="tbar-v">${v.toFixed(1)}</span></div>
-      <div class="tbar-lbl">2026*</div>
+      <div class="tbar tbar-empty" onclick="toggleCalc(${idx})" title="Simular IV° Medio"><span class="tbar-plus">+</span></div>
+      <div class="tbar-lbl">IV° Medio</div>
     </div>`;
   })();
 
@@ -868,6 +942,22 @@ function renderModalBody(s, idx) {
     ? s.carreras.map(c => `<span class="tag">${c}</span>`).join('')
     : '<span style="color:var(--muted);font-size:0.8rem;font-style:italic">Sin carreras declaradas</span>';
 
+  const areaLower = (s.area_interes || '').toLowerCase();
+  const esIndeciso = areaLower === 'indeciso' || areaLower === '';
+  const perfilGuardado = getPerfilTags(s, idx);
+  const sugTagsHTML = PERFILES_VOCACIONALES.map(p =>
+    `<label><input type="checkbox" value="${p.tag}" ${perfilGuardado.includes(p.tag) ? 'checked' : ''}>${p.label}</label>`
+  ).join('');
+  const sugerenciasIniciales = perfilGuardado.length ? sugerirCarreras(perfilGuardado) : [];
+  const sugerenciasIniHTML = sugerenciasIniciales.map(c => `
+    <div class="sug-card">
+      <div class="sug-card-name">${esc(c.nombre)}</div>
+      <div class="sug-card-row"><span>🏫 Dónde estudiarlo</span><span>${esc(c.instituciones)}</span></div>
+      <div class="sug-card-row"><span>📈 Empleabilidad (referencial)</span><span>${esc(c.empleabilidad)}</span></div>
+      <div class="sug-card-row"><span>💰 Ingreso (referencial)</span><span>${esc(c.sueldo)}</span></div>
+      <div class="sug-card-row"><span>⏳ Duración</span><span>${esc(c.duracion)}</span></div>
+    </div>`).join('');
+
   document.getElementById('modal-body').innerHTML = `
     <div class="fs">
       <div class="fs-title">📊 Hitos Académicos — NEM & Ranking</div>
@@ -882,13 +972,13 @@ function renderModalBody(s, idx) {
         <div class="fi"><span class="fi-lbl">Ranking${override && override.ranking ? ' (actualizado)' : ' (hasta III°)'}</span><span class="fi-val">${rankFinal ? Math.round(rankFinal) : '—'}</span></div>
       </div>
       <div class="trend-wrap">
-        <div class="trend-label">Trayectoria anual de calificaciones ${override ? '' : '· * estimación preliminar registrada en la ficha, sin confirmar'}</div>
-        <div class="trend-bars">${bars}${estBar}</div>
+        <div class="trend-label">Trayectoria I° a III° Medio</div>
+        <div class="trend-bars">${bars}${ivBar}</div>
         <div class="trend-note">${trendNote}</div>
       </div>
-      <button class="calc-toggle" onclick="toggleCalc(${idx})">🧮 ${override ? 'Editar' : 'Actualizar'} promedio y puntajes de IV° Medio</button>
+      <button class="calc-toggle" onclick="toggleCalc(${idx})">🧮 ${override ? 'Editar' : 'Simular'} promedio y puntajes de IV° Medio</button>
       <div class="calc-box${override ? '' : ''}" id="calc-box-${idx}">
-        <p>Complétalo junto al estudiante cuando ya tengan el promedio real de IV° Medio, y si ya simularon el puntaje en la Plataforma Pedro de Valdivia o en demre.cl, regístrenlo aquí también. Esto reemplaza la estimación preliminar y queda guardado en este computador.</p>
+        <p>Complétalo junto al estudiante cuando ya tengan el promedio real de IV° Medio, y si ya simularon el puntaje en la Plataforma Pedro de Valdivia o en demre.cl, regístrenlo aquí también. Queda guardado en este computador.</p>
         <div class="calc-fields">
           <div class="calc-field"><label>Promedio IV° Medio</label><input type="text" inputmode="decimal" id="ov-prom-${idx}" placeholder="Ej: 6.2" value="${override ? override.promedio_iv : ''}"></div>
           <div class="calc-field"><label>Puntaje NEM (opcional)</label><input type="number" id="ov-nem-${idx}" placeholder="Ej: 780" value="${override && override.nem ? override.nem : ''}"></div>
@@ -911,6 +1001,16 @@ function renderModalBody(s, idx) {
       </div>
       <div class="fi-lbl" style="margin-bottom:6px">Carreras de interés declaradas</div>
       <div class="careers-wrap">${careersHTML}</div>
+      ${esIndeciso ? `
+      <button class="calc-toggle" onclick="toggleSugerenciasBox(${idx})">🧭 Sugerencias vocacionales (según sus gustos)</button>
+      <div class="sug-box${perfilGuardado.length ? ' open' : ''}" id="sug-box-${idx}">
+        <p>Marca junto al estudiante lo que más le gusta o se le da bien, y te mostramos algunas carreras afines con datos referenciales de empleabilidad e ingreso (mifuturo.cl / DEMRE). Son solo un punto de partida para conversar — las cifras exactas y actualizadas siempre se confirman en <strong>mifuturo.cl</strong> y <strong>demre.cl</strong>.</p>
+        <div class="sug-tags" id="sug-tags-${idx}">${sugTagsHTML}</div>
+        <button class="calc-save" onclick="generarSugerencias(${idx})">Ver sugerencias</button>
+        <div class="sug-resultados-wrap" id="sug-resultados-wrap-${idx}" style="display:${sugerenciasIniciales.length ? 'block' : 'none'}">
+          <div class="sug-resultados" id="sug-resultados-${idx}">${sugerenciasIniHTML}</div>
+        </div>
+      </div>` : ''}
     </div>
 
     <div class="fs">
@@ -1062,6 +1162,89 @@ function sipHeaderHTML(kicker, sub) {
     <div class="plan-kicker">${kicker}</div>
     <div class="plan-sub">${sub}</div>
   </div>`;
+}
+
+/* ═══════════════ SUGERENCIAS VOCACIONALES (estudiantes "Indeciso") ═══════════════
+   Banco curado de carreras con cifras REFERENCIALES de empleabilidad/ingresos
+   (rangos aproximados basados en reportes de mifuturo.cl y DEMRE). Los montos
+   exactos cambian cada año — siempre hay que verificarlos en mifuturo.cl y
+   demre.cl antes de tomar una decisión; por eso cada tarjeta lo recuerda. */
+const PERFILES_VOCACIONALES = [
+  { tag: 'ayudar', label: '🩺 Ayudar y cuidar personas' },
+  { tag: 'numeros', label: '🔢 Números, lógica y finanzas' },
+  { tag: 'tecnologia', label: '💻 Tecnología y programación' },
+  { tag: 'arte', label: '🎨 Arte, diseño y creatividad' },
+  { tag: 'enseñar', label: '📚 Enseñar y formar a otros' },
+  { tag: 'naturaleza', label: '🌱 Naturaleza, animales y ciencia' },
+  { tag: 'negocios', label: '📈 Negocios y liderazgo' },
+  { tag: 'construir', label: '🏗️ Construir, diseñar y resolver problemas' },
+  { tag: 'comunicar', label: '🎤 Comunicar e informar' },
+  { tag: 'tecnico', label: '🔧 Trabajo técnico y entrar rápido a trabajar' },
+  { tag: 'orden', label: '🛡️ Seguridad, orden y disciplina' },
+  { tag: 'deporte', label: '🏃 Deporte y actividad física' },
+];
+
+const CAREER_BANK = [
+  { nombre: 'Enfermería', tags: ['ayudar'], instituciones: 'U. de Chile, Católica, Usach, Andrés Bello', empleabilidad: '85–93% al 1er año', sueldo: '$900.000 – $1.300.000', duracion: '5 años' },
+  { nombre: 'Kinesiología', tags: ['ayudar','deporte'], instituciones: 'Católica, Usach, U. de Chile', empleabilidad: '75–88% al 1er año', sueldo: '$1.000.000 – $1.500.000', duracion: '5 años' },
+  { nombre: 'Terapia Ocupacional', tags: ['ayudar'], instituciones: 'Católica, Usach, U. de Chile', empleabilidad: '70–86% al 1er año', sueldo: '$900.000 – $1.400.000', duracion: '4-5 años' },
+  { nombre: 'Técnico en Enfermería', tags: ['ayudar','tecnico'], instituciones: 'INACAP, DUOC UC, AIEP', empleabilidad: '80–90% al 1er año', sueldo: '$500.000 – $750.000', duracion: '2 años' },
+  { nombre: 'Ingeniería Comercial', tags: ['numeros','negocios'], instituciones: 'U. de Chile, Católica, Usach, UAI', empleabilidad: '88–96% al 1er año', sueldo: '$1.400.000 – $2.200.000', duracion: '5 años' },
+  { nombre: 'Contador Auditor', tags: ['numeros','negocios'], instituciones: 'Usach, U. de Chile, INACAP', empleabilidad: '85–94% al 1er año', sueldo: '$900.000 – $1.400.000', duracion: '4-5 años' },
+  { nombre: 'Ingeniería en Informática / Civil Informática', tags: ['tecnologia','numeros'], instituciones: 'U. de Chile, USM, Usach, U. Andrés Bello', empleabilidad: '90–97% al 1er año', sueldo: '$1.300.000 – $2.100.000', duracion: '5-6 años' },
+  { nombre: 'Analista Programador (técnico)', tags: ['tecnologia','tecnico'], instituciones: 'DUOC UC, INACAP', empleabilidad: '85–92% al 1er año', sueldo: '$700.000 – $1.100.000', duracion: '2-2,5 años' },
+  { nombre: 'Diseño Gráfico', tags: ['arte'], instituciones: 'DUOC UC, U. Mayor, UDLA, Instituto ARCOS', empleabilidad: '70–85% al 1er año', sueldo: '$700.000 – $1.100.000', duracion: '4 años' },
+  { nombre: 'Animación Digital', tags: ['arte','tecnologia'], instituciones: 'DUOC UC, INACAP, AIEP, UDLA', empleabilidad: '65–80% al 1er año', sueldo: '$700.000 – $1.200.000', duracion: '2,5-4 años' },
+  { nombre: 'Arquitectura', tags: ['arte','construir'], instituciones: 'U. de Chile, Católica, U. Central', empleabilidad: '70–85% al 1er año', sueldo: '$900.000 – $1.500.000', duracion: '6 años' },
+  { nombre: 'Pedagogía en Educación Básica', tags: ['enseñar'], instituciones: 'UMCE, U. Alberto Hurtado, U. de Chile', empleabilidad: '85–93% al 1er año', sueldo: '$800.000 – $1.100.000', duracion: '4-5 años' },
+  { nombre: 'Pedagogía en Inglés', tags: ['enseñar','comunicar'], instituciones: 'UMCE, UDP, USACH', empleabilidad: '80–90% al 1er año', sueldo: '$800.000 – $1.200.000', duracion: '4-5 años' },
+  { nombre: 'Educación Física', tags: ['enseñar','deporte'], instituciones: 'U. de Chile, UMCE, Usach', empleabilidad: '78–88% al 1er año', sueldo: '$750.000 – $1.100.000', duracion: '4-5 años' },
+  { nombre: 'Medicina Veterinaria', tags: ['naturaleza','ayudar'], instituciones: 'U. de Chile, U. Austral, Sto. Tomás', empleabilidad: '75–90% al 1er año', sueldo: '$800.000 – $1.400.000', duracion: '5-6 años' },
+  { nombre: 'Agronomía', tags: ['naturaleza','construir'], instituciones: 'U. de Chile, Católica, Usach', empleabilidad: '80–90% al 1er año', sueldo: '$1.000.000 – $1.500.000', duracion: '5 años' },
+  { nombre: 'Ingeniería Ambiental', tags: ['naturaleza','numeros'], instituciones: 'Usach, U. de Chile, UTFSM', empleabilidad: '75–88% al 1er año', sueldo: '$1.000.000 – $1.600.000', duracion: '5 años' },
+  { nombre: 'Ingeniería Civil', tags: ['construir','numeros'], instituciones: 'U. de Chile, Católica, USM', empleabilidad: '88–96% al 1er año', sueldo: '$1.400.000 – $2.200.000', duracion: '6 años' },
+  { nombre: 'Técnico en Construcción / Edificación', tags: ['construir','tecnico'], instituciones: 'INACAP, DUOC UC', empleabilidad: '80–90% al 1er año', sueldo: '$650.000 – $1.000.000', duracion: '2-2,5 años' },
+  { nombre: 'Periodismo', tags: ['comunicar','arte'], instituciones: 'U. de Chile, Católica, UDP', empleabilidad: '65–80% al 1er año', sueldo: '$700.000 – $1.100.000', duracion: '5 años' },
+  { nombre: 'Comunicación Audiovisual', tags: ['comunicar','arte','tecnologia'], instituciones: 'UDP, U. Mayor, DUOC UC', empleabilidad: '65–80% al 1er año', sueldo: '$700.000 – $1.100.000', duracion: '4 años' },
+  { nombre: 'Técnico en Administración', tags: ['negocios','tecnico'], instituciones: 'INACAP, DUOC UC, AIEP', empleabilidad: '78–88% al 1er año', sueldo: '$550.000 – $850.000', duracion: '2 años' },
+  { nombre: 'Técnico en Sonido y Grabación', tags: ['arte','tecnico'], instituciones: 'DUOC UC, AIEP', empleabilidad: '70–82% al 1er año', sueldo: '$600.000 – $950.000', duracion: '2 años' },
+  { nombre: 'Ingeniería en Prevención de Riesgos', tags: ['orden','numeros'], instituciones: 'Usach, INACAP, U. Central', empleabilidad: '82–92% al 1er año', sueldo: '$900.000 – $1.400.000', duracion: '4-5 años' },
+  { nombre: 'PDI / Carabineros (formación policial)', tags: ['orden','deporte'], instituciones: 'Escuela de Investigaciones Policiales, Escuela de Suboficiales', empleabilidad: 'Ingreso directo a la institución al egresar', sueldo: 'Escala institucional + beneficios', duracion: '2-4 años' },
+  { nombre: 'Química y Farmacia', tags: ['ayudar','numeros'], instituciones: 'U. de Chile, Católica, Usach, U. Austral', empleabilidad: '95–100% al 1er año', sueldo: '$1.700.000 – $2.300.000', duracion: '5 años' },
+];
+
+function sugerirCarreras(tagsSeleccionados) {
+  const scored = CAREER_BANK.map(c => ({
+    ...c,
+    score: c.tags.filter(t => tagsSeleccionados.includes(t)).length,
+  })).filter(c => c.score > 0);
+  scored.sort((a, b) => b.score - a.score);
+  return scored.slice(0, 6);
+}
+
+function toggleSugerenciasBox(idx) {
+  document.getElementById('sug-box-' + idx).classList.toggle('open');
+}
+function getPerfilTags(s, idx) {
+  try { return JSON.parse(localStorage.getItem('perfilVocacional_' + studentKey(s, idx)) || '[]'); } catch(e) { return []; }
+}
+function generarSugerencias(idx) {
+  const s = STUDENTS[idx];
+  const checked = Array.from(document.querySelectorAll(`#sug-tags-${idx} input:checked`)).map(el => el.value);
+  if (!checked.length) { alert('Marca al menos un gusto o preferencia junto al estudiante.'); return; }
+  localStorage.setItem('perfilVocacional_' + studentKey(s, idx), JSON.stringify(checked));
+  const sugs = sugerirCarreras(checked);
+  const out = document.getElementById('sug-resultados-' + idx);
+  out.innerHTML = sugs.length ? sugs.map(c => `
+    <div class="sug-card">
+      <div class="sug-card-name">${esc(c.nombre)}</div>
+      <div class="sug-card-row"><span>🏫 Dónde estudiarlo</span><span>${esc(c.instituciones)}</span></div>
+      <div class="sug-card-row"><span>📈 Empleabilidad (referencial)</span><span>${esc(c.empleabilidad)}</span></div>
+      <div class="sug-card-row"><span>💰 Ingreso (referencial)</span><span>${esc(c.sueldo)}</span></div>
+      <div class="sug-card-row"><span>⏳ Duración</span><span>${esc(c.duracion)}</span></div>
+    </div>`).join('')
+    : '<p style="font-size:0.78rem;color:var(--muted)">No encontramos coincidencias — prueba marcando otra combinación de gustos.</p>';
+  document.getElementById('sug-resultados-wrap-' + idx).style.display = 'block';
 }
 
 const CALENDARIO_2027 = [
@@ -1344,6 +1527,58 @@ function imprimirTareasEstudiante(idx) {
 function closeModal() { document.getElementById('modalBg').classList.remove('open'); }
 function closeModalOutside(e) { if (e.target === document.getElementById('modalBg')) closeModal(); }
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+/* ═══════════════ SESIÓN — rama de ASE-IA ═══════════════
+   Reutiliza la sesión ya iniciada en ase-ia.html si viene del mismo navegador
+   y dominio (localStorage compartido en aseia.cl), para no pedir el correo de
+   nuevo. Si se abre esta página directo, pide el correo institucional @sip.cl. */
+const SESSION_MAX_AGE_MS = 12 * 60 * 60 * 1000; // 12 horas
+let CURRENT_USER = null;
+
+function readSession() {
+  try {
+    const s = JSON.parse(localStorage.getItem('aseiaSession') || 'null');
+    if (!s || !s.email) return null;
+    if (Date.now() - (s.ts || 0) > SESSION_MAX_AGE_MS) return null;
+    return s;
+  } catch(e) { return null; }
+}
+
+function aplicarSesion(s) {
+  CURRENT_USER = s;
+  document.body.classList.remove('gate-open');
+  document.getElementById('sessionBadge').style.display = 'flex';
+  document.getElementById('sessionEmail').textContent = s.email;
+}
+
+function submitLogin(e) {
+  e.preventDefault();
+  const email = document.getElementById('loginEmail').value.trim().toLowerCase();
+  const err = document.getElementById('loginErr');
+  if (!/^[^\s@]+@sip\.cl$/.test(email)) {
+    err.textContent = 'Esta herramienta es solo para el equipo del colegio: usa tu correo @sip.cl.';
+    return false;
+  }
+  err.textContent = '';
+  const session = { role: 'teacher', email, ts: Date.now() };
+  try { localStorage.setItem('aseiaSession', JSON.stringify(session)); } catch(e2) {}
+  aplicarSesion(session);
+  return false;
+}
+
+function cerrarSesion() {
+  try { localStorage.removeItem('aseiaSession'); } catch(e) {}
+  CURRENT_USER = null;
+  document.body.classList.add('gate-open');
+  document.getElementById('sessionBadge').style.display = 'none';
+  document.getElementById('loginEmail').value = '';
+}
+
+(function initSesion() {
+  const s = readSession();
+  if (s && s.email) { aplicarSesion(s); }
+  else { document.body.classList.add('gate-open'); }
+})();
 
 document.getElementById('header-count').textContent =
   `Sistema de Fichas de Perfil Estudiantil · IV° Medio 2026 · ${STUDENTS.length} estudiantes · IV°A, IV°B, IV°C`;
