@@ -1540,6 +1540,10 @@ function readSession() {
     const s = JSON.parse(localStorage.getItem('aseiaSession') || 'null');
     if (!s || !s.email) return null;
     if (Date.now() - (s.ts || 0) > SESSION_MAX_AGE_MS) return null;
+    // Esta ficha tiene datos de estudiantes: solo docentes/administrativos, nunca
+    // una sesión de estudiante o apoderado abierta en ASE-IA.
+    if (s.role !== 'teacher' && s.role !== 'admin') return null;
+    if (!/@sip\.cl$/.test(s.email.toLowerCase())) return null;
     return s;
   } catch(e) { return null; }
 }
