@@ -56,24 +56,45 @@ vuelve automáticamente al modo local.
 
 ---
 
-## 🎓 Conectar el botón "Generar Ficha SIP con IA" (fichas de tutoría)
+## 🎓 Login y botón "Generar análisis completo con IA" (fichas de tutoría)
 
-Mismo proceso, con su propio Worker (así cada herramienta tiene su propia clave
-y sus propios límites, aunque puedes reutilizar la misma cuenta de Cloudflare
-y la misma API key):
+**Fichas de Tutoría ya no tiene su propio login ni su propio Worker.** Es una
+rama de ASE-IA: reutiliza el mismo `GOOGLE_CLIENT_ID` y el mismo Worker
+(`ase-ia-worker.js`) que usa `ase-ia.html`, así no hay que crear nada nuevo en
+Google Cloud ni en Cloudflare.
 
-1. Crea un Worker nuevo (ej. **`fichas-tutoria`**) y pega el contenido de
-   [`fichas-worker.js`](./fichas-worker.js).
-2. Agrega el secreto `ANTHROPIC_API_KEY` igual que arriba. Deploy.
-3. Copia la URL del Worker y pégala en [`fichas_JJP_v3_2.html`](./fichas_JJP_v3_2.html),
-   en la constante:
-   ```js
-   const AI_PROXY_URL = "";
-   ```
-   reemplazándola por `"https://fichas-tutoria.TU-CUENTA.workers.dev"`.
+- **Login**: `fichas_JJP_v3_2.html` muestra el botón real de "Iniciar sesión
+  con Google" (Google Identity Services) y verifica la cuenta llamando a
+  `${ASE_IA_API_URL}?resource=me` — el mismo endpoint que usa ASE-IA. Solo
+  entra el equipo del colegio (`role: staff` o `dev`).
+- **Generar ficha con IA**: el botón llama a `${ASE_IA_API_URL}?resource=crear`
+  del mismo Worker, mandando el `credential` de Google (para verificar que
+  quien pide el análisis sigue siendo staff) junto con el prompt.
+- Si se abre `fichas_JJP_v3_2.html` **desde ASE-IA** (mismo navegador, mismo
+  dominio `aseia.cl`), no hay que volver a iniciar sesión: la sesión se
+  comparte vía `localStorage` (`aseiaSession`).
+- Si se abre **directo**, pide iniciar sesión con Google igual que ASE-IA.
 
-Mientras `AI_PROXY_URL` esté vacía, el botón "Generar Ficha SIP con IA" muestra
-un aviso claro en vez de fallar en silencio.
+Las constantes viven al inicio del bloque de sesión en `fichas_JJP_v3_2.html`:
+
+```js
+const GOOGLE_CLIENT_ID = "195849212680-....apps.googleusercontent.com";
+const ASE_IA_API_URL = "https://ase-ia.TU-CUENTA.workers.dev";
+```
+
+Si alguna vez publicas Fichas de Tutoría en un dominio nuevo (además de
+`aseia.cl`), agrégalo también a `ALLOWED_ORIGINS` en `ase-ia-worker.js` (ver
+sección de Seguridad más abajo) o el Worker rechazará las peticiones por CORS.
+
+### Alternativa: Worker propio y separado
+
+Si en algún momento prefieres que Fichas de Tutoría tenga su propia clave y
+sus propios límites (en vez de compartir el Worker de ASE-IA), puedes volver
+al esquema anterior con [`fichas-worker.js`](./fichas-worker.js): créalo como
+un Worker nuevo, agrega el secreto `ANTHROPIC_API_KEY` y ajusta el fetch del
+botón "Generar análisis completo con IA" en `fichas_JJP_v3_2.html` para que
+apunte a esa URL en vez de `ASE_IA_API_URL`. No es necesario para el
+funcionamiento normal — el archivo se mantiene solo por si se necesita.
 
 ---
 
