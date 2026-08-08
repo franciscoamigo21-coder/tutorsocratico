@@ -23,6 +23,8 @@ const ALLOWED_ORIGINS = [
   "https://franciscoamigo21-coder.github.io",
   "https://www.josejoaquinprieto.cl",
   "https://josejoaquinprieto.cl",
+  "https://aseia.cl",
+  "https://www.aseia.cl",
 ];
 
 const MODEL = "claude-sonnet-4-6";
