@@ -720,8 +720,14 @@ function quitarDeGrupo(idx) {
   setGrupo(getGrupo().filter(k => k !== key));
   renderGrupoLista();
 }
-function toggleMiGrupo() {
-  const grupo = getGrupo();
+async function toggleMiGrupo() {
+  let grupo = getGrupo();
+  if (!grupo.length) {
+    // puede que el grupo esté guardado en la nube pero este navegador
+    // todavía no lo haya bajado — lo intentamos antes de avisar que no hay nada.
+    await cargarGrupoNube();
+    grupo = getGrupo();
+  }
   if (!grupo.length) { alert('Todavía no has creado tus tutorías. Usa el botón "Mis Tutorías" para elegir a tus tutoriados.'); return; }
   showMiGrupo = !showMiGrupo;
   document.getElementById('btn-mi-grupo').classList.toggle('active', showMiGrupo);
@@ -1644,6 +1650,7 @@ function aplicarSesion(s) {
   document.body.classList.remove('gate-open');
   document.getElementById('sessionBadge').style.display = 'flex';
   document.getElementById('sessionEmail').textContent = s.email;
+  cargarGrupoNube(); // trae "Mis Tutorías" de la nube apenas hay sesión, sin esperar a que abran el modal
 }
 
 function cerrarSesion() {
