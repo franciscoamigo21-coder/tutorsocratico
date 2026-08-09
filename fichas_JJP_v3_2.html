@@ -950,11 +950,14 @@ function agregarAvance(idx) {
   const cambioDet = (document.getElementById('av-cambio-det-' + idx).value || '').trim();
   const prefSiNo = document.getElementById('av-pref-' + idx).value;
   const prefDet = (document.getElementById('av-pref-det-' + idx).value || '').trim();
+  const claveSiNo = document.getElementById('av-clave-' + idx).value;
+  const claveDet = (document.getElementById('av-clave-det-' + idx).value || '').trim();
   const fuasSiNo = document.getElementById('av-fuas-' + idx).value;
   const fuasDet = (document.getElementById('av-fuas-det-' + idx).value || '').trim();
   const seguimiento = (document.getElementById('av-seguimiento-' + idx).value || '').trim();
   const antecedentes = (document.getElementById('av-antecedentes-' + idx).value || '').trim();
-  if (!avance && !mallasDet && !cambioDet && !prefDet && !fuasDet && !seguimiento && !antecedentes) {
+  const algunSi = [mallasSiNo, cambioSiNo, prefSiNo, claveSiNo, fuasSiNo].includes('si');
+  if (!avance && !mallasDet && !cambioDet && !prefDet && !claveDet && !fuasDet && !seguimiento && !antecedentes && !algunSi) {
     alert('Escribe al menos un dato antes de guardar (el avance, un detalle, o nuevos antecedentes).');
     return;
   }
@@ -968,6 +971,8 @@ function agregarAvance(idx) {
     cambio_carrera_detalle: cambioDet,
     preferencia_carrera: prefSiNo,
     preferencia_carrera_detalle: prefDet,
+    clave_unica: claveSiNo,
+    clave_unica_detalle: claveDet,
     avance_fuas: fuasSiNo,
     avance_fuas_detalle: fuasDet,
     seguimiento_especial: seguimiento,
@@ -1191,6 +1196,7 @@ function renderModalBody(s, idx) {
     if (a.mallas_revisadas === 'si') filas.push(`<div class="avance-chip">📋 Revisión de mallas: Sí${a.mallas_detalle ? ' — ' + esc(a.mallas_detalle) : ''}</div>`);
     if (a.cambio_carrera === 'si') filas.push(`<div class="avance-chip cambio">🔄 Cambio de carrera: Sí${a.cambio_carrera_detalle ? ' — ' + esc(a.cambio_carrera_detalle) : ''}</div>`);
     if (a.preferencia_carrera === 'si') filas.push(`<div class="avance-chip cambio">🎯 Manifestó preferencia de carrera${a.preferencia_carrera_detalle ? ': ' + esc(a.preferencia_carrera_detalle) : ''}</div>`);
+    if (a.clave_unica === 'si') filas.push(`<div class="avance-chip">🔑 Sacó su Clave Única${a.clave_unica_detalle ? ' — ' + esc(a.clave_unica_detalle) : ''}</div>`);
     if (a.avance_fuas === 'si') filas.push(`<div class="avance-chip">💰 Avanzó en el FUAS${a.avance_fuas_detalle ? ' — ' + esc(a.avance_fuas_detalle) : ''}</div>`);
     if (a.seguimiento_especial) filas.push(`<div class="avance-chip cambio">👁️ Seguimiento: ${esc(a.seguimiento_especial)}</div>`);
     if (a.nuevos_antecedentes) filas.push(`<div class="avance-chip">🆕 ${esc(a.nuevos_antecedentes)}</div>`);
@@ -1290,6 +1296,13 @@ function renderModalBody(s, idx) {
             <select id="av-pref-${idx}"><option value="no">No</option><option value="si">Sí</option></select>
           </div>
           <input type="text" id="av-pref-det-${idx}" placeholder="Ej: Enfermería en la UDD (se agrega sola a Carreras de interés)">
+        </div>
+        <div class="avance-siNo-row">
+          <div>
+            <label class="avance-lbl">¿Sacó su Clave Única?</label>
+            <select id="av-clave-${idx}"><option value="no">No</option><option value="si">Sí</option></select>
+          </div>
+          <input type="text" id="av-clave-det-${idx}" placeholder="Detalle (opcional)">
         </div>
         <div class="avance-siNo-row">
           <div>
@@ -1790,6 +1803,7 @@ function contextoEstudianteIA(s, idx) {
       a.mallas_revisadas === 'si' && ('Revisó mallas curriculares' + (a.mallas_detalle ? ': ' + a.mallas_detalle : '')),
       a.cambio_carrera === 'si' && ('Cambio de carrera' + (a.cambio_carrera_detalle ? ': ' + a.cambio_carrera_detalle : '')),
       a.preferencia_carrera === 'si' && ('Manifestó preferencia de carrera' + (a.preferencia_carrera_detalle ? ': ' + a.preferencia_carrera_detalle : '')),
+      a.clave_unica === 'si' && ('Sacó su Clave Única' + (a.clave_unica_detalle ? ': ' + a.clave_unica_detalle : '')),
       a.avance_fuas === 'si' && ('Avanzó en el FUAS' + (a.avance_fuas_detalle ? ': ' + a.avance_fuas_detalle : '')),
       a.seguimiento_especial && ('Seguimiento especial: ' + a.seguimiento_especial),
       a.nuevos_antecedentes,
