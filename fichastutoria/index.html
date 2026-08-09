@@ -164,9 +164,9 @@ body.gate-open .login-gate { display: flex; }
 .search-wrap input { width: 100%; padding-left: 36px; }
 .search-icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--muted); font-size: 0.9rem; }
 .btn-filter {
-  background: var(--sip-navy);
-  color: white;
-  border: none;
+  background: var(--white);
+  color: var(--sip-navy);
+  border: 1.5px solid var(--border);
   padding: 6px 12px;
   border-radius: 5px;
   font-family: 'Montserrat', sans-serif;
@@ -174,10 +174,11 @@ body.gate-open .login-gate { display: flex; }
   font-weight: 700;
   cursor: pointer;
   letter-spacing: 0.03em;
-  transition: background 0.2s;
+  transition: background 0.2s, border-color 0.2s, color 0.2s;
 }
-.btn-filter:hover { background: var(--sip-navy-mid); }
-.btn-filter.active { background: var(--sip-gold); color: var(--sip-navy); }
+.btn-filter:hover { border-color: var(--sip-navy); background: var(--paper); }
+.btn-filter.active { background: var(--sip-navy); color: white; border-color: var(--sip-navy); }
+.btn-filter.active:hover { background: var(--sip-navy-mid); }
 .count-label { font-size: 0.78rem; color: var(--muted); font-weight: 600; margin-left: auto; }
 
 /* ─── TABS ─── */
@@ -467,7 +468,6 @@ body.gate-open .login-gate { display: flex; }
 .grupo-btn-add { background: var(--sip-navy); color: white; }
 .grupo-btn-add:hover { background: var(--sip-navy-mid); }
 .grupo-btn-added { background: var(--success-bg); color: var(--success); }
-.btn-filter#btn-mi-grupo.active { background: var(--sip-gold); color: var(--sip-navy); }
 
 /* careers */
 .careers-wrap { display: flex; flex-wrap: wrap; gap: 5px; }
@@ -876,11 +876,10 @@ function renderGrid() {
     const idx = STUDENTS.indexOf(s);
     const p = s.notas.promedio;
     const ov = getOverride(s, idx);
-    const alertDot = isAlerta(s) ? ' ⚠' : '';
     return `
     <div class="card" onclick="openModal(${idx})">
       <div class="card-header">
-        <span class="card-curso">📚 ${s.curso}${alertDot}</span>
+        <span class="card-curso">📚 ${s.curso}</span>
       </div>
       <div class="card-body">
         <div class="card-name">${s.nombre}</div>
@@ -899,7 +898,6 @@ function renderGrid() {
           ${s.area_interes ? `<span class="tag ${areaTagClass(s.area_interes)}">${s.area_interes}</span>` : ''}
           ${s.pueblo_originario && s.pueblo_originario.toLowerCase() !== '' && s.pueblo_originario.toLowerCase() !== 'nan' ? '<span class="tag pueblo">🪶 Pueblo originario</span>' : ''}
           ${s.carreras.length ? `<span class="tag carreras">${s.carreras.length} carrera${s.carreras.length>1?'s':''}</span>` : ''}
-          ${isAlerta(s) ? '<span class="tag" style="background:#fff2d6;border-color:#f5b301;color:#8a5a00">⚠ Alerta</span>' : ''}
         </div>
       </div>
     </div>`;
