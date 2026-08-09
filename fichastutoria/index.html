@@ -333,8 +333,6 @@ body.gate-open .login-gate { display: flex; }
 .plan-card-btn:hover { background: var(--sip-navy-mid); }
 .plan-card-btn.gold { background: var(--sip-gold); color: var(--sip-navy); }
 .plan-card-btn.gold:hover { background: #d99e00; color: white; }
-.link-vincular { display: block; width: 100%; background: none; border: none; color: var(--sip-navy-mid); font-family: 'Montserrat', sans-serif; font-size: 0.66rem; font-weight: 700; cursor: pointer; text-decoration: underline; margin-top: 6px; padding: 0; }
-.link-vincular:hover { color: var(--sip-navy); }
 
 /* ─── MODAL ─── */
 .modal-bg {
@@ -1134,16 +1132,12 @@ function botonGenerarPlanHTML(idx, tipo) {
     return `<button class="plan-card-btn" onclick="event.stopPropagation();event.preventDefault();${cfg.fn}(${idx}, this)">${cfg.listo ? '✅ Plan generado — regenerar' : cfg.labelIA}</button>
       <div id="${cfg.statusId}" style="font-size:0.62rem;color:var(--muted);margin-top:4px;min-height:1.4em"></div>`;
   }
+  // Sin cuenta vinculada NO se ofrece ninguna forma de generar el informe
+  // (nunca uno "básico" sin IA) — solo se puede vincular la cuenta primero.
   const gbtnId = 'vincular-gbtn-' + tipo + '-' + idx;
-  return `<button class="plan-card-btn" onclick="event.stopPropagation();${cfg.imprimirFn}(${idx})">📄 Generar informe básico</button>
-    <button type="button" class="link-vincular" onclick="event.stopPropagation();event.preventDefault();mostrarVincularCuenta('${gbtnId}',${idx})">🔗 Vincular cuenta de Google para generar con IA</button>
-    <div class="g-btn-box" id="${gbtnId}" style="display:none;margin-top:6px"></div>
-    <div id="${cfg.statusId}" style="font-size:0.62rem;color:var(--muted);margin-top:4px;min-height:1.4em"></div>`;
-}
-function mostrarVincularCuenta(boxId, idx) {
-  const box = document.getElementById(boxId);
-  if (box) box.style.display = 'flex';
-  renderInlineGoogleButton(boxId, () => renderModalBody(STUDENTS[idx], idx));
+  setTimeout(() => renderInlineGoogleButton(gbtnId, () => renderModalBody(STUDENTS[idx], idx)), 0);
+  return `<p style="font-size:0.72rem;color:var(--sip-red);margin-bottom:8px">Vincula tu cuenta de Google para generar este informe (se genera siempre con IA).</p>
+    <div class="g-btn-box" id="${gbtnId}"></div>`;
 }
 
 function renderModalBody(s, idx) {
