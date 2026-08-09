@@ -2055,6 +2055,14 @@ function gmailComposeUrl(subject,body,to){
     +"&su="+encodeURIComponent(subject||"")
     +"&body="+encodeURIComponent(body||"");
 }
+/* En celular conviene abrir la APP de correo (Gmail) con un enlace mailto:,
+   en vez de la versión web que pide iniciar sesión. */
+function isMobileDev(){ return /Android|iPhone|iPad|iPod|Mobile|Silk/i.test(navigator.userAgent||""); }
+function toMailto(gurl){
+  try{ const u=new URL(gurl); const to=u.searchParams.get("to")||"", su=u.searchParams.get("su")||"", bo=u.searchParams.get("body")||"";
+    return "mailto:"+to+"?subject="+encodeURIComponent(su)+"&body="+encodeURIComponent(bo);
+  }catch(e){ return gurl; }
+}
 /* ---- Planilla de Matrículas: lectura del CSV publicado (opcional) ---- */
 let STUDENTS=[];
 function parseCSV(text){
@@ -2545,8 +2553,10 @@ function add(text,who,extra){
   if(who==="bot") renderRich(msg,text); else msg.textContent=text;
   if(extra){
     if(extra.cards&&extra.cards.length)extra.cards.forEach(c=>msg.appendChild(listCardEl(c)));
-    if(extra.mail){const a=document.createElement("a");a.className="mailbtn";a.href=extra.mail.url;
-      a.target="_blank";a.rel="noopener";a.innerHTML=GMAIL_ICON+"<span>Abrir Gmail y redactar</span>";msg.appendChild(a);}
+    if(extra.mail){const a=document.createElement("a");a.className="mailbtn";const mob=isMobileDev();
+      a.href=mob?toMailto(extra.mail.url):extra.mail.url;
+      if(!mob){a.target="_blank";a.rel="noopener";}
+      a.innerHTML=GMAIL_ICON+"<span>"+(mob?"Abrir en tu correo y enviar":"Abrir Gmail y redactar")+"</span>";msg.appendChild(a);}
     if(extra.docCites&&extra.docCites.length){const box=el("div","srccards");
       extra.docCites.forEach(c=>box.appendChild(srcCardEl(c)));msg.appendChild(box);}
   }
@@ -2742,9 +2752,6 @@ function avatarInto(elId,photo,fallback){
 function enter(role,email,name,photo,prof){
   ROLE=role;convo.length=0;log.innerHTML="";
   CURRENT={role,email:email||"",name:name||"",photo:photo||"",prof:prof||null};
-  // Sesión compartida con otras apps de ASE-IA en el mismo dominio (ej. Fichas de
-  // Tutoría en /fichastutoria): evita pedir el correo de nuevo en este navegador.
-  try { localStorage.setItem('aseiaSession', JSON.stringify({ role, email: email||'', name: name||'', ts: Date.now() })); } catch(_) {}
   const disp=niceName(email,name);
   document.getElementById("whoLabel").textContent=disp;
   document.getElementById("mailLabel").textContent=email||"";
@@ -2758,11 +2765,7 @@ function enter(role,email,name,photo,prof){
   history.replaceState({screen:"app"},"");  // reemplaza 'login': el botón atrás vuelve a elegir perfil
   showScreen("app");
 }
-function showGate(){
-  closeProfileMenu();
-  try { localStorage.removeItem('aseiaSession'); } catch(_) {}
-  if(history.state&&history.state.screen==="app") history.back(); else showScreen("gate");
-}
+function showGate(){ closeProfileMenu(); if(history.state&&history.state.screen==="app") history.back(); else showScreen("gate"); }
 document.getElementById("f").addEventListener("submit",e=>{e.preventDefault();ask(document.getElementById("q").value);});
 
 /* ============ PERFIL PERSONALIZADO · apoderado y estudiante ============
@@ -3995,7 +3998,8 @@ function openHelpMail(){
   const subject="Ayuda o requerimiento · ASE-IA"+(who?(" · "+who):"");
   const body="Hola, escribo desde ASE-IA.\n\nMi solicitud o requerimiento es:\n\n\n\nPerfil: "+((LOGIN_INFO[ROLE]||{}).t||ROLE)+"\nCorreo: "+(CURRENT.email||"")+"\n";
   const url=gmailComposeUrl(subject,body,HELP_TO);
-  window.open(url,"_blank","noopener");
+  if(isMobileDev()){ window.location.href=toMailto(url); }
+  else { window.open(url,"_blank","noopener"); }
   aseToast("Ayuda","Te abrimos un correo a Coordinación","Escribe tu requerimiento y pulsa Enviar. Llega a "+HELP_TO+".",8000);
 }
 /* ---- Datos del perfil (se guardan en este dispositivo) ---- */
