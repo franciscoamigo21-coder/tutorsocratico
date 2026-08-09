@@ -333,6 +333,8 @@ body.gate-open .login-gate { display: flex; }
 .plan-card-btn:hover { background: var(--sip-navy-mid); }
 .plan-card-btn.gold { background: var(--sip-gold); color: var(--sip-navy); }
 .plan-card-btn.gold:hover { background: #d99e00; color: white; }
+.link-vincular { display: block; width: 100%; background: none; border: none; color: var(--sip-navy-mid); font-family: 'Montserrat', sans-serif; font-size: 0.66rem; font-weight: 700; cursor: pointer; text-decoration: underline; margin-top: 6px; padding: 0; }
+.link-vincular:hover { color: var(--sip-navy); }
 
 /* ─── MODAL ─── */
 .modal-bg {
@@ -1120,6 +1122,30 @@ function clearOverride(idx) {
   renderModalBody(STUDENTS[idx], idx);
 }
 
+/* Solo se ofrece "generar con IA" si la cuenta de Google ya está
+   confirmada en esta pestaña (GOOGLE_CREDENTIAL) — si no, se ofrece un
+   informe básico instantáneo (sin IA, sin pedir nada) y un enlace aparte
+   para vincular la cuenta y recién ahí generar con IA. */
+function botonGenerarPlanHTML(idx, tipo) {
+  const cfg = tipo === 'docente'
+    ? { fn: 'generarPlanDeAccion', statusId: 'plan-ia-status-' + idx, listo: window.__planIA && window.__planIA[idx], labelIA: '🚀 Generar Plan de Acción', imprimirFn: 'imprimirPlanDocente' }
+    : { fn: 'generarTareasEstudiante', statusId: 'tareas-ia-status-' + idx, listo: window.__tareasIA && window.__tareasIA[idx], labelIA: '🚀 Generar Tareas a Realizar', imprimirFn: 'imprimirTareasEstudiante' };
+  if (GOOGLE_CREDENTIAL) {
+    return `<button class="plan-card-btn" onclick="event.stopPropagation();event.preventDefault();${cfg.fn}(${idx}, this)">${cfg.listo ? '✅ Plan generado — regenerar' : cfg.labelIA}</button>
+      <div id="${cfg.statusId}" style="font-size:0.62rem;color:var(--muted);margin-top:4px;min-height:1.4em"></div>`;
+  }
+  const gbtnId = 'vincular-gbtn-' + tipo + '-' + idx;
+  return `<button class="plan-card-btn" onclick="event.stopPropagation();${cfg.imprimirFn}(${idx})">📄 Generar informe básico</button>
+    <button type="button" class="link-vincular" onclick="event.stopPropagation();event.preventDefault();mostrarVincularCuenta('${gbtnId}',${idx})">🔗 Vincular cuenta de Google para generar con IA</button>
+    <div class="g-btn-box" id="${gbtnId}" style="display:none;margin-top:6px"></div>
+    <div id="${cfg.statusId}" style="font-size:0.62rem;color:var(--muted);margin-top:4px;min-height:1.4em"></div>`;
+}
+function mostrarVincularCuenta(boxId, idx) {
+  const box = document.getElementById(boxId);
+  if (box) box.style.display = 'flex';
+  renderInlineGoogleButton(boxId, () => renderModalBody(STUDENTS[idx], idx));
+}
+
 function renderModalBody(s, idx) {
   const n = s.notas;
   const override = getOverride(s, idx);
@@ -1325,16 +1351,14 @@ function renderModalBody(s, idx) {
         <div class="plan-card">
           <div class="plan-card-icon">🧑‍🏫</div>
           <div class="plan-card-title">Plan de Acción Docente</div>
-          <div class="plan-card-desc">Ficha de seguimiento para el profesor jefe/tutor: datos, alertas y próximos pasos. Genera el diagnóstico con IA y abre el PDF en un solo paso.</div>
-          <button class="plan-card-btn" onclick="event.stopPropagation();event.preventDefault();generarPlanDeAccion(${idx}, this)">${window.__planIA && window.__planIA[idx] ? '✅ Plan generado — regenerar' : '🚀 Generar Plan de Acción'}</button>
-          <div id="plan-ia-status-${idx}" style="font-size:0.62rem;color:var(--muted);margin-top:4px;min-height:1.4em"></div>
+          <div class="plan-card-desc">Ficha de seguimiento para tu tutor/a: datos, alertas y próximos pasos. Genera el diagnóstico con IA y abre el PDF en un solo paso.</div>
+          ${botonGenerarPlanHTML(idx, 'docente')}
         </div>
         <div class="plan-card">
           <div class="plan-card-icon">✅</div>
           <div class="plan-card-title">Tareas a Realizar</div>
           <div class="plan-card-desc">Hoja para el/la estudiante con su checklist paso a paso. Genera con IA y abre el PDF en un solo paso.</div>
-          <button class="plan-card-btn" onclick="event.stopPropagation();event.preventDefault();generarTareasEstudiante(${idx}, this)">${window.__tareasIA && window.__tareasIA[idx] ? '✅ Plan generado — regenerar' : '🚀 Generar Tareas a Realizar'}</button>
-          <div id="tareas-ia-status-${idx}" style="font-size:0.62rem;color:var(--muted);margin-top:4px;min-height:1.4em"></div>
+          ${botonGenerarPlanHTML(idx, 'estudiante')}
         </div>
         <div class="plan-card">
           <div class="plan-card-icon">🎓</div>
@@ -1863,7 +1887,7 @@ async function generarPlanDeAccion(idx, btn) {
   btn.textContent = 'Generando…';
 
   const ctx = contextoEstudianteIA(s, idx);
-  const prompt = `Eres el orientador educativo institucional del Colegio Presidente José Joaquín Prieto (SIP Red de Colegios, Chile). Vas a redactar la sección "Diagnóstico y recomendaciones personalizadas" del Plan de Acción Docente de UN estudiante específico de IV° Medio, de cara a la Admisión 2027. Es para uso interno del profesor/a jefe — sé concreto, profesional y accionable, no genérico.
+  const prompt = `Eres el orientador educativo institucional del Colegio Presidente José Joaquín Prieto (SIP Red de Colegios, Chile). Vas a redactar la sección "Diagnóstico y recomendaciones personalizadas" del Plan de Acción Docente de UN estudiante específico de IV° Medio, de cara a la Admisión 2027. Es para uso interno de su tutor/a — sé concreto, profesional y accionable, no genérico.
 
 DATOS REALES DE ESTE ESTUDIANTE:
 • Nombre: ${s.nombre} — ${s.curso}
@@ -1877,7 +1901,7 @@ DATOS REALES DE ESTE ESTUDIANTE:
 ${ctx.contextoPersonal ? `• Contexto personal registrado por el propio estudiante:\n${ctx.contextoPersonal}` : ''}
 ${ctx.avancesTxt ? `• Registro de avances de tutoría (del más reciente al más antiguo):\n${ctx.avancesTxt}` : ''}
 
-Escribe 3-4 párrafos breves, en español de Chile, tono profesional y cálido, SIN encabezados ni markdown, SIN inventar datos que no están arriba (si falta información, dilo con naturalidad en vez de inventar). Si hay Registro de Avances, dale prioridad: refleja lo último conversado, no lo contradigas. Cubre: (1) lectura de su trayectoria y momento actual, (2) coherencia o brechas entre su perfil vocacional y sus opciones declaradas, (3) 2-3 acciones concretas y específicas para este estudiante en particular (no genéricas) que el profesor jefe puede tomar antes de fin de año, (4) si aplica, un llamado de atención empático sobre algún riesgo o urgencia.`;
+Escribe 3-4 párrafos breves, en español de Chile, tono profesional y cálido, SIN encabezados ni markdown, SIN inventar datos que no están arriba (si falta información, dilo con naturalidad en vez de inventar). Si hay Registro de Avances, dale prioridad: refleja lo último conversado, no lo contradigas. Cubre: (1) lectura de su trayectoria y momento actual, (2) coherencia o brechas entre su perfil vocacional y sus opciones declaradas, (3) 2-3 acciones concretas y específicas para este estudiante en particular (no genéricas) que su tutor/a puede tomar antes de fin de año, (4) si aplica, un llamado de atención empático sobre algún riesgo o urgencia.`;
 
   try {
     const text = await llamarIAContenido(credential, prompt);
