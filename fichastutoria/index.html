@@ -471,6 +471,13 @@ body.gate-open .login-gate { display: flex; }
 
 /* careers */
 .careers-wrap { display: flex; flex-wrap: wrap; gap: 5px; }
+.carrera-tag { display: inline-flex; align-items: center; gap: 5px; }
+.carrera-tag-x { background: none; border: none; color: inherit; opacity: 0.55; cursor: pointer; font-size: 0.68rem; padding: 0; line-height: 1; }
+.carrera-tag-x:hover { opacity: 1; }
+.add-carrera-row { display: flex; gap: 8px; margin-top: 10px; }
+.add-carrera-row input { flex: 1; min-width: 0; padding: 6px 10px; border: 1.5px solid var(--border); border-radius: 5px; font-family: 'Inter', sans-serif; font-size: 0.8rem; }
+.add-carrera-btn { background: var(--white); color: var(--sip-navy); border: 1.5px solid var(--border); padding: 6px 12px; border-radius: 5px; font-family: 'Montserrat', sans-serif; font-size: 0.72rem; font-weight: 700; cursor: pointer; white-space: nowrap; }
+.add-carrera-btn:hover { border-color: var(--sip-navy); background: var(--paper); }
 
 /* AI section */
 .ai-loading { display: flex; align-items: center; gap: 10px; padding: 14px; color: var(--muted); font-size: 0.83rem; font-weight: 500; }
@@ -611,7 +618,8 @@ body.gate-open .login-gate { display: flex; }
   </select>
   <select id="sort" onchange="renderGrid()">
     <option value="nombre">Ordenar: Nombre A–Z</option>
-    <option value="promedio">Ordenar: Promedio ↓</option>
+    <option value="promedio_desc">Ordenar: Promedio más alto</option>
+    <option value="promedio_asc">Ordenar: Promedio más bajo</option>
   </select>
   <button class="btn-filter" id="btn-alert" onclick="toggleAlerta()">⚠ Solo alertas</button>
   <button class="btn-filter" id="btn-mi-grupo" onclick="toggleMiGrupo()">👥 Ver solo mis tutorías</button>
@@ -862,7 +870,8 @@ function renderGrid() {
   });
 
   if (sort === 'nombre') list.sort((a,b) => a.nombre.localeCompare(b.nombre, 'es'));
-  else if (sort === 'promedio') list.sort((a,b) => (b.notas.promedio||0) - (a.notas.promedio||0));
+  else if (sort === 'promedio_desc') list.sort((a,b) => (b.notas.promedio||0) - (a.notas.promedio||0));
+  else if (sort === 'promedio_asc') list.sort((a,b) => (a.notas.promedio||99) - (b.notas.promedio||99));
 
   document.getElementById('count').textContent = `${list.length} estudiante${list.length !== 1?'s':''}`;
 
@@ -876,6 +885,7 @@ function renderGrid() {
     const idx = STUDENTS.indexOf(s);
     const p = s.notas.promedio;
     const ov = getOverride(s, idx);
+    const carrerasCard = carrerasEfectivas(s, idx);
     return `
     <div class="card" onclick="openModal(${idx})">
       <div class="card-header">
@@ -887,7 +897,7 @@ function renderGrid() {
         <div class="card-stats">
           <div class="stat-box">
             <div class="stat-val ${gradeClass(p)}">${p ? p.toFixed(2) : '—'}</div>
-            <div class="stat-lbl">Prom. III°</div>
+            <div class="stat-lbl">Promedio I°–III°</div>
           </div>
           <div class="stat-box">
             <div class="stat-val ${ov ? '' : 'none'}" style="font-size:${ov ? '1.3rem' : '0.72rem'}">${ov ? '✓ Con IV°' : 'Pendiente IV°'}</div>
@@ -897,7 +907,7 @@ function renderGrid() {
         <div class="card-tags">
           ${s.area_interes ? `<span class="tag ${areaTagClass(s.area_interes)}">${s.area_interes}</span>` : ''}
           ${s.pueblo_originario && s.pueblo_originario.toLowerCase() !== '' && s.pueblo_originario.toLowerCase() !== 'nan' ? '<span class="tag pueblo">🪶 Pueblo originario</span>' : ''}
-          ${s.carreras.length ? `<span class="tag carreras">${s.carreras.length} carrera${s.carreras.length>1?'s':''}</span>` : ''}
+          ${carrerasCard.length ? `<span class="tag carreras">${carrerasCard.length} carrera${carrerasCard.length>1?'s':''}</span>` : ''}
         </div>
       </div>
     </div>`;
@@ -920,6 +930,46 @@ function overrideKey(s, idx) {
 function getOverride(s, idx) {
   try { return JSON.parse(localStorage.getItem(overrideKey(s, idx)) || 'null'); } catch(e) { return null; }
 }
+
+/* Carreras: se puede agregar/quitar a mano (queda guardado en este
+   navegador) sin borrar los datos originales que vinieron de HITO 1/2/3 —
+   solo se anota qué se agregó y qué se quitó, y se combina al mostrar. */
+function carrerasOverrideKey(s, idx) {
+  const rut = s.rut && s.rut !== 'nan' && s.rut.trim() !== '' ? s.rut : null;
+  return 'carrerasOverride_' + (rut || 'idx' + idx);
+}
+function getCarrerasOverride(s, idx) {
+  try {
+    const raw = JSON.parse(localStorage.getItem(carrerasOverrideKey(s, idx)) || 'null');
+    return raw || { added: [], removed: [] };
+  } catch(e) { return { added: [], removed: [] }; }
+}
+function carrerasEfectivas(s, idx) {
+  const ov = getCarrerasOverride(s, idx);
+  const base = (s.carreras || []).filter(c => !ov.removed.includes(c));
+  const extra = ov.added.filter(c => !base.includes(c));
+  return [...base, ...extra];
+}
+function agregarCarrera(idx) {
+  const s = STUDENTS[idx];
+  const input = document.getElementById('nueva-carrera-' + idx);
+  const val = (input.value || '').trim();
+  if (!val) return;
+  const ov = getCarrerasOverride(s, idx);
+  if (!ov.added.includes(val)) ov.added.push(val);
+  ov.removed = ov.removed.filter(c => c !== val);
+  localStorage.setItem(carrerasOverrideKey(s, idx), JSON.stringify(ov));
+  renderModalBody(s, idx);
+}
+function quitarCarrera(idx, carrera) {
+  const s = STUDENTS[idx];
+  const ov = getCarrerasOverride(s, idx);
+  if (!ov.removed.includes(carrera)) ov.removed.push(carrera);
+  ov.added = ov.added.filter(c => c !== carrera);
+  localStorage.setItem(carrerasOverrideKey(s, idx), JSON.stringify(ov));
+  renderModalBody(s, idx);
+}
+
 function toggleCalc(idx) {
   document.getElementById('calc-box-' + idx).classList.toggle('open');
 }
@@ -1046,8 +1096,9 @@ function renderModalBody(s, idx) {
     return '➡️ Trayectoria estable a lo largo de la enseñanza media';
   })();
 
-  const careersHTML = s.carreras.length
-    ? s.carreras.map(c => `<span class="tag">${c}</span>`).join('')
+  const carrerasLista = carrerasEfectivas(s, idx);
+  const careersHTML = carrerasLista.length
+    ? carrerasLista.map(c => `<span class="tag carrera-tag">${esc(c)}<button type="button" class="carrera-tag-x" onclick="quitarCarrera(${idx},'${esc(c).replace(/'/g,"\\'")}')" title="Quitar">✕</button></span>`).join('')
     : '<span style="color:var(--muted);font-size:0.8rem;font-style:italic">Sin carreras declaradas</span>';
 
   const areaLower = (s.area_interes || '').toLowerCase();
@@ -1112,6 +1163,10 @@ function renderModalBody(s, idx) {
       </div>
       <div class="fi-lbl" style="margin-bottom:6px">Carreras de interés declaradas</div>
       <div class="careers-wrap">${careersHTML}</div>
+      <div class="add-carrera-row">
+        <input type="text" id="nueva-carrera-${idx}" placeholder="Ej: Enfermería" onkeydown="if(event.key==='Enter'){event.preventDefault();agregarCarrera(${idx});}">
+        <button type="button" class="add-carrera-btn" onclick="agregarCarrera(${idx})">+ Agregar carrera</button>
+      </div>
       ${esIndeciso ? `
       <button class="calc-toggle" onclick="toggleSugerenciasBox(${idx})">🧭 Sugerencias vocacionales (según sus gustos)</button>
       <div class="sug-box${perfilGuardado.length ? ' open' : ''}" id="sug-box-${idx}">
@@ -1130,10 +1185,9 @@ function renderModalBody(s, idx) {
         <div class="plan-card">
           <div class="plan-card-icon">🧑‍🏫</div>
           <div class="plan-card-title">Plan de Acción Docente</div>
-          <div class="plan-card-desc">Ficha de seguimiento para el profesor jefe/tutor: datos, alertas y próximos pasos.</div>
-          <button class="plan-card-btn" onclick="event.stopPropagation();event.preventDefault();generarDiagnosticoIA(${idx}, this)">${window.__planIA && window.__planIA[idx] ? '✅ Diagnóstico IA listo — regenerar' : '✦ Generar diagnóstico con IA'}</button>
+          <div class="plan-card-desc">Ficha de seguimiento para el profesor jefe/tutor: datos, alertas y próximos pasos. Genera el diagnóstico con IA y abre el PDF en un solo paso.</div>
+          <button class="plan-card-btn" onclick="event.stopPropagation();event.preventDefault();generarPlanDeAccion(${idx}, this)">${window.__planIA && window.__planIA[idx] ? '✅ Plan generado — regenerar' : '🚀 Generar Plan de Acción'}</button>
           <div id="plan-ia-status-${idx}" style="font-size:0.62rem;color:var(--muted);margin-top:4px;min-height:1.4em"></div>
-          <button class="plan-card-btn" onclick="event.stopPropagation();imprimirPlanDocente(${idx})">🖨️ Imprimir / PDF</button>
         </div>
         <div class="plan-card">
           <div class="plan-card-icon">✅</div>
@@ -1294,8 +1348,9 @@ function tutorDisplayName() {
   return 'Tutor/a';
 }
 
-function detectarVia(s) {
-  const blob = [s.area_interes, s.ayuda_especifica, (s.carreras||[]).join(' '), JSON.stringify(s.conocimiento_personal||{})].join(' ').toLowerCase();
+function detectarVia(s, idx) {
+  const carreras = idx !== undefined ? carrerasEfectivas(s, idx) : (s.carreras || []);
+  const blob = [s.area_interes, s.ayuda_especifica, carreras.join(' '), JSON.stringify(s.conocimiento_personal||{})].join(' ').toLowerCase();
   if (/\bpdi\b|policía de investigaciones|investigaciones policiales|cecapro/.test(blob)) return 'pdi';
   if (/\bfach\b|fuerza aérea|cefps|escuela de especialidades/.test(blob)) return 'fach';
   return 'general';
@@ -1305,9 +1360,10 @@ function calendarioTableHTML() {
   return `<table class="plan-table"><tbody>${CALENDARIO_2027.map(([a,b]) => `<tr><td>${esc(a)}</td><td>${esc(b)}</td></tr>`).join('')}</tbody></table>`;
 }
 
-function buildPlanEstudianteHTML(s) {
-  const via = detectarVia(s);
-  const carrerasTxt = (s.carreras||[]).length ? s.carreras.slice(0,4).join(', ') : '';
+function buildPlanEstudianteHTML(s, idx) {
+  const via = detectarVia(s, idx);
+  const carrerasIdx = idx !== undefined ? carrerasEfectivas(s, idx) : (s.carreras || []);
+  const carrerasTxt = carrerasIdx.length ? carrerasIdx.slice(0,4).join(', ') : '';
 
   let intro, loQueSaber, pasos;
 
@@ -1422,11 +1478,12 @@ function buildPlanDocenteHTML(s, idx) {
     ['Pertenece a pueblo originario / etnia', s.etnia_detalle || s.pueblo_originario || 'No declarado'],
   ];
 
+  const carrerasEfec = carrerasEfectivas(s, idx);
   const alertas = [];
   if (!s.paes_confirmado) alertas.push('No se ha podido confirmar su inscripción a la PAES Regular con los comprobantes disponibles — verificar directamente con Secretaría / DEMRE.');
   if (s.ficha_pendiente) alertas.push('Ficha vocacional pendiente de completar — no se cuenta con datos suficientes para un plan detallado.');
   if (!s.area_interes) alertas.push('Sin área de interés declarada — agendar tutoría para levantar esta información.');
-  if (!(s.carreras||[]).length && !s.ficha_pendiente) alertas.push('Sin carreras de preferencia registradas (Hito 3) — agendar sesión dedicada a comparar 3-4 alternativas.');
+  if (!carrerasEfec.length && !s.ficha_pendiente) alertas.push('Sin carreras de preferencia registradas (Hito 3) — agendar sesión dedicada a comparar 3-4 alternativas.');
   if (s.nuevo_no_en_padron_original) alertas.push('Estudiante identificado en la carpeta de Drive pero no en la nómina previa de la ficha — confirmar sus datos oficiales (RUT, curso, notas).');
 
   const situacion = [];
@@ -1441,7 +1498,7 @@ function buildPlanDocenteHTML(s, idx) {
   }
   if (s.ayuda_especifica) situacion.push(`<li><strong>Ayuda específica solicitada (Hito 2):</strong> "${esc(s.ayuda_especifica)}"</li>`);
 
-  const via = detectarVia(s);
+  const via = detectarVia(s, idx);
   const planDocente = via === 'pdi' ? [
     'Conversar con calma la situación de plazos PDI y proyectar su postulación al próximo proceso.',
     'Asegurar que rinda la PAES Regular de diciembre de 2026 (requisito de vigencia para PDI).',
@@ -1452,14 +1509,14 @@ function buildPlanDocenteHTML(s, idx) {
     'Coordinar con el profesor/a correspondiente la preparación específica de la prueba/entrevista de su proceso.',
     'Asegurar que rinda la PAES Regular y complete el FUAS como respaldo civil.',
   ] : [
-    `Agendar sesión de tutoría para ${(s.carreras||[]).length ? 'confirmar y comparar' : 'definir'} 3-4 carreras/instituciones de interés usando demre.cl y mifuturo.cl.`,
+    `Agendar sesión de tutoría para ${carrerasEfec.length ? 'confirmar y comparar' : 'definir'} 3-4 carreras/instituciones de interés usando demre.cl y mifuturo.cl.`,
     'Verificar su inscripción a la PAES Regular con Secretaría.',
     'Recordar completar el FUAS en octubre de 2026 sin autodescartarse de becas o gratuidad.',
     'Registrar simulaciones de puntaje PAES en la Plataforma Pedro de Valdivia tras cada ensayo.',
   ];
 
-  const carrerasHTML = (s.carreras||[]).length
-    ? `<ul class="plan-ul">${s.carreras.map(c => `<li>${esc(c)}</li>`).join('')}</ul>`
+  const carrerasHTML = carrerasEfec.length
+    ? `<ul class="plan-ul">${carrerasEfec.map(c => `<li>${esc(c)}</li>`).join('')}</ul>`
     : '<p class="plan-p" style="font-style:italic">Sin carreras de preferencia registradas todavía.</p>';
 
   const aiText = window.__planIA && window.__planIA[idx];
@@ -1551,11 +1608,11 @@ function imprimirPlanDocente(idx) {
   imprimirEnPagina('Plan de Acción Docente — ' + s.nombre, buildPlanDocenteHTML(s, idx));
 }
 
-/* Diagnóstico personalizado con IA para el Plan de Acción Docente. Si falla
-   por cualquier motivo, el plan sigue funcionando igual con la plantilla
-   normal (nunca queda un documento roto o vacío) — esto solo agrega una
-   sección extra cuando funciona. */
-async function generarDiagnosticoIA(idx, btn) {
+/* Un solo botón: genera el diagnóstico personalizado con IA y de inmediato
+   imprime/crea el PDF del Plan de Acción Docente — con la sección de IA si
+   se pudo generar, o sin ella si falló (nunca queda un documento roto o
+   vacío, y nunca hay que apretar un segundo botón aparte para imprimir). */
+async function generarPlanDeAccion(idx, btn) {
   const s = STUDENTS[idx];
   const statusEl = document.getElementById('plan-ia-status-' + idx);
   btn.disabled = true;
@@ -1565,9 +1622,10 @@ async function generarDiagnosticoIA(idx, btn) {
   if (!credential) {
     const boxId = 'plan-ia-gbtn-' + idx;
     setStatus('');
-    if (statusEl) statusEl.innerHTML = `No pudimos confirmar tu cuenta automáticamente. Haz clic para confirmarla: <div class="g-btn-box" id="${boxId}" style="margin-top:6px"></div>`;
-    renderInlineGoogleButton(boxId, () => generarDiagnosticoIA(idx, btn));
+    if (statusEl) statusEl.innerHTML = `No pudimos confirmar tu cuenta automáticamente para agregar el diagnóstico con IA (el PDF ya se generó igual, sin esa sección). Haz clic para confirmarla y regenerarlo con IA: <div class="g-btn-box" id="${boxId}" style="margin-top:6px"></div>`;
+    renderInlineGoogleButton(boxId, () => generarPlanDeAccion(idx, btn));
     btn.disabled = false;
+    imprimirPlanDocente(idx);
     return;
   }
   setStatus('Generando diagnóstico personalizado…');
@@ -1576,7 +1634,7 @@ async function generarDiagnosticoIA(idx, btn) {
   const n = s.notas || {};
   const notasStr = Object.entries(n).filter(([k,v]) => v !== null && v !== undefined).map(([k,v]) => `${k.replace('_est',' (est.)')}: ${v}`).join(' | ');
   const override = getOverride(s, idx);
-  const via = detectarVia(s);
+  const via = detectarVia(s, idx);
   const cp = s.conocimiento_personal || {};
   const contextoPersonal = [
     cp.intereses_futuro && `Intereses a futuro: "${cp.intereses_futuro}"`,
@@ -1593,7 +1651,7 @@ DATOS REALES DE ESTE ESTUDIANTE:
 • Trayectoria de notas: ${notasStr || 'Sin datos registrados'}
 • Promedio de IV° Medio: ${override ? override.promedio_iv : 'Aún no registrado'}
 • Área de interés: ${s.area_interes || 'No declarada'}
-• Carreras de interés: ${(s.carreras||[]).join(', ') || 'No declaradas'}
+• Carreras de interés: ${carrerasEfectivas(s, idx).join(', ') || 'No declaradas'}
 • Interés en Pedagogía: ${s.quiere_pedagogia || 'No declarado'}
 • Pertenece a pueblo originario: ${s.pueblo_originario || 'No'}
 ${contextoPersonal ? `• Contexto personal registrado por el propio estudiante:\n${contextoPersonal}` : ''}
@@ -1619,20 +1677,21 @@ Escribe 3-4 párrafos breves, en español de Chile, tono profesional y cálido, 
     if (!text) throw new Error('Respuesta vacía');
     window.__planIA = window.__planIA || {};
     window.__planIA[idx] = text;
-    setStatus('✅ Listo — se incluirá al imprimir el Plan de Acción Docente.');
-    btn.textContent = '✅ Diagnóstico IA listo — regenerar';
+    setStatus('✅ Diagnóstico generado — el PDF ya se abrió con esa sección incluida.');
+    btn.textContent = '✅ Plan generado — regenerar';
   } catch(e) {
     const msg = e.name === 'AbortError' ? 'el servidor tardó demasiado en responder' : (e.message || 'error de conexión');
-    setStatus('No se pudo generar (' + msg + '). El Plan de Acción sigue funcionando normal, sin esta sección.', true);
-    btn.textContent = '✦ Generar diagnóstico con IA';
+    setStatus('No se pudo generar el diagnóstico con IA (' + msg + '). El PDF ya se creó igual, sin esa sección.', true);
+    btn.textContent = '🚀 Generar Plan de Acción';
   } finally {
     btn.disabled = false;
+    imprimirPlanDocente(idx);
   }
 }
 
 function imprimirTareasEstudiante(idx) {
   const s = STUDENTS[idx];
-  imprimirEnPagina('Tareas a Realizar — ' + s.nombre, buildPlanEstudianteHTML(s));
+  imprimirEnPagina('Tareas a Realizar — ' + s.nombre, buildPlanEstudianteHTML(s, idx));
 }
 
 function closeModal() { document.getElementById('modalBg').classList.remove('open'); }
