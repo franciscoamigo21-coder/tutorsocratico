@@ -479,6 +479,22 @@ body.gate-open .login-gate { display: flex; }
 .add-carrera-btn { background: var(--white); color: var(--sip-navy); border: 1.5px solid var(--border); padding: 6px 12px; border-radius: 5px; font-family: 'Montserrat', sans-serif; font-size: 0.72rem; font-weight: 700; cursor: pointer; white-space: nowrap; }
 .add-carrera-btn:hover { border-color: var(--sip-navy); background: var(--paper); }
 
+/* registro de avances */
+.avances-lista { display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px; }
+.avance-item { position: relative; background: var(--paper); border: 1px solid var(--border); border-radius: 8px; padding: 10px 32px 10px 12px; }
+.avance-fecha { font-size: 0.66rem; font-weight: 700; color: var(--sip-navy); text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 4px; }
+.avance-txt { font-size: 0.82rem; color: var(--text); margin-bottom: 4px; line-height: 1.4; }
+.avance-chip { font-size: 0.74rem; color: var(--muted); margin-top: 3px; }
+.avance-chip.cambio { color: var(--sip-red); font-weight: 600; }
+.avance-del { position: absolute; top: 8px; right: 8px; background: none; border: none; color: var(--muted); opacity: 0.5; cursor: pointer; font-size: 0.7rem; }
+.avance-del:hover { opacity: 1; color: var(--sip-red); }
+.avance-form { display: none; background: var(--paper); border: 1.5px solid var(--border); border-radius: 8px; padding: 14px 16px; margin-top: 10px; }
+.avance-form.open { display: block; }
+.avance-form textarea { width: 100%; padding: 8px 10px; border: 1.5px solid var(--border); border-radius: 5px; font-family: 'Inter', sans-serif; font-size: 0.82rem; resize: vertical; margin-bottom: 10px; }
+.avance-lbl { display: block; font-size: 0.66rem; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 4px; }
+.avance-siNo-row { display: grid; grid-template-columns: 160px 1fr; gap: 10px; margin-bottom: 10px; align-items: end; }
+.avance-siNo-row select, .avance-siNo-row input { padding: 7px 10px; border: 1.5px solid var(--border); border-radius: 5px; font-family: 'Inter', sans-serif; font-size: 0.82rem; width: 100%; }
+
 /* AI section */
 .ai-loading { display: flex; align-items: center; gap: 10px; padding: 14px; color: var(--muted); font-size: 0.83rem; font-weight: 500; }
 .dots span { display: inline-block; width: 7px; height: 7px; background: var(--sip-red); border-radius: 50%; animation: dot-bounce 1.2s infinite; }
@@ -931,6 +947,53 @@ function getOverride(s, idx) {
   try { return JSON.parse(localStorage.getItem(overrideKey(s, idx)) || 'null'); } catch(e) { return null; }
 }
 
+/* ═══════════════ REGISTRO DE AVANCES ═══════════════
+   Bitácora de tutoría: cada entrada queda fechada y se van acumulando
+   (no se sobrescriben). Alimenta el Plan de Acción Docente y las Tareas
+   del estudiante cuando se generan con IA, para que reflejen lo último
+   conversado en tutoría. */
+function avancesKey(s, idx) {
+  const rut = s.rut && s.rut !== 'nan' && s.rut.trim() !== '' ? s.rut : null;
+  return 'avances_' + (rut || 'idx' + idx);
+}
+function getAvances(s, idx) {
+  try { return JSON.parse(localStorage.getItem(avancesKey(s, idx)) || '[]'); } catch(e) { return []; }
+}
+function agregarAvance(idx) {
+  const s = STUDENTS[idx];
+  const avance = (document.getElementById('av-avance-' + idx).value || '').trim();
+  const mallasSiNo = document.getElementById('av-mallas-' + idx).value;
+  const mallasDet = (document.getElementById('av-mallas-det-' + idx).value || '').trim();
+  const cambioSiNo = document.getElementById('av-cambio-' + idx).value;
+  const cambioDet = (document.getElementById('av-cambio-det-' + idx).value || '').trim();
+  const antecedentes = (document.getElementById('av-antecedentes-' + idx).value || '').trim();
+  if (!avance && !mallasDet && !cambioDet && !antecedentes) {
+    alert('Escribe al menos un dato antes de guardar (el avance, un detalle, o nuevos antecedentes).');
+    return;
+  }
+  const entry = {
+    fecha: new Date().toLocaleDateString('es-CL', { day: 'numeric', month: 'long', year: 'numeric' }),
+    ts: Date.now(),
+    avance,
+    mallas_revisadas: mallasSiNo,
+    mallas_detalle: mallasDet,
+    cambio_carrera: cambioSiNo,
+    cambio_carrera_detalle: cambioDet,
+    nuevos_antecedentes: antecedentes,
+  };
+  const lista = getAvances(s, idx);
+  lista.unshift(entry);
+  localStorage.setItem(avancesKey(s, idx), JSON.stringify(lista));
+  renderModalBody(s, idx);
+}
+function eliminarAvance(idx, ts) {
+  if (!confirm('¿Eliminar este avance del registro?')) return;
+  const s = STUDENTS[idx];
+  const lista = getAvances(s, idx).filter(a => a.ts !== ts);
+  localStorage.setItem(avancesKey(s, idx), JSON.stringify(lista));
+  renderModalBody(s, idx);
+}
+
 /* Carreras: se puede agregar/quitar a mano (queda guardado en este
    navegador) sin borrar los datos originales que vinieron de HITO 1/2/3 —
    solo se anota qué se agregó y qué se quitó, y se combina al mostrar. */
@@ -972,6 +1035,9 @@ function quitarCarrera(idx, carrera) {
 
 function toggleCalc(idx) {
   document.getElementById('calc-box-' + idx).classList.toggle('open');
+}
+function toggleAvanceForm(idx) {
+  document.getElementById('avance-form-' + idx).classList.toggle('open');
 }
 
 /* Estimación referencial de puntaje NEM (Grupo A · Científico-Humanista diurna),
@@ -1117,6 +1183,20 @@ function renderModalBody(s, idx) {
       <div class="sug-card-row"><span>⏳ Duración</span><span>${esc(c.duracion)}</span></div>
     </div>`).join('');
 
+  const avancesLista = getAvances(s, idx);
+  const avancesListHTML = avancesLista.length ? avancesLista.map(a => {
+    const filas = [];
+    if (a.avance) filas.push(`<p class="avance-txt">${esc(a.avance)}</p>`);
+    if (a.mallas_revisadas === 'si') filas.push(`<div class="avance-chip">📋 Revisión de mallas: Sí${a.mallas_detalle ? ' — ' + esc(a.mallas_detalle) : ''}</div>`);
+    if (a.cambio_carrera === 'si') filas.push(`<div class="avance-chip cambio">🔄 Cambio de carrera: Sí${a.cambio_carrera_detalle ? ' — ' + esc(a.cambio_carrera_detalle) : ''}</div>`);
+    if (a.nuevos_antecedentes) filas.push(`<div class="avance-chip">🆕 ${esc(a.nuevos_antecedentes)}</div>`);
+    return `<div class="avance-item">
+      <div class="avance-fecha">${esc(a.fecha)}</div>
+      ${filas.join('')}
+      <button type="button" class="avance-del" onclick="eliminarAvance(${idx},${a.ts})" title="Eliminar">✕</button>
+    </div>`;
+  }).join('') : '<p style="color:var(--muted);font-size:0.8rem;font-style:italic">Todavía no hay avances registrados.</p>';
+
   document.getElementById('modal-body').innerHTML = `
     <div class="fs">
       <div class="fs-title">📊 Hitos Académicos — NEM & Ranking</div>
@@ -1180,6 +1260,33 @@ function renderModalBody(s, idx) {
     </div>
 
     <div class="fs">
+      <div class="fs-title">📝 Registro de Avances</div>
+      <div class="avances-lista">${avancesListHTML}</div>
+      <button class="calc-toggle" onclick="toggleAvanceForm(${idx})">➕ Registrar un avance nuevo</button>
+      <div class="avance-form" id="avance-form-${idx}">
+        <label class="avance-lbl">Escribe un avance a la fecha de hoy</label>
+        <textarea id="av-avance-${idx}" rows="2" placeholder="Ej: se reunió con el tutor y confirmó que rendirá la PAES en diciembre…"></textarea>
+        <div class="avance-siNo-row">
+          <div>
+            <label class="avance-lbl">¿Revisión de mallas curriculares?</label>
+            <select id="av-mallas-${idx}"><option value="no">No</option><option value="si">Sí</option></select>
+          </div>
+          <input type="text" id="av-mallas-det-${idx}" placeholder="Detalle (opcional)">
+        </div>
+        <div class="avance-siNo-row">
+          <div>
+            <label class="avance-lbl">¿Cambio de carrera de interés?</label>
+            <select id="av-cambio-${idx}"><option value="no">No</option><option value="si">Sí</option></select>
+          </div>
+          <input type="text" id="av-cambio-det-${idx}" placeholder="Detalle (opcional)">
+        </div>
+        <label class="avance-lbl">Nuevos antecedentes</label>
+        <textarea id="av-antecedentes-${idx}" rows="2" placeholder="Cualquier otro dato relevante que surgió en la tutoría…"></textarea>
+        <button class="calc-save" onclick="agregarAvance(${idx})">Guardar avance</button>
+      </div>
+    </div>
+
+    <div class="fs">
       <div class="fs-title">🚀 Plan de Acción — Admisión 2027</div>
       <div class="plan-cards">
         <div class="plan-card">
@@ -1192,8 +1299,9 @@ function renderModalBody(s, idx) {
         <div class="plan-card">
           <div class="plan-card-icon">✅</div>
           <div class="plan-card-title">Tareas a Realizar</div>
-          <div class="plan-card-desc">Hoja personalizada para el/la estudiante con su checklist paso a paso, para entregarle.</div>
-          <button class="plan-card-btn" onclick="event.stopPropagation();imprimirTareasEstudiante(${idx})">🖨️ Imprimir / PDF</button>
+          <div class="plan-card-desc">Hoja para el/la estudiante con su checklist paso a paso. Genera con IA y abre el PDF en un solo paso.</div>
+          <button class="plan-card-btn" onclick="event.stopPropagation();event.preventDefault();generarTareasEstudiante(${idx}, this)">${window.__tareasIA && window.__tareasIA[idx] ? '✅ Plan generado — regenerar' : '🚀 Generar Tareas a Realizar'}</button>
+          <div id="tareas-ia-status-${idx}" style="font-size:0.62rem;color:var(--muted);margin-top:4px;min-height:1.4em"></div>
         </div>
         <div class="plan-card">
           <div class="plan-card-icon">🎓</div>
@@ -1360,6 +1468,29 @@ function calendarioTableHTML() {
   return `<table class="plan-table"><tbody>${CALENDARIO_2027.map(([a,b]) => `<tr><td>${esc(a)}</td><td>${esc(b)}</td></tr>`).join('')}</tbody></table>`;
 }
 
+/* Convierte el texto plano que devuelve la IA (bloques "TITULO:" seguidos
+   de líneas "- acción") en la misma estructura [[etapa, [items]], ...] que
+   usa la plantilla fija, para poder reemplazar "Tu plan paso a paso" sin
+   tocar el resto del documento. Si la IA no siguió el formato, se recupera
+   igual (nada de contenido se pierde) en vez de mostrar un bloque vacío. */
+function parsearPasosIA(text) {
+  const lines = text.split('\n').map(l => l.trim()).filter(Boolean);
+  const bloques = [];
+  let actual = null;
+  for (const line of lines) {
+    const esTitulo = /^[A-ZÁÉÍÓÚÑ0-9°][A-ZÁÉÍÓÚÑ0-9° \-\/]{2,60}:?\s*$/.test(line) && line === line.toUpperCase();
+    if (esTitulo) {
+      actual = [line.replace(/:$/, ''), []];
+      bloques.push(actual);
+    } else {
+      const item = line.replace(/^[-••]\s*/, '');
+      if (!actual) { actual = ['TU PLAN', []]; bloques.push(actual); }
+      actual[1].push(item);
+    }
+  }
+  return bloques.filter(([, items]) => items.length);
+}
+
 function buildPlanEstudianteHTML(s, idx) {
   const via = detectarVia(s, idx);
   const carrerasIdx = idx !== undefined ? carrerasEfectivas(s, idx) : (s.carreras || []);
@@ -1420,10 +1551,16 @@ function buildPlanEstudianteHTML(s, idx) {
     ];
   }
 
-  const pasosHTML = pasos.map(([etapa, items]) => `
+  const tareasIA = idx !== undefined && window.__tareasIA && window.__tareasIA[idx];
+  const pasosIA = tareasIA ? parsearPasosIA(tareasIA) : null;
+  const pasosFinal = (pasosIA && pasosIA.length) ? pasosIA : pasos;
+  const pasosHTML = pasosFinal.map(([etapa, items]) => `
     <div class="plan-etapa">${esc(etapa)}</div>
-    ${items.map(it => `<div class="plan-check">☐ ${it}</div>`).join('')}
+    ${items.map(it => `<div class="plan-check">☐ ${esc(it)}</div>`).join('')}
   `).join('');
+  const pasosNota = pasosIA && pasosIA.length
+    ? '<p style="font-size:10.5px;color:#8892a6;font-style:italic;margin:-4px 0 8px">Personalizado con IA a partir de tus datos y tu tutoría — revísalo con tu tutor/a.</p>'
+    : '';
 
   return `
   <div class="plan-page">
@@ -1445,6 +1582,7 @@ function buildPlanEstudianteHTML(s, idx) {
     <ul class="plan-ul">${PAES_DAY_INFO.map(t => `<li>${esc(t)}</li>`).join('')}</ul>
 
     <div class="plan-section-title">✅ Tu plan paso a paso</div>
+    ${pasosNota}
     ${pasosHTML}
 
     <div class="plan-section-title">📞 Contactos y páginas que te van a servir</div>
@@ -1608,6 +1746,57 @@ function imprimirPlanDocente(idx) {
   imprimirEnPagina('Plan de Acción Docente — ' + s.nombre, buildPlanDocenteHTML(s, idx));
 }
 
+/* Contexto compartido: el Plan de Acción Docente y las Tareas del
+   estudiante se arman con exactamente los mismos datos (incluyendo el
+   Registro de Avances), así que aunque tengan tono distinto (uno interno
+   para el profesor, otro directo para el estudiante) siempre quedan
+   alineados y no se contradicen entre sí. */
+function contextoEstudianteIA(s, idx) {
+  const n = s.notas || {};
+  const notasStr = Object.entries(n).filter(([k,v]) => v !== null && v !== undefined).map(([k,v]) => `${k.replace('_est',' (est.)')}: ${v}`).join(' | ');
+  const override = getOverride(s, idx);
+  const via = detectarVia(s, idx);
+  const cp = s.conocimiento_personal || {};
+  const contextoPersonal = [
+    cp.intereses_futuro && `Intereses a futuro: "${cp.intereses_futuro}"`,
+    cp.dificultades_logros && `Dificultades y logros: "${cp.dificultades_logros}"`,
+    cp.expectativas_futuras && `Expectativas al salir del colegio: "${cp.expectativas_futuras}"`,
+    s.ayuda_especifica && `Ayuda específica solicitada: "${s.ayuda_especifica}"`,
+  ].filter(Boolean).join('\n');
+  const avances = getAvances(s, idx);
+  const avancesTxt = avances.length ? avances.slice(0, 8).map(a => {
+    const partes = [a.avance, a.mallas_revisadas === 'si' && ('Revisó mallas curriculares' + (a.mallas_detalle ? ': ' + a.mallas_detalle : '')), a.cambio_carrera === 'si' && ('Cambio de carrera' + (a.cambio_carrera_detalle ? ': ' + a.cambio_carrera_detalle : '')), a.nuevos_antecedentes].filter(Boolean).join(' · ');
+    return `[${a.fecha}] ${partes}`;
+  }).join('\n') : '';
+  return {
+    via, notasStr, override, contextoPersonal, avancesTxt,
+    carreras: carrerasEfectivas(s, idx),
+    viaTxt: via === 'pdi' ? 'Policía de Investigaciones (PDI)' : via === 'fach' ? 'Fuerza Aérea de Chile (FACH)' : 'Admisión a la educación superior (vía regular PAES/NEM/Ranking)',
+  };
+}
+
+/* Llama al Worker de ASE-IA (resource=crear) con tope de 30s. Lanza si falla;
+   quien llama decide qué hacer (mostrar error, mantener la plantilla fija). */
+async function llamarIAContenido(credential, prompt) {
+  const ac = new AbortController();
+  const to = setTimeout(() => ac.abort(), 30000);
+  let res;
+  try {
+    res = await fetch(ASE_IA_API_URL + '?resource=crear', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ credential, prompt }),
+      signal: ac.signal,
+    });
+  } finally { clearTimeout(to); }
+  let data;
+  try { data = await res.json(); } catch(e) { throw new Error('El servidor respondió algo inesperado (HTTP ' + res.status + ').'); }
+  if (!res.ok || data.error) throw new Error(data.error || ('HTTP ' + res.status));
+  const text = (data.reply || data.text || '').toString().trim();
+  if (!text) throw new Error('Respuesta vacía');
+  return text;
+}
+
 /* Un solo botón: genera el diagnóstico personalizado con IA y de inmediato
    imprime/crea el PDF del Plan de Acción Docente — con la sección de IA si
    se pudo generar, o sin ella si falló (nunca queda un documento roto o
@@ -1631,50 +1820,25 @@ async function generarPlanDeAccion(idx, btn) {
   setStatus('Generando diagnóstico personalizado…');
   btn.textContent = 'Generando…';
 
-  const n = s.notas || {};
-  const notasStr = Object.entries(n).filter(([k,v]) => v !== null && v !== undefined).map(([k,v]) => `${k.replace('_est',' (est.)')}: ${v}`).join(' | ');
-  const override = getOverride(s, idx);
-  const via = detectarVia(s, idx);
-  const cp = s.conocimiento_personal || {};
-  const contextoPersonal = [
-    cp.intereses_futuro && `Intereses a futuro: "${cp.intereses_futuro}"`,
-    cp.dificultades_logros && `Dificultades y logros: "${cp.dificultades_logros}"`,
-    cp.expectativas_futuras && `Expectativas al salir del colegio: "${cp.expectativas_futuras}"`,
-    s.ayuda_especifica && `Ayuda específica solicitada: "${s.ayuda_especifica}"`,
-  ].filter(Boolean).join('\n');
-
+  const ctx = contextoEstudianteIA(s, idx);
   const prompt = `Eres el orientador educativo institucional del Colegio Presidente José Joaquín Prieto (SIP Red de Colegios, Chile). Vas a redactar la sección "Diagnóstico y recomendaciones personalizadas" del Plan de Acción Docente de UN estudiante específico de IV° Medio, de cara a la Admisión 2027. Es para uso interno del profesor/a jefe — sé concreto, profesional y accionable, no genérico.
 
 DATOS REALES DE ESTE ESTUDIANTE:
 • Nombre: ${s.nombre} — ${s.curso}
-• Vía de postulación: ${via === 'pdi' ? 'Policía de Investigaciones (PDI)' : via === 'fach' ? 'Fuerza Aérea de Chile (FACH)' : 'Admisión a la educación superior (vía regular PAES/NEM/Ranking)'}
-• Trayectoria de notas: ${notasStr || 'Sin datos registrados'}
-• Promedio de IV° Medio: ${override ? override.promedio_iv : 'Aún no registrado'}
+• Vía de postulación: ${ctx.viaTxt}
+• Trayectoria de notas: ${ctx.notasStr || 'Sin datos registrados'}
+• Promedio de IV° Medio: ${ctx.override ? ctx.override.promedio_iv : 'Aún no registrado'}
 • Área de interés: ${s.area_interes || 'No declarada'}
-• Carreras de interés: ${carrerasEfectivas(s, idx).join(', ') || 'No declaradas'}
+• Carreras de interés: ${ctx.carreras.join(', ') || 'No declaradas'}
 • Interés en Pedagogía: ${s.quiere_pedagogia || 'No declarado'}
 • Pertenece a pueblo originario: ${s.pueblo_originario || 'No'}
-${contextoPersonal ? `• Contexto personal registrado por el propio estudiante:\n${contextoPersonal}` : ''}
+${ctx.contextoPersonal ? `• Contexto personal registrado por el propio estudiante:\n${ctx.contextoPersonal}` : ''}
+${ctx.avancesTxt ? `• Registro de avances de tutoría (del más reciente al más antiguo):\n${ctx.avancesTxt}` : ''}
 
-Escribe 3-4 párrafos breves, en español de Chile, tono profesional y cálido, SIN encabezados ni markdown, SIN inventar datos que no están arriba (si falta información, dilo con naturalidad en vez de inventar). Cubre: (1) lectura de su trayectoria y momento actual, (2) coherencia o brechas entre su perfil vocacional y sus opciones declaradas, (3) 2-3 acciones concretas y específicas para este estudiante en particular (no genéricas) que el profesor jefe puede tomar antes de fin de año, (4) si aplica, un llamado de atención empático sobre algún riesgo o urgencia.`;
+Escribe 3-4 párrafos breves, en español de Chile, tono profesional y cálido, SIN encabezados ni markdown, SIN inventar datos que no están arriba (si falta información, dilo con naturalidad en vez de inventar). Si hay Registro de Avances, dale prioridad: refleja lo último conversado, no lo contradigas. Cubre: (1) lectura de su trayectoria y momento actual, (2) coherencia o brechas entre su perfil vocacional y sus opciones declaradas, (3) 2-3 acciones concretas y específicas para este estudiante en particular (no genéricas) que el profesor jefe puede tomar antes de fin de año, (4) si aplica, un llamado de atención empático sobre algún riesgo o urgencia.`;
 
   try {
-    const ac = new AbortController();
-    const to = setTimeout(() => ac.abort(), 30000);
-    let res;
-    try {
-      res = await fetch(ASE_IA_API_URL + '?resource=crear', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ credential, prompt }),
-        signal: ac.signal,
-      });
-    } finally { clearTimeout(to); }
-    let data;
-    try { data = await res.json(); } catch(e) { throw new Error('El servidor respondió algo inesperado (HTTP ' + res.status + ').'); }
-    if (!res.ok || data.error) throw new Error(data.error || ('HTTP ' + res.status));
-    const text = (data.reply || data.text || '').toString().trim();
-    if (!text) throw new Error('Respuesta vacía');
+    const text = await llamarIAContenido(credential, prompt);
     window.__planIA = window.__planIA || {};
     window.__planIA[idx] = text;
     setStatus('✅ Diagnóstico generado — el PDF ya se abrió con esa sección incluida.');
@@ -1692,6 +1856,64 @@ Escribe 3-4 párrafos breves, en español de Chile, tono profesional y cálido, 
 function imprimirTareasEstudiante(idx) {
   const s = STUDENTS[idx];
   imprimirEnPagina('Tareas a Realizar — ' + s.nombre, buildPlanEstudianteHTML(s, idx));
+}
+
+/* Igual que generarPlanDeAccion pero para la hoja del estudiante: genera
+   con IA su checklist personalizado (usando el mismo contexto — incluido
+   el Registro de Avances — para que quede alineado con el Plan Docente) y
+   abre el PDF de inmediato. Las fechas oficiales de la Admisión 2027, el
+   FUAS y el día de la PAES quedan fijos en la plantilla (no los redacta la
+   IA) para no arriesgar un dato mal citado. */
+async function generarTareasEstudiante(idx, btn) {
+  const s = STUDENTS[idx];
+  const statusEl = document.getElementById('tareas-ia-status-' + idx);
+  btn.disabled = true;
+  const setStatus = (t, isErr) => { if (statusEl) { statusEl.textContent = t; statusEl.style.color = isErr ? 'var(--sip-red)' : 'var(--muted)'; } };
+  setStatus('Confirmando tu cuenta de Google…');
+  const credential = await pedirCredencialFresca();
+  if (!credential) {
+    const boxId = 'tareas-ia-gbtn-' + idx;
+    setStatus('');
+    if (statusEl) statusEl.innerHTML = `No pudimos confirmar tu cuenta automáticamente (el PDF ya se generó igual, con el plan estándar). Haz clic para confirmarla y personalizarlo con IA: <div class="g-btn-box" id="${boxId}" style="margin-top:6px"></div>`;
+    renderInlineGoogleButton(boxId, () => generarTareasEstudiante(idx, btn));
+    btn.disabled = false;
+    imprimirTareasEstudiante(idx);
+    return;
+  }
+  setStatus('Generando tu plan personalizado…');
+  btn.textContent = 'Generando…';
+
+  const ctx = contextoEstudianteIA(s, idx);
+  const prompt = `Eres el orientador vocacional del Colegio Presidente José Joaquín Prieto (SIP Red de Colegios, Chile). Vas a redactar la sección "Tu plan paso a paso" de la hoja "Tareas a Realizar" de UN estudiante específico de IV° Medio, de cara a la Admisión 2027. Es PARA EL ESTUDIANTE (se la vas a entregar a él/ella directamente) — escríbele a él/ella de tú a tú, en segundo persona, tono cercano, claro y motivador, nunca genérico.
+
+DATOS REALES DE ESTE ESTUDIANTE:
+• Nombre: ${s.nombre} — ${s.curso}
+• Vía de postulación: ${ctx.viaTxt}
+• Trayectoria de notas: ${ctx.notasStr || 'Sin datos registrados'}
+• Promedio de IV° Medio: ${ctx.override ? ctx.override.promedio_iv : 'Aún no registrado'}
+• Área de interés: ${s.area_interes || 'No declarada'}
+• Carreras de interés: ${ctx.carreras.join(', ') || 'No declaradas'}
+${ctx.contextoPersonal ? `• Lo que el propio estudiante escribió sobre sí mismo:\n${ctx.contextoPersonal}` : ''}
+${ctx.avancesTxt ? `• Registro de avances de tutoría (del más reciente al más antiguo — dale prioridad, no lo contradigas):\n${ctx.avancesTxt}` : ''}
+
+FECHAS OFICIALES YA CONFIRMADAS (úsalas tal cual si las necesitas, no inventes otras): PAES Regular 30 de noviembre, 1 y 2 de diciembre de 2026 · Resultados PAES 4 de enero de 2027 · Postulaciones 4 al 7 de enero de 2027 · Matrícula 19 al 28 de enero de 2027 · FUAS entre el 1 y el 22 de octubre de 2026 en www.fuas.cl.
+
+Organiza la respuesta en 3 a 5 bloques de tiempo (por ejemplo "AHORA", "SEPTIEMBRE-OCTUBRE 2026", "NOVIEMBRE-DICIEMBRE 2026", "ENERO 2027" — ajusta los bloques a su vía real), y dentro de cada bloque 2-4 acciones concretas y específicas para ESTE estudiante (no genéricas), en formato de lista simple con guion. Formato de salida: escribe cada bloque como una línea con el título en mayúsculas seguida de dos puntos, y debajo las acciones cada una en su propia línea empezando con "- ". Sin markdown, sin negritas, sin encabezados con #. Si hay Registro de Avances, refleja lo último conversado (por ejemplo si ya revisó mallas o cambió de carrera, no le pidas que haga eso de nuevo).`;
+
+  try {
+    const text = await llamarIAContenido(credential, prompt);
+    window.__tareasIA = window.__tareasIA || {};
+    window.__tareasIA[idx] = text;
+    setStatus('✅ Plan generado — el PDF ya se abrió personalizado.');
+    btn.textContent = '✅ Plan generado — regenerar';
+  } catch(e) {
+    const msg = e.name === 'AbortError' ? 'el servidor tardó demasiado en responder' : (e.message || 'error de conexión');
+    setStatus('No se pudo generar con IA (' + msg + '). El PDF ya se creó igual, con el plan estándar.', true);
+    btn.textContent = '🚀 Generar Tareas a Realizar';
+  } finally {
+    btn.disabled = false;
+    imprimirTareasEstudiante(idx);
+  }
 }
 
 function closeModal() { document.getElementById('modalBg').classList.remove('open'); }
