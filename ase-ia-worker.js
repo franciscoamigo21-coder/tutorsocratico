@@ -271,6 +271,30 @@ export default {
       return new Response(JSON.stringify({ ok: true, grupo: raw ? JSON.parse(raw) : [] }), { status: 200, headers: secure });
     }
 
+    // ---- Ficha del estudiante (avances de tutoría, carreras agregadas y
+    // simulación de NEM/promedio de IV°): se guarda en el PERFIL del
+    // estudiante, no en el navegador de quien lo edita, para que cualquier
+    // docente que abra esa ficha (desde cualquier computador) vea lo mismo.
+    // Usa el mismo KV TUTORIAS que "Mis Tutorías" (misma cuenta, otra clave).
+    if (resource === "fichaEstudiante") {
+      const u = await verifyGoogle(body.credential);
+      if (!u) return json({ error: "No pudimos verificar tu cuenta." }, 401, cors);
+      const p = profileFor(u);
+      if (p.role !== "staff" && p.role !== "dev") return json({ error: "No autorizado" }, 403, cors);
+      if (!env.TUTORIAS) return json({ error: "Falta configurar el almacenamiento (KV TUTORIAS)" }, 500, cors);
+      const studentKey = String(body.studentKey || "").trim().slice(0, 100);
+      if (!studentKey) return json({ error: "Falta studentKey" }, 400, cors);
+      const key = "ficha:" + studentKey;
+      if (body.action === "save") {
+        const data = body.data && typeof body.data === "object" ? body.data : {};
+        const payload = JSON.stringify(data).slice(0, 200000);
+        await env.TUTORIAS.put(key, payload);
+        return new Response(JSON.stringify({ ok: true }), { status: 200, headers: secure });
+      }
+      const raw = await env.TUTORIAS.get(key);
+      return new Response(JSON.stringify({ ok: true, data: raw ? JSON.parse(raw) : null }), { status: 200, headers: secure });
+    }
+
     // ---- Chat con IA (por defecto) ----
     if (!env.ANTHROPIC_API_KEY) return json({ error: "Falta configurar ANTHROPIC_API_KEY" }, 500, cors);
     const question = (body.question || "").toString().slice(0, 1000);
