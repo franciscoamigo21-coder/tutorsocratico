@@ -86,6 +86,42 @@ Si alguna vez publicas Fichas de Tutoría en un dominio nuevo (además de
 `aseia.cl`), agrégalo también a `ALLOWED_ORIGINS` en `ase-ia-worker.js` (ver
 sección de Seguridad más abajo) o el Worker rechazará las peticiones por CORS.
 
+### ⚠️ Paso obligatorio: KV `TUTORIAS` para que "Mis Tutorías" y la ficha del estudiante se guarden en la nube
+
+"Mis Tutorías" (grupo de tutoriados de cada docente), el **Registro de
+Avances**, las carreras agregadas a mano y la simulación de NEM de IV° Medio
+**no se guardan solo en el navegador**: se guardan en un almacenamiento en la
+nube (Cloudflare KV) para que cualquier docente vea lo mismo desde cualquier
+computador o celular. Si este KV no está creado y enlazado al Worker, esos
+datos **solo quedan guardados en el navegador de quien los escribió** — que es
+exactamente el síntoma de "los avances no se están guardando" cuando en
+realidad sí se guardaron, pero solo localmente.
+
+**Cómo crearlo (una sola vez, 2 minutos):**
+1. https://dash.cloudflare.com → **Workers & Pages** → **KV** (menú lateral) →
+   **Create a namespace**.
+2. Nómbralo, por ejemplo, **`TUTORIAS`**. Crear.
+3. Ve a tu Worker (`ase-ia`) → **Settings** → **Variables and Secrets** (o
+   **Bindings**, según la versión del panel) → **Add binding** → tipo
+   **KV Namespace**.
+4. **Variable name**: escribe exactamente **`TUTORIAS`** (en mayúsculas, tal
+   cual — el código busca `env.TUTORIAS`). **KV namespace**: selecciona el que
+   creaste en el paso 2.
+5. Guarda y **Deploy** de nuevo.
+
+**Cada vez que se actualice `ase-ia-worker.js`** (por ejemplo, para agregar
+una función nueva como esta), hay que volver a copiar TODO su contenido en el
+Worker de Cloudflare (paso 3 de la sección de arriba) y pulsar **Deploy** —
+subir el archivo a este repositorio de GitHub **no actualiza el Worker
+solo**, son dos lugares distintos.
+
+**Cómo confirmar que quedó bien:** inicia sesión en Fichas de Tutoría, agrega
+un avance de prueba en cualquier estudiante, y luego abre la misma ficha desde
+otro navegador (o modo incógnito) con la misma sesión — el avance debe
+aparecer igual ahí. Si no aparece, revisa que el nombre del binding sea
+exactamente `TUTORIAS` y que el Worker se haya vuelto a desplegar después de
+crearlo.
+
 ### Alternativa: Worker propio y separado
 
 Si en algún momento prefieres que Fichas de Tutoría tenga su propia clave y

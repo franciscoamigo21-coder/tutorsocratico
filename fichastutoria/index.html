@@ -929,8 +929,10 @@ function renderGrid() {
   }).join('');
 }
 
+let currentModalIdx = null;
 function openModal(idx) {
   const s = STUDENTS[idx];
+  currentModalIdx = idx;
   document.getElementById('modal-name').textContent = s.nombre;
   const carrerasModalSub = carrerasEfectivas(s, idx);
   document.getElementById('modal-sub').textContent = `${s.rut !== 'nan' ? s.rut : 'RUT no registrado'} · ${s.curso} · ${carrerasModalSub.length ? carrerasModalSub.slice(0,2).join(', ') : 'Sin carrera de interés declarada'}`;
@@ -944,6 +946,14 @@ function openModal(idx) {
   document.getElementById('modal-avatar').textContent = initials(s.nombre);
   renderModalBody(s, idx);
   document.getElementById('modalBg').classList.add('open');
+  // la ficha (avances, carreras agregadas, simulación de NEM) vive en la
+  // nube por estudiante — se muestra de inmediato con lo que haya en este
+  // navegador y, apenas llega la versión de la nube, se refresca sola.
+  cargarFichaNube(s, idx).then(cambio => {
+    if (cambio && currentModalIdx === idx && document.getElementById('modalBg').classList.contains('open')) {
+      renderModalBody(STUDENTS[idx], idx);
+    }
+  });
 }
 
 function overrideKey(s, idx) {
@@ -952,6 +962,53 @@ function overrideKey(s, idx) {
 }
 function getOverride(s, idx) {
   try { return JSON.parse(localStorage.getItem(overrideKey(s, idx)) || 'null'); } catch(e) { return null; }
+}
+
+/* ═══════════════ FICHA EN LA NUBE (por estudiante) ═══════════════
+   Avances, carreras agregadas/quitadas y simulación de NEM de IV° medio
+   quedan en el PERFIL del estudiante (Cloudflare KV, vía el Worker de
+   ASE-IA), no solo en el navegador de quien los escribió — así cualquier
+   docente que abra esa ficha, desde cualquier computador, ve lo mismo.
+   Best-effort: si no hay conexión o cuenta vinculada, sigue funcionando
+   guardado solo en este navegador (como antes), sin romper nada. */
+function fichaNubeSnapshot(s, idx) {
+  return {
+    avances: getAvances(s, idx),
+    carrerasOverride: getCarrerasOverride(s, idx),
+    override: getOverride(s, idx),
+  };
+}
+function aplicarFichaNubeSnapshot(s, idx, data) {
+  if (!data) return;
+  localStorage.setItem(avancesKey(s, idx), JSON.stringify(Array.isArray(data.avances) ? data.avances : []));
+  localStorage.setItem(carrerasOverrideKey(s, idx), JSON.stringify(data.carrerasOverride || { added: [], removed: [] }));
+  if (data.override) localStorage.setItem(overrideKey(s, idx), JSON.stringify(data.override));
+  else localStorage.removeItem(overrideKey(s, idx));
+}
+async function sincronizarFichaNube(s, idx) {
+  try {
+    const credential = GOOGLE_CREDENTIAL || await pedirCredencialFresca();
+    if (!credential) return;
+    await fetch(ASE_IA_API_URL + '?resource=fichaEstudiante', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ credential, studentKey: studentKey(s, idx), action: 'save', data: fichaNubeSnapshot(s, idx) }),
+    });
+  } catch(e) { /* sin nube por ahora, sigue guardado en este navegador */ }
+}
+async function cargarFichaNube(s, idx) {
+  try {
+    const credential = GOOGLE_CREDENTIAL || await pedirCredencialFresca();
+    if (!credential) return false;
+    const r = await fetch(ASE_IA_API_URL + '?resource=fichaEstudiante', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ credential, studentKey: studentKey(s, idx), action: 'get' }),
+    });
+    const res = await r.json();
+    if (res && res.data) { aplicarFichaNubeSnapshot(s, idx, res.data); return true; }
+    return false;
+  } catch(e) { return false; }
 }
 
 /* ═══════════════ REGISTRO DE AVANCES ═══════════════
@@ -1016,6 +1073,7 @@ function agregarAvance(idx) {
     localStorage.setItem(carrerasOverrideKey(s, idx), JSON.stringify(ov));
   }
   renderModalBody(s, idx);
+  sincronizarFichaNube(s, idx);
 }
 function eliminarAvance(idx, ts) {
   if (!confirm('¿Eliminar este avance del registro?')) return;
@@ -1023,6 +1081,7 @@ function eliminarAvance(idx, ts) {
   const lista = getAvances(s, idx).filter(a => a.ts !== ts);
   localStorage.setItem(avancesKey(s, idx), JSON.stringify(lista));
   renderModalBody(s, idx);
+  sincronizarFichaNube(s, idx);
 }
 
 /* Carreras: se puede agregar/quitar a mano (queda guardado en este
@@ -1054,6 +1113,7 @@ function agregarCarrera(idx) {
   ov.removed = ov.removed.filter(c => c !== val);
   localStorage.setItem(carrerasOverrideKey(s, idx), JSON.stringify(ov));
   renderModalBody(s, idx);
+  sincronizarFichaNube(s, idx);
 }
 function quitarCarrera(idx, carrera) {
   const s = STUDENTS[idx];
@@ -1062,6 +1122,7 @@ function quitarCarrera(idx, carrera) {
   ov.added = ov.added.filter(c => c !== carrera);
   localStorage.setItem(carrerasOverrideKey(s, idx), JSON.stringify(ov));
   renderModalBody(s, idx);
+  sincronizarFichaNube(s, idx);
 }
 
 function toggleCalc(idx) {
@@ -1139,10 +1200,12 @@ function saveOverride(idx) {
   };
   localStorage.setItem(overrideKey(s, idx), JSON.stringify(data));
   renderModalBody(s, idx);
+  sincronizarFichaNube(s, idx);
 }
 function clearOverride(idx) {
   localStorage.removeItem(overrideKey(STUDENTS[idx], idx));
   renderModalBody(STUDENTS[idx], idx);
+  sincronizarFichaNube(STUDENTS[idx], idx);
 }
 
 /* Solo se ofrece "generar con IA" si la cuenta de Google ya está
@@ -1998,7 +2061,7 @@ Organiza la respuesta en 3 a 5 bloques de tiempo (por ejemplo "AHORA", "SEPTIEMB
   }
 }
 
-function closeModal() { document.getElementById('modalBg').classList.remove('open'); }
+function closeModal() { document.getElementById('modalBg').classList.remove('open'); currentModalIdx = null; }
 function closeModalOutside(e) { if (e.target === document.getElementById('modalBg')) closeModal(); }
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
 
