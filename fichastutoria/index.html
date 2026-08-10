@@ -792,25 +792,27 @@ function setGrupo(grupo, opts) {
   localStorage.setItem(grupoKey(), JSON.stringify(grupo));
   const el = document.getElementById('grupo-count');
   if (el) el.textContent = `${grupo.length} en tus tutorías`;
-  if (!(opts && opts.skipSync)) sincronizarGrupoNube(grupo);
+  if (!(opts && opts.skipSync)) sincronizarGrupoNube();
 }
 function agregarAGrupo(idx) {
   const s = STUDENTS[idx];
   const key = studentKey(s, idx);
   const grupo = getGrupo();
   if (!grupo.includes(key)) grupo.push(key);
-  setGrupo(grupo);
+  setGrupo(grupo, { skipSync: true });
   // si antes lo habían sacado (era tutoriado oficial) y ahora lo agregan de nuevo, se saca de exclusiones
   setExclusiones(getExclusiones().filter(k => k !== key));
+  sincronizarGrupoNube();
   renderGrupoLista();
 }
 function quitarDeGrupo(idx) {
   const s = STUDENTS[idx];
   const key = studentKey(s, idx);
-  setGrupo(getGrupo().filter(k => k !== key));
+  setGrupo(getGrupo().filter(k => k !== key), { skipSync: true });
   // por si es un tutoriado asignado oficialmente por el colegio: que no reaparezca solo
   const excl = getExclusiones();
   if (!excl.includes(key)) setExclusiones([...excl, key]);
+  sincronizarGrupoNube();
   renderGrupoLista();
 }
 async function toggleMiGrupo() {
@@ -858,8 +860,9 @@ function renderGrupoLista() {
 }
 function vaciarGrupo() {
   if (!confirm('¿Vaciar por completo tus tutorías?')) return;
-  setGrupo([]);
+  setGrupo([], { skipSync: true });
   setExclusiones(tutoriadosAsignadosOficialmente());
+  sincronizarGrupoNube();
   showMiGrupo = false;
   document.getElementById('btn-mi-grupo').classList.remove('active');
   renderGrupoLista();
@@ -867,16 +870,20 @@ function vaciarGrupo() {
 }
 
 /* Sincronización en la nube (Cloudflare KV, vía el Worker de ASE-IA).
-   Best-effort: si falla (sin internet, KV no configurado aún, etc.) el grupo
-   sigue funcionando normalmente guardado solo en este navegador. */
-async function sincronizarGrupoNube(grupo) {
+   Se manda TANTO el grupo agregado a mano COMO las exclusiones (tutoriados
+   oficiales que el/la docente sacó a propósito) — si solo se guardara el
+   grupo, al sacar a alguien asignado oficialmente reaparecería solo en
+   cualquier otro navegador/celular, porque ahí no habría quedado registrada
+   la exclusión. Best-effort: si falla (sin internet, KV no configurado
+   todavía, etc.) sigue funcionando guardado solo en este navegador. */
+async function sincronizarGrupoNube() {
   try {
-    const credential = GOOGLE_CREDENTIAL;
+    const credential = GOOGLE_CREDENTIAL || await pedirCredencialFresca();
     if (!credential) return;
     await fetch(ASE_IA_API_URL + '?resource=misTutorias', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ credential, action: 'save', grupo }),
+      body: JSON.stringify({ credential, action: 'save', grupo: getGrupo(), exclusiones: getExclusiones() }),
     });
   } catch(e) { /* sin nube por ahora, no pasa nada — sigue guardado localmente */ }
 }
@@ -890,8 +897,11 @@ async function cargarGrupoNube() {
       body: JSON.stringify({ credential, action: 'get' }),
     });
     const data = await r.json();
-    if (data && Array.isArray(data.grupo) && data.grupo.length) {
-      setGrupo(data.grupo, { skipSync: true });
+    // "found" distingue "nunca se guardó nada todavía" (no tocar lo local)
+    // de "se guardó como vacío a propósito" (por ejemplo, tras vaciar todo).
+    if (data && data.found) {
+      setGrupo(Array.isArray(data.grupo) ? data.grupo : [], { skipSync: true });
+      setExclusiones(Array.isArray(data.exclusiones) ? data.exclusiones : []);
     }
   } catch(e) { /* sin nube por ahora, sigue con lo que haya local */ }
 }
@@ -1084,6 +1094,17 @@ function openModal(idx) {
       renderModalBody(STUDENTS[idx], idx);
     }
   });
+  // el botón de "vincular cuenta de Google" solo debe salir cuando de
+  // verdad no hay forma de confirmar la cuenta — si ya inició sesión, se
+  // intenta obtener la credencial en silencio y, si se logra, se refresca
+  // la ficha sola para mostrar directo el botón de generar con IA.
+  if (!GOOGLE_CREDENTIAL) {
+    pedirCredencialFresca().then(cred => {
+      if (cred && currentModalIdx === idx && document.getElementById('modalBg').classList.contains('open')) {
+        renderModalBody(STUDENTS[idx], idx);
+      }
+    });
+  }
 }
 
 function overrideKey(s, idx) {
@@ -2222,7 +2243,15 @@ function aplicarSesion(s) {
   document.body.classList.remove('gate-open');
   document.getElementById('sessionBadge').style.display = 'flex';
   document.getElementById('sessionEmail').textContent = s.email;
-  cargarGrupoNube(); // trae "Mis Tutorías" de la nube apenas hay sesión, sin esperar a que abran el modal
+  // trae "Mis Tutorías" de la nube apenas hay sesión, sin esperar a que
+  // abran el modal — de paso, esto intenta obtener una credencial de Google
+  // fresca en silencio, así el botón de "generar con IA" ya sale disponible
+  // desde la primera ficha que se abra, en vez de pedir vincular de nuevo.
+  cargarGrupoNube().then(() => {
+    if (GOOGLE_CREDENTIAL && currentModalIdx !== null && document.getElementById('modalBg').classList.contains('open')) {
+      renderModalBody(STUDENTS[currentModalIdx], currentModalIdx);
+    }
+  });
 }
 
 function cerrarSesion() {
