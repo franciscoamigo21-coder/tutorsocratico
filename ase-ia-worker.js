@@ -264,11 +264,21 @@ export default {
       const key = "tutorias:" + u.email;
       if (body.action === "save") {
         const grupo = Array.isArray(body.grupo) ? body.grupo.slice(0, 500).map(String) : [];
-        await env.TUTORIAS.put(key, JSON.stringify(grupo));
-        return new Response(JSON.stringify({ ok: true, grupo }), { status: 200, headers: secure });
+        const exclusiones = Array.isArray(body.exclusiones) ? body.exclusiones.slice(0, 500).map(String) : [];
+        await env.TUTORIAS.put(key, JSON.stringify({ grupo, exclusiones }));
+        return new Response(JSON.stringify({ ok: true, grupo, exclusiones }), { status: 200, headers: secure });
       }
       const raw = await env.TUTORIAS.get(key);
-      return new Response(JSON.stringify({ ok: true, grupo: raw ? JSON.parse(raw) : [] }), { status: 200, headers: secure });
+      let grupo = [], exclusiones = [];
+      if (raw) {
+        try {
+          const parsed = JSON.parse(raw);
+          // formato viejo: solo un array de grupo (antes de agregar exclusiones)
+          if (Array.isArray(parsed)) grupo = parsed;
+          else { grupo = Array.isArray(parsed.grupo) ? parsed.grupo : []; exclusiones = Array.isArray(parsed.exclusiones) ? parsed.exclusiones : []; }
+        } catch {}
+      }
+      return new Response(JSON.stringify({ ok: true, found: !!raw, grupo, exclusiones }), { status: 200, headers: secure });
     }
 
     // ---- Ficha del estudiante (avances de tutoría, carreras agregadas y
