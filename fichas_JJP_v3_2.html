@@ -211,13 +211,16 @@ body.gate-open .login-gate { display: flex; }
   padding: 24px 28px;
 }
 
-/* Vista "Todos": 3 columnas fijas por curso (izq. IV°A, medio IV°B, der. IV°C) */
+/* Vista "Todos": 3 columnas fijas por curso (izq. IV°A, medio IV°B, der. IV°C).
+   En pantallas anchas, cada tarjeta se ubica en una fila explícita (misma
+   fila = mismo puesto en su curso) para que las 3 columnas queden parejas:
+   el grid le da a cada fila el alto de la tarjeta más alta de esa fila. */
 .grid-columns {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(var(--cols, 3), 1fr);
   gap: 18px;
   padding: 24px 28px;
-  align-items: start;
+  align-items: stretch;
 }
 .grid-col-head {
   font-family: 'Montserrat', sans-serif;
@@ -230,6 +233,8 @@ body.gate-open .login-gate { display: flex; }
   border-bottom: 2px solid var(--sip-gold);
   margin-bottom: 12px;
 }
+/* En pantallas angostas (apilado en 1 columna, ver media query) las tarjetas
+   de cada curso se agrupan en su propio bloque vertical. */
 .grid-col-cards { display: flex; flex-direction: column; gap: 14px; }
 .grid-col-empty { color: var(--muted); font-size: 0.8rem; font-style: italic; padding: 10px 2px; }
 .scope-toggle { display: flex; border: 1.5px solid var(--border); border-radius: 6px; overflow: hidden; }
@@ -915,6 +920,15 @@ function gradeClass(v) {
   return 'low';
 }
 
+function isNarrowViewport() {
+  return window.matchMedia('(max-width: 900px)').matches;
+}
+let __narrowAnterior = isNarrowViewport();
+window.addEventListener('resize', () => {
+  const ahora = isNarrowViewport();
+  if (ahora !== __narrowAnterior) { __narrowAnterior = ahora; renderGrid(); }
+});
+
 function initials(nombre) {
   const parts = nombre.trim().split(' ');
   return (parts[0][0] + (parts[1]?.[0] || '')).toUpperCase();
@@ -928,12 +942,13 @@ function ordenarLista(list, sort) {
   return out;
 }
 
-function cardHTML(s, idx) {
+function cardHTML(s, idx, gridCol, gridRow) {
   const p = s.notas.promedio;
   const ov = getOverride(s, idx);
   const carrerasCard = carrerasEfectivas(s, idx);
+  const posStyle = gridCol && gridRow ? ` style="grid-column:${gridCol};grid-row:${gridRow}"` : '';
   return `
-    <div class="card" onclick="openModal(${idx})">
+    <div class="card"${posStyle} onclick="openModal(${idx})">
       <div class="card-header">
         <span class="card-curso">📚 ${s.curso}</span>
       </div>
@@ -979,7 +994,6 @@ function renderGrid() {
 
   if (!items.length) {
     grid.className = 'grid';
-    grid.style.gridTemplateColumns = '';
     grid.innerHTML = '<div class="no-results"><div class="nr-icon">🔎</div>No se encontraron estudiantes con los filtros seleccionados.</div>';
     if (scopeToggle) scopeToggle.style.display = curso ? 'none' : 'flex';
     return;
@@ -1000,23 +1014,44 @@ function renderGrid() {
     // uno en su columna, manteniendo el orden relativo entre ellos.
     // "Por curso": cada curso se ordena comparándose solo consigo mismo.
     const ordenados = ordenScope === 'curso' ? null : ordenarLista(items, sort);
+    const listasPorCurso = cursos.map(c => ordenScope === 'curso'
+      ? ordenarLista(items.filter(({s}) => perteneceA(s, c)), sort)
+      : ordenados.filter(({s}) => perteneceA(s, c)));
+
     grid.className = 'grid-columns';
-    grid.style.gridTemplateColumns = `repeat(${cursos.length}, 1fr)`;
-    grid.innerHTML = cursos.map(c => {
-      const deEsteCurso = ordenScope === 'curso'
-        ? ordenarLista(items.filter(({s}) => perteneceA(s, c)), sort)
-        : ordenados.filter(({s}) => perteneceA(s, c));
-      const cardsHTML = deEsteCurso.length
-        ? deEsteCurso.map(({s, idx}) => cardHTML(s, idx)).join('')
-        : '<div class="grid-col-empty">Sin estudiantes con los filtros actuales.</div>';
-      return `<div class="grid-col">
-        <div class="grid-col-head">${c} · ${deEsteCurso.length}</div>
-        <div class="grid-col-cards">${cardsHTML}</div>
-      </div>`;
-    }).join('');
+    grid.style.setProperty('--cols', String(cursos.length));
+
+    if (isNarrowViewport()) {
+      // pantalla angosta: se apilan (ver media query), no hace falta alinear filas
+      grid.innerHTML = cursos.map((c, i) => {
+        const lista = listasPorCurso[i];
+        const cardsHTML = lista.length
+          ? lista.map(({s, idx}) => cardHTML(s, idx)).join('')
+          : '<div class="grid-col-empty">Sin estudiantes con los filtros actuales.</div>';
+        return `<div class="grid-col">
+          <div class="grid-col-head">${c} · ${lista.length}</div>
+          <div class="grid-col-cards">${cardsHTML}</div>
+        </div>`;
+      }).join('');
+    } else {
+      // pantalla ancha: cada tarjeta va en una fila explícita del grid
+      // (misma fila = mismo puesto dentro de su curso), así el grid iguala
+      // el alto de cada fila a la tarjeta más alta de esa fila y las 3
+      // columnas quedan parejas de arriba a abajo.
+      let html = '';
+      cursos.forEach((c, i) => {
+        const lista = listasPorCurso[i];
+        html += `<div class="grid-col-head" style="grid-column:${i+1};grid-row:1">${c} · ${lista.length}</div>`;
+        if (!lista.length) {
+          html += `<div class="grid-col-empty" style="grid-column:${i+1};grid-row:2">Sin estudiantes con los filtros actuales.</div>`;
+        } else {
+          lista.forEach(({s, idx}, rowIdx) => { html += cardHTML(s, idx, i+1, rowIdx+2); });
+        }
+      });
+      grid.innerHTML = html;
+    }
     return;
   }
-  grid.style.gridTemplateColumns = '';
 
   // Un solo curso seleccionado: grilla simple, como antes.
   if (scopeToggle) scopeToggle.style.display = 'none';
