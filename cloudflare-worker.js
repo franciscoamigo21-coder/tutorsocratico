@@ -145,14 +145,21 @@ export default {
       .trim()
       .replace(/^```json\s*/i, "")
       .replace(/^```/, "")
-      .replace(/```$/, "")
+      .replace(/```\s*$/i, "")
       .trim();
 
-    let parsed;
+    // Parseo robusto: si viene con texto alrededor, extrae el objeto { ... }
+    let parsed = null;
     try {
       parsed = JSON.parse(raw);
     } catch (_) {
-      return json({ error: "La IA no devolvió JSON válido" }, 502, cors);
+      const m = raw.match(/\{[\s\S]*\}/);
+      if (m) {
+        try { parsed = JSON.parse(m[0]); } catch (_2) { parsed = null; }
+      }
+    }
+    if (!parsed) {
+      return json({ error: "La IA no devolvió JSON válido", detalle: raw.slice(0, 300) }, 502, cors);
     }
 
     if (!Array.isArray(parsed.preguntas_defensa) || parsed.preguntas_defensa.length === 0) {
