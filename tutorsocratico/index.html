@@ -1243,9 +1243,9 @@
                     <span class="modo-desc">Pega el ensayo, tarea o prueba</span>
                 </button>
                 <button type="button" class="modo-card" data-modo="pdf" onclick="seleccionarModo('pdf')">
-                    <i class="fas fa-file-pdf"></i>
-                    <span class="modo-nombre">Insertar trabajo en PDF</span>
-                    <span class="modo-desc">Sube un archivo PDF</span>
+                    <i class="fas fa-file-lines"></i>
+                    <span class="modo-nombre">Insertar PDF o Word</span>
+                    <span class="modo-desc">Sube un PDF o documento Word</span>
                 </button>
                 <button type="button" class="modo-card" data-modo="camara" onclick="seleccionarModo('camara')">
                     <i class="fas fa-camera"></i>
@@ -1276,9 +1276,9 @@
         <div id="panel-pdf" class="panel-modo">
             <label class="dropzone" for="pdfInput">
                 <i class="fas fa-file-arrow-up"></i>
-                <span class="dz-title">Selecciona un archivo PDF</span>
+                <span class="dz-title">Selecciona un PDF o Word</span>
                 <span class="dz-sub">Se extraerá el texto del trabajo y se analizará igual que un texto pegado</span>
-                <input type="file" id="pdfInput" accept="application/pdf" onchange="procesarPDF(this.files[0])" hidden>
+                <input type="file" id="pdfInput" accept=".pdf,application/pdf,.docx,application/vnd.openxmlformats-officedocument.wordprocessingml.document" onchange="procesarArchivo(this.files[0])" hidden>
             </label>
             <p id="pdf-status" class="modo-status"></p>
         </div>
@@ -2406,25 +2406,41 @@
         }
 
         // --- PDF: extrae el texto y lo manda al mismo análisis ---
-        async function procesarPDF(file) {
+        async function procesarArchivo(file) {
             if (!file) return;
             const st = document.getElementById('pdf-status');
-            st.textContent = '📄 Leyendo el PDF...';
+            const nombre = (file.name || '').toLowerCase();
+            const esWord = nombre.endsWith('.docx') || (file.type || '').indexOf('wordprocessingml') !== -1;
+            if (nombre.endsWith('.doc') && !nombre.endsWith('.docx')) {
+                st.innerHTML = '⚠️ El formato .doc antiguo no es compatible. Guárdalo como <strong>.docx</strong> (Archivo → Guardar como) o expórtalo a PDF.';
+                return;
+            }
             try {
-                await _cargarScript('https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js');
-                pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
-                const buf = await file.arrayBuffer();
-                const pdf = await pdfjsLib.getDocument({ data: buf }).promise;
                 let texto = '';
-                for (let i = 1; i <= pdf.numPages; i++) {
-                    st.textContent = `📄 Extrayendo texto... página ${i}/${pdf.numPages}`;
-                    const page = await pdf.getPage(i);
-                    const content = await page.getTextContent();
-                    texto += content.items.map(it => it.str).join(' ') + '\n';
+                if (esWord) {
+                    st.textContent = '📝 Leyendo el documento Word...';
+                    await _cargarScript('https://cdn.jsdelivr.net/npm/mammoth@1.6.0/mammoth.browser.min.js');
+                    const buf = await file.arrayBuffer();
+                    const res = await mammoth.extractRawText({ arrayBuffer: buf });
+                    texto = (res && res.value) ? res.value : '';
+                } else {
+                    st.textContent = '📄 Leyendo el PDF...';
+                    await _cargarScript('https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js');
+                    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+                    const buf = await file.arrayBuffer();
+                    const pdf = await pdfjsLib.getDocument({ data: buf }).promise;
+                    for (let i = 1; i <= pdf.numPages; i++) {
+                        st.textContent = `📄 Extrayendo texto... página ${i}/${pdf.numPages}`;
+                        const page = await pdf.getPage(i);
+                        const content = await page.getTextContent();
+                        texto += content.items.map(it => it.str).join(' ') + '\n';
+                    }
                 }
                 texto = texto.replace(/\s+/g, ' ').trim();
                 if (texto.length < 80) {
-                    st.innerHTML = '⚠️ Este PDF casi no tiene texto seleccionable (parece escaneado). Prueba con <strong>Escanear con cámara</strong> o sube una foto.';
+                    st.innerHTML = esWord
+                        ? '⚠️ El documento casi no tiene texto (¿solo imágenes?). Prueba con otro archivo o pega el texto manualmente.'
+                        : '⚠️ Este PDF casi no tiene texto seleccionable (parece escaneado). Prueba con <strong>Escanear con cámara</strong> o sube una foto.';
                     return;
                 }
                 st.textContent = `✅ Texto extraído (${texto.length} caracteres). Analizando...`;
@@ -2433,7 +2449,7 @@
                 analizarTextoEstudiante();
             } catch (e) {
                 console.error(e);
-                st.textContent = '❌ No se pudo leer el PDF: ' + e.message;
+                st.textContent = '❌ No se pudo leer el archivo: ' + e.message;
             }
         }
 
