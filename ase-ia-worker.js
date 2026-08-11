@@ -305,6 +305,44 @@ export default {
       return new Response(JSON.stringify({ ok: true, data: raw ? JSON.parse(raw) : null }), { status: 200, headers: secure });
     }
 
+    // ---- Documentos/antecedentes adjuntos (archivos subidos para un
+    // estudiante): los BYTES se guardan en una clave KV aparte por
+    // documento — nunca junto a la ficha general ni en localStorage — para
+    // no inflar esos otros datos con el peso de un PDF. Usa el mismo KV
+    // TUTORIAS que el resto.
+    if (resource === "documento") {
+      const u = await verifyGoogle(body.credential);
+      if (!u) return json({ error: "No pudimos verificar tu cuenta." }, 401, cors);
+      const p = profileFor(u);
+      if (p.role !== "staff" && p.role !== "dev") return json({ error: "No autorizado" }, 403, cors);
+      if (!env.TUTORIAS) return json({ error: "Falta configurar el almacenamiento (KV TUTORIAS)" }, 500, cors);
+      const studentKey = String(body.studentKey || "").trim().slice(0, 100);
+      const ts = String(body.ts || "").trim().slice(0, 30);
+      if (!studentKey || !ts) return json({ error: "Falta studentKey o ts" }, 400, cors);
+      const key = `documento:${studentKey}:${ts}`;
+
+      if (body.action === "subir") {
+        const b64 = String(body.contenidoB64 || "");
+        if (!b64) return json({ error: "Archivo vacío" }, 400, cors);
+        if (b64.length > 7000000) return json({ error: "Archivo demasiado grande (máx. ~5 MB)" }, 400, cors);
+        const tipo = String(body.tipo || "application/octet-stream").slice(0, 100);
+        await env.TUTORIAS.put(key, JSON.stringify({ tipo, contenidoB64: b64 }));
+        return new Response(JSON.stringify({ ok: true }), { status: 200, headers: secure });
+      }
+      if (body.action === "descargar") {
+        const raw = await env.TUTORIAS.get(key);
+        if (!raw) return json({ error: "No encontrado" }, 404, cors);
+        let parsed;
+        try { parsed = JSON.parse(raw); } catch { return json({ error: "Documento dañado" }, 500, cors); }
+        return new Response(JSON.stringify({ ok: true, contenidoB64: parsed.contenidoB64, tipo: parsed.tipo }), { status: 200, headers: secure });
+      }
+      if (body.action === "eliminar") {
+        await env.TUTORIAS.delete(key);
+        return new Response(JSON.stringify({ ok: true }), { status: 200, headers: secure });
+      }
+      return json({ error: "Acción no reconocida" }, 400, cors);
+    }
+
     // ---- Chat con IA (por defecto) ----
     if (!env.ANTHROPIC_API_KEY) return json({ error: "Falta configurar ANTHROPIC_API_KEY" }, 500, cors);
     const question = (body.question || "").toString().slice(0, 1000);
