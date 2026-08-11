@@ -237,14 +237,6 @@ body.gate-open .login-gate { display: flex; }
    de cada curso se agrupan en su propio bloque vertical. */
 .grid-col-cards { display: flex; flex-direction: column; gap: 14px; }
 .grid-col-empty { color: var(--muted); font-size: 0.8rem; font-style: italic; padding: 10px 2px; }
-.scope-toggle { display: flex; border: 1.5px solid var(--border); border-radius: 6px; overflow: hidden; }
-.scope-toggle button {
-  border: none; background: var(--white); color: var(--sip-navy);
-  font-size: 0.72rem; font-weight: 700; padding: 8px 12px; cursor: pointer;
-  transition: all 0.15s;
-}
-.scope-toggle button + button { border-left: 1.5px solid var(--border); }
-.scope-toggle button.active { background: var(--sip-navy); color: white; }
 
 /* ─── CARD ─── */
 .card {
@@ -614,7 +606,6 @@ body.gate-open .login-gate { display: flex; }
   .tab { padding: 6px 10px; font-size: 0.66rem; }
   .grid { padding: 14px; gap: 12px; }
   .grid-columns { padding: 14px; gap: 20px; }
-  .scope-toggle button { padding: 7px 9px; font-size: 0.66rem; }
 }
 @media (max-width: 900px) {
   .grid-columns { grid-template-columns: 1fr; }
@@ -682,10 +673,6 @@ body.gate-open .login-gate { display: flex; }
     <option value="promedio_desc">Ordenar: Promedio más alto</option>
     <option value="promedio_asc">Ordenar: Promedio más bajo</option>
   </select>
-  <div class="scope-toggle" id="scope-toggle" title="Cómo comparar el orden/promedio: entre toda la generación o solo dentro de cada curso">
-    <button type="button" class="active" onclick="setScope(this,'generacion')">Generación</button>
-    <button type="button" onclick="setScope(this,'curso')">Por curso</button>
-  </div>
   <button class="btn-filter" id="btn-mi-grupo" onclick="toggleMiGrupo()">👥 Ver solo mis tutorías</button>
   <button class="btn-filter" onclick="abrirGrupoModal()">✏️ Mis Tutorías</button>
   <span class="count-label" id="count"></span>
@@ -933,14 +920,6 @@ function setTab(el, val) {
   renderGrid();
 }
 
-let ordenScope = 'generacion'; // 'generacion' (los 3 cursos comparados juntos) o 'curso' (cada curso comparado solo consigo mismo)
-function setScope(el, val) {
-  ordenScope = val;
-  document.querySelectorAll('#scope-toggle button').forEach(b => b.classList.remove('active'));
-  el.classList.add('active');
-  renderGrid();
-}
-
 function gradeClass(v) {
   if (!v) return 'none';
   if (v >= 6.0) return '';
@@ -1005,7 +984,6 @@ function renderGrid() {
   const q = document.getElementById('search').value.toLowerCase();
   const curso = document.getElementById('curso').value;
   const sort = document.getElementById('sort').value;
-  const scopeToggle = document.getElementById('scope-toggle');
 
   let items = STUDENTS
     .map((s, idx) => ({ s, idx }))
@@ -1023,13 +1001,11 @@ function renderGrid() {
   if (!items.length) {
     grid.className = 'grid';
     grid.innerHTML = '<div class="no-results"><div class="nr-icon">🔎</div>No se encontraron estudiantes con los filtros seleccionados.</div>';
-    if (scopeToggle) scopeToggle.style.display = curso ? 'none' : 'flex';
     return;
   }
 
   // Vista "Todos los cursos": 3 columnas fijas (izq. IV°A, medio IV°B, der. IV°C).
   if (!curso) {
-    if (scopeToggle) scopeToggle.style.display = 'flex';
     const CURSOS_CONOCIDOS = ['IV° A', 'IV° B', 'IV° C'];
     const cursos = CURSOS_CONOCIDOS.slice();
     // por si algún estudiante quedara sin uno de esos 3 cursos exactos (dato
@@ -1038,13 +1014,10 @@ function renderGrid() {
     const hayOtros = items.some(({s}) => !CURSOS_CONOCIDOS.includes(s.curso));
     if (hayOtros) cursos.push('Otros / curso por confirmar');
     const perteneceA = (s, c) => c === 'Otros / curso por confirmar' ? !CURSOS_CONOCIDOS.includes(s.curso) : s.curso === c;
-    // "Generación": se ordenan los 3 cursos juntos y luego se reparte cada
-    // uno en su columna, manteniendo el orden relativo entre ellos.
-    // "Por curso": cada curso se ordena comparándose solo consigo mismo.
-    const ordenados = ordenScope === 'curso' ? null : ordenarLista(items, sort);
-    const listasPorCurso = cursos.map(c => ordenScope === 'curso'
-      ? ordenarLista(items.filter(({s}) => perteneceA(s, c)), sort)
-      : ordenados.filter(({s}) => perteneceA(s, c)));
+    // se ordenan los 3 cursos juntos (toda la generación) y luego se reparte
+    // cada uno en su columna, manteniendo el orden relativo entre ellos.
+    const ordenados = ordenarLista(items, sort);
+    const listasPorCurso = cursos.map(c => ordenados.filter(({s}) => perteneceA(s, c)));
 
     grid.className = 'grid-columns';
     grid.style.setProperty('--cols', String(cursos.length));
@@ -1082,7 +1055,6 @@ function renderGrid() {
   }
 
   // Un solo curso seleccionado: grilla simple, como antes.
-  if (scopeToggle) scopeToggle.style.display = 'none';
   grid.className = 'grid';
   grid.innerHTML = ordenarLista(items, sort).map(({s, idx}) => cardHTML(s, idx)).join('');
 }
@@ -1440,26 +1412,25 @@ function toggleAvanceForm(idx) {
   document.getElementById('avance-form-' + idx).classList.toggle('open');
 }
 
-/* Estimación referencial de puntaje NEM (Grupo A · Científico-Humanista diurna),
-   interpolando puntos reales de la tabla oficial DEMRE (demre.cl/paes/factores-seleccion/
-   tabla-transformacion-nem-grupo-a). Es un cálculo automático hecho por esta página,
-   NO el valor oficial: DEMRE recalcula la tabla cada proceso según la distribución
-   nacional de notas, así que esto es solo referencial hasta tener el puntaje real. */
-const NEM_TABLE_GRUPO_A = [
-  [4.0, 100], [4.2, 163], [4.5, 257], [5.0, 415], [5.5, 572], [5.9, 685],
-  [6.0, 713], [6.2, 771], [6.3, 799], [6.5, 856], [6.6, 886], [6.7, 914],
-  [6.8, 942], [7.0, 1000],
-];
+/* Tabla oficial completa de transformación de NEM (Grupo A · Científico-Humanista
+   diurna), tal como la usa el DEMRE (demre.cl/paes/factores-seleccion/
+   tabla-transformacion-nem-grupo-a) — centésima por centésima, de 4.00 a 7.00.
+   Es la tabla del proceso vigente: el DEMRE la recalcula cada admisión según la
+   distribución nacional de notas, así que puede variar en próximos procesos. */
+const NEM_TABLE_GRUPO_A = {"4.00":100,"4.01":103,"4.02":105,"4.03":109,"4.04":112,"4.05":115,"4.06":118,"4.07":122,"4.08":124,"4.09":128,"4.10":131,"4.11":135,"4.12":137,"4.13":140,"4.14":144,"4.15":146,"4.16":150,"4.17":153,"4.18":157,"4.19":159,"4.20":163,"4.21":166,"4.22":169,"4.23":172,"4.24":176,"4.25":178,"4.26":181,"4.27":185,"4.28":187,"4.29":191,"4.30":194,"4.31":198,"4.32":200,"4.33":204,"4.34":207,"4.35":211,"4.36":213,"4.37":216,"4.38":220,"4.39":222,"4.40":226,"4.41":229,"4.42":232,"4.43":235,"4.44":239,"4.45":241,"4.46":245,"4.47":248,"4.48":252,"4.49":254,"4.50":257,"4.51":261,"4.52":263,"4.53":267,"4.54":270,"4.55":274,"4.56":276,"4.57":280,"4.58":283,"4.59":286,"4.60":289,"4.61":292,"4.62":295,"4.63":298,"4.64":302,"4.65":304,"4.66":308,"4.67":311,"4.68":315,"4.69":317,"4.70":321,"4.71":324,"4.72":328,"4.73":330,"4.74":333,"4.75":337,"4.76":339,"4.77":343,"4.78":346,"4.79":349,"4.80":352,"4.81":356,"4.82":358,"4.83":362,"4.84":365,"4.85":367,"4.86":371,"4.87":374,"4.88":378,"4.89":380,"4.90":384,"4.91":387,"4.92":391,"4.93":393,"4.94":397,"4.95":400,"4.96":403,"4.97":406,"4.98":409,"4.99":412,"5.00":415,"5.01":419,"5.02":421,"5.03":425,"5.04":428,"5.05":432,"5.06":434,"5.07":438,"5.08":441,"5.09":443,"5.10":447,"5.11":450,"5.12":454,"5.13":456,"5.14":460,"5.15":463,"5.16":466,"5.17":469,"5.18":473,"5.19":475,"5.20":479,"5.21":482,"5.22":484,"5.23":488,"5.24":491,"5.25":495,"5.26":497,"5.27":501,"5.28":504,"5.29":508,"5.30":510,"5.31":514,"5.32":517,"5.33":519,"5.34":523,"5.35":526,"5.36":529,"5.37":532,"5.38":536,"5.39":538,"5.40":542,"5.41":545,"5.42":549,"5.43":551,"5.44":555,"5.45":558,"5.46":560,"5.47":564,"5.48":567,"5.49":569,"5.50":572,"5.51":574,"5.52":577,"5.53":580,"5.54":583,"5.55":586,"5.56":589,"5.57":591,"5.58":594,"5.59":596,"5.60":599,"5.61":603,"5.62":605,"5.63":608,"5.64":610,"5.65":613,"5.66":617,"5.67":619,"5.68":622,"5.69":625,"5.70":628,"5.71":631,"5.72":634,"5.73":636,"5.74":639,"5.75":643,"5.76":645,"5.77":648,"5.78":650,"5.79":654,"5.80":657,"5.81":659,"5.82":662,"5.83":664,"5.84":668,"5.85":671,"5.86":673,"5.87":676,"5.88":680,"5.89":682,"5.90":685,"5.91":688,"5.92":690,"5.93":694,"5.94":697,"5.95":699,"5.96":702,"5.97":706,"5.98":708,"5.99":711,"6.00":713,"6.01":716,"6.02":720,"6.03":722,"6.04":725,"6.05":727,"6.06":731,"6.07":734,"6.08":736,"6.09":739,"6.10":742,"6.11":745,"6.12":748,"6.13":751,"6.14":753,"6.15":757,"6.16":760,"6.17":762,"6.18":765,"6.19":767,"6.20":771,"6.21":774,"6.22":776,"6.23":779,"6.24":783,"6.25":785,"6.26":788,"6.27":790,"6.28":793,"6.29":797,"6.30":799,"6.31":802,"6.32":805,"6.33":808,"6.34":811,"6.35":814,"6.36":816,"6.37":819,"6.38":823,"6.39":825,"6.40":828,"6.41":830,"6.42":834,"6.43":837,"6.44":839,"6.45":842,"6.46":844,"6.47":848,"6.48":851,"6.49":853,"6.50":856,"6.51":860,"6.52":862,"6.53":865,"6.54":868,"6.55":870,"6.56":874,"6.57":877,"6.58":879,"6.59":882,"6.60":886,"6.61":888,"6.62":891,"6.63":893,"6.64":896,"6.65":900,"6.66":902,"6.67":905,"6.68":907,"6.69":911,"6.70":914,"6.71":916,"6.72":919,"6.73":922,"6.74":925,"6.75":928,"6.76":931,"6.77":933,"6.78":937,"6.79":940,"6.80":942,"6.81":945,"6.82":947,"6.83":951,"6.84":954,"6.85":956,"6.86":959,"6.87":963,"6.88":965,"6.89":968,"6.90":970,"6.91":973,"6.92":977,"6.93":979,"6.94":982,"6.95":985,"6.96":988,"6.97":991,"6.98":994,"6.99":996,"7.00":1000};
 function estimarNEM(prom) {
   if (!Number.isFinite(prom)) return null;
-  const t = NEM_TABLE_GRUPO_A;
-  if (prom <= t[0][0]) return t[0][1];
-  if (prom >= t[t.length-1][0]) return t[t.length-1][1];
-  for (let i = 0; i < t.length - 1; i++) {
-    const [p1, v1] = t[i], [p2, v2] = t[i+1];
-    if (prom >= p1 && prom <= p2) return v1 + (prom - p1) / (p2 - p1) * (v2 - v1);
+  const p = Math.max(4.0, Math.min(7.0, prom));
+  const key = p.toFixed(2);
+  if (NEM_TABLE_GRUPO_A[key] !== undefined) return NEM_TABLE_GRUPO_A[key];
+  // por si algún redondeo intermedio no calza exacto con una clave (no debería
+  // pasar entre 4.00 y 7.00 en pasos de 0.01), se busca la más cercana.
+  let mejor = null, mejorDist = Infinity;
+  for (const k in NEM_TABLE_GRUPO_A) {
+    const dist = Math.abs(parseFloat(k) - p);
+    if (dist < mejorDist) { mejorDist = dist; mejor = NEM_TABLE_GRUPO_A[k]; }
   }
-  return null;
+  return mejor;
 }
 function livePreviewNEM(idx) {
   const s = STUDENTS[idx];
@@ -1670,8 +1641,13 @@ function renderModalBody(s, idx) {
           <button class="calc-save" onclick="saveOverride(${idx})">Guardar</button>
           ${override ? `<button class="calc-clear" onclick="clearOverride(${idx})">Quitar actualización</button>` : ''}
         </div>
-        <div class="calc-note">El NEM mostrado aquí es una estimación automática (interpolación de la tabla oficial DEMRE, Grupo A Científico-Humanista diurna) — no es el puntaje oficial, que se recalcula cada proceso según la distribución nacional de notas. Reemplázalo cuando tengan el real de demre.cl o la Plataforma Pedro de Valdivia.</div>
+        <div class="calc-note">El NEM mostrado aquí se calcula con la tabla oficial completa del DEMRE (Grupo A, Científico-Humanista diurna) — es el puntaje que corresponde a ese promedio en el proceso vigente. El DEMRE puede ajustar la tabla en próximos procesos según la distribución nacional de notas, así que conviene confirmarlo en demre.cl o la Plataforma Pedro de Valdivia cuando esté disponible.</div>
       </div>
+    </div>
+
+    <div class="fs">
+      <div class="fs-title">🎯 Ensayos PAES</div>
+      <p style="color:var(--muted);font-size:0.85rem;font-style:italic;padding:6px 0">🛠️ Pronto — acá vas a poder ir registrando los puntajes de cada ensayo PAES rendido durante el año.</p>
     </div>
 
     <div class="fs">
@@ -1782,7 +1758,7 @@ function renderModalBody(s, idx) {
           <div class="plan-card-icon">🎓</div>
           <div class="plan-card-title">Opciones de Carrera</div>
           <div class="plan-card-desc">Abre la Plataforma Pedro de Valdivia (alianza SIP) para simular puntajes y explorar carreras.</div>
-          <button class="plan-card-btn gold" onclick="event.stopPropagation();window.open('https://plataformaseducativaspdv.com/auth/google','_blank')">Comenzar</button>
+          <button class="plan-card-btn gold" onclick="event.stopPropagation();window.open('https://plataformaseducativaspdv.com/auth/login?callbackUrl=https%3A%2F%2Fplataformaseducativaspdv.com%2F','_blank')">Comenzar</button>
         </div>
       </div>
       <div style="font-size:0.66rem;color:var(--muted);margin-top:8px">Los botones de impresión abren el diálogo de impresión del navegador en esta misma pestaña — ahí puedes imprimir en papel o elegir "Guardar como PDF".</div>
