@@ -525,6 +525,24 @@ body.gate-open .login-gate { display: flex; }
 .avance-siNo-row { display: grid; grid-template-columns: 160px 1fr; gap: 10px; margin-bottom: 10px; align-items: end; }
 .avance-siNo-row select, .avance-siNo-row input { padding: 7px 10px; border: 1.5px solid var(--border); border-radius: 5px; font-family: 'Inter', sans-serif; font-size: 0.82rem; width: 100%; }
 
+/* documentos / antecedentes adjuntos */
+.docs-lista { display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px; }
+.doc-item { position: relative; display: flex; align-items: flex-start; gap: 10px; background: var(--paper); border: 1px solid var(--border); border-radius: 8px; padding: 10px 32px 10px 12px; }
+.doc-item-icon { font-size: 1.3rem; line-height: 1; }
+.doc-item-nombre { font-size: 0.82rem; font-weight: 700; color: var(--sip-navy); word-break: break-word; }
+.doc-item-meta { font-size: 0.66rem; color: var(--muted); margin-top: 2px; }
+.doc-item-resumen { font-size: 0.78rem; color: var(--text); margin-top: 4px; line-height: 1.4; }
+.doc-item-link { font-size: 0.72rem; font-weight: 700; color: var(--sip-navy-mid); text-decoration: none; margin-top: 5px; display: inline-block; }
+.doc-item-link:hover { text-decoration: underline; }
+.doc-del { position: absolute; top: 8px; right: 8px; background: none; border: none; color: var(--muted); opacity: 0.5; cursor: pointer; font-size: 0.7rem; }
+.doc-del:hover { opacity: 1; color: var(--sip-red); }
+.doc-upload-form { display: none; background: var(--paper); border: 1.5px solid var(--border); border-radius: 8px; padding: 14px 16px; margin-top: 10px; }
+.doc-upload-form.open { display: block; }
+.doc-upload-form input[type="file"] { width: 100%; margin-bottom: 10px; font-size: 0.78rem; }
+.doc-upload-form textarea { width: 100%; padding: 8px 10px; border: 1.5px solid var(--border); border-radius: 5px; font-family: 'Inter', sans-serif; font-size: 0.82rem; resize: vertical; margin-bottom: 10px; }
+.doc-upload-note { font-size: 0.68rem; color: var(--muted); margin-top: 8px; }
+.doc-upload-err { font-size: 0.74rem; color: var(--sip-red); margin-top: 6px; }
+
 /* AI section */
 .ai-loading { display: flex; align-items: center; gap: 10px; padding: 14px; color: var(--muted); font-size: 0.83rem; font-weight: 500; }
 .dots span { display: inline-block; width: 7px; height: 7px; background: var(--sip-red); border-radius: 50%; animation: dot-bounce 1.2s infinite; }
@@ -1088,9 +1106,10 @@ function openModal(idx) {
   document.getElementById('modalBg').classList.add('open');
   // la ficha (avances, carreras agregadas, simulación de NEM) vive en la
   // nube por estudiante — se muestra de inmediato con lo que haya en este
-  // navegador y, apenas llega la versión de la nube, se refresca sola.
+  // navegador y, apenas llega la versión de la nube, se refresca sola
+  // (salvo que el/la docente ya esté escribiendo algo, para no borrárselo).
   cargarFichaNube(s, idx).then(cambio => {
-    if (cambio && currentModalIdx === idx && document.getElementById('modalBg').classList.contains('open')) {
+    if (cambio && currentModalIdx === idx && document.getElementById('modalBg').classList.contains('open') && !hayFormularioAbiertoEnFicha(idx)) {
       renderModalBody(STUDENTS[idx], idx);
     }
   });
@@ -1100,11 +1119,22 @@ function openModal(idx) {
   // la ficha sola para mostrar directo el botón de generar con IA.
   if (!GOOGLE_CREDENTIAL) {
     pedirCredencialFresca().then(cred => {
-      if (cred && currentModalIdx === idx && document.getElementById('modalBg').classList.contains('open')) {
+      if (cred && currentModalIdx === idx && document.getElementById('modalBg').classList.contains('open') && !hayFormularioAbiertoEnFicha(idx)) {
         renderModalBody(STUDENTS[idx], idx);
       }
     });
   }
+}
+
+/* Antes de refrescar solos una ficha en segundo plano (cuando llega la
+   nube o se obtiene una credencial), hay que asegurarse de que el/la
+   docente no esté a mitad de escribir algo en ella — si no, un refresco
+   silencioso le borraría lo que llevaba tipeado. */
+function hayFormularioAbiertoEnFicha(idx) {
+  return ['avance-form-' + idx, 'doc-form-' + idx, 'calc-box-' + idx].some(id => {
+    const el = document.getElementById(id);
+    return el && el.classList.contains('open');
+  });
 }
 
 function overrideKey(s, idx) {
@@ -1127,6 +1157,9 @@ function fichaNubeSnapshot(s, idx) {
     avances: getAvances(s, idx),
     carrerasOverride: getCarrerasOverride(s, idx),
     override: getOverride(s, idx),
+    // solo la lista liviana (nombre/resumen/fecha) — el archivo en sí vive
+    // aparte en la nube (resource=documento), nunca acá.
+    documentos: getDocumentos(s, idx),
   };
 }
 function aplicarFichaNubeSnapshot(s, idx, data) {
@@ -1135,6 +1168,7 @@ function aplicarFichaNubeSnapshot(s, idx, data) {
   localStorage.setItem(carrerasOverrideKey(s, idx), JSON.stringify(data.carrerasOverride || { added: [], removed: [] }));
   if (data.override) localStorage.setItem(overrideKey(s, idx), JSON.stringify(data.override));
   else localStorage.removeItem(overrideKey(s, idx));
+  setDocumentos(s, idx, Array.isArray(data.documentos) ? data.documentos : []);
 }
 async function sincronizarFichaNube(s, idx) {
   try {
@@ -1231,6 +1265,129 @@ function eliminarAvance(idx, ts) {
   const s = STUDENTS[idx];
   const lista = getAvances(s, idx).filter(a => a.ts !== ts);
   localStorage.setItem(avancesKey(s, idx), JSON.stringify(lista));
+  renderModalBody(s, idx);
+  sincronizarFichaNube(s, idx);
+}
+
+/* ═══════════════ DOCUMENTOS / ANTECEDENTES ADJUNTOS ═══════════════
+   Certificados, informes, comprobantes, etc. que sirven de antecedente
+   para la ficha y para los planes generados con IA. El ARCHIVO en sí se
+   guarda solo en la nube (una clave aparte por documento) — nunca en
+   localStorage ni en el mismo bloque que avances/carreras/NEM — porque
+   los navegadores solo dan unos pocos MB de espacio total por sitio, y un
+   PDF ahí adentro rompería el guardado de todo lo demás. Lo único que se
+   guarda localmente (y en la ficha de la nube) es una lista liviana con
+   nombre, resumen y fecha — no el archivo. */
+const DOC_MAX_BYTES = 5 * 1024 * 1024; // 5 MB por archivo
+function formatBytes(n) {
+  if (!Number.isFinite(n)) return '';
+  if (n < 1024) return n + ' B';
+  if (n < 1024 * 1024) return Math.round(n / 1024) + ' KB';
+  return (n / (1024 * 1024)).toFixed(1) + ' MB';
+}
+function documentosKey(s, idx) {
+  const rut = s.rut && s.rut !== 'nan' && s.rut.trim() !== '' ? s.rut : null;
+  return 'documentos_' + (rut || 'idx' + idx);
+}
+function getDocumentos(s, idx) {
+  try { return JSON.parse(localStorage.getItem(documentosKey(s, idx)) || '[]'); } catch(e) { return []; }
+}
+function setDocumentos(s, idx, lista) {
+  localStorage.setItem(documentosKey(s, idx), JSON.stringify(lista));
+}
+function toggleDocForm(idx) {
+  document.getElementById('doc-form-' + idx).classList.toggle('open');
+}
+async function subirDocumento(idx) {
+  const s = STUDENTS[idx];
+  const fileInput = document.getElementById('doc-file-' + idx);
+  const resumenInput = document.getElementById('doc-resumen-' + idx);
+  const errEl = document.getElementById('doc-upload-err-' + idx);
+  const btn = document.getElementById('doc-upload-btn-' + idx);
+  errEl.textContent = '';
+  const file = fileInput.files && fileInput.files[0];
+  if (!file) { errEl.textContent = 'Selecciona un archivo primero.'; return; }
+  if (file.size > DOC_MAX_BYTES) { errEl.textContent = `El archivo pesa ${formatBytes(file.size)} — el máximo es ${formatBytes(DOC_MAX_BYTES)}.`; return; }
+  const credential = GOOGLE_CREDENTIAL || await pedirCredencialFresca();
+  if (!credential) { errEl.textContent = 'Necesitas tu cuenta de Google vinculada para subir documentos (se guardan en la nube).'; return; }
+  btn.disabled = true; btn.textContent = 'Subiendo…';
+  try {
+    const contenidoB64 = await new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(String(reader.result).split(',')[1] || '');
+      reader.onerror = () => reject(new Error('read-error'));
+      reader.readAsDataURL(file);
+    });
+    const ts = Date.now();
+    const r = await fetch(ASE_IA_API_URL + '?resource=documento', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ credential, studentKey: studentKey(s, idx), ts, action: 'subir', tipo: file.type, contenidoB64 }),
+    });
+    const res = await r.json();
+    if (!res || !res.ok) throw new Error((res && res.error) || 'error-subida');
+    const entry = {
+      ts,
+      fecha: new Date().toLocaleDateString('es-CL', { day: 'numeric', month: 'long', year: 'numeric' }),
+      nombreArchivo: file.name,
+      tipo: file.type || 'application/octet-stream',
+      tamano: file.size,
+      resumen: (resumenInput.value || '').trim(),
+    };
+    const lista = getDocumentos(s, idx);
+    lista.unshift(entry);
+    setDocumentos(s, idx, lista);
+    fileInput.value = '';
+    resumenInput.value = '';
+    document.getElementById('doc-form-' + idx).classList.remove('open');
+    renderModalBody(s, idx);
+    sincronizarFichaNube(s, idx);
+  } catch(e) {
+    errEl.textContent = 'No se pudo subir el documento (revisa tu conexión e intenta de nuevo).';
+  } finally {
+    btn.disabled = false; btn.textContent = '📎 Subir documento';
+  }
+}
+async function descargarDocumento(idx, ts) {
+  const s = STUDENTS[idx];
+  const doc = getDocumentos(s, idx).find(d => d.ts === ts);
+  if (!doc) return;
+  const credential = GOOGLE_CREDENTIAL || await pedirCredencialFresca();
+  if (!credential) { alert('Necesitas tu cuenta de Google vinculada para ver este documento.'); return; }
+  try {
+    const r = await fetch(ASE_IA_API_URL + '?resource=documento', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ credential, studentKey: studentKey(s, idx), ts, action: 'descargar' }),
+    });
+    const res = await r.json();
+    if (!res || !res.ok || !res.contenidoB64) throw new Error('no-encontrado');
+    const bin = atob(res.contenidoB64);
+    const bytes = new Uint8Array(bin.length);
+    for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+    const blob = new Blob([bytes], { type: res.tipo || doc.tipo || 'application/octet-stream' });
+    const url = URL.createObjectURL(blob);
+    window.open(url, '_blank');
+    setTimeout(() => URL.revokeObjectURL(url), 60000);
+  } catch(e) {
+    alert('No se pudo abrir el documento. Puede que se haya guardado antes de configurar el almacenamiento en la nube — intenta subirlo de nuevo.');
+  }
+}
+async function eliminarDocumento(idx, ts) {
+  if (!confirm('¿Eliminar este documento?')) return;
+  const s = STUDENTS[idx];
+  const credential = GOOGLE_CREDENTIAL || await pedirCredencialFresca();
+  if (credential) {
+    try {
+      await fetch(ASE_IA_API_URL + '?resource=documento', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ credential, studentKey: studentKey(s, idx), ts, action: 'eliminar' }),
+      });
+    } catch(e) { /* si falla la nube, igual se saca de la lista local */ }
+  }
+  const lista = getDocumentos(s, idx).filter(d => d.ts !== ts);
+  setDocumentos(s, idx, lista);
   renderModalBody(s, idx);
   sincronizarFichaNube(s, idx);
 }
@@ -1466,6 +1623,20 @@ function renderModalBody(s, idx) {
     </div>`;
   }).join('') : '<p style="color:var(--muted);font-size:0.8rem;font-style:italic">Todavía no hay avances registrados.</p>';
 
+  const documentosLista = getDocumentos(s, idx);
+  const docIcono = (tipo) => tipo && tipo.includes('pdf') ? '📄' : tipo && tipo.startsWith('image/') ? '🖼️' : tipo && tipo.includes('word') ? '📝' : '📎';
+  const docsListHTML = documentosLista.length ? documentosLista.map(d => `
+    <div class="doc-item">
+      <div class="doc-item-icon">${docIcono(d.tipo)}</div>
+      <div style="flex:1;min-width:0">
+        <div class="doc-item-nombre">${esc(d.nombreArchivo)}</div>
+        <div class="doc-item-meta">${esc(d.fecha)} · ${formatBytes(d.tamano)}</div>
+        ${d.resumen ? `<div class="doc-item-resumen">${esc(d.resumen)}</div>` : ''}
+        <a href="javascript:void(0)" class="doc-item-link" onclick="descargarDocumento(${idx},${d.ts})">Ver / descargar ↗</a>
+      </div>
+      <button type="button" class="doc-del" onclick="eliminarDocumento(${idx},${d.ts})" title="Eliminar">✕</button>
+    </div>`).join('') : '<p style="color:var(--muted);font-size:0.8rem;font-style:italic">Todavía no hay documentos adjuntos.</p>';
+
   document.getElementById('modal-body').innerHTML = `
     <div class="fs">
       <div class="fs-title">📊 Hitos Académicos — NEM & Ranking</div>
@@ -1574,6 +1745,21 @@ function renderModalBody(s, idx) {
         <label class="avance-lbl">Nuevos antecedentes</label>
         <textarea id="av-antecedentes-${idx}" rows="2" placeholder="Cualquier otro dato relevante que surgió en la tutoría…"></textarea>
         <button class="calc-save" onclick="agregarAvance(${idx})">Guardar avance</button>
+      </div>
+    </div>
+
+    <div class="fs">
+      <div class="fs-title">📎 Documentos y Antecedentes</div>
+      <div class="docs-lista">${docsListHTML}</div>
+      <button class="calc-toggle" onclick="toggleDocForm(${idx})">➕ Subir un documento</button>
+      <div class="doc-upload-form" id="doc-form-${idx}">
+        <label class="avance-lbl">Archivo (PDF, Word o imagen — máx. ${formatBytes(DOC_MAX_BYTES)})</label>
+        <input type="file" id="doc-file-${idx}" accept=".pdf,.doc,.docx,image/*">
+        <label class="avance-lbl">¿Qué es este documento? (resumen breve)</label>
+        <textarea id="doc-resumen-${idx}" rows="2" placeholder="Ej: Certificado de la PDI que acredita que rindió el examen físico en agosto…"></textarea>
+        <button class="calc-save" id="doc-upload-btn-${idx}" onclick="subirDocumento(${idx})">📎 Subir documento</button>
+        <div class="doc-upload-err" id="doc-upload-err-${idx}"></div>
+        <p class="doc-upload-note">El resumen que escribas se usa como antecedente para generar el Plan de Acción y las Tareas con IA — el archivo queda guardado para consultarlo, pero la IA no lee su contenido directamente, solo el resumen.</p>
       </div>
     </div>
 
@@ -2066,8 +2252,12 @@ function contextoEstudianteIA(s, idx) {
     ].filter(Boolean).join(' · ');
     return `[${a.fecha}] ${partes}`;
   }).join('\n') : '';
+  const documentos = getDocumentos(s, idx);
+  const documentosTxt = documentos.length ? documentos.map(d =>
+    `[${d.fecha}] ${d.nombreArchivo}${d.resumen ? ': ' + d.resumen : ' (sin resumen escrito)'}`
+  ).join('\n') : '';
   return {
-    via, notasStr, override, contextoPersonal, avancesTxt,
+    via, notasStr, override, contextoPersonal, avancesTxt, documentosTxt,
     carreras: carrerasEfectivas(s, idx),
     viaTxt: via === 'pdi' ? 'Policía de Investigaciones (PDI)' : via === 'fach' ? 'Fuerza Aérea de Chile (FACH)' : 'Admisión a la educación superior (vía regular PAES/NEM/Ranking)',
   };
@@ -2131,6 +2321,7 @@ DATOS REALES DE ESTE ESTUDIANTE:
 • Pertenece a pueblo originario: ${s.pueblo_originario || 'No'}
 ${ctx.contextoPersonal ? `• Contexto personal registrado por el propio estudiante:\n${ctx.contextoPersonal}` : ''}
 ${ctx.avancesTxt ? `• Registro de avances de tutoría (del más reciente al más antiguo):\n${ctx.avancesTxt}` : ''}
+${ctx.documentosTxt ? `• Documentos/antecedentes adjuntos a la ficha (nombre y resumen escrito por el/la tutor/a):\n${ctx.documentosTxt}` : ''}
 
 Escribe 3-4 párrafos breves, en español de Chile, tono profesional y cálido, SIN encabezados ni markdown, SIN inventar datos que no están arriba (si falta información, dilo con naturalidad en vez de inventar). Si hay Registro de Avances, dale prioridad: refleja lo último conversado, no lo contradigas. Cubre: (1) lectura de su trayectoria y momento actual, (2) coherencia o brechas entre su perfil vocacional y sus opciones declaradas, (3) 2-3 acciones concretas y específicas para este estudiante en particular (no genéricas) que su tutor/a puede tomar antes de fin de año, (4) si aplica, un llamado de atención empático sobre algún riesgo o urgencia.`;
 
@@ -2191,6 +2382,7 @@ DATOS REALES DE ESTE ESTUDIANTE:
 • Carreras de interés: ${ctx.carreras.join(', ') || 'No declaradas'}
 ${ctx.contextoPersonal ? `• Lo que el propio estudiante escribió sobre sí mismo:\n${ctx.contextoPersonal}` : ''}
 ${ctx.avancesTxt ? `• Registro de avances de tutoría (del más reciente al más antiguo — dale prioridad, no lo contradigas):\n${ctx.avancesTxt}` : ''}
+${ctx.documentosTxt ? `• Documentos/antecedentes adjuntos a la ficha (nombre y resumen escrito por el/la tutor/a):\n${ctx.documentosTxt}` : ''}
 
 FECHAS OFICIALES YA CONFIRMADAS (úsalas tal cual si las necesitas, no inventes otras): PAES Regular 30 de noviembre, 1 y 2 de diciembre de 2026 · Resultados PAES 4 de enero de 2027 · Postulaciones 4 al 7 de enero de 2027 · Matrícula 19 al 28 de enero de 2027 · FUAS entre el 1 y el 22 de octubre de 2026 en www.fuas.cl.
 
@@ -2248,7 +2440,7 @@ function aplicarSesion(s) {
   // fresca en silencio, así el botón de "generar con IA" ya sale disponible
   // desde la primera ficha que se abra, en vez de pedir vincular de nuevo.
   cargarGrupoNube().then(() => {
-    if (GOOGLE_CREDENTIAL && currentModalIdx !== null && document.getElementById('modalBg').classList.contains('open')) {
+    if (GOOGLE_CREDENTIAL && currentModalIdx !== null && document.getElementById('modalBg').classList.contains('open') && !hayFormularioAbiertoEnFicha(currentModalIdx)) {
       renderModalBody(STUDENTS[currentModalIdx], currentModalIdx);
     }
   });
