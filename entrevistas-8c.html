@@ -267,7 +267,7 @@ const D=[
   ff:[
    {e:"N",f:"",an:"",pr:"",co:"",mo:"Firma compromiso académico",te:"",ac:"Apoderada no asiste a primera citación."},
    {e:"N",f:"",an:"",pr:"",co:"",mo:"Firma compromiso académico (2ª citación)",te:"",ac:"Apoderada no asiste a segunda citación."}]},
- {mat:1048,n:"Maturana Flores Ignacio Alejandro",run:"24.014.107-8",dom:"Pasaje Z 12935",com:"La Pintana",apo:"Monica Flores Cornejo",ar:"16.696.011-B",at:"957268912",am:"ramsmonika19@gmail.com",as:"Cristián Maturana M.",ast:"992238009",ii:[],ff:[{e:"",f:"",an:"",pr:"",co:"",mo:"",te:"",ac:""}]},
+ {mat:1048,n:"Maturana Flores Ignacio Alejandro",run:"24.014.107-8",dom:"Pasaje Z 12935",com:"La Pintana",apo:"Monica Flores Cornejo",ar:"16.696.011-B",at:"957268912",am:"ramsmonika19@gmail.com",as:"Cristián Maturana M.",ast:"992238009",ii:[],ff:[{e:"R",f:"2026-08-10",an:"Ignacio presenta un promedio de 5,8, el cual puede subir si estudia.",pr:"Reforzar las asignaturas de Tecnología y Artes Visuales, y estudiar más Matemáticas.",co:"",mo:"Rendimiento académico y paseo de curso",te:"Se conversa sobre el rendimiento académico de Ignacio: puede subir su promedio de 5,8 si estudia. Se sugiere reforzar Tecnología y Artes Visuales, y estudiar especialmente Matemáticas. También se conversa sobre el paseo de curso.",ac:"Se acuerda que Ignacio reforzará Tecnología, Artes Visuales y Matemáticas. Se llega a acuerdo de que no asistirá al paseo de curso, ya que no tiene interés ni ganas de ir, y no se le puede obligar."}]},
  {mat:1049,n:"Miranda Díaz Benjamín Felipe",run:"24.218.464-5",dom:"Poeta León Felipe 10941",com:"La Pintana",apo:"Johanna Díaz Corigoitia",ar:"14.456.739-0",at:"973149488",am:"jovi.dig@hotmail.com",as:"Juan Miranda",ast:"958641596",ii:[],ff:[{e:"",f:"",an:"",pr:"",co:"",mo:"",te:"",ac:""}]},
  {mat:1050,n:"Olivares González Constanza Isidora",run:"24.132.645-4",dom:"Cautin 12276",com:"La Pintana",apo:"Elizabeth González",ar:"12.609.163-k",at:"993063469",am:"elizabeth2gc@gmail.com",as:"Marianela Cifuentes",ast:"983128214",ii:[],
   ff:[
@@ -313,7 +313,7 @@ const D=[
 </script>
 <script>
 // Persistencia local: si el profesor ya guardó cambios antes, se cargan.
-const DATA_VERSION=4;
+const DATA_VERSION=5;
 function freshData(){return D.map(a=>({...a,ff:a.ff.map(f=>({...f}))}));}
 let data;
 try{
