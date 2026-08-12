@@ -1698,7 +1698,7 @@
         // ====================================================================
         const API_PROXY_URL = "https://tutor-socratico.franciscoamigo21.workers.dev";
 
-        async function generarPreguntasContextuales(texto, probabilidadIA, clicheList) {
+        async function generarPreguntasContextuales(texto, probabilidadIA, clicheList, tipo) {
             const nivelAlerta = probabilidadIA >= 70 ? "ALTA (muy probable IA)"
                               : probabilidadIA >= 35 ? "MEDIA (posible híbrido IA/humano)"
                               : "BAJA (probable humano)";
@@ -1714,6 +1714,7 @@
                 body: JSON.stringify({
                     texto: texto.substring(0, 4000),
                     nivelAlerta,
+                    tipo: tipo || 'texto',
                     clicheList: (clicheList || []).slice(0, 8)
                 })
             });
@@ -2040,6 +2041,128 @@
         // =====================================================================
         //  FUNCIÓN PRINCIPAL DE ANÁLISIS
         // =====================================================================
+        // =====================================================================
+        //  MOTOR MATEMÁTICO: detección + análisis + preguntas socráticas
+        // =====================================================================
+        function detectarMatematica(text) {
+            const t = text || '';
+            const ops = (t.match(/[=+\-−×÷·√∫∑∏πθ°%^<>]|≤|≥|≠|≈|→|⇒/g) || []).length;
+            const nums = (t.match(/\d+(?:[.,]\d+)?/g) || []).length;
+            const frac = (t.match(/\d+\s*\/\s*\d+/g) || []).length;
+            const ecua = (t.match(/[a-zA-Z0-9)]\s*=\s*[a-zA-Z0-9(\-]/g) || []).length;
+            const varOp = (t.match(/\b[a-zA-Z]\s*[=+\-*/^]\s*\d|\d\s*[a-zA-Z]\b/g) || []).length;
+            const kw = /\b(ecuaci[oó]n|inc[oó]gnita|despej|factoriz|ra[ií]z cuadrada|fracci[oó]n|numerador|denominador|[aá]rea|per[ií]metro|volumen|tri[aá]ngulo|rect[aá]ngulo|cuadrado|c[ií]rculo|circunferencia|radio|di[aá]metro|hipotenusa|pit[aá]goras|[aá]ngulo|grados|porcentaje|descuento|inter[eé]s|iva|promedio|media aritm|mediana|moda|probabilidad|funci[oó]n|derivada|integral|pendiente|logaritmo|seno|coseno|tangente|matriz|vector|polinomio|potencia|exponente|m[uú]ltiplo|divisor|m[ií]nimo com[uú]n|m[aá]ximo com[uú]n|teorema|f[oó]rmula|calcul|resuelv|simplific|opera|multiplic|cociente|per[ií]metro|kil[oó]metro|cent[ií]metro|litro|km\/h|metros?)\b/gi;
+            const kwc = (t.match(kw) || []).length;
+            let score = 0;
+            score += Math.min(ops, 14) * 1.3;
+            score += Math.min(nums, 15) * 0.6;
+            score += frac * 3;
+            score += ecua * 2.5;
+            score += varOp * 1.5;
+            score += Math.min(kwc, 12) * 2;
+            const words = (t.split(/\s+/).filter(Boolean).length) || 1;
+            if (((ops + nums) / words) > 0.22 && (ops + nums) >= 5) score += 8;
+            return score >= 11;
+        }
+
+        function analizarMatematicaScore(text) {
+            let score = 18;
+            const razones = [];
+            const clicheList = [];
+            const t = (text || '').toLowerCase();
+            const words = (text || '').split(/\s+/).filter(Boolean).length;
+            const narr = ['sabemos que','recordemos que','podemos observar','es importante notar','cabe destacar','notemos que','observamos que','de esta manera','de este modo','por lo tanto','en conclusi[oó]n','finalmente obtenemos','simplificando','despejando','sustituyendo','reemplazando','aplicando la f[oó]rmula','aplicamos la f[oó]rmula','a continuaci[oó]n','en primer lugar','para resolver este problema','para resolver este ejercicio','primero que todo'];
+            let narrCount = 0;
+            narr.forEach(f => { if (new RegExp(f).test(t)) { narrCount++; if (clicheList.length < 6) clicheList.push(f.replace('[oó]','ó').replace('[eé]','é')); } });
+            if (narrCount >= 4) { score += 32; razones.push(`⚠️ Narración muy detallada del procedimiento (${narrCount} conectores explicativos): patrón frecuente en soluciones generadas por IA, que explican con palabras cada paso trivial.`); }
+            else if (narrCount >= 2) { score += 15; razones.push(`Explicaciones paso a paso frecuentes (${narrCount} conectores): podría indicar asistencia externa.`); }
+            const pasos = (text.match(/\bpaso\s*\d|(^|\n)\s*\d\s*[).\-]\s/gi) || []).length;
+            if (pasos >= 4) { score += 14; razones.push(`Estructura de pasos numerados muy ordenada (${pasos}): habitual en respuestas de IA.`); }
+            if (/para resolver (este|el|la) (problema|ejercicio|sistema|ecuaci[oó]n)/i.test(text)) { score += 8; razones.push('Reformula el enunciado antes de resolver ("para resolver este problema…"): muletilla típica de IA.'); }
+            if (/(la respuesta( final)? es|el resultado( final)? es|por lo tanto,?\s*(el|la)\s)/i.test(text)) { score += 7; razones.push('Cierre con "la respuesta final es…": formato característico de IA.'); }
+            const symbols = (text.match(/[=+\-−×÷·√^]|≤|≥/g) || []).length;
+            if (words > 55 && symbols < words * 0.05) { score += 12; razones.push('Mucho texto explicativo y pocos cálculos escritos: la solución "narra" más de lo que un estudiante suele anotar a mano.'); }
+            if (razones.length === 0) razones.push('No se detectaron patrones claros de generación automática en el procedimiento.');
+            score = Math.max(8, Math.min(95, Math.round(score)));
+            return { score, razones, clicheList };
+        }
+
+        function _getAnalisisMatematica(prob, razones) {
+            const r = razones.length ? razones.join(' ') : '';
+            let cab;
+            if (prob >= 70)      cab = `<strong>🔴 ALTA SOSPECHA DE ASISTENCIA DE IA EN EL PROCEDIMIENTO — Índice ${prob}/99.</strong>`;
+            else if (prob >= 45) cab = `<strong>🟠 POSIBLE ASISTENCIA DE IA — Índice ${prob}/99.</strong>`;
+            else                 cab = `<strong>🟡 TRABAJO MATEMÁTICO — Índice orientativo ${prob}/99.</strong>`;
+            const nota = ` <em>Detectar el uso de IA en matemática es más difícil que en un texto, así que este índice es solo orientativo. La verificación decisiva es la <strong>defensa oral</strong>: quien resolvió el problema podrá justificar cada paso, verificar el resultado y resolver un caso similar.</em>`;
+            return `${cab} ${r}${nota}`;
+        }
+
+        function generarPreguntasMatematicasOffline(text) {
+            const shuffle = arr => { const a=arr.slice(); for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a; };
+            const pick = arr => arr[Math.floor(Math.random()*arr.length)];
+            const nums = (text.match(/\d+(?:[.,]\d+)?/g) || []);
+            const someNum = nums.length ? pick(nums) : null;
+            let otroNum = null;
+            if (someNum) { const v = parseFloat(String(someNum).replace(',', '.')); if (!isNaN(v)) otroNum = String(Math.round(v + 3 + Math.floor(Math.random()*6))); }
+            const ecuacion = (text.match(/[0-9a-zA-Z().]+\s*=\s*[0-9a-zA-Z().+\-*/^ ]+/) || [])[0];
+            const fragOp = (text.match(/[0-9a-zA-Z()]+\s*[+\-−×÷*/^]\s*[0-9a-zA-Z()]+/) || [])[0];
+            const refPaso = fragOp ? `el paso "${fragOp.trim()}"` : (ecuacion ? `el paso "${ecuacion.trim()}"` : 'uno de los pasos que hiciste');
+            const t = text.toLowerCase();
+            let tipo = 'general';
+            if (/[aá]rea|per[ií]metro|volumen|tri[aá]ngulo|rect[aá]ngulo|c[ií]rculo|radio|di[aá]metro|hipotenusa|pit[aá]goras|[aá]ngulo|figura|per[ií]metro|altura|base/.test(t)) tipo='geometria';
+            else if (/fracci[oó]n|numerador|denominador|\d\s*\/\s*\d/.test(t)) tipo='fracciones';
+            else if (/%|porcentaje|descuento|inter[eé]s|iva/.test(t)) tipo='porcentajes';
+            else if (/promedio|media|mediana|moda|probabilidad|frecuencia|datos/.test(t)) tipo='estadistica';
+            else if (/funci[oó]n|derivada|integral|pendiente|gr[aá]fic|l[ií]mite/.test(t)) tipo='calculo';
+            else if (/ecuaci[oó]n|inc[oó]gnita|despej|factoriz|sistema|polinomio/.test(t) || /[a-z]\s*=/.test(text)) tipo='algebra';
+            const concepto = {
+                geometria: `¿De dónde viene la fórmula que usaste (por ejemplo, para el área o el perímetro)? ¿Por qué es esa y no otra?`,
+                algebra: `¿Qué representa la incógnita en este problema y por qué el valor que obtuviste hace verdadera la ecuación?`,
+                fracciones: `Explica por qué operaste las fracciones así (por ejemplo, por qué buscaste común denominador).`,
+                porcentajes: `Explica en términos concretos qué significa el porcentaje que calculaste (por cada 100, ¿cuánto?).`,
+                estadistica: `¿Qué te dice ese valor (promedio, probabilidad…) sobre los datos? ¿Es representativo? ¿Por qué?`,
+                calculo: `Explica con tus palabras qué significa lo que calculaste (pendiente, derivada…) en la situación o el gráfico.`,
+                general: `Explica con tus palabras el concepto matemático principal que hay detrás de este ejercicio.`
+            };
+            const banco = {
+                procedimiento: [
+                    `Explícame ${refPaso}: ¿por qué ese paso es válido? ¿Qué regla o propiedad matemática usaste?`,
+                    `Señala el paso que consideras más importante de tu desarrollo y justifícalo: ¿qué pasaría si lo omitieras?`,
+                    `Sin mirar tu hoja, explícame de memoria cómo resolviste el problema, paso a paso.`
+                ],
+                verificacion: [
+                    `¿Cómo compruebas que tu resultado es correcto? Verifícalo ahora con un método distinto al que usaste.`,
+                    ecuacion ? `Reemplaza tu resultado en el problema original y muéstrame que la igualdad se cumple.` : `Comprueba tu resultado por otra vía y muéstrame que coincide.`
+                ],
+                variacion: [
+                    (someNum && otroNum) ? `Vuelve a resolver el ejercicio cambiando el número ${someNum} por ${otroNum}, explicando cada paso.` : `Cambia uno de los datos del problema por otro valor y resuélvelo de nuevo, explicando cada paso.`,
+                    `Inventa un problema parecido (del mismo tipo) y resuélvelo aquí, delante de mí.`
+                ],
+                metodo: [
+                    `¿Por qué elegiste este método para resolverlo? ¿Conoces otra forma distinta de llegar al mismo resultado?`,
+                    `Si tuvieras que enseñarle a un compañero a resolver este ejercicio, ¿qué le dirías que haga primero y por qué?`
+                ],
+                significado: [
+                    `¿Qué significa el resultado en el contexto del problema? ¿La magnitud tiene sentido (por ejemplo, una longitud no puede ser negativa)?`,
+                    `¿Qué representa cada número o letra que aparece en el problema? Explícalo con tus palabras.`
+                ],
+                limite: [
+                    `¿Qué pasaría con tu procedimiento si uno de los datos fuera 0 o un número negativo? ¿Seguiría funcionando?`,
+                    `¿En qué parte del ejercicio es más fácil equivocarse y por qué? ¿Cómo te aseguraste de no cometer ese error?`
+                ]
+            };
+            const seleccion = [];
+            const usadas = new Set();
+            const add = arr => { const o=(arr||[]).filter(q=>q&&!usadas.has(q)); if(o.length){const q=pick(o);usadas.add(q);seleccion.push(q);} };
+            add(banco.procedimiento);
+            add([concepto[tipo]]);
+            add(banco.verificacion);
+            add(banco.variacion);
+            const reserva = shuffle([].concat(banco.metodo, banco.significado, banco.limite, banco.procedimiento));
+            for (const q of reserva) { if (seleccion.length >= 4) break; if (!usadas.has(q)) { usadas.add(q); seleccion.push(q); } }
+            return { preguntas: seleccion.slice(0, 4) };
+        }
+
         async function analizarTextoEstudiante() {
             const text = document.getElementById('inputText').value.trim();
             const resultsArea = document.getElementById('results-area');
@@ -2047,21 +2170,28 @@
             const loadingText = document.getElementById('loading-text');
             const btn = document.getElementById('btn-analizar');
 
-            if (!text || text.length < 80) {
-                mostrarError("Por favor, pega un texto con mayor contenido (mínimo 80 caracteres) para evaluarlo con precisión.");
+            const esMate = detectarMatematica(text);
+            const minLen = esMate ? 20 : 80;
+            if (!text || text.length < minLen) {
+                mostrarError(esMate
+                    ? "Escribe o adjunta el problema con su desarrollo (al menos unas líneas) para analizarlo."
+                    : "Por favor, pega un texto con mayor contenido (mínimo 80 caracteres) para evaluarlo con precisión.");
                 return;
             }
 
             resultsArea.style.display = 'none';
             loadingArea.style.display = 'flex';
             if (btn) btn.disabled = true;
-            loadingText.textContent = "🔬 Analizando semántica, sintaxis y patrones algorítmicos del texto...";
+            loadingText.textContent = esMate
+                ? "🧮 Analizando el procedimiento matemático y el razonamiento..."
+                : "🔬 Analizando semántica, sintaxis y patrones algorítmicos del texto...";
             loadingArea.scrollIntoView({ behavior:'smooth', block:'start' });
 
-            // --- 1. ANÁLISIS HEURÍSTICO ---
-            const { score: probabilidadIA, razones, clicheList } = calcularScore(text);
-
-            const analisisTexto = _getAnalisisTexto(probabilidadIA, razones);
+            // --- 1. ANÁLISIS HEURÍSTICO (texto o matemática) ---
+            const tipoTrabajo = esMate ? 'matematica' : 'texto';
+            const heur = esMate ? analizarMatematicaScore(text) : calcularScore(text);
+            const probabilidadIA = heur.score, razones = heur.razones, clicheList = heur.clicheList;
+            const analisisTexto = esMate ? _getAnalisisMatematica(probabilidadIA, razones) : _getAnalisisTexto(probabilidadIA, razones);
 
             // --- 2. PREGUNTAS CONTEXTUALES VÍA IA ---
             loadingText.textContent = "✨ ASE-IA está preparando preguntas personalizadas según el contenido específico del texto...";
@@ -2071,13 +2201,13 @@
             window._motivoOffline = '';
 
             try {
-                const ia = await generarPreguntasContextuales(text, probabilidadIA, clicheList);
+                const ia = await generarPreguntasContextuales(text, probabilidadIA, clicheList, tipoTrabajo);
                 preguntasDefensa = ia.preguntas_defensa.slice(0, 4);
             } catch(e) {
                 console.error("Error API:", e);
                 contextualOk = false;
                 window._motivoOffline = (e && e.message) ? e.message : 'desconocido';
-                const offlineQA = generarPreguntasOffline(text);
+                const offlineQA = esMate ? generarPreguntasMatematicasOffline(text) : generarPreguntasOffline(text);
                 preguntasDefensa = offlineQA.preguntas;
             }
 

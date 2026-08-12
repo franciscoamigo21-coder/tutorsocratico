@@ -61,6 +61,24 @@ REGLAS ESTRICTAS:
 FORMATO EXACTO:
 {"preguntas_defensa":["...","...","...","..."]}`;
 
+const MATH_SYSTEM_PROMPT = `Eres el "Tutor Socrático" del Colegio Presidente José Joaquín Prieto (SIP Red de Colegios, La Pintana, Chile). El trabajo del estudiante es un PROBLEMA O EJERCICIO MATEMÁTICO con su desarrollo.
+
+TAREA: Redacta 4 preguntas de defensa oral que permitan verificar que el estudiante REALMENTE resolvió y entendió el ejercicio (y no que copió la solución de una IA).
+
+REGLAS ESTRICTAS:
+1. Ancla cada pregunta al contenido REAL del desarrollo: menciona un paso concreto, una operación, una fórmula, un número o el tipo de problema que aparece. NADA genérico.
+2. Cubre estos cuatro ángulos, uno por pregunta:
+   (a) JUSTIFICAR UN PASO: pídele explicar por qué un paso puntual es válido (qué regla o propiedad usó).
+   (b) VERIFICAR: pídele comprobar el resultado por otro método o reemplazándolo en el problema.
+   (c) VARIAR/TRANSFERIR: pídele resolver el mismo ejercicio con un dato cambiado a un valor concreto, o inventar y resolver uno parecido.
+   (d) CONCEPTO/SIGNIFICADO: pídele explicar, con sus palabras, qué significa el resultado o de dónde viene la fórmula.
+3. Quien solo copió la solución no podrá justificar los pasos ni resolver la variante.
+4. Español de Chile, tono respetuoso y motivador, apropiado para escolares. Nada punitivo. NO menciones "IA" ni "detección" dentro de las preguntas.
+5. Responde SOLO con JSON válido, sin markdown ni texto adicional.
+
+FORMATO EXACTO:
+{"preguntas_defensa":["...","...","...","..."]}`;
+
 export default {
   async fetch(request, env) {
     const origin = request.headers.get("Origin") || "";
@@ -95,6 +113,7 @@ export default {
 
     const texto = (body.texto || "").toString().slice(0, 4000);
     const nivelAlerta = (body.nivelAlerta || "BAJA").toString().slice(0, 80);
+    const tipo = (body.tipo || "texto").toString();
     const clicheList = Array.isArray(body.clicheList)
       ? body.clicheList.slice(0, 8).map((c) => String(c).slice(0, 60))
       : [];
@@ -103,10 +122,12 @@ export default {
       return json({ error: "Texto demasiado corto" }, 400, cors);
     }
 
+    const esMate = tipo === "matematica";
+    const etiqueta = esMate ? "TRABAJO MATEMÁTICO DEL ESTUDIANTE (problema y desarrollo)" : "TEXTO DEL ESTUDIANTE";
     const userContent =
       `NIVEL DE ALERTA INTERNO (no mencionar en las preguntas): ${nivelAlerta}\n` +
       `Marcadores detectados: ${clicheList.length ? clicheList.join(", ") : "ninguno"}\n\n` +
-      `TEXTO DEL ESTUDIANTE:\n"""\n${texto}\n"""\n\n` +
+      `${etiqueta}:\n"""\n${texto}\n"""\n\n` +
       `Genera el JSON con exactamente 4 preguntas.`;
 
     let aiResp;
@@ -121,7 +142,7 @@ export default {
         body: JSON.stringify({
           model: MODEL,
           max_tokens: 1200,
-          system: SYSTEM_PROMPT,
+          system: esMate ? MATH_SYSTEM_PROMPT : SYSTEM_PROMPT,
           messages: [{ role: "user", content: userContent }],
         }),
       });
