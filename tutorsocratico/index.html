@@ -2163,6 +2163,107 @@
             return { preguntas: seleccion.slice(0, 4) };
         }
 
+        // =====================================================================
+        //  MOTOR DE INGLÉS: detección de idioma + IA + preguntas socráticas (EN)
+        // =====================================================================
+        function detectarIdioma(text) {
+            const t = ' ' + (text || '').toLowerCase() + ' ';
+            const en = ['the','and','of','to','in','is','that','it','for','with','was','this','are','you','your','they','have','not','but','which','from','would','there','their','what','when','because','however','about','will'];
+            const es = ['el','la','los','las','de','que','y','en','un','una','es','se','no','por','con','para','su','lo','como','más','pero','sus','este','esta','porque','cuando','también','sobre','del','al'];
+            const count = arr => arr.reduce((n,w) => n + ((t.match(new RegExp('\\s'+w+'\\s','g')) || []).length), 0);
+            const ec = count(en), sc = count(es);
+            return (ec > sc * 1.15 && ec >= 5) ? 'en' : 'es';
+        }
+
+        function calcularScoreIngles(text) {
+            let score = 15;
+            const razones = [];
+            const clicheList = [];
+            const t = (text || '').toLowerCase();
+            const CLICHES = ["in today's world","in the modern world","in the modern era","it is important to note","it is worth noting","plays a crucial role","plays a vital role","plays a significant role","a testament to","delve into","delving into","tapestry","navigating the","in conclusion","in summary","to sum up","furthermore","moreover","additionally","firstly","secondly","on the other hand","as a result","it is essential","a myriad of","a plethora of","underscore","ever-evolving","ever-changing","seamless","holistic","pivotal","vibrant","boasts","showcasing","when it comes to","the realm of","shed light on","pave the way","last but not least","needless to say","in essence","notably","significantly"];
+            let c = 0;
+            CLICHES.forEach(f => { if (t.includes(f)) { c++; if (clicheList.length < 8) clicheList.push(f); } });
+            if (c >= 5) { score += 45; razones.push(`⚠️ Very high density of AI-style phrasing (${c} markers such as "in conclusion", "furthermore", "delve into"): strongly typical of AI-generated English.`); }
+            else if (c >= 3) { score += 28; razones.push(`Several AI-style phrases detected (${c}): possible generated content.`); }
+            else if (c >= 1) { score += 14; razones.push(`Some AI-style phrasing detected (${c}).`); }
+            const conn = (t.match(/\b(furthermore|moreover|additionally|however|therefore|thus|consequently|nevertheless|nonetheless|firstly|secondly|finally|in conclusion)\b/g) || []).length;
+            if (conn >= 4) { score += 15; razones.push(`Heavy use of formal connectors (${conn}): uniform, essay-generator style.`); }
+            const personal = (t.match(/\b(i think|i believe|in my opinion|i feel|my own|honestly|i really)\b/g) || []).length;
+            const contr = (t.match(/\b(i'm|it's|don't|can't|didn't|i've|we're|they're|that's|there's|isn't|aren't)\b/g) || []).length;
+            const words = (text || '').split(/\s+/).filter(Boolean).length;
+            if (words > 60 && personal === 0 && contr === 0) { score += 16; razones.push('No personal voice or contractions in a long text: impersonal, formal register typical of AI.'); }
+            const sents = (text.match(/[^.!?]+[.!?]/g) || []);
+            if (sents.length >= 5) {
+                const lens = sents.map(x => x.trim().split(/\s+/).length);
+                const avg = lens.reduce((a,b)=>a+b,0)/lens.length;
+                const varz = lens.reduce((a,b)=>a+Math.pow(b-avg,2),0)/lens.length;
+                if (varz < 12 && avg > 12) { score += 12; razones.push('Very uniform sentence length: low natural variability, common in AI writing.'); }
+            }
+            if (razones.length === 0) razones.push('No clear AI markers detected in the English text.');
+            score = Math.max(5, Math.min(97, Math.round(score)));
+            return { score, razones, clicheList };
+        }
+
+        function _getAnalisisIngles(prob, razones) {
+            const r = razones.length ? razones.join(' ') : '';
+            let cab;
+            if (prob >= 70)      cab = `<strong>🔴 ALTA PROBABILIDAD DE I.A. (texto en inglés) — Índice ${prob}/99.</strong>`;
+            else if (prob >= 40) cab = `<strong>🟠 TEXTO EN INGLÉS SOSPECHOSO — Índice ${prob}/99.</strong>`;
+            else                 cab = `<strong>🟡 TEXTO EN INGLÉS — Índice ${prob}/99.</strong>`;
+            const nota = ` <em>Se detectó un texto en inglés. Las preguntas de defensa se generan en inglés para aplicarlas directamente en la asignatura.</em>`;
+            return `${cab} ${r}${nota}`;
+        }
+
+        function generarPreguntasInglesOffline(text) {
+            const shuffle = arr => { const a=arr.slice(); for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a; };
+            const pick = arr => arr[Math.floor(Math.random()*arr.length)];
+            const STOP = new Set(['the','a','an','and','or','but','of','to','in','on','at','for','with','as','by','from','is','are','was','were','be','been','being','this','that','these','those','it','its','they','them','their','you','your','our','so','if','then','than','too','very','just','more','most','some','any','all','each','other','such','not','only','own','same','can','will','would','could','should','may','might','must','do','does','did','have','has','had','about','into','through','during','before','after','above','below','over','under','again','here','there','when','where','how','what','which','who','because','while','also','however','therefore','thus','moreover','furthermore','many','much','upon','among','between','both','either','neither','every','another','they','then']);
+            const clean = (text || '').toLowerCase().replace(/[^a-z\s'-]/g,' ');
+            const freq = {};
+            clean.split(/\s+/).filter(w => w.length > 3 && !STOP.has(w)).forEach(w => freq[w] = (freq[w]||0)+1);
+            const keywords = Object.entries(freq).sort((a,b)=> b[1]-a[1] || b[0].length-a[0].length).slice(0,12).map(([w])=>w);
+            const caps = (text.match(/[A-Z][a-z]{3,}(?:\s+[A-Z][a-z]{3,})?/g) || []).map(w=>w.trim()).filter(w => !['This','That','These','Those','There','When','Where','What','Which','With','From','Their','Your','Also','Because','However','Finally','First','Second','Furthermore','Moreover','Additionally','Therefore','Thus','Consequently','Nevertheless','Nonetheless','Instead','Overall','Indeed','Perhaps','Meanwhile','Although','Despite','Today','Nowadays','Firstly','Secondly','Thirdly','Lastly'].includes(w));
+            const concepto = caps[0] || keywords[0] || 'the main idea';
+            const concepto2 = (caps[1] && caps[1] !== concepto) ? caps[1] : (keywords.find(k => k !== (concepto||'').toLowerCase()) || null);
+            const refC = `"${concepto}"`;
+            const sents = (text.match(/[^.!?]{25,}[.!?]/g) || []).map(x => x.trim().replace(/\s+/g,' '));
+            const frag = s => { if(!s) return ''; let x=s.replace(/^[\s"']+/,''); return x.length>95 ? x.substring(0,95).trim()+'…' : x.replace(/[.!?]+$/,''); };
+            const firstS = frag(sents[0] || ''); const midS = frag(sents[Math.floor(sents.length/2)] || '');
+            const banco = {
+                comprehension: [
+                    `In your text you focus on ${refC}. What role does it play in your argument, and why is it important? Explain it in your own words with an example.`,
+                    `What exactly do you mean by ${refC}? Explain it as if to a classmate who has never heard the term.`,
+                    concepto2 ? `How are ${refC} and "${concepto2}" connected in your text? Explain how one leads to the other.` : null
+                ],
+                evidence: [
+                    midS ? `You write: "${midS}". What source or experience backs up this claim? How would you prove it?` : `Which part of your text was hardest to support? What evidence would you give for it right now?`,
+                    `Where did you get your information about ${refC}? Name the source and explain why it is reliable.`
+                ],
+                application: [
+                    `How does what you wrote about ${refC} apply to your everyday life? Give an example that is NOT in your text.`,
+                    `If you had to explain ${refC} to a younger student, what real-life example would you use?`
+                ],
+                reflection: [
+                    `Beyond the grade, what did you learn while working on ${refC}? How did it change the way you see the topic?`,
+                    `What is YOUR honest opinion about ${refC}? Share your own view, not the one you think is expected.`,
+                    `If you had to defend your text in front of the class, which part are you most proud of, and why?`
+                ],
+                critical: [
+                    `What argument could someone who DISAGREES with you about ${refC} make? How would you respond?`,
+                    `Point out one weakness or limit of your own argument about ${refC}. No text is perfect: what is yours?`
+                ],
+                detail: []
+            };
+            if (firstS) banco.detail.push(`Your text opens with "${firstS}". Why did you choose to start this way, and what did you want the reader to feel?`);
+            const seleccion = [];
+            const usadas = new Set();
+            const add = arr => { const o=(arr||[]).filter(q=>q && !usadas.has(q)); if(o.length){ const q=pick(o); usadas.add(q); seleccion.push(q); } };
+            ['comprehension','evidence','application','reflection'].forEach(c => add(banco[c]));
+            const reserva = shuffle([].concat(banco.critical, banco.detail, banco.comprehension, banco.reflection));
+            for (const q of reserva) { if (seleccion.length >= 4) break; if (!usadas.has(q)) { usadas.add(q); seleccion.push(q); } }
+            return { preguntas: seleccion.slice(0, 4) };
+        }
+
         async function analizarTextoEstudiante() {
             const text = document.getElementById('inputText').value.trim();
             const resultsArea = document.getElementById('results-area');
@@ -2188,10 +2289,13 @@
             loadingArea.scrollIntoView({ behavior:'smooth', block:'start' });
 
             // --- 1. ANÁLISIS HEURÍSTICO (texto o matemática) ---
-            const tipoTrabajo = esMate ? 'matematica' : 'texto';
-            const heur = esMate ? analizarMatematicaScore(text) : calcularScore(text);
+            const idioma = esMate ? 'es' : detectarIdioma(text);
+            const tipoTrabajo = esMate ? 'matematica' : (idioma === 'en' ? 'ingles' : 'texto');
+            let heur, analisisTexto;
+            if (esMate) { heur = analizarMatematicaScore(text); analisisTexto = _getAnalisisMatematica(heur.score, heur.razones); }
+            else if (idioma === 'en') { heur = calcularScoreIngles(text); analisisTexto = _getAnalisisIngles(heur.score, heur.razones); }
+            else { heur = calcularScore(text); analisisTexto = _getAnalisisTexto(heur.score, heur.razones); }
             const probabilidadIA = heur.score, razones = heur.razones, clicheList = heur.clicheList;
-            const analisisTexto = esMate ? _getAnalisisMatematica(probabilidadIA, razones) : _getAnalisisTexto(probabilidadIA, razones);
 
             // --- 2. PREGUNTAS CONTEXTUALES VÍA IA ---
             loadingText.textContent = "✨ ASE-IA está preparando preguntas personalizadas según el contenido específico del texto...";
@@ -2207,7 +2311,8 @@
                 console.error("Error API:", e);
                 contextualOk = false;
                 window._motivoOffline = (e && e.message) ? e.message : 'desconocido';
-                const offlineQA = esMate ? generarPreguntasMatematicasOffline(text) : generarPreguntasOffline(text);
+                const offlineQA = esMate ? generarPreguntasMatematicasOffline(text)
+                    : (tipoTrabajo === 'ingles' ? generarPreguntasInglesOffline(text) : generarPreguntasOffline(text));
                 preguntasDefensa = offlineQA.preguntas;
             }
 

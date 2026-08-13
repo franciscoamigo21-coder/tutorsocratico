@@ -79,6 +79,20 @@ REGLAS ESTRICTAS:
 FORMATO EXACTO:
 {"preguntas_defensa":["...","...","...","..."]}`;
 
+const ENGLISH_SYSTEM_PROMPT = `You are the "Socratic Tutor" of Colegio Presidente José Joaquín Prieto (SIP, Chile). The student's work is written in ENGLISH (an English-class assignment).
+
+TASK: Write 4 oral-defense questions IN ENGLISH that verify the student truly wrote and understood the text (not copied from an AI).
+
+STRICT RULES:
+1. Anchor each question to the REAL content: quote or refer to a specific idea, phrase, example, term or claim that appears in the text. No generic questions.
+2. Cover four angles, one per question: (a) comprehension of a key idea in their own words; (b) the source or evidence behind a specific claim; (c) a real-life application or example NOT in the text; (d) a personal reflection or a critical/counter-argument point.
+3. If the student only copied the text, they should not be able to answer these in detail.
+4. Use natural, encouraging English appropriate for school students. Not punitive. Do NOT mention "AI" or "detection" inside the questions.
+5. Reply ONLY with valid JSON, no markdown, no extra text.
+
+EXACT FORMAT:
+{"preguntas_defensa":["...","...","...","..."]}`;
+
 export default {
   async fetch(request, env) {
     const origin = request.headers.get("Origin") || "";
@@ -123,7 +137,10 @@ export default {
     }
 
     const esMate = tipo === "matematica";
-    const etiqueta = esMate ? "TRABAJO MATEMÁTICO DEL ESTUDIANTE (problema y desarrollo)" : "TEXTO DEL ESTUDIANTE";
+    const esIngles = tipo === "ingles";
+    const etiqueta = esMate
+      ? "TRABAJO MATEMÁTICO DEL ESTUDIANTE (problema y desarrollo)"
+      : (esIngles ? "STUDENT'S TEXT (written in English)" : "TEXTO DEL ESTUDIANTE");
     const userContent =
       `NIVEL DE ALERTA INTERNO (no mencionar en las preguntas): ${nivelAlerta}\n` +
       `Marcadores detectados: ${clicheList.length ? clicheList.join(", ") : "ninguno"}\n\n` +
@@ -142,7 +159,7 @@ export default {
         body: JSON.stringify({
           model: MODEL,
           max_tokens: 1200,
-          system: esMate ? MATH_SYSTEM_PROMPT : SYSTEM_PROMPT,
+          system: esMate ? MATH_SYSTEM_PROMPT : (esIngles ? ENGLISH_SYSTEM_PROMPT : SYSTEM_PROMPT),
           messages: [{ role: "user", content: userContent }],
         }),
       });
