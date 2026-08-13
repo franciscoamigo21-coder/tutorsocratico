@@ -820,18 +820,44 @@ function quitarDeGrupo(idx) {
   sincronizarGrupoNube();
   renderGrupoLista();
 }
+let __toggleMiGrupoEnCurso = false;
 async function toggleMiGrupo() {
-  await cargarGrupoNube();
-  if (!getGrupoEfectivo().size) { alert('Todavía no has creado tus tutorías. Usa el botón "Mis Tutorías" para elegir a tus tutoriados.'); return; }
+  // evita el bug de "hay que apretarlo dos veces": si ya hay un clic
+  // procesándose (por ejemplo, esperando la nube), este clic no hace nada
+  // en vez de pisar al anterior — antes ambos alternaban showMiGrupo a la
+  // vez y el filtro terminaba prendido/apagado al azar.
+  if (__toggleMiGrupoEnCurso) return;
+  const btn = document.getElementById('btn-mi-grupo');
+  // si ya hay tutoriados guardados en este navegador (lo normal: los
+  // asignados oficialmente no dependen de la nube), el clic responde al
+  // toque, sin esperar ninguna llamada de red.
+  if (!getGrupoEfectivo().size) {
+    __toggleMiGrupoEnCurso = true;
+    if (btn) btn.disabled = true;
+    await cargarGrupoNube();
+    if (btn) btn.disabled = false;
+    __toggleMiGrupoEnCurso = false;
+    if (!getGrupoEfectivo().size) {
+      alert('Todavía no has creado tus tutorías. Usa el botón "Mis Tutorías" para elegir a tus tutoriados.');
+      return;
+    }
+  }
   showMiGrupo = !showMiGrupo;
-  document.getElementById('btn-mi-grupo').classList.toggle('active', showMiGrupo);
+  if (btn) btn.classList.toggle('active', showMiGrupo);
   renderGrid();
+  // de paso, se reconcilia con la nube en segundo plano (sin bloquear el
+  // clic) por si desde otro computador se agregó o sacó a alguien.
+  cargarGrupoNube().then(() => { if (showMiGrupo) renderGrid(); });
 }
 async function abrirGrupoModal() {
   document.getElementById('grupo-search').value = '';
-  await cargarGrupoNube();
+  // se muestra de inmediato con lo que haya guardado en este navegador, y
+  // se refresca sola apenas llega la versión de la nube — así no se siente
+  // pegado el modal mientras espera la red.
   renderGrupoLista();
   document.getElementById('grupoModalBg').classList.add('open');
+  await cargarGrupoNube();
+  if (document.getElementById('grupoModalBg').classList.contains('open')) renderGrupoLista();
 }
 function cerrarGrupoModal() {
   document.getElementById('grupoModalBg').classList.remove('open');
