@@ -202,8 +202,8 @@
         1:  U("1583422409516-2895a77efded"), 2:  U("1551634979-2b11f8c946fe"),
         3:  U("1552832230-c0197dd311b5"),    4:  U("1531572753322-ad063cecc140"),
         5:  U("1531425300797-d5dc8b021c84"), 6:  U("1525874684015-58379d421a52"),
-        7:  U("1502602898657-3e91760cbb34"), 8:  U("1550340499-a6c60fc8287c"),
-        9:  U("1529655683826-aba9b3e77383"), 10: U("1513635269975-59663e0ac1ad"),
+        7:  U("1552832230-c0197dd311b5"),    8:  U("1502602898657-3e91760cbb34"),
+        9:  U("1550340499-a6c60fc8287c"),    10: U("1513635269975-59663e0ac1ad"),
         11: U("1486299267070-83823f5448dd"), 12: U("1505761671935-60b3a7427bad"),
         13: U("1533929736458-ca588d08c8be"), 14: U("1520986606214-8b456906c813"),
         15: U("1539037116277-4db20889f2d4"), 16: U("1436491865332-7a61a109cc05"),
@@ -300,6 +300,7 @@
           { n: "Qué comprar", d: "Turrón, aceite de oliva, abanicos pintados a mano." },
         ],
         cerca: [
+          { n: "Spotify Camp Nou (FC Barcelona)", d: "El mítico estadio del FC Barcelona y su museo. Tour imperdible para los fans del fútbol (reinaugurado y más grande que nunca).", price: "tour ~€28" },
           { n: "Cascada Monumental de la Ciutadella", d: "Visita fija y gratis: cascada monumental en la que colaboró un joven Gaudí, dentro del parque más bonito de la ciudad.", free: true },
         ],
       },
@@ -444,26 +445,25 @@
         ],
       },
       {
-        day: 6, date: "23 Ene", city: "Roma", title: "Borghese y vuelo a París",
-        transfer: { from: "Roma", to: "París", mode: "Vuelo directo", detail: "easyJet / Vueling / Air France · ~2h10 · FCO → CDG/ORY", icon: "Plane" },
-        map: { area: "Norte del centro → Aeropuerto", points: [
+        day: 6, date: "23 Ene", city: "Roma", title: "Villa Borghese y el Tridente",
+        map: { area: "Villa Borghese & Tridente", points: [
           { n: "Villa Borghese", note: "Galleria Borghese con reserva", how: "Metro Línea A hasta 'Spagna' y sube por el ascensor/escaleras al parque." },
           { n: "Piazza del Popolo", note: "Obelisco e iglesias gemelas", how: "Baja del parque por la terraza del Pincio (~10 min a pie con vistas)." },
           { n: "Plaza de España", note: "La famosa escalinata", how: "8 min a pie desde Piazza del Popolo por Via del Babuino; o Metro 'Spagna'." },
         ]},
         blocks: [
           { period: "Mañana", items: [
-            { type: "Atracción", name: "Villa Borghese", desc: "El gran pulmón verde de Roma. Pasea por sus jardines y miradores." },
+            { type: "Atracción", name: "Villa Borghese", desc: "El gran pulmón verde de Roma. Pasea por sus jardines y sube a la Galleria Borghese (reserva)." },
           ]},
           { period: "Mediodía", items: [
             { type: "Atracción", name: "Piazza del Popolo", desc: "Plaza monumental con obelisco e iglesias gemelas, al pie del Pincio." },
             { type: "Atracción", name: "Plaza de España", desc: "La escalinata de Trinità dei Monti, punto de encuentro icónico." },
           ]},
           { period: "Tarde", items: [
-            { type: "Transporte", name: "Vuelo Roma → París", desc: "Vuelo directo (easyJet/Vueling/Air France) a CDG u Orly." },
+            { type: "Atracción", name: "Terraza del Pincio", desc: "El mejor atardecer sobre Roma y la cúpula de San Pedro, sobre Piazza del Popolo." },
           ]},
           { period: "Noche", items: [
-            { type: "Transporte", name: "Llegada a París", desc: "RER B (CDG) o Orlybus hasta el centro; check-in y descanso." },
+            { type: "Comida", name: "Cena en el Tridente", desc: "Última noche romana entre Via del Corso y el Panteón." },
           ]},
         ],
         food: [
@@ -478,7 +478,43 @@
         ],
       },
       {
-        day: 7, date: "24 Ene", city: "París", title: "París clásico",
+        day: 7, date: "24 Ene", city: "Roma", title: "Testaccio y vuelo a París",
+        transfer: { from: "Roma", to: "París", mode: "Vuelo directo", detail: "easyJet / Vueling / Air France · ~2h10 · FCO → CDG/ORY", icon: "Plane" },
+        map: { area: "Testaccio / Aventino → Aeropuerto", points: [
+          { n: "Barrio Testaccio", note: "El barrio más auténtico de Roma", how: "Metro Línea B hasta 'Piramide' + 5 min a pie al mercado de Testaccio." },
+          { n: "Giardino degli Aranci", note: "Mirador con naranjos", how: "Sube desde 'Circo Massimo' (Metro B) por el Aventino, ~10 min a pie." },
+          { n: "Aeropuerto de Roma", note: "Para el vuelo a París", how: "Leonardo Express desde Termini a Fiumicino (32 min), o bus a Ciampino." },
+        ]},
+        blocks: [
+          { period: "Mañana", items: [
+            { type: "Atracción", name: "Mercado de Testaccio", desc: "Mañana relajada por el barrio más auténtico: mercado, cocina romana y ambiente local." },
+            { type: "Atracción", name: "La Cerradura de Aventino", desc: "Asómate al ojo de la cerradura de la Orden de Malta: verás la cúpula de San Pedro enmarcada por un seto. Mágico y gratis." },
+          ]},
+          { period: "Mediodía", items: [
+            { type: "Comida", name: "Último almuerzo romano", desc: "Pasta o pizza al taglio antes de despedirte de la ciudad eterna." },
+          ]},
+          { period: "Tarde", items: [
+            { type: "Transporte", name: "Vuelo Roma → París", desc: "Vuelo directo (easyJet/Vueling/Air France) a CDG u Orly." },
+          ]},
+          { period: "Noche", items: [
+            { type: "Transporte", name: "Llegada a París", desc: "RER B (CDG) o Orlybus hasta el centro; check-in y descanso." },
+          ]},
+        ],
+        food: [
+          { n: "Mercato di Testaccio", addr: "Testaccio", d: "Puestos de comida romana callejera dentro del mercado.", p: "€6–12" },
+          { n: "Pizzeria Da Remo", addr: "Testaccio", d: "Pizza romana finísima, un clásico del barrio.", p: "€8–14" },
+        ],
+        shopping: [
+          { n: "Mercato di Testaccio", d: "Ropa, cuero y comida a precios de barrio (no turístico)." },
+          { n: "Qué comprar", d: "Últimos souvenirs: pasta, café y limoncello para llevar." },
+        ],
+        cerca: [
+          { n: "Pirámide Cestia", d: "Una pirámide romana del 12 a.C. junto a la estación Piramide, sorprendente y gratis por fuera.", free: true },
+          { n: "Mirador de Gianicolo", d: "Si te queda tiempo antes del vuelo: la panorámica más bonita de Roma.", free: true },
+        ],
+      },
+      {
+        day: 8, date: "25 Ene", city: "París", title: "París clásico",
         map: { area: "Orillas del Sena", points: [
           { n: "Museo del Louvre", note: "La Gioconda; reserva con franja horaria", how: "Metro L1/L7 hasta 'Palais Royal – Musée du Louvre' (acceso por el Carrousel)." },
           { n: "Notre Dame", note: "Île de la Cité", how: "20 min a pie por la orilla del Sena, o Metro L4 hasta 'Cité'." },
@@ -519,7 +555,7 @@
         ],
       },
       {
-        day: 8, date: "25 Ene", city: "París", title: "Luxemburgo y Montmartre",
+        day: 9, date: "26 Ene", city: "París", title: "Luxemburgo y Montmartre",
         map: { area: "Rive Gauche → Montmartre", points: [
           { n: "Jardines de Luxemburgo", note: "Parque elegante del Barrio Latino", how: "RER B hasta 'Luxembourg', o Metro L4 hasta 'Saint-Sulpice' + 5 min." },
           { n: "Montmartre", note: "Barrio de artistas en la colina", how: "Metro L2 'Anvers' o L12 'Abbesses'; luego sube la colina (o el funicular)." },
@@ -551,7 +587,7 @@
         ],
       },
       {
-        day: 9, date: "26 Ene", city: "Londres", title: "Eurostar y Westminster",
+        day: 10, date: "27 Ene", city: "Londres", title: "Eurostar y Westminster",
         transfer: { from: "París", to: "Londres", mode: "Tren Eurostar", detail: "Gare du Nord → St Pancras · ~2h20 · llega antes para control de pasaportes", icon: "Train" },
         map: { area: "Westminster & South Bank", points: [
           { n: "Abadía de Westminster", note: "Gótico imponente, coronaciones reales", how: "Tube Circle/District/Jubilee hasta 'Westminster' (salida Westminster Abbey)." },
@@ -583,7 +619,7 @@
         ],
       },
       {
-        day: 10, date: "27 Ene", city: "Londres", title: "Notting Hill & West End",
+        day: 11, date: "28 Ene", city: "Londres", title: "Notting Hill & West End",
         map: { area: "Notting Hill → West End", points: [
           { n: "Notting Hill", note: "Casas de colores", how: "Tube Central/Circle/District hasta 'Notting Hill Gate'." },
           { n: "Portobello Market", note: "Antigüedades (sáb. más grande)", how: "5 min a pie cuesta abajo desde Notting Hill Gate por Pembridge Rd." },
@@ -618,7 +654,7 @@
         ],
       },
       {
-        day: 11, date: "28 Ene", city: "Londres", title: "Realeza y museos",
+        day: 12, date: "29 Ene", city: "Londres", title: "Realeza y museos",
         map: { area: "St. James → South Kensington", points: [
           { n: "Palacio de Buckingham", note: "Cambio de guardia (ciertos días)", how: "Tube Victoria/Piccadilly hasta 'Green Park' + 8 min por St James's Park." },
           { n: "10 Adam Street", note: "Calle georgiana cerca del Strand", how: "Tube Northern/Bakerloo 'Charing Cross' + 5 min a pie hacia el Strand." },
@@ -652,42 +688,12 @@
         ],
       },
       {
-        day: 12, date: "29 Ene", city: "Londres", title: "Estadios, música y parques",
-        map: { area: "Este → Oeste de Londres", points: [
-          { n: "Estadio de Londres", note: "Queen Elizabeth Olympic Park", how: "Tube/Overground/Elizabeth Line hasta 'Stratford' + 10 min por el parque." },
-          { n: "Abbey Road", note: "El cruce de los Beatles", how: "Tube Jubilee hasta 'St John's Wood' + 5 min a pie hasta el cruce." },
-          { n: "Hyde Park", note: "Speakers' Corner y Serpentine", how: "Tube hasta 'Hyde Park Corner' o 'Marble Arch'." },
-          { n: "Battersea Park", note: "Central eléctrica reconvertida", how: "Northern Line hasta 'Battersea Power Station', o tren a 'Battersea Park'." },
-        ]},
-        blocks: [
-          { period: "Mañana", items: [
-            { type: "Atracción", name: "Estadio de Londres", desc: "El estadio olímpico de 2012 en el Olympic Park de Stratford." },
-          ]},
-          { period: "Mediodía", items: [
-            { type: "Atracción", name: "Abbey Road", desc: "Recrea la mítica foto del cruce de los Beatles frente a los estudios." },
-            { type: "Comida", name: "Almuerzo informal", desc: "Café cerca de St John's Wood antes de seguir al parque." },
-          ]},
-          { period: "Tarde", items: [
-            { type: "Atracción", name: "Hyde Park", desc: "El gran parque real: Serpentine, Speakers' Corner y Kensington Gardens." },
-          ]},
-          { period: "Noche", items: [
-            { type: "Atracción", name: "Battersea Park", desc: "Atardecer junto al río y la icónica Battersea Power Station reconvertida en centro comercial." },
-          ]},
-        ],
-        food: [
-          { n: "Battersea Power Station food hall", d: "Patio gastronómico con vistas al Támesis.", p: "£12–20 p/p" },
-        ],
-        shopping: [
-          { n: "Battersea Power Station", d: "Centro comercial dentro de la antigua central eléctrica." },
-          { n: "Qué comprar", d: "Merchandising de los Beatles, vinilos, ropa deportiva." },
-        ],
-      },
-      {
-        day: 13, date: "30 Ene", city: "Londres", title: "Tower Bridge & la City",
-        map: { area: "City of London", points: [
+        day: 13, date: "30 Ene", city: "Londres", title: "Tower Bridge, música y río",
+        map: { area: "City · Támesis · rincones musicales", points: [
           { n: "Tower Bridge", note: "El puente levadizo victoriano", how: "Tube District/Circle hasta 'Tower Hill' + 5 min a pie hasta el puente." },
-          { n: "Torre de Londres", note: "Joyas de la corona (opcional)", how: "Justo al lado del puente, saliendo de la estación 'Tower Hill'." },
           { n: "The City", note: "The Gherkin y Sky Garden gratis", how: "10 min a pie al norte; o Tube hasta 'Bank' o 'Monument'." },
+          { n: "Abbey Road", note: "El cruce de los Beatles", how: "Tube Jubilee hasta 'St John's Wood' + 5 min a pie hasta el cruce." },
+          { n: "Battersea Power Station", note: "Portada de Pink Floyd (Animals)", how: "Northern Line hasta 'Battersea Power Station'." },
         ]},
         blocks: [
           { period: "Mañana", items: [
@@ -698,19 +704,25 @@
             { type: "Comida", name: "Almuerzo en Leadenhall Market", desc: "Mercado victoriano cubierto (escenario de Harry Potter)." },
           ]},
           { period: "Tarde", items: [
-            { type: "Atracción", name: "Sky Garden", desc: "Mirador-jardín gratuito en lo alto del Walkie-Talkie. Reserva online." },
+            { type: "Atracción", name: "Abbey Road", desc: "Recrea la mítica foto del cruce de los Beatles frente a los estudios (NW8)." },
           ]},
           { period: "Noche", items: [
-            { type: "Comida", name: "Cena con vista", desc: "Pub histórico de la City o cena junto al río en Shad Thames." },
+            { type: "Atracción", name: "Battersea Power Station", desc: "Atardecer junto al río en la icónica central de Pink Floyd, hoy centro comercial." },
           ]},
         ],
         food: [
+          { n: "Battersea Power Station food hall", addr: "Battersea", d: "Patio gastronómico con vistas al Támesis.", p: "£12–20 p/p" },
           { n: "The Counting House", d: "Pub en un antiguo banco victoriano de la City.", p: "£14–22 p/p" },
-          { n: "Duck & Waffle (cerca)", d: "Vistas 24h desde la altura (reserva).", p: "£30–45 p/p" },
         ],
         shopping: [
           { n: "Leadenhall Market", d: "Galería victoriana con tiendas y pubs." },
-          { n: "Qué comprar", d: "Paraguas británicos, corbatas, gemelos." },
+          { n: "Battersea Power Station", d: "Centro comercial en la antigua central: merch de los Beatles, vinilos y tiendas." },
+        ],
+        cerca: [
+          { n: "Sky Garden", d: "Mirador-jardín gratuito en lo alto del Walkie-Talkie. Reserva online.", url: "https://skygarden.london", price: "Gratis (reserva)", free: true },
+          { n: "Torre de Londres", d: "Junto al puente: las joyas de la corona (opcional, entrada de pago).", price: "£" },
+          { n: "Hyde Park", d: "Si te sobra energía: el gran parque real con la Serpentine y Speakers' Corner.", free: true },
+          { n: "Estadio de Londres", d: "Para fans del deporte: el estadio olímpico de 2012 en Stratford." },
         ],
       },
       {
@@ -813,9 +825,9 @@
       ],
       cities: [
         { city: "Barcelona", nights: 1, lodging: 90, food: 45, transport: 12, attractions: 60 },
-        { city: "Roma", nights: 4, lodging: 85, food: 40, transport: 8, attractions: 45 },
+        { city: "Roma", nights: 5, lodging: 85, food: 40, transport: 8, attractions: 45 },
         { city: "París", nights: 3, lodging: 110, food: 50, transport: 9, attractions: 50 },
-        { city: "Londres", nights: 6, lodging: 130, food: 55, transport: 14, attractions: 35 },
+        { city: "Londres", nights: 5, lodging: 130, food: 55, transport: 14, attractions: 35 },
       ],
       notes: [
         "Cifras por persona y por día (alojamiento es por habitación doble / 2).",
@@ -873,6 +885,7 @@
       Barcelona: {
         intro: "Capital catalana del modernismo: Gaudí en cada esquina, mar Mediterráneo y una vida de calle vibrante. Es compacta, muy caminable y con un metro excelente para moverse.",
         must: [
+          { n: "Spotify Camp Nou (FC Barcelona)", d: "El mítico estadio del FC Barcelona y su museo, reinaugurado y más grande que nunca. Tour imperdible para los amantes del fútbol.", price: "tour ~€28" },
           { n: "Cascada Monumental de la Ciutadella", d: "Visita fija y gratis: una cascada monumental de aire barroco (en la que colaboró un joven Gaudí) dentro del parque más bonito de la ciudad.", free: true },
         ],
         souvenirs: [
@@ -1923,7 +1936,7 @@
               <div className="min-w-0">
                 <h1 className="truncate font-display text-xl sm:text-2xl font-bold leading-none">
                   <span className="bg-gradient-to-r from-blue-700 via-rose-600 to-amber-500 bg-clip-text text-transparent">Eurotrip</span>
-                  <span className="text-ink"> · Nosotros</span>
+                  <span className="text-ink"> · 16 días</span>
                 </h1>
                 <p className="hidden sm:block text-[11px] font-semibold tracking-[0.1em] text-stone-500">🇪🇸 Barcelona · 🇮🇹 Roma · 🇫🇷 París · 🇬🇧 Londres</p>
               </div>
@@ -1976,7 +1989,7 @@
             <div className="mx-auto max-w-6xl px-4 py-8 text-center">
               <div className="mb-3 text-3xl">🇪🇸 🇮🇹 🇫🇷 🇬🇧</div>
               <p className="flex items-center justify-center gap-2 font-display text-2xl font-semibold text-ink">
-                <Icon name="Heart" size={18} className="text-rose-500 animate-wiggle" /> Hecho con cariño para nuestro viaje soñado
+                <Icon name="Plane" size={18} className="text-blue-600 animate-wiggle" /> 16 días · 4 ciudades · Europa
               </p>
               <p className="mt-2 text-xs text-stone-400 max-w-xl mx-auto">Costos, recomendaciones y rutas de "cómo llegar" son estimaciones referenciales; verifica precios, horarios y líneas de transporte antes de viajar.</p>
             </div>
