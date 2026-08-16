@@ -281,11 +281,45 @@ MBE Módulo 3: Estándar 11 completo (11.1, 11.2, 11.3, 11.6, 11.7)
 ## Documentos institucionales (no evaluados por CPEIP, solo vocabulario/prácticas)
 
 - **Marco Escuelas Efectivas Aptus** (32 pág.): 5 dominios — A. Visión y liderazgo escolar · B. Sistemas y prácticas efectivas de enseñanza · C. Cultura, convivencia y formación del carácter · D. Desarrollo de capacidades profesionales · E. Gestión del establecimiento. Es un marco de **liderazgo/gestión escolar**, con foco en directivos — el dominio B es el más relevante para vocabulario de aula. Pendiente: revisar dominio B en detalle si se necesita vocabulario específico de sala de clases.
-- **Marco para la Buena Dirección y Liderazgo Escolar 2015** (Mineduc/CPEIP, 44 pág.): el que subiste NO es "Marco Clases Efectivas SIP.xlsx" ni "Cuaderno DLI" — es otro documento de liderazgo directivo (5 dimensiones de prácticas + recursos personales). Útil como material para Módulo 3 / DLI, pero no reemplaza los dos archivos originalmente mencionados. Si los tienes, súbelos aparte.
+- **Marco para la Buena Dirección y Liderazgo Escolar 2015** (Mineduc/CPEIP, 44 pág.): documento de liderazgo directivo (5 dimensiones de prácticas + recursos personales). Material de contexto para DLI, no para el Portafolio directamente.
+- **Modelo de Clase Efectiva SIP (MCE)** — reemplaza lo que originalmente se llamó "Marco Clases Efectivas SIP.xlsx". Es el documento vigente 2026. Ver resumen abajo.
+- **Cuaderno DLI** (82 pág., Diplomado Aptus) — recibido, pendiente de lectura detallada (se hará cuando se trabaje Módulo 3 / aprendizajes profesionales).
+
+### Modelo de Clase Efectiva SIP (MCE) — vocabulario y estructura para citar en fichas de clase y reflexiones
+
+**Pilares SIP**: orden, respeto, prudencia, justicia, fortaleza.
+
+**4 dimensiones** (1 transversal + 3 que configuran la clase):
+1. **Planificación y reflexión pedagógica** (transversal): sostiene todo el modelo — análisis, diseño y ajuste continuo antes/después de la clase.
+2. **Ambiente Propicio para el Aprendizaje**: rutinas y normas explícitas, interacciones basadas en respeto y "enmarque positivo", organización física del aula.
+3. **Enseñanza para el Aprendizaje Centrada en Todos los Estudiantes**: propósitos claros, preguntas desafiantes, **ratio de participación y pensamiento**, **cultura del error orientada a la mejora**, tiempos de práctica guiada e independiente, colaboración estructurada.
+4. **Evaluación y Monitoreo para el Ajuste Continuo de la Enseñanza**: instrumentos alineados a objetivos, monitoreo continuo, retroalimentación formativa oportuna y específica, reenseñanza/profundización/diversificación según evidencia.
+
+**Términos útiles para fichas y reflexiones** (dan vocabulario técnico, no se citan ante CPEIP pero ayudan a que tu redacción suene rigurosa):
+- **Involucramiento auténtico**: participación activa, cognitiva y significativa — no solo estar ocupado o responder preguntas aisladas; implica pensar organizadamente, tomar decisiones, argumentar, equivocarse y ajustar el desempeño.
+- **Triángulo Instruccional (Cohen)**: docente – estudiantes – contenido, interactuando dentro de un entorno (ambiente, normas, rutinas, clima, tiempo, recursos).
+- **Ciclo de retroalimentación Ver–Nombrar–Hacer**: Ver el éxito/modelo/brecha → Nombrar la Acción a Seguir (qué + cómo, en pasos concretos y observables) → Hacer (practicar y ajustar la próxima clase).
+- **Evidencia** (definición MCE): información observable y concreta sobre lo que hacen y dicen docentes y estudiantes. NO incluye interpretaciones ni juicios.
+
+---
+
+## Objetivos de Aprendizaje (OA) — Música 8° Básico (Bases Curriculares 7°B a 2°M)
+
+**⚠️ Advertencia de verificación**: el entorno de esta sesión tiene bloqueado el acceso directo a curriculumnacional.cl y mineduc.cl (egress bloqueado por política de red), así que no pude confirmar el texto contra la fuente oficial en este momento. Lo de abajo es una reconstrucción a partir de múltiples resultados de búsqueda independientes y coincidentes, con confianza razonable pero **no 100% verbatim confirmada**. Antes de pegarlo en la Plataforma Docentemás, cópialo tú mismo directamente desde el selector de OA de la Plataforma o desde curriculumnacional.cl — es un punto no negociable dado que un error aquí cuenta como error conceptual/de fidelidad al currículum.
+
+**Eje Escuchar y apreciar:**
+- **MU08 OA 01**: Comunicar sentimientos, sensaciones e ideas al escuchar manifestaciones y obras musicales de Chile y el mundo, presentes en la tradición oral, escrita y popular, integrando sus conocimientos en expresiones verbales, visuales, sonoras y corporales.
+- **MU08 OA 02** ← **el más pertinente para pentagrama/clave de sol**: Describir analíticamente los elementos del lenguaje musical y los procedimientos compositivos evidentes en la música escuchada, interpretada y creada, y su relación con el propósito expresivo.
+  - Indicadores de evaluación sugeridos asociados (reconstrucción, verificar): distinguir elementos del lenguaje musical en una obra escrita de forma tradicional; asociar signos de escritura musical convencional a lo escuchado siguiendo una partitura; reconocer patrones rítmicos y melódicos; graficar elementos del lenguaje musical usando signos no convencionales.
+
+**Eje Interpretar y crear:**
+- **MU08 OA 03**: Cantar y tocar repertorio relacionado con la música escuchada, desarrollando habilidades tales como comprensión rítmica, melódica, conciencia de textura y estilo, expresividad, rigurosidad, fluidez de fraseo y dinámica, entre otros.
+
+**Lectura recomendada**: OA 02 (leer/reconocer notación en el pentagrama, clave de sol) + OA 03 (aplicarlo cantando/tocando) combinan bien para una experiencia de aprendizaje progresiva: primero reconocer, luego ejecutar.
 
 ---
 
 ## Pendiente de recibir del usuario
 
-- Unidad y OA de Música que se está pasando actualmente con 8° Básico (para partir Módulo 1).
-- Confirmar si sigue faltando: `Marco_Clases_Efectivas_SIP.xlsx` y `Cuaderno_DLI.pdf` (no llegaron; se subió en su lugar el Marco de Liderazgo Escolar 2015).
+- Confirmar con precisión cuántas clases/semanas dura la unidad de lectura de pentagrama en 8°, para definir las 3 experiencias de la Tarea 1.1.
+- Verificar el texto exacto de los OA arriba contra la Plataforma Docentemás o curriculumnacional.cl antes de usarlo oficialmente.
