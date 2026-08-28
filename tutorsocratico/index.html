@@ -283,8 +283,8 @@
         }
 
         .btn-gemini {
-            background: linear-gradient(135deg, var(--accent-gold) 0%, #ff9800 100%);
-            box-shadow: 0 6px 22px rgba(255, 193, 7, 0.35);
+            background: linear-gradient(135deg, #f6c85a 0%, #eaa93a 100%);
+            box-shadow: 0 6px 20px rgba(234, 169, 58, 0.28);
             border: 2px solid rgba(255, 255, 255, 0.5);
             position: relative;
             overflow: hidden;
@@ -292,8 +292,8 @@
 
         .btn-gemini:hover {
             transform: translateY(-3px);
-            box-shadow: 0 10px 32px rgba(255, 152, 0, 0.5);
-            background: linear-gradient(135deg, var(--accent-gold-hover) 0%, #ffb74d 100%);
+            box-shadow: 0 10px 28px rgba(234, 169, 58, 0.38);
+            background: linear-gradient(135deg, #f1bb45 0%, #e5a02e 100%);
         }
 
         .btn-gemini:disabled {
@@ -1163,9 +1163,9 @@
         .institutional-strip { background:linear-gradient(135deg,#eef4ff 0%,#f6f9ff 100%) !important; }
         .strip-quote { color:#3c4a63 !important; }
         /* --- Colores mejor definidos: paleta ASE-IA completa (azul/oro/cian/verde) --- */
-        .modo-card { --acc:#0b3d91; background:#ffffff; border:2px solid #0b3d91; box-shadow:0 6px 18px rgba(11,36,65,0.10); }
-        .modo-card[data-modo="pdf"]    { --acc:#0e93b0; }
-        .modo-card[data-modo="camara"] { --acc:#12a150; }
+        .modo-card { --acc:#3a5fa8; background:#ffffff; border:1.5px solid #c3d5f0; box-shadow:0 6px 18px rgba(11,36,65,0.08); }
+        .modo-card[data-modo="pdf"]    { --acc:#4a92a6; }
+        .modo-card[data-modo="camara"] { --acc:#4f9e79; }
         .modo-card i { color: var(--acc); }
         .modo-card:hover { border-color: var(--acc); box-shadow:0 10px 24px rgba(11,36,65,0.14); transform:translateY(-2px); }
         .modo-card.active { background: var(--acc) !important; border-color: var(--acc) !important; box-shadow:0 12px 28px rgba(11,36,65,0.24) !important; }
@@ -1907,7 +1907,8 @@
                 salud: ['salud','enfermedad','alimentaci','nutrici','ejercicio','mental','droga','virus','m[ée]dic','bienestar','obesidad','adicci','vacuna','higiene','pandemia'],
                 economia: ['dinero','econom[íi]a','mercado','empresa','pobreza','consumo','comercio','producci','empleo','desempleo','sueldo','presupuesto','inflaci','salario'],
                 deporte: ['deporte','f[úu]tbol','jugador','equipo','competencia','entrenamiento','partido','atleta','campeonato'],
-                arte: ['arte','m[úu]sica','pintura','artista','dibujo','canci[óo]n','danza','teatro','instrumento','escultura','melod[íi]a']
+                arte: ['arte','m[úu]sica','pintura','artista','dibujo','canci[óo]n','danza','teatro','instrumento','escultura','melod[íi]a'],
+                filosofia: ['filosof','[ée]tica','moral','existenci','metaf[íi]sica','epistemolog','dilema','virtud','sentido de la vida','platón','platon','arist[óo]teles','s[óo]crates','kant','nietzsche','pensamiento cr']
             };
             let dominio=null, mejor=0;
             for (const [d,terms] of Object.entries(LEXICONS)) {
@@ -1927,7 +1928,8 @@
                     `Tu texto trata un hecho histórico ligado a ${refC}. ¿Qué causas explican que ocurriera de esa forma y no de otra?`,
                     `Si lo relacionado con ${refC2} hubiese terminado distinto, ¿cómo sería hoy nuestra sociedad? Argumenta tu hipótesis.`,
                     `¿Qué semejanzas ves entre lo que describes sobre ${refC} y algo que ocurra en la actualidad?`,
-                    `¿Desde qué punto de vista está contada esta historia? ¿Qué versión o protagonista quedó fuera de tu relato?`
+                    `¿Desde qué punto de vista está contada esta historia? ¿Qué versión o protagonista quedó fuera de tu relato?`,
+                    `¿En qué fuentes o documentos te apoyaste para lo que afirmas sobre ${refC}? ¿Cómo sabes que son confiables?`
                 ],
                 literatura: [
                     `En tu texto trabajas con ${refC}. ¿Qué crees que se quiso transmitir con eso? Justifícalo con una parte concreta.`,
@@ -1963,7 +1965,8 @@
                     `Tu texto aborda ${refC}. ¿Cómo afecta eso al presupuesto de una familia como la tuya? Da un ejemplo concreto.`,
                     `Sobre ${refC2}: ¿quién gana y quién pierde en esa situación? Explica tu razonamiento.`,
                     `¿Qué decisión económica cotidiana (comprar, ahorrar, gastar) se relaciona con lo que escribiste? Descríbela.`,
-                    `¿Crees que el problema que planteas sobre ${refC} tiene solución? ¿Quién debería actuar y cómo?`
+                    `¿Crees que el problema que planteas sobre ${refC} tiene solución? ¿Quién debería actuar y cómo?`,
+                    `Si mencionas datos o cifras, ¿de dónde provienen y qué representan realmente? Explícalo con tus palabras.`
                 ],
                 deporte: [
                     `Tu texto trata sobre ${refC}. ¿Qué aprendizaje de vida (esfuerzo, equipo, frustración) se puede sacar de eso? Da un ejemplo tuyo.`,
@@ -1974,6 +1977,12 @@
                     `Tu texto habla de ${refC}. ¿Qué sensación busca provocar y con qué recurso lo logra? Explica con un detalle concreto.`,
                     `Sobre ${refC2}: ¿qué dice de la época o la cultura en que se creó? Argumenta.`,
                     `¿Con qué experiencia o emoción personal conectas ${refC}? Descríbelo.`
+                ],
+                filosofia: [
+                    `Tu texto reflexiona sobre ${refC}. ¿Cuál es TU postura personal y con qué argumento la defiendes?`,
+                    `Sobre ${refC2}: ¿qué pensaría alguien que opina lo contrario? Formula su mejor argumento y luego respóndele.`,
+                    `¿Qué ejemplo de la vida real ilustra lo que planteas sobre ${refC}? Explícalo.`,
+                    `¿En qué cambió tu forma de pensar después de reflexionar sobre ${refC}?`
                 ]
             };
 
@@ -2327,11 +2336,11 @@
             if (prob >= 70) {
                 cardClass='card-alert'; iconClass='fas fa-robot';
                 titleText=`⚠ ALTA PROBABILIDAD DE I.A. — Índice ${prob}/99`;
-                titleColor='var(--strict-color)'; barColor='#ff4d7e'; barWidth=prob;
+                titleColor='var(--strict-color)'; barColor='#e06a8c'; barWidth=prob;
             } else if (prob >= 40) {
                 cardClass='card-warning'; iconClass='fas fa-triangle-exclamation';
                 titleText=`🔍 TEXTO SOSPECHOSO — Índice de riesgo ${prob}/99`;
-                titleColor='var(--alert-color)'; barColor='#ff9800'; barWidth=prob;
+                titleColor='var(--alert-color)'; barColor='#e6a23c'; barWidth=prob;
             } else {
                 // Aunque el índice sea bajo, SIEMPRE se muestra como sospechoso
                 // porque si se usa esta plataforma, ya hay sospecha previa
