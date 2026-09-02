@@ -23,6 +23,8 @@ const ALLOWED_ORIGINS = [
   "https://franciscoamigo21-coder.github.io",
   "https://www.josejoaquinprieto.cl",
   "https://josejoaquinprieto.cl",
+  "https://aseia.cl",
+  "https://www.aseia.cl",
 ];
 
 const MODEL = "claude-sonnet-4-6";
@@ -65,10 +67,13 @@ async function verifyGoogle(credential) {
 function profileFor(u) {
   const email = u.email, dom = email.split("@")[1] || "";
   if (DEV_EMAILS.includes(email)) return { role: "dev", email, name: u.name, picture: u.picture };
-  if (dom === "sip.cl") return { role: "staff", email, name: u.name, picture: u.picture };
-  if (dom === "alumnos.sip.cl") {
-    const s = DIRECTORY.find((x) => (x.e || "").toLowerCase() === email);
-    return { role: "student", email, name: u.name, picture: u.picture, student: s ? { name: s.n, course: s.c } : null };
+  const isInst = dom === "sip.cl" || dom.endsWith(".sip.cl");   // acepta cualquier subdominio de sip.cl
+  if (isInst) {
+    if (dom.includes("alumnos")) {
+      const s = DIRECTORY.find((x) => (x.e || "").toLowerCase() === email);
+      return { role: "student", email, name: u.name, picture: u.picture, student: s ? { name: s.n, course: s.c } : null };
+    }
+    return { role: "staff", email, name: u.name, picture: u.picture };
   }
   const pupils = DIRECTORY.filter((x) => (x.ae || "").toLowerCase() === email).map((x) => ({ name: x.n, course: x.c, email: x.e }));
   return { role: "guardian", email, name: u.name, picture: u.picture, pupils };
@@ -205,17 +210,23 @@ export default {
       const prompt = (body.prompt || body.question || "").toString().slice(0, 4000);
       if (prompt.trim().length < 3) return json({ error: "Solicitud vacía" }, 400, cors);
       const sysCrear =
-        `Eres un asesor pedagógico experto en el currículum nacional de Chile ` +
-        `(MINEDUC, Bases Curriculares) del Colegio Presidente José Joaquín Prieto. ` +
+        `Eres el asesor pedagógico institucional del Colegio Presidente José ` +
+        `Joaquín Prieto (SIP Red de Colegios, Chile), experto en el currículum ` +
+        `nacional (MINEDUC, Bases Curriculares). ` +
         `Tu tarea es CREAR material educativo de alta calidad para docentes: ` +
         `planificaciones de clase, guías de trabajo, rúbricas de evaluación, ` +
         `objetivos de aprendizaje (OA) y guiones de presentación. ` +
         `IMPORTANTE: siempre CREAS el material solicitado; nunca pides datos al ` +
         `usuario ni lo derives a terceros. Alinea todo a los OA del nivel indicado. ` +
-        `Escribe en español de Chile, claro, concreto y listo para usar. Usa formato ` +
-        `Markdown: encabezados con ##, subtítulos con ###, listas con - o números, ` +
-        `negritas con **texto** y tablas con | y fila separadora |---|---| cuando ` +
-        `ayude (por ejemplo, en rúbricas). Sé práctico y pertinente al nivel.`;
+        `TONO: usa un lenguaje simple, formal e institucional, propio de un ` +
+        `colegio, con la identidad de este establecimiento. Prioriza SIEMPRE ese ` +
+        `tono institucional por sobre cualquier estilo genérico de inteligencia ` +
+        `artificial o de internet: nada de frases de relleno, entusiasmo artificial ` +
+        `ni jerga técnica innecesaria. Escribe en español de Chile, claro, concreto ` +
+        `y listo para usar. Usa formato Markdown: encabezados con ##, subtítulos ` +
+        `con ###, listas con - o números, negritas con **texto** y tablas con | y ` +
+        `fila separadora |---|---| cuando ayude (por ejemplo, en rúbricas). Sé ` +
+        `práctico y pertinente al nivel.`;
       let aiC;
       try {
         aiC = await fetch("https://api.anthropic.com/v1/messages", {
@@ -242,6 +253,97 @@ export default {
       const dc = await aiC.json();
       const bc = (dc.content || []).find((b) => b.type === "text");
       return new Response(JSON.stringify({ reply: (bc?.text || "").trim() }), { status: 200, headers: secure });
+    }
+
+    // ---- Mis Tutorías (grupo de tutoriados guardado por cada docente) ----
+    // Cada docente ve su propio grupo desde cualquier navegador con solo
+    // iniciar sesión. Requiere un KV namespace enlazado como TUTORIAS.
+    if (resource === "misTutorias") {
+      const u = await verifyGoogle(body.credential);
+      if (!u) return json({ error: "No pudimos verificar tu cuenta." }, 401, cors);
+      const p = profileFor(u);
+      if (p.role !== "staff" && p.role !== "dev") return json({ error: "No autorizado" }, 403, cors);
+      if (!env.TUTORIAS) return json({ error: "Falta configurar el almacenamiento (KV TUTORIAS)" }, 500, cors);
+      const key = "tutorias:" + u.email;
+      if (body.action === "save") {
+        const grupo = Array.isArray(body.grupo) ? body.grupo.slice(0, 500).map(String) : [];
+        const exclusiones = Array.isArray(body.exclusiones) ? body.exclusiones.slice(0, 500).map(String) : [];
+        await env.TUTORIAS.put(key, JSON.stringify({ grupo, exclusiones }));
+        return new Response(JSON.stringify({ ok: true, grupo, exclusiones }), { status: 200, headers: secure });
+      }
+      const raw = await env.TUTORIAS.get(key);
+      let grupo = [], exclusiones = [];
+      if (raw) {
+        try {
+          const parsed = JSON.parse(raw);
+          // formato viejo: solo un array de grupo (antes de agregar exclusiones)
+          if (Array.isArray(parsed)) grupo = parsed;
+          else { grupo = Array.isArray(parsed.grupo) ? parsed.grupo : []; exclusiones = Array.isArray(parsed.exclusiones) ? parsed.exclusiones : []; }
+        } catch {}
+      }
+      return new Response(JSON.stringify({ ok: true, found: !!raw, grupo, exclusiones }), { status: 200, headers: secure });
+    }
+
+    // ---- Ficha del estudiante (avances de tutoría, carreras agregadas y
+    // simulación de NEM/promedio de IV°): se guarda en el PERFIL del
+    // estudiante, no en el navegador de quien lo edita, para que cualquier
+    // docente que abra esa ficha (desde cualquier computador) vea lo mismo.
+    // Usa el mismo KV TUTORIAS que "Mis Tutorías" (misma cuenta, otra clave).
+    if (resource === "fichaEstudiante") {
+      const u = await verifyGoogle(body.credential);
+      if (!u) return json({ error: "No pudimos verificar tu cuenta." }, 401, cors);
+      const p = profileFor(u);
+      if (p.role !== "staff" && p.role !== "dev") return json({ error: "No autorizado" }, 403, cors);
+      if (!env.TUTORIAS) return json({ error: "Falta configurar el almacenamiento (KV TUTORIAS)" }, 500, cors);
+      const studentKey = String(body.studentKey || "").trim().slice(0, 100);
+      if (!studentKey) return json({ error: "Falta studentKey" }, 400, cors);
+      const key = "ficha:" + studentKey;
+      if (body.action === "save") {
+        const data = body.data && typeof body.data === "object" ? body.data : {};
+        const payload = JSON.stringify(data).slice(0, 200000);
+        await env.TUTORIAS.put(key, payload);
+        return new Response(JSON.stringify({ ok: true }), { status: 200, headers: secure });
+      }
+      const raw = await env.TUTORIAS.get(key);
+      return new Response(JSON.stringify({ ok: true, data: raw ? JSON.parse(raw) : null }), { status: 200, headers: secure });
+    }
+
+    // ---- Documentos/antecedentes adjuntos (archivos subidos para un
+    // estudiante): los BYTES se guardan en una clave KV aparte por
+    // documento — nunca junto a la ficha general ni en localStorage — para
+    // no inflar esos otros datos con el peso de un PDF. Usa el mismo KV
+    // TUTORIAS que el resto.
+    if (resource === "documento") {
+      const u = await verifyGoogle(body.credential);
+      if (!u) return json({ error: "No pudimos verificar tu cuenta." }, 401, cors);
+      const p = profileFor(u);
+      if (p.role !== "staff" && p.role !== "dev") return json({ error: "No autorizado" }, 403, cors);
+      if (!env.TUTORIAS) return json({ error: "Falta configurar el almacenamiento (KV TUTORIAS)" }, 500, cors);
+      const studentKey = String(body.studentKey || "").trim().slice(0, 100);
+      const ts = String(body.ts || "").trim().slice(0, 30);
+      if (!studentKey || !ts) return json({ error: "Falta studentKey o ts" }, 400, cors);
+      const key = `documento:${studentKey}:${ts}`;
+
+      if (body.action === "subir") {
+        const b64 = String(body.contenidoB64 || "");
+        if (!b64) return json({ error: "Archivo vacío" }, 400, cors);
+        if (b64.length > 7000000) return json({ error: "Archivo demasiado grande (máx. ~5 MB)" }, 400, cors);
+        const tipo = String(body.tipo || "application/octet-stream").slice(0, 100);
+        await env.TUTORIAS.put(key, JSON.stringify({ tipo, contenidoB64: b64 }));
+        return new Response(JSON.stringify({ ok: true }), { status: 200, headers: secure });
+      }
+      if (body.action === "descargar") {
+        const raw = await env.TUTORIAS.get(key);
+        if (!raw) return json({ error: "No encontrado" }, 404, cors);
+        let parsed;
+        try { parsed = JSON.parse(raw); } catch { return json({ error: "Documento dañado" }, 500, cors); }
+        return new Response(JSON.stringify({ ok: true, contenidoB64: parsed.contenidoB64, tipo: parsed.tipo }), { status: 200, headers: secure });
+      }
+      if (body.action === "eliminar") {
+        await env.TUTORIAS.delete(key);
+        return new Response(JSON.stringify({ ok: true }), { status: 200, headers: secure });
+      }
+      return json({ error: "Acción no reconocida" }, 400, cors);
     }
 
     // ---- Chat con IA (por defecto) ----
