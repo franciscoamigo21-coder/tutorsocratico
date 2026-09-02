@@ -4135,9 +4135,16 @@ history.replaceState({screen:"gate"},"");  // estado inicial
 
 /* ============ ACCESO CON GOOGLE (dominios institucionales) ============ */
 const DOMAIN={teacher:"sip.cl",student:"alumnos.sip.cl",admin:"sip.cl"}; // apoderado: libre
+/* Acepta CUALQUIER dominio de la familia sip.cl (subdominios incluidos):
+   @sip.cl, @algo.sip.cl (staff) y @alumnos.sip.cl, @alumnos.algo.sip.cl (estudiante). */
+function instDomOk(dom,need){ dom=(dom||"").toLowerCase().trim();
+  if(!(dom==="sip.cl"||dom.endsWith(".sip.cl"))) return false;
+  const alum=dom.includes("alumnos");
+  return need==="alumnos.sip.cl"?alum:!alum;
+}
 /* Correos maestros (para administrar/editar): pueden entrar en cualquier rol
    sin exigir dominio institucional ni obligar a elegir estudiante. */
-const DEV_EMAILS=["franciscoamigo21@gmail.com","paulina.devia@sip.cl","jcid@sip.cl","camila.ortiz@sip.cl","cesar.cid@sip.cl"];
+const DEV_EMAILS=["franciscoamigo21@gmail.com","paulina.devia@sip.cl","jcid@sip.cl","camila.ortiz@sip.cl","cesar.cid@sip.cl","nardyn.mella@sip.cl","israel.salas@sip.cl"];
 function isDev(email){return DEV_EMAILS.includes((email||"").trim().toLowerCase());}
 /* El perfil de estudiante solo está disponible desde 4° Básico en adelante
    (PK, K, 1°, 2° y 3° Básico quedan bajo el perfil del apoderado/a). */
@@ -4249,7 +4256,7 @@ document.getElementById("gform").addEventListener("submit",e=>{
     return;
   }
   const need=DOMAIN[PENDING];
-  if(need&&email.split("@")[1]!==need){gErr("Este perfil requiere una cuenta @"+need+".");return;}
+  if(need&&!instDomOk(email.split("@")[1],need)){gErr("Este perfil requiere una cuenta institucional "+(need==="alumnos.sip.cl"?"@alumnos.sip.cl":"@sip.cl")+".");return;}
   if(!pass||pass.length<4){gErr("La contraseña debe tener al menos 4 caracteres.");return;}
   const users=loadUsers();const existing=users[email];
   if(AUTH_MODE==="signup"){
