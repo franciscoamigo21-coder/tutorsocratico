@@ -30,9 +30,11 @@ Eso es TODO lo que tienes que hacer hoy. Nada más.
 
 ## 🔵 Preparación de la clase grabada (Módulo 2)
 
-- [ ] **12.** Diseñamos la clase del 1 de octubre indicador por indicador (ambiente, participación, equidad de género, etc.) — probablemente será tu Experiencia 3.
+> **Actualizado**: la grabación es con **I° Medio** (no con 8° básico). Es un curso distinto al de Módulo 1, y eso está permitido. Ver `tarea-4-clase-grabada-1medio.md`.
+
+- [ ] **12.** Diseñamos la clase del 1 de octubre indicador por indicador (ambiente, participación, equidad de género, etc.) — tema: repertorio con contexto histórico + interpretación.
 - [ ] **13.** Ensayo con el celular ~2 semanas antes (mediados de septiembre) para ajustar.
-- [ ] **14.** Grabación real: **1 de octubre de 2026**.
+- [ ] **14.** Grabación real: **1 de octubre de 2026**, con I° Medio.
 
 ## 🟣 Cierre
 
