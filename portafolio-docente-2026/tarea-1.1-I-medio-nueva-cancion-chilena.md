@@ -55,21 +55,23 @@ Lo que sigue son **borradores crudos tipo apunte de planificación**, no texto f
 
 ## Experiencia 1 — "Charagua" (Víctor Jara)
 
-**Fecha**: 8 de septiembre de 2026 (propuesta — ajusta a tu horario real) · **Duración**: 2 clases de 40 min.
+**Fecha**: 8 de septiembre de 2026 (propuesta — ajusta a tu horario real) · **Duración**: 3 clases de 40 min.
 
-**Objetivo(s)** (borrador, ~195 caracteres, cabe en los 500 del campo):
-> Reconocer el contexto histórico de la Nueva Canción Chilena a partir de "Charagua" de Víctor Jara, y tocar su tema principal con los instrumentos del curso, respetando el pulso y la sonoridad de la pieza.
+Estructura confirmada por el usuario: clase 1 = escuchar + sacar intro y sección A; clase 2 = sección B completa; clase 3 = completar el repertorio y empezar a conocer la historia de Violeta Parra (puente a la Experiencia 2). Se usan Kahoot, Mentimeter y Padlet como herramientas digitales.
 
-**Descripción de actividades y monitoreo** (borrador crudo):
-1. Escuchamos "Charagua" completa (versión Inti-Illimani) sin dar contexto antes. Pregunto: ¿de qué época les parece? ¿qué instrumentos reconocen? ¿es una canción o algo distinto?
-2. Contexto: quién fue Víctor Jara, qué fue la Nueva Canción Chilena (rescate de sonoridades folclóricas/andinas — charango, quena, bombo — en los 60-70). Explico por qué Charagua es particular en su obra: es instrumental, no tiene letra.
-3. Dato para que ellos mismos noten: la instrumentación original de Charagua es tiple, quenas, guitarra, pandero y bombo — guitarra acústica y bombo, que ya tenemos en la sala, son literalmente parte del arreglo original. Flauta/melódica/metalófono hacen de quena (melodía principal), batería suma pulso.
-4. Muestro la guía/partitura simplificada del tema principal adaptada a nuestros instrumentos.
-5. Dividimos por instrumento y ensayamos por secciones (10-15 min): bombo+batería llevan el pulso, guitarra el acompañamiento, flauta/melódica/metalófono la melodía.
-6. Juntamos todo, tocamos el fragmento 2-3 veces, grabamos audio corto.
-7. Escuchamos la grabación: ¿mantuvimos el pulso? ¿se distinguía la melodía sobre el acompañamiento?
+**Objetivo(s)** (borrador, prosa corrida, sin viñetas — así se pega en el campo de texto real):
 
-**Monitoreo**: grabación de audio + observación directa por grupo de instrumento durante el ensayo por secciones.
+Reconocer el contexto histórico de la Nueva Canción Chilena a partir de Charagua de Víctor Jara y tocar la pieza completa con los instrumentos del curso, respetando el pulso y la sonoridad original.
+
+**Descripción de las actividades para el aprendizaje y las acciones de monitoreo** (borrador, prosa corrida):
+
+En la primera clase escuchamos Charagua completa, en la versión de Inti-Illimani, sin adelantar nada de contexto. Después les pregunto en Mentimeter qué les transmite esa música y de qué época creen que es, para ver qué intuyen antes de explicarles nada. Ahí les cuento quién fue Víctor Jara y qué fue la Nueva Canción Chilena, un movimiento que rescató sonoridades folclóricas y andinas como el charango, la quena y el bombo. Les hago notar que Charagua es instrumental, no tiene letra, y que la guitarra acústica y el bombo que tenemos en la sala son literalmente parte de la instrumentación original de la pieza. Cada estudiante registra en un Padlet qué instrumento va a tocar, entre guitarra, flauta, batería, bombo, melódica o metalófono, y con esa organización armamos los grupos y aprendemos la introducción y la sección A, ensayando por partes.
+
+En la segunda clase partimos con un Kahoot corto sobre lo que vimos de Víctor Jara y la Nueva Canción Chilena, para chequear qué les quedó antes de seguir tocando. Repasamos la introducción y la sección A tocando todos juntos, y después aprendemos la sección B completa, otra vez ensayando por instrumento antes de juntar todo. Vamos grabando audios cortos de cada ensayo para que se escuchen entre ellos y ajusten solos si perdieron el pulso o si la melodía no se distingue sobre el acompañamiento.
+
+En la tercera clase juntamos la introducción, la sección A y la sección B para tocar el repertorio completo, grabamos una versión final y la escuchamos entre todos comentando qué se logró y qué faltó por mejorar. Cerramos la clase empezando a conocer la historia de Violeta Parra, como puente hacia la siguiente experiencia con La Jardinera.
+
+**Monitoreo**: las grabaciones de audio de cada clase, el Kahoot como chequeo de comprensión del contexto histórico, y la observación directa por grupo de instrumento durante los ensayos por secciones.
 
 ---
 
