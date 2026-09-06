@@ -2,9 +2,11 @@
 
 **Curso**: I°C · **Asignatura**: Música
 **Fecha de grabación**: **1 de octubre de 2026** (jueves)
-**Contenido**: es la Clase 1 de la Experiencia 1 de `tarea-1.1-I-medio-nueva-cancion-chilena.md` — La Jardinera de Violeta Parra: escucha + contexto histórico + discusión sobre el rol de las mujeres en el movimiento + análisis de la letra. **El canto y el montaje instrumental NO van en esta clase — quedan completos para la Clase 2 (que no se graba).**
+**Contenido**: es la Experiencia 1 completa de `tarea-1.1-I-medio-nueva-cancion-chilena.md` — una sola clase real de **90 minutos**, con La Jardinera de Violeta Parra.
 
-Esta clase cumple doble función: es parte real de tu progresión de Módulo 1 y es la que grabas para Módulo 2. Al no incluir canto/montaje, el objetivo trabajado en la ficha de esta clase específica es más acotado que el objetivo general de la Experiencia 1 completa — y eso es correcto: el Manual no exige trabajar el OA completo en una sola clase.
+**⚠️ Duración real vs. duración grabada**: el Manual pide que el segmento grabado dure ~40 minutos — eso NO es la duración de tu clase completa (90 min), es solo el tramo que se sube a la Plataforma. Estructura: primeros ~40 min = escucha + contexto histórico + discusión sobre el rol de las mujeres en el movimiento + análisis de la letra (ESTO se graba). Últimos ~50 min, misma clase = canto + montaje instrumental (esto NO se graba, pero sí es parte real de la Experiencia 1 en Tarea 1.1).
+
+Esta clase cumple doble función: es parte real de tu progresión de Módulo 1 y el primer bloque es el que grabas para Módulo 2. Al no incluir canto/montaje, el objetivo trabajado en la ficha de la clase grabada es más acotado que el objetivo general de la Experiencia 1 completa — y eso es correcto: el Manual no exige trabajar el OA completo en el segmento grabado.
 
 ---
 

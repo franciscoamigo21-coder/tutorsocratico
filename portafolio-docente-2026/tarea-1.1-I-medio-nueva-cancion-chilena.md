@@ -7,18 +7,15 @@
 
 **Orden vigente (actualizado 2026-09-06)**: La Jardinera (Violeta Parra) primero — es la clase grabada del 1 de octubre — después Charagua (Víctor Jara), y se cierra con la presentación grupal.
 
-**Calendario confirmado**: Música con I°C es una vez por semana, los jueves. Entre el 1 de octubre y el cierre de la Plataforma (10 de noviembre) solo caben 6 jueves, así que la Experiencia 3 se comprimió de 2 a 1 clase (la investigación se hace como trabajo previo, la clase es solo para exponer).
+**⚠️ Corrección importante (2026-09-06 tarde)**: cada clase real dura **90 minutos**, no 40. Los 40 minutos son solo el requisito del Manual para el segmento que se graba y evalúa en el Módulo 2 — no la duración real de la clase. Esto significa que la Experiencia 1 cabe completa en **una sola clase de 90 min** (bloque grabado de ~40 min + bloque no grabado de ~50 min, mismo día). Probablemente esto también permite comprimir la Experiencia 2 de 3 a 2 clases — pendiente de confirmar con el usuario y recalcular la tabla de fechas completa.
 
 | Clase | Fecha | Contenido |
 |---|---|---|
-| Exp. 1 — Clase 1 | 1 de octubre | La Jardinera: contexto + género + letra (GRABADA) |
-| Exp. 1 — Clase 2 | 8 de octubre | La Jardinera: canto + montaje |
-| Exp. 2 — Clase 1 | 15 de octubre | Charagua: contexto + intro y sección A |
-| Exp. 2 — Clase 2 | 22 de octubre | Charagua: sección B |
-| Exp. 2 — Clase 3 | 29 de octubre | Charagua: repertorio completo |
-| Exp. 3 — Clase única | 5 de noviembre | Presentación grupal Nueva Canción Chilena |
+| Exp. 1 — Clase única (90 min) | 1 de octubre | Bloque grabado (~40 min): contexto + género + letra. Bloque no grabado (~50 min): canto + montaje |
+| Exp. 2 | **pendiente de recalcular** | Charagua — posiblemente 2 clases de 90 min en vez de 3 |
+| Exp. 3 | **pendiente de recalcular** | Presentación musical ante Artes |
 
-Del 6 al 10 de noviembre queda para escribir todo en la Plataforma.
+Calendario completo pendiente de rehacer con la duración real de 90 min.
 
 ---
 
@@ -69,7 +66,7 @@ Lo que sigue son **borradores crudos tipo apunte de planificación**, no texto f
 
 ## Experiencia 1 — "La Jardinera" (Violeta Parra) — ES LA CLASE GRABADA
 
-**Fecha**: **1 de octubre de 2026** (clase 1, grabada — ver `tarea-4-clase-grabada-1medio.md`) · **Duración**: 2 clases de 40 min.
+**Fecha**: **1 de octubre de 2026** · **Duración**: 1 clase de 90 min (bloque grabado ~40 min + bloque no grabado ~50 min, mismo día — ver `tarea-4-clase-grabada-1medio.md`).
 
 **Objetivo(s)** (mejorado con estructura Habilidad + Contenido + Procedimiento + Actitudinal, según esquema del usuario):
 
