@@ -75,18 +75,51 @@ En la tercera clase juntamos la introducción, la sección A y la sección B par
 
 ---
 
-## Experiencia 2 — "La Jardinera" (Violeta Parra) — pendiente de diseñar
+## Experiencia 2 — "La Jardinera" (Violeta Parra)
 
-Va después de Charagua. Es vocal (tiene letra), tonada sobre sanar una pena de amor cuidando un jardín.
+**Fecha**: 22 de septiembre de 2026 (propuesta, después del corte de Fiestas Patrias — ajusta a tu horario real) · **Duración**: 2 clases de 40 min. Más simple/corta que Charagua.
 
-**Necesito de ti**: ¿la cantan completa o solo una estrofa? ¿acompañan con algún instrumento (guitarra) o es solo voz? ¿fecha aproximada?
+**Objetivo(s)** (borrador, prosa corrida):
 
-## Experiencia 3 — sin definir
+Conocer la figura de Violeta Parra y el aporte de la tonada a la identidad musical chilena, y cantar La Jardinera acompañándola con los instrumentos del curso, cuidando la expresividad propia del estilo.
 
-**Necesito de ti**: ¿qué va después de La Jardinera? Puede ser una tercera pieza, o una experiencia de síntesis/comparación entre Charagua y La Jardinera (que además calzaría con otro OA real: MU1M OA 02 — "Comparar músicas con características diferentes..."). Dime qué prefieres.
+**Descripción de las actividades para el aprendizaje y las acciones de monitoreo** (borrador, prosa corrida):
+
+En la primera clase seguimos con la historia de Violeta Parra que empezamos a ver al final de la experiencia anterior, y escuchamos La Jardinera en su versión original. Conversamos sobre la tonada como género y sobre lo distinta que suena esta pieza comparada con Charagua, mucho más lenta y lírica, pensada para contar una historia de pena de amor a través del cuidado de un jardín. Aprendemos la letra y la melodía cantándola entre todos, y de a poco vamos sacando el acompañamiento en guitarra.
+
+En la segunda clase armamos el acompañamiento completo: la guitarra lleva la armonía, la flauta, la melódica y el metalófono refuerzan la melodía, y el bombo marca un pulso suave, mucho más tranquilo que el de Charagua. Cantamos todos juntos varias veces, grabamos una versión final y la escuchamos comentando si logramos transmitir el sentido de la canción y no solo las notas correctas.
+
+**Monitoreo**: grabación de audio de la versión final + observación de la participación en el canto grupal durante los ensayos.
+
+*(Nota: no me confirmaste si usas Kahoot/Mentimeter/Padlet también acá — dejé sin herramienta digital porque el foco es más el canto grupal, pero si quieres sumar algo dímelo y lo agrego.)*
+
+---
+
+## Experiencia 3 — Presentación grupal sobre la Nueva Canción Chilena
+
+Confirmado: algo completamente distinto a tocar, una investigación/presentación grupal.
+
+**Fecha**: [pendiente — ¿coincide con el 1 de octubre? ver nota abajo] · **Duración**: a definir contigo (propongo 2 clases: una de trabajo grupal + una de exposición).
+
+**Objetivo(s)** (borrador, prosa corrida):
+
+Investigar y presentar de manera grupal aspectos históricos, sociales y culturales de la Nueva Canción Chilena, evaluando su relevancia en la construcción de la identidad musical chilena.
+
+**Descripción de las actividades para el aprendizaje y las acciones de monitoreo** (borrador, prosa corrida):
+
+Los estudiantes se organizan en grupos y cada uno investiga un aspecto distinto de la Nueva Canción Chilena: puede ser una figura como Violeta Parra, Víctor Jara, Inti-Illimani o Quilapayún, o el contexto político y social de los años sesenta y setenta en que surge el movimiento. Cada grupo arma una presentación breve, con imágenes y al menos un fragmento de audio, y la expone al curso. Después de cada presentación el resto del curso hace preguntas o comenta algo que le llamó la atención, y usamos Mentimeter para que todos puedan votar o comentar de forma anónima qué fue lo que más les interesó de cada grupo. Cerramos armando entre todos un Padlet con los aportes de cada grupo, para que quede como un mapa colectivo del movimiento.
+
+**Monitoreo**: la presentación misma como evidencia + las respuestas en Mentimeter + observación de la participación en las preguntas entre grupos.
+
+---
+
+## ⚠️ Pregunta importante antes de seguir: ¿cuál es la clase grabada del 1 de octubre?
+
+Con este cambio de plan, ya no está claro cuál de las 3 experiencias (o qué clase específica dentro de ellas) es la que grabas para el Módulo 2. El archivo `tarea-4-clase-grabada-1medio.md` todavía asume una clase de "repertorio con contexto histórico + interpretación", que calza con Charagua o La Jardinera — pero por fechas, la Experiencia 3 (presentación grupal) es la que más se acerca al 1 de octubre. Una presentación grupal también puede funcionar muy bien para varios indicadores del Módulo 2 (participación, colaboración, pensamiento crítico), pero es un formato distinto al que habíamos diseñado. Dime cuál quieres que sea la clase grabada y ajusto `tarea-4-clase-grabada-1medio.md` en consecuencia.
 
 ## Pendiente de tu parte
 
-1. Detalle de la Experiencia 2 (La Jardinera): qué hacen exactamente, fecha.
-2. Definir la Experiencia 3.
-3. Revisar y reescribir con tu voz el Objetivo y la Descripción de la Experiencia 1 antes de pegarlos en la Plataforma.
+1. Confirmar si usas herramientas digitales en la Experiencia 2 (La Jardinera) o no.
+2. Fecha y duración real de la Experiencia 3.
+3. Cuál clase específica grabas el 1 de octubre.
+4. Revisar y reescribir con tu voz los tres objetivos y descripciones antes de pegarlos en la Plataforma.
