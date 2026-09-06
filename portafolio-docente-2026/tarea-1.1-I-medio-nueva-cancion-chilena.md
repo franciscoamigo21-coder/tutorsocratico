@@ -1,9 +1,11 @@
 # Tarea 1.1 — Planificación de las experiencias de aprendizaje — I°C, Nueva Canción Chilena (VIGENTE)
 
-**Estado**: en construcción activa (empezado 2026-09-06 directamente en la Plataforma). Este documento va sincronizado con lo que se llena en Docentemás.
+**Estado**: en construcción activa. Este documento va sincronizado con lo que se llena en Docentemás.
 
 **Curso**: I°C · **Asignatura**: Música
-**Unidad**: repertorio de la Nueva Canción Chilena — contexto histórico-cultural + interpretación instrumental/vocal con los instrumentos que cada estudiante ya conoce.
+**Unidad**: repertorio de la Nueva Canción Chilena y su antecedente folclórico (Violeta Parra) — contexto histórico-cultural + interpretación vocal/instrumental con los instrumentos que cada estudiante ya conoce.
+
+**Orden vigente (actualizado 2026-09-06)**: La Jardinera (Violeta Parra) primero — es la clase grabada del 1 de octubre — después Charagua (Víctor Jara), y se cierra con la presentación grupal.
 
 ---
 
@@ -29,81 +31,74 @@ MU1M OA 07: Evaluar la relevancia de la música, destacando el singular sentido 
 ## Repertorio confirmado y su ficha de contenido (para que la contextualización histórica sea precisa)
 
 ### "La Jardinera" — Violeta Parra
-- Género: tonada. Compuesta ~1954-1956.
-- **Es vocal** (tiene letra).
-- Grabada originalmente junto a su hija Isabel Parra (sello Odeon, 1954).
-- Contenido temático: superar una pena de amor a través del cuidado de un jardín — paralelo entre el dolor y el florecer de las plantas.
-- Uso pedagógico sugerido: entrada a Violeta Parra como figura fundacional de la música folclórica/identitaria chilena, antes de llegar a la Nueva Canción Chilena de los 60-70.
+- Género: tonada, 1956. **Es vocal** (tiene letra).
+- Grabada originalmente junto a su hija Isabel Parra (sello Odeón, 1956); reaparece en el álbum "Toda Violeta Parra" (1961).
+- Marca el inicio del trabajo de creación propia de Violeta, sustentado en su labor de recopilación folclórica.
+- **Letra**: usa el jardín como metáfora del mundo interior — sanar una pena de amor cuidando las plantas. Imagen concreta: el rosal de espina gruesa representa el dolor y los mecanismos de defensa tras la pena; los "pensamientos felices" que van a crecer representan la alegría que vuelve de a poco.
+- Violeta entendía el canto con función social (sanar, agradecer, ofrecer, protestar) — no cantar por cantar.
+- **Ángulo de género (verificado, no forzado)**: en el imaginario de la música folclórica/protesta chilena de los 60-70, los conjuntos instrumentales más recordados (Quilapayún, Inti-Illimani) eran integrados solo por hombres, mientras las mujeres —empezando por Violeta— aparecen como cantautoras, no como instrumentistas de conjunto. **No** uses el ángulo de "Violeta es poco conocida" — es factualmente débil, es la figura más icónica del folclore chileno.
 
 ### "Charagua" — Víctor Jara
-- **Es 100% instrumental — no tiene letra.** (Cuidado: no se puede trabajar análisis de texto/mensaje verbal con esta pieza, a diferencia de otras canciones de Jara como "El Aparecido").
+- **Es 100% instrumental — no tiene letra.**
 - Compuesta en 1970, para tiple, 2 quenas, guitarra, pandero y bombo. Grabada por Inti-Illimani en el disco "Autores Chilenos".
-- Contexto: parte del trabajo de Jara explorando sonoridades y ritmos andinos/latinoamericanos (charango, tiple, bombo, quena), dentro del proyecto más amplio de la **Nueva Canción Chilena** — más allá del formato tradicional de canción de autor con guitarra y voz.
-- Uso pedagógico sugerido: candidata fuerte para trabajar interpretación instrumental (con los instrumentos que cada estudiante ya conoce, adaptando/simplificando la instrumentación original) + contexto histórico (identidad latinoamericanista, Nueva Canción Chilena, década de 1960-70 en Chile).
+- Parte del trabajo de Jara con sonoridades andinas/latinoamericanas (charango, tiple, bombo, quena), dentro de la Nueva Canción Chilena.
+- La guitarra acústica y el bombo del curso son literalmente instrumentos de la instrumentación original.
 
 ---
 
 ## ⚠️ Regla de oro para esta sección
 
-Lo que sigue son **borradores crudos tipo apunte de planificación**, no texto final. El Manual exige declarar que la evidencia no fue "elaborada... con uso de herramientas de inteligencia artificial para suplantar su juicio profesional". Antes de pegar cualquier "Objetivo(s)" o "Descripción de actividades" en la Plataforma: **reescríbelo con tus palabras**, corrige lo que no vayas a hacer realmente, agrega tus propios detalles (cómo divides tú al curso, tu forma de hablarles, etc.). Yo te doy la estructura y el contenido correcto; la redacción final tiene que sonar a ti.
+Lo que sigue son **borradores crudos tipo apunte de planificación**, no texto final. El Manual exige declarar que la evidencia no fue "elaborada... con uso de herramientas de inteligencia artificial para suplantar su juicio profesional". Antes de pegar cualquier "Objetivo(s)" o "Descripción de actividades" en la Plataforma: **reescríbelo con tus palabras**, corrige lo que no vayas a hacer realmente, agrega tus propios detalles. Yo te doy la estructura y el contenido correcto; la redacción final tiene que sonar a ti.
 
 **Instrumentos confirmados de I°C**: guitarra acústica, flauta, batería, bombo, melódica, metalófono.
 
-**Orden confirmado**: Charagua primero, La Jardinera después (directo, sin pieza intermedia).
+---
+
+## Experiencia 1 — "La Jardinera" (Violeta Parra) — ES LA CLASE GRABADA
+
+**Fecha**: **1 de octubre de 2026** (clase 1, grabada — ver `tarea-4-clase-grabada-1medio.md`) · **Duración**: 2 clases de 40 min.
+
+**Objetivo(s)** (borrador):
+
+Reconocer el aporte de Violeta Parra a la identidad musical chilena analizando la letra de La Jardinera, y cantarla acompañándola con los instrumentos del curso, cuidando su sentido expresivo.
+
+**Descripción de las actividades para el aprendizaje y las acciones de monitoreo** (borrador, prosa corrida):
+
+En la primera clase (grabada) escuchamos La Jardinera en su versión original, sin dar contexto antes. Les pregunto en Mentimeter qué sienten al escucharla y de qué creen que habla. Después les cuento quién fue Violeta Parra y su rol fundacional en la música chilena, y aprovecho de preguntarles por qué creen que en el movimiento de la Nueva Canción Chilena los conjuntos instrumentales más recordados, como Quilapayún o Inti-Illimani, eran solo de hombres, mientras las mujeres aparecían cantando. Dejamos esa pregunta abierta y la discutimos entre todos. Después proyecto la letra y en parejas identifican una imagen o metáfora de la canción, como el rosal de espina gruesa, y explican qué emoción representa. Esta clase no incluye canto ni montaje instrumental — todo el foco está en escuchar, contextualizar y analizar.
+
+En la segunda clase (no grabada) partimos aprendiendo a cantar la canción completa y sacando el acompañamiento en guitarra, y después armamos el acompañamiento completo: la guitarra lleva la armonía, la flauta, la melódica y el metalófono refuerzan la melodía, y el bombo marca un pulso suave. Cantamos todos juntos varias veces, grabamos una versión final y la escuchamos comentando si logramos transmitir el sentido de la canción y no solo cantar las notas correctas.
+
+**Monitoreo**: respuestas de Mentimeter, la discusión oral sobre el rol de las mujeres en el movimiento, la actividad de identificar metáforas en parejas, y la grabación de audio final.
+
+Ver `tarea-4-clase-grabada-1medio.md` para el detalle de esta clase indicador por indicador contra las 7 rúbricas del Módulo 2.
 
 ---
 
-## Experiencia 1 — "Charagua" (Víctor Jara)
+## Experiencia 2 — "Charagua" (Víctor Jara)
 
-**Fecha**: **1 de octubre de 2026** (confirmado — es la clase grabada del Módulo 2, ver `tarea-4-clase-grabada-1medio.md`) · **Duración**: 3 clases de 40 min.
+**Fecha**: a definir después de cerrar Experiencia 1 (ver riesgo de calendario abajo) · **Duración**: 3 clases de 40 min.
 
-Estructura confirmada por el usuario: clase 1 (1 de octubre) = escuchar + contexto + sacar intro y sección A — ESTA es la clase grabada; clase 2 = sección B completa; clase 3 = completar el repertorio y empezar a conocer la historia de Violeta Parra (puente a la Experiencia 2). Se usan Kahoot, Mentimeter y Padlet como herramientas digitales.
-
-⚠️ Como toda la unidad recién arranca el 1 de octubre (no en septiembre como se había asumido antes), hay que revisar si alcanza el tiempo hasta el cierre de la Plataforma (10 de noviembre) para las 3 experiencias completas — ver la nota de riesgo de calendario en `tarea-4-clase-grabada-1medio.md`.
-
-**Objetivo(s)** (borrador, prosa corrida, sin viñetas — así se pega en el campo de texto real):
+**Objetivo(s)** (borrador):
 
 Reconocer el contexto histórico de la Nueva Canción Chilena a partir de Charagua de Víctor Jara y tocar la pieza completa con los instrumentos del curso, respetando el pulso y la sonoridad original.
 
 **Descripción de las actividades para el aprendizaje y las acciones de monitoreo** (borrador, prosa corrida):
 
-En la primera clase escuchamos Charagua completa, en la versión de Inti-Illimani, sin adelantar nada de contexto. Después les pregunto en Mentimeter qué les transmite esa música y de qué época creen que es, para ver qué intuyen antes de explicarles nada. Ahí les cuento quién fue Víctor Jara y qué fue la Nueva Canción Chilena, un movimiento que rescató sonoridades folclóricas y andinas como el charango, la quena y el bombo. Les hago notar que Charagua es instrumental, no tiene letra, y que la guitarra acústica y el bombo que tenemos en la sala son literalmente parte de la instrumentación original de la pieza. Cada estudiante registra en un Padlet qué instrumento va a tocar, entre guitarra, flauta, batería, bombo, melódica o metalófono, y con esa organización armamos los grupos y aprendemos la introducción y la sección A, ensayando por partes.
+En la primera clase escuchamos Charagua completa, en la versión de Inti-Illimani, sin adelantar nada de contexto. Después les pregunto en Mentimeter qué les transmite esa música y de qué época creen que es. Ahí les cuento quién fue Víctor Jara y qué fue la Nueva Canción Chilena, un movimiento que rescató sonoridades folclóricas y andinas como el charango, la quena y el bombo. Les hago notar que Charagua es instrumental, no tiene letra, y que la guitarra acústica y el bombo que tenemos en la sala son literalmente parte de la instrumentación original de la pieza. Cada estudiante registra en un Padlet qué instrumento va a tocar, entre guitarra, flauta, batería, bombo, melódica o metalófono, y con esa organización armamos los grupos y aprendemos la introducción y la sección A, ensayando por partes.
 
-En la segunda clase partimos con un Kahoot corto sobre lo que vimos de Víctor Jara y la Nueva Canción Chilena, para chequear qué les quedó antes de seguir tocando. Repasamos la introducción y la sección A tocando todos juntos, y después aprendemos la sección B completa, otra vez ensayando por instrumento antes de juntar todo. Vamos grabando audios cortos de cada ensayo para que se escuchen entre ellos y ajusten solos si perdieron el pulso o si la melodía no se distingue sobre el acompañamiento.
+En la segunda clase partimos con un Kahoot corto sobre lo que vimos de Víctor Jara y la Nueva Canción Chilena. Repasamos la introducción y la sección A tocando todos juntos, y después aprendemos la sección B completa, otra vez ensayando por instrumento antes de juntar todo. Vamos grabando audios cortos de cada ensayo para que se escuchen entre ellos y ajusten solos si perdieron el pulso o si la melodía no se distingue sobre el acompañamiento.
 
-En la tercera clase juntamos la introducción, la sección A y la sección B para tocar el repertorio completo, grabamos una versión final y la escuchamos entre todos comentando qué se logró y qué faltó por mejorar. Cerramos la clase empezando a conocer la historia de Violeta Parra, como puente hacia la siguiente experiencia con La Jardinera.
+En la tercera clase juntamos la introducción, la sección A y la sección B para tocar el repertorio completo, grabamos una versión final y la escuchamos entre todos comentando qué se logró y qué faltó por mejorar. Cerramos la clase conversando sobre qué otras figuras o grupos de la Nueva Canción Chilena les gustaría investigar, como puente hacia la Experiencia 3.
 
 **Monitoreo**: las grabaciones de audio de cada clase, el Kahoot como chequeo de comprensión del contexto histórico, y la observación directa por grupo de instrumento durante los ensayos por secciones.
 
 ---
 
-## Experiencia 2 — "La Jardinera" (Violeta Parra)
-
-**Fecha**: 22 de septiembre de 2026 (propuesta, después del corte de Fiestas Patrias — ajusta a tu horario real) · **Duración**: 2 clases de 40 min. Más simple/corta que Charagua.
-
-**Objetivo(s)** (borrador, prosa corrida):
-
-Conocer la figura de Violeta Parra y el aporte de la tonada a la identidad musical chilena, y cantar La Jardinera acompañándola con los instrumentos del curso, cuidando la expresividad propia del estilo.
-
-**Descripción de las actividades para el aprendizaje y las acciones de monitoreo** (borrador, prosa corrida):
-
-En la primera clase seguimos con la historia de Violeta Parra que empezamos a ver al final de la experiencia anterior, y escuchamos La Jardinera en su versión original. Conversamos sobre la tonada como género y sobre lo distinta que suena esta pieza comparada con Charagua, mucho más lenta y lírica, pensada para contar una historia de pena de amor a través del cuidado de un jardín. Aprendemos la letra y la melodía cantándola entre todos, y de a poco vamos sacando el acompañamiento en guitarra.
-
-En la segunda clase armamos el acompañamiento completo: la guitarra lleva la armonía, la flauta, la melódica y el metalófono refuerzan la melodía, y el bombo marca un pulso suave, mucho más tranquilo que el de Charagua. Cantamos todos juntos varias veces, grabamos una versión final y la escuchamos comentando si logramos transmitir el sentido de la canción y no solo las notas correctas.
-
-**Monitoreo**: grabación de audio de la versión final + observación de la participación en el canto grupal durante los ensayos.
-
-*(Nota: no me confirmaste si usas Kahoot/Mentimeter/Padlet también acá — dejé sin herramienta digital porque el foco es más el canto grupal, pero si quieres sumar algo dímelo y lo agrego.)*
-
----
-
 ## Experiencia 3 — Presentación grupal sobre la Nueva Canción Chilena
 
-Confirmado: algo completamente distinto a tocar, una investigación/presentación grupal.
+**Fecha**: a definir · **Duración**: propongo 2 clases (una de trabajo grupal + una de exposición).
 
-**Fecha**: [pendiente — ¿coincide con el 1 de octubre? ver nota abajo] · **Duración**: a definir contigo (propongo 2 clases: una de trabajo grupal + una de exposición).
-
-**Objetivo(s)** (borrador, prosa corrida):
+**Objetivo(s)** (borrador):
 
 Investigar y presentar de manera grupal aspectos históricos, sociales y culturales de la Nueva Canción Chilena, evaluando su relevancia en la construcción de la identidad musical chilena.
 
@@ -111,17 +106,16 @@ Investigar y presentar de manera grupal aspectos históricos, sociales y cultura
 
 Los estudiantes se organizan en grupos y cada uno investiga un aspecto distinto de la Nueva Canción Chilena: puede ser una figura como Violeta Parra, Víctor Jara, Inti-Illimani o Quilapayún, o el contexto político y social de los años sesenta y setenta en que surge el movimiento. Cada grupo arma una presentación breve, con imágenes y al menos un fragmento de audio, y la expone al curso. Después de cada presentación el resto del curso hace preguntas o comenta algo que le llamó la atención, y usamos Mentimeter para que todos puedan votar o comentar de forma anónima qué fue lo que más les interesó de cada grupo. Cerramos armando entre todos un Padlet con los aportes de cada grupo, para que quede como un mapa colectivo del movimiento.
 
-**Monitoreo**: la presentación misma como evidencia + las respuestas en Mentimeter + observación de la participación en las preguntas entre grupos.
+**Monitoreo**: la presentación misma como evidencia, las respuestas en Mentimeter, y observación de la participación en las preguntas entre grupos.
 
 ---
 
-## ⚠️ Pregunta importante antes de seguir: ¿cuál es la clase grabada del 1 de octubre?
+## ⚠️ Riesgo de calendario — se vuelve más urgente con este orden
 
-Con este cambio de plan, ya no está claro cuál de las 3 experiencias (o qué clase específica dentro de ellas) es la que grabas para el Módulo 2. El archivo `tarea-4-clase-grabada-1medio.md` todavía asume una clase de "repertorio con contexto histórico + interpretación", que calza con Charagua o La Jardinera — pero por fechas, la Experiencia 3 (presentación grupal) es la que más se acerca al 1 de octubre. Una presentación grupal también puede funcionar muy bien para varios indicadores del Módulo 2 (participación, colaboración, pensamiento crítico), pero es un formato distinto al que habíamos diseñado. Dime cuál quieres que sea la clase grabada y ajusto `tarea-4-clase-grabada-1medio.md` en consecuencia.
+7 clases en total (2+3+2) partiendo el 1 de octubre. Si Música con I°C es una vez por semana, esto termina recién a mediados de noviembre — después del cierre de la Plataforma (10 de noviembre, 23:59). **Necesito saber cuántas veces a la semana tienes clase con I°C** para saber si esto alcanza o si hay que comprimir alguna experiencia (por ejemplo, Charagua podría bajar de 3 a 2 clases).
 
 ## Pendiente de tu parte
 
-1. Confirmar si usas herramientas digitales en la Experiencia 2 (La Jardinera) o no.
-2. Fecha y duración real de la Experiencia 3.
-3. Cuál clase específica grabas el 1 de octubre.
-4. Revisar y reescribir con tu voz los tres objetivos y descripciones antes de pegarlos en la Plataforma.
+1. **Cuántas veces a la semana tienes Música con I°C** (crítico para el calendario).
+2. Fechas reales de las Experiencias 2 y 3.
+3. Revisar y reescribir con tu voz los tres objetivos y descripciones antes de pegarlos en la Plataforma.
