@@ -2,11 +2,11 @@
 
 **Curso**: I°C · **Asignatura**: Música
 **Fecha de grabación**: **1 de octubre de 2026** (jueves)
-**Contenido**: es la Experiencia 1 completa de `tarea-1.1-I-medio-nueva-cancion-chilena.md` — una sola clase real de **90 minutos**, con La Jardinera de Violeta Parra.
+**Contenido**: es la Clase 1 de la Experiencia 1 (de 2 clases de 90 min) de `tarea-1.1-I-medio-nueva-cancion-chilena.md` — La Jardinera de Violeta Parra.
 
-**⚠️ Duración real vs. duración grabada**: el Manual pide que el segmento grabado dure ~40 minutos — eso NO es la duración de tu clase completa (90 min), es solo el tramo que se sube a la Plataforma. Estructura: primeros ~40 min = escucha + contexto histórico + discusión sobre el rol de las mujeres en el movimiento + análisis de la letra (ESTO se graba). Últimos ~50 min, misma clase = canto + montaje instrumental (esto NO se graba, pero sí es parte real de la Experiencia 1 en Tarea 1.1).
+**⚠️ Duración real vs. duración grabada**: el Manual pide que el segmento grabado dure ~40 minutos — eso NO es la duración de tu clase completa (90 min), es solo el tramo que se sube a la Plataforma. Estructura del 1 de octubre: primera hora (~40 min) = escucha + contexto histórico + discusión sobre el rol de las mujeres en el movimiento + análisis de la letra (ESTO se graba). Segunda hora (~50 min), misma clase = sección A de la canción (los dos primeros versos): canto + inicio del montaje instrumental por percusión y luego instrumentación completa (esto NO se graba). La canción completa no alcanza a verse este día — se cierra el 8 de octubre en la Clase 2 (no grabada).
 
-Esta clase cumple doble función: es parte real de tu progresión de Módulo 1 y el primer bloque es el que grabas para Módulo 2. Al no incluir canto/montaje, el objetivo trabajado en la ficha de la clase grabada es más acotado que el objetivo general de la Experiencia 1 completa — y eso es correcto: el Manual no exige trabajar el OA completo en el segmento grabado.
+Esta clase cumple doble función: es parte real de tu progresión de Módulo 1 y el primer bloque (primera hora) es el que grabas para Módulo 2. Al no incluir canto/montaje, el objetivo trabajado en la ficha de la clase grabada es más acotado que el objetivo general de la Experiencia 1 completa — y eso es correcto: el Manual no exige trabajar el OA completo en el segmento grabado.
 
 ---
 

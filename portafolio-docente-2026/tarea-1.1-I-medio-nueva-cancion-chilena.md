@@ -7,15 +7,18 @@
 
 **Orden vigente (actualizado 2026-09-06)**: La Jardinera (Violeta Parra) primero — es la clase grabada del 1 de octubre — después Charagua (Víctor Jara), y se cierra con la presentación grupal.
 
-**⚠️ Corrección importante (2026-09-06 tarde)**: cada clase real dura **90 minutos**, no 40. Los 40 minutos son solo el requisito del Manual para el segmento que se graba y evalúa en el Módulo 2 — no la duración real de la clase. Esto significa que la Experiencia 1 cabe completa en **una sola clase de 90 min** (bloque grabado de ~40 min + bloque no grabado de ~50 min, mismo día). Probablemente esto también permite comprimir la Experiencia 2 de 3 a 2 clases — pendiente de confirmar con el usuario y recalcular la tabla de fechas completa.
+**⚠️ Duración real de la clase**: cada clase real dura **90 minutos**, no 40. Los 40 minutos son solo el requisito del Manual para el segmento que se graba y evalúa en el Módulo 2 (primera hora del 1 de octubre) — no la duración real de la clase completa.
+
+**Experiencia 1 quedó en 2 clases de 90 min** (no en 1 como se pensó inicialmente): ver la canción completa en una sola clase no es realista, así que el 1 de octubre se cierra solo la sección A (dos primeros versos) y el 8 de octubre se completa el resto.
 
 | Clase | Fecha | Contenido |
 |---|---|---|
-| Exp. 1 — Clase única (90 min) | 1 de octubre | Bloque grabado (~40 min): contexto + género + letra. Bloque no grabado (~50 min): canto + montaje |
+| Exp. 1 — Clase 1 (90 min) | 1 de octubre | 1ª hora GRABADA: contexto + género + letra. 2ª hora: sección A (2 primeros versos), instrumentos y canto |
+| Exp. 1 — Clase 2 (90 min) | 8 de octubre | Versos restantes + montaje completo + grabación final |
 | Exp. 2 | **pendiente de recalcular** | Charagua — posiblemente 2 clases de 90 min en vez de 3 |
 | Exp. 3 | **pendiente de recalcular** | Presentación musical ante Artes |
 
-Calendario completo pendiente de rehacer con la duración real de 90 min.
+Calendario de Experiencias 2 y 3 pendiente de rehacer con la duración real de 90 min.
 
 ---
 
@@ -66,17 +69,21 @@ Lo que sigue son **borradores crudos tipo apunte de planificación**, no texto f
 
 ## Experiencia 1 — "La Jardinera" (Violeta Parra) — ES LA CLASE GRABADA
 
-**Fecha**: **1 de octubre de 2026** · **Duración**: 1 clase de 90 min (bloque grabado ~40 min + bloque no grabado ~50 min, mismo día — ver `tarea-4-clase-grabada-1medio.md`).
+**Fecha**: **1 y 8 de octubre de 2026** · **Duración**: 2 clases de 90 min. La clase del 1 de octubre tiene el bloque grabado (~40 min, primera hora) — ver `tarea-4-clase-grabada-1medio.md`. Ver la canción completa en una sola clase no es realista, así que la segunda hora del 1 de octubre solo cubre la sección A (dos primeros versos), y el 8 de octubre se cierra el resto.
 
-**Objetivo(s)** (mejorado con estructura Habilidad + Contenido + Procedimiento + Actitudinal, según esquema del usuario):
+**Objetivo(s)** (versión mejorada, estructura Habilidad + Contenido + Procedimiento + Actitudinal):
 
-Analizar la letra de La Jardinera de Violeta Parra, identificando metáforas y cuestionando el rol de género en la Nueva Canción Chilena a través de la discusión grupal, e interpretarla vocal e instrumentalmente con los instrumentos del curso, valorando la equidad de género en la práctica musical.
+Evaluar la relevancia de La Jardinera de Violeta Parra en la identidad musical chilena, analizando su letra y cuestionando el rol asignado a las mujeres en la Nueva Canción Chilena a través de la reflexión grupal, e interpretarla vocal e instrumentalmente con los instrumentos del curso, valorando la equidad de género en la práctica musical.
 
-**Descripción de las actividades para el aprendizaje y las acciones de monitoreo** (reescrita desde la perspectiva de los estudiantes, no del docente):
+**Descripción de las actividades para el aprendizaje y las acciones de monitoreo** (versión del usuario, pulida, con la Clase 2 agregada):
 
-En la primera clase, que es la que grabamos el 1 de octubre, los estudiantes escuchan La Jardinera en su versión original sin contexto previo y responden en Mentimeter qué sienten al escucharla y de qué creen que habla, lo que permite ver qué traen de antes. Luego conocen quién fue Violeta Parra y su rol fundacional en la música chilena, y a partir de eso reflexionan sobre por qué en el movimiento de la Nueva Canción Chilena los conjuntos instrumentales más recordados, como Quilapayún o Inti-Illimani, eran solo de hombres, mientras las mujeres aparecían cantando. Esa pregunta queda abierta y la discuten entre todos, cuestionando el estereotipo. Después, en parejas, leen la letra e identifican una imagen o metáfora de la canción, como el rosal de espina gruesa, y explican qué emoción representa, lo que permite ver si están comprendiendo el sentido de la canción y no solo escuchándola.
+En la primera hora de clases, que es la que grabamos el 1 de octubre, los estudiantes escuchan La Jardinera en su versión original sin contexto previo y responden qué sienten al escucharla y de qué creen que habla, lo que permite ver qué traen de antes. Luego conocen quién fue Violeta Parra y su rol en la música chilena, y a partir de eso reflexionan sobre por qué en el movimiento de la Nueva Canción Chilena los conjuntos instrumentales más recordados, como Illapu, Quilapayún o Inti-Illimani, eran solo de hombres, mientras las mujeres aparecían cantando. Esa pregunta queda abierta y la discuten entre todos, cuestionando el estereotipo. Después, en parejas, leen la letra e identifican una imagen o metáfora de la canción, como el rosal de espina gruesa, y explican qué emoción representa, lo que permite ver si están comprendiendo el sentido de la canción y no solo escuchándola.
 
-En la segunda clase, los estudiantes aprenden a cantar la canción completa y sacan el acompañamiento en guitarra, y luego arman el acompañamiento completo entre todos: la guitarra lleva la armonía, la flauta, la melódica y el metalófono refuerzan la melodía, y el bombo marca un pulso suave. Cantan todos juntos varias veces, graban una versión final y la escuchan comentando si lograron transmitir el sentido de la canción y no solo cantar las notas correctas — esa grabación queda como evidencia de cómo cerró el montaje.
+En la segunda hora, más enfocada en lo instrumental y cantado, los estudiantes aprenden a cantar los dos primeros versos de la canción, que corresponden a la sección A, y comienzan la interpretación grupal por instrumentos. Primero practican el acompañamiento de percusión, y luego arman la instrumentación completa entre todos: la guitarra lleva la armonía, la flauta, la melódica y el metalófono refuerzan la melodía, y el bombo marca un pulso suave típico de la tonada. Ensayan de forma independiente por sección de instrumento varias veces, y después hacen el primer ensamble completo de la sección A. Se graba este primer avance y lo escuchan comentando si lograron transmitir el sentido de la canción y no solo tocar las notas correctas; esa grabación queda como evidencia del punto en que cerró el montaje en esta primera clase.
+
+En la clase siguiente (8 de octubre), ya que aprender la canción completa no alcanza en una sola sesión, los estudiantes retoman el montaje aprendiendo los versos restantes de la canción, manteniendo el mismo acompañamiento instrumental trabajado en la sección A. Ensayan la canción completa por partes hasta unir todos los versos con el acompañamiento, y graban una versión final que escuchan y comentan entre todos, evaluando si lograron mantener el sentido expresivo de la canción de principio a fin.
+
+*(Nota sobre "Illapu": se formó en 1971, un poco después del núcleo duro de la Nueva Canción Chilena, y algunos lo ubican en el "Canto Nuevo" posterior. No es grave para el nivel de la clase, pero queda a tu criterio mantenerlo o sacarlo.)*
 
 Ver `tarea-4-clase-grabada-1medio.md` para el detalle de esta clase indicador por indicador contra las 7 rúbricas del Módulo 2.
 
