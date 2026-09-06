@@ -17,7 +17,7 @@
 | Exp. 1 — Clase 2 (90 min) | 8 de octubre | Versos restantes + montaje completo + grabación final + Google Forms |
 | Exp. 2 — Clase 1 (90 min) | 15 de octubre | Contexto de Víctor Jara + censura/dictadura + Kahoot. Padlet + intro y sección A de Charagua |
 | Exp. 2 — Clase 2 (90 min) | 22 de octubre | Sección B + repertorio completo + grabación final + Google Forms |
-| Exp. 3 | **por confirmar, hay margen para adelantarla a fines de octubre** | Presentación musical ante Artes |
+| Exp. 3 (90 min) | 29 de octubre | Presentación musical ante Artes |
 
 Calendario de Experiencias 2 y 3 pendiente de rehacer con la duración real de 90 min.
 
@@ -98,21 +98,21 @@ Ver `tarea-4-clase-grabada-1medio.md` para el detalle de esta clase indicador po
 
 **Fecha**: 15 y 22 de octubre de 2026 · **Duración**: 2 clases de 90 min (mismo patrón que La Jardinera, no 3 clases de 40 min como en el borrador original).
 
-**Objetivo(s)** (estructura Habilidad + Contenido + Procedimiento + Actitudinal, mismo esquema que Experiencia 1):
+**Objetivo(s)** (versión más delicada: sin mención explícita del golpe, "contexto social y político"):
 
-Evaluar la censura y represión que enfrentó la Nueva Canción Chilena tras el golpe de 1973 a partir de la escucha activa de obras de Víctor Jara, un texto de investigación y la reflexión en parejas, e interpretar instrumentalmente Charagua con los instrumentos del curso, valorando la libertad de expresión artística.
+Evaluar el contexto social y político que enfrentó la Nueva Canción Chilena a partir de la escucha activa de obras de Víctor Jara, un texto de investigación y la reflexión en parejas, e interpretar instrumentalmente Charagua con los instrumentos del curso, valorando la libertad de expresión artística.
 
-**Texto de lectura** (mismo formato que el de Violeta Parra — verificado, no inventado):
+**Texto de lectura** (versión más delicada — se quitó "torturado" y el enfoque más cargado; se mantienen los hechos verificables en tono medido):
 
-"Tras el golpe de Estado del 11 de septiembre de 1973, la dictadura militar prohibió toda la música asociada a la Nueva Canción Chilena, considerándola 'música comunista' o 'no chilena'. Existió una prohibición no escrita de tocar instrumentos como la quena, el charango y la zampoña, considerados 'subversivos' por su asociación con el movimiento. A este período se le llamó 'apagón cultural': se buscó censurar todo lo vinculado al gobierno de Salvador Allende y, al mismo tiempo, promover con recursos del Estado un arte afín al nuevo régimen. Víctor Jara fue detenido, torturado y asesinado en el Estadio Chile pocos días después del golpe. Inti-Illimani y Quilapayún, nombrados embajadores culturales por el gobierno de Allende, se encontraban de gira en Italia y Francia el día del golpe, y se les prohibió volver a Chile, quedando exiliados por años. Aun así, canciones del movimiento circularon de forma clandestina en casetes durante la dictadura."
+"Durante la dictadura militar que gobernó Chile entre 1973 y 1990, la música asociada a la Nueva Canción Chilena fue objeto de censura, por considerarse vinculada al gobierno de Salvador Allende. Existió una restricción no escrita al uso de instrumentos como la quena, el charango y la zampoña, asociados al movimiento. A este período se le llamó 'apagón cultural': se buscó silenciar ciertas expresiones artísticas y, al mismo tiempo, promover con recursos del Estado un arte afín al nuevo gobierno. Víctor Jara fue detenido y perdió la vida en el Estadio Chile poco después del golpe de Estado de 1973. Inti-Illimani y Quilapayún, que se encontraban de gira en Italia y Francia en ese momento, no pudieron volver a Chile y permanecieron exiliados por años. Aun así, canciones del movimiento circularon de forma clandestina en casetes durante ese período."
 
-**Descripción de las actividades para el aprendizaje y las acciones de monitoreo** (2418/3600 caracteres):
+**Descripción de las actividades para el aprendizaje y las acciones de monitoreo** (2155/3600 caracteres, tono suavizado):
 
-En la primera hora de la primera clase, los estudiantes parten respondiendo si conocen a Víctor Jara. Escuchan un par de fragmentos breves de distintas obras suyas, sin decirles de entrada que son de él, ejercitando la escucha activa para ver si lo reconocen y qué tienen en común esos fragmentos. Luego conocen quién fue Víctor Jara y leen un breve texto sobre la censura que sufrió la Nueva Canción Chilena tras el golpe de 1973: la prohibición no escrita de instrumentos como la quena y el charango por considerarse subversivos, el llamado apagón cultural, el asesinato de Jara en el Estadio Chile y el exilio forzado de conjuntos como Inti-Illimani y Quilapayún. Responden un Kahoot corto para verificar que comprendieron el texto. Para cerrar, escuchan Charagua completa y, en parejas o tríos, comparan este tipo de censura política con el estereotipo de género visto en La Jardinera: qué otras formas de exclusión o restricción existieron en esa época y en qué se parecen o diferencian de la que ya conocían. Algunos pares comparten su comparación con el curso.
+En la primera hora de la primera clase, los estudiantes parten respondiendo si conocen a Víctor Jara. Escuchan un par de fragmentos breves de distintas obras suyas, sin decirles de entrada que son de él, ejercitando la escucha activa para ver si lo reconocen y qué tienen en común esos fragmentos. Luego conocen quién fue Víctor Jara y leen un breve texto sobre el contexto social y político que enfrentó la Nueva Canción Chilena, incluyendo la restricción de ciertos instrumentos, lo ocurrido con Jara y el exilio de conjuntos como Inti-Illimani y Quilapayún. Responden un Kahoot corto para verificar que comprendieron el texto. Para cerrar, escuchan Charagua completa y, en parejas o tríos, comparan este tipo de restricción social y política con el estereotipo de género visto en La Jardinera: qué otras formas de exclusión existieron en esa época y en qué se parecen o diferencian de la que ya conocían. Algunos pares comparten su comparación con el curso.
 
-En la segunda hora, los estudiantes se anotan en Padlet señalando qué rol instrumental van a tomar, entre guitarra, flauta, batería, bombo, melódica o metalófono. Con esa organización, notan que la guitarra acústica y el bombo del curso son parte de la instrumentación original de Charagua, y comienzan a aprender la introducción y la sección A de la pieza. Ensayan por sección de instrumento varias veces, y hacen el primer ensamble de la introducción y la sección A. Graban este primer avance y lo escuchan comentando si mantuvieron el pulso y si la melodía se distinguió sobre el acompañamiento; esa grabación queda como evidencia del cierre de esta primera clase.
+En la segunda hora, los estudiantes se anotan en Padlet señalando qué rol instrumental van a tomar, entre guitarra, flauta, batería, bombo, melódica o metalófono. Con esa organización, notan que la guitarra acústica y el bombo del curso son parte de la instrumentación original de Charagua, y comienzan a aprender la introducción y la sección A de la pieza. Ensayan por sección de instrumento varias veces, y hacen el primer ensamble de la introducción y la sección A. Graban este primer avance y lo escuchan comentando si mantuvieron el pulso y si la melodía se distinguió sobre el acompañamiento.
 
-En la clase siguiente, los estudiantes repasan la introducción y la sección A tocando todos juntos, y luego aprenden la sección B completa, ensayando de nuevo por instrumento antes de integrarla. Hacen el ensamble completo de la pieza, introducción, sección A y sección B, y graban la versión final, escuchándola y comentando qué se logró y qué mejorarían. Para cerrar, completan individualmente un formulario en Google Forms donde evalúan su propio avance en el montaje de Charagua y su comprensión del contexto histórico trabajado, y reflexionan brevemente sobre qué otras figuras de la Nueva Canción Chilena les gustaría seguir investigando, como puente hacia la Experiencia 3.
+En la clase siguiente, repasan la introducción y la sección A tocando todos juntos, y luego aprenden la sección B completa, ensayando de nuevo por instrumento antes de integrarla. Hacen el ensamble completo de la pieza y graban la versión final, escuchándola y comentando qué se logró y qué mejorarían. Para cerrar, completan individualmente un formulario en Google Forms donde evalúan su propio avance en el montaje y su comprensión del contexto trabajado, reflexionando sobre qué otras figuras de la Nueva Canción Chilena les gustaría seguir investigando, como puente hacia la Experiencia 3.
 
 **Monitoreo**: las grabaciones de audio de cada clase, el Kahoot como chequeo de comprensión del contexto histórico, y la observación directa por grupo de instrumento durante los ensayos por secciones.
 
@@ -120,7 +120,7 @@ En la clase siguiente, los estudiantes repasan la introducción y la sección A 
 
 ## Experiencia 3 — Presentación musical ante el electivo de Artes
 
-**Fecha**: 5 de noviembre de 2026 · **Duración**: 1 clase de 40 min. ⚠️ Requiere coordinar con el/la profesor/a de Artes (mismo horario, arte latinoamericano/Nueva Canción Chilena desde su disciplina) — logística de tu lado.
+**Fecha**: 29 de octubre de 2026 (adelantada — Charagua terminó antes de lo esperado, en solo 2 clases) · **Duración**: 1 clase de 90 min (corregido: no son 40 min, esa duración era un resabio de cuando se pensaba que todo el Portafolio usaba bloques de 40 min). ⚠️ Requiere coordinar con el/la profesor/a de Artes (mismo horario, arte latinoamericano/Nueva Canción Chilena desde su disciplina) — logística de tu lado.
 
 **Objetivo(s)** (esquema Habilidad + Contenido + Procedimiento + Actitudinal):
 
@@ -132,11 +132,11 @@ Los estudiantes preparan y ensayan una breve presentación musical que reúne lo
 
 ---
 
-## ✅ Calendario resuelto
+## ✅ Calendario resuelto (con margen de sobra)
 
-Confirmado: Música con I°C es una vez por semana (jueves). Con la Experiencia 3 comprimida a 1 clase, las 6 clases totales (2+3+1) calzan exactas entre el 1 de octubre y el 5 de noviembre, dejando del 6 al 10 de noviembre para escribir todo en la Plataforma. Ver tabla de fechas al inicio del documento.
+Confirmado: Música con I°C es una vez por semana (jueves). Con Charagua comprimido a 2 clases de 90 min (en vez de 3 de 40 min) y la Experiencia 3 en 1 clase, las 5 clases totales (2+2+1) terminan el **29 de octubre**, no el 5 de noviembre como se calculó antes. Eso deja del 30 de octubre al 10 de noviembre — más de una semana extra — para escribir todo en la Plataforma, con colchón por si alguna clase se atrasa. Ver tabla de fechas al inicio del documento.
 
 ## Pendiente de tu parte
 
-1. Confirmar que la compresión de la Experiencia 3 (investigación como trabajo previo, 1 sola clase para exponer) te acomoda.
+1. Coordinar con el/la profesor/a de Artes el horario y espacio para la Experiencia 3 (29 de octubre).
 2. Revisar y reescribir con tu voz los tres objetivos y descripciones antes de pegarlos en la Plataforma.
