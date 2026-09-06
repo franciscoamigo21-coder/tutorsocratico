@@ -55,9 +55,11 @@ Lo que sigue son **borradores crudos tipo apunte de planificación**, no texto f
 
 ## Experiencia 1 — "Charagua" (Víctor Jara)
 
-**Fecha**: 8 de septiembre de 2026 (propuesta — ajusta a tu horario real) · **Duración**: 3 clases de 40 min.
+**Fecha**: **1 de octubre de 2026** (confirmado — es la clase grabada del Módulo 2, ver `tarea-4-clase-grabada-1medio.md`) · **Duración**: 3 clases de 40 min.
 
-Estructura confirmada por el usuario: clase 1 = escuchar + sacar intro y sección A; clase 2 = sección B completa; clase 3 = completar el repertorio y empezar a conocer la historia de Violeta Parra (puente a la Experiencia 2). Se usan Kahoot, Mentimeter y Padlet como herramientas digitales.
+Estructura confirmada por el usuario: clase 1 (1 de octubre) = escuchar + contexto + sacar intro y sección A — ESTA es la clase grabada; clase 2 = sección B completa; clase 3 = completar el repertorio y empezar a conocer la historia de Violeta Parra (puente a la Experiencia 2). Se usan Kahoot, Mentimeter y Padlet como herramientas digitales.
+
+⚠️ Como toda la unidad recién arranca el 1 de octubre (no en septiembre como se había asumido antes), hay que revisar si alcanza el tiempo hasta el cierre de la Plataforma (10 de noviembre) para las 3 experiencias completas — ver la nota de riesgo de calendario en `tarea-4-clase-grabada-1medio.md`.
 
 **Objetivo(s)** (borrador, prosa corrida, sin viñetas — así se pega en el campo de texto real):
 
