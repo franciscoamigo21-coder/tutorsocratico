@@ -1,4 +1,8 @@
-# Tarea 1.1 — Planificación de las experiencias de aprendizaje (BORRADOR)
+# Tarea 1.1 — Planificación de las experiencias de aprendizaje — 8° Básico / Metalófono (SUPERADO)
+
+**⚠️ SUPERADO el 2026-09-06**: el Portafolio pasó a desarrollarse con **I°C** (Nueva Canción Chilena — Víctor Jara / Violeta Parra), no con 8° básico. Ver `tarea-1.1-I-medio-nueva-cancion-chilena.md` para el plan vigente. Este archivo queda como registro histórico de la primera idea, por si se retoma el trabajo con 8° básico más adelante.
+
+---
 
 **Estado**: borrador de trabajo para que ajustes con tus datos reales (fechas, duración exacta, curso/letra). No es texto final para pegar en la Plataforma — falta que confirmes fechas y que verifiques el OA contra la Plataforma/curriculumnacional.cl.
 
