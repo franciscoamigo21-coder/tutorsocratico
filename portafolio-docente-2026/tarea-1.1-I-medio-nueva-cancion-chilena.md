@@ -15,9 +15,9 @@
 |---|---|---|
 | Exp. 1 — Clase 1 (90 min) | 1 de octubre | 1ª hora GRABADA: contexto de Violeta Parra + rol de mujeres + Kahoot. 2ª hora: sección A (2 primeros versos), Padlet e instrumentos |
 | Exp. 1 — Clase 2 (90 min) | 8 de octubre | Versos restantes + montaje completo + grabación final + Google Forms |
-| Exp. 2 — Clase 1 (90 min) | 15 de octubre | Contexto de Víctor Jara + censura/dictadura + Kahoot. Padlet + intro y sección A de Charagua |
+| Exp. 2 — Clase 1 (90 min) | 15 de octubre | Contexto de Víctor Jara + contexto social/político, video, Mentimeter x2, Classroom. Roles instrumentales + intro y sección A de Charagua |
 | Exp. 2 — Clase 2 (90 min) | 22 de octubre | Sección B + repertorio completo + grabación final + Google Forms |
-| Exp. 3 (90 min) | 29 de octubre | Presentación musical ante Artes |
+| Exp. 3 (90 min) | 29 de octubre | Conversatorio breve (Nueva Canción Chilena, Violeta Parra, Víctor Jara) + presentación musical ante Artes |
 
 Calendario de Experiencias 2 y 3 pendiente de rehacer con la duración real de 90 min.
 
@@ -124,13 +124,13 @@ En la clase siguiente, repasan la introducción y la sección A tocando todos ju
 
 **Fecha**: 29 de octubre de 2026 (adelantada — Charagua terminó antes de lo esperado, en solo 2 clases) · **Duración**: 1 clase de 90 min (corregido: no son 40 min, esa duración era un resabio de cuando se pensaba que todo el Portafolio usaba bloques de 40 min). ⚠️ Requiere coordinar con el/la profesor/a de Artes (mismo horario, arte latinoamericano/Nueva Canción Chilena desde su disciplina) — logística de tu lado.
 
-**Objetivo(s)** (esquema Habilidad + Contenido + Procedimiento + Actitudinal):
+**Objetivo(s)** (esquema Habilidad + Contenido + Procedimiento + Actitudinal — ahora incluye el conversatorio, no solo la interpretación):
 
-Interpretar el repertorio de la Nueva Canción Chilena trabajado durante la unidad, La Jardinera y Charagua, mediante una presentación musical ante el electivo de Artes, valorando el diálogo entre la música y las artes visuales en la construcción de la identidad cultural chilena.
+Comunicar en un conversatorio breve lo aprendido sobre la Nueva Canción Chilena, Violeta Parra y Víctor Jara, e interpretar el repertorio trabajado, La Jardinera y Charagua, mediante una presentación musical ante el electivo de Artes, valorando el diálogo entre la música y las artes visuales en la construcción de la identidad cultural chilena.
 
-**Descripción de las actividades para el aprendizaje y las acciones de monitoreo** (voz de los estudiantes):
+**Descripción de las actividades para el aprendizaje y las acciones de monitoreo** (1232/3600 caracteres — con el conversatorio previo a la interpretación):
 
-Los estudiantes preparan y ensayan una breve presentación musical que reúne los dos repertorios trabajados en la unidad, La Jardinera de Violeta Parra y Charagua de Víctor Jara, ajustando los últimos detalles de afinación, pulso y dinámica antes de la puesta en escena. La presentación se realiza ante el electivo de Artes, que en el mismo horario está estudiando arte latinoamericano y la Nueva Canción Chilena desde su propia disciplina. Después de interpretar ambas piezas, los estudiantes conversan con sus compañeros y compañeras de Artes sobre cómo la música y las artes visuales representan de distintas maneras un mismo momento histórico y cultural, y responden en Mentimeter qué fue lo que más les llamó la atención de esa conversación. Esta instancia les permite reconocer la relevancia de su propio repertorio más allá de la sala de clases de Música.
+Antes de la presentación, los estudiantes preparan en grupos pequeños un conversatorio breve sobre la Nueva Canción Chilena y las figuras de Violeta Parra y Víctor Jara, retomando lo trabajado en las dos experiencias anteriores: quiénes fueron, qué fue el movimiento, el rol de las mujeres en él y el contexto social y político de la época. Al inicio de la clase, presentan este conversatorio al electivo de Artes, alternándose entre grupos para cubrir cada aspecto en pocos minutos, sin extenderse en una exposición larga. Después, interpretan La Jardinera y Charagua, los dos repertorios trabajados durante la unidad, ajustando los últimos detalles de afinación, pulso y dinámica frente al público. Al terminar, conversan con sus compañeros y compañeras de Artes, que en el mismo horario estudian arte latinoamericano y la Nueva Canción Chilena desde su disciplina, sobre cómo la música y las artes visuales representan de distintas maneras un mismo momento histórico y cultural, y responden en Mentimeter qué fue lo que más les llamó la atención de esa conversación. Se graba tanto el conversatorio como la presentación musical, y esas grabaciones junto con las respuestas de Mentimeter quedan como evidencia de esta experiencia.
 
 ---
 
