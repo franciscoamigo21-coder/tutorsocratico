@@ -124,9 +124,9 @@ En la clase siguiente, repasan la introducción y la sección A tocando todos ju
 
 **Fecha**: 29 de octubre de 2026 (adelantada — Charagua terminó antes de lo esperado, en solo 2 clases) · **Duración**: 1 clase de 90 min (corregido: no son 40 min, esa duración era un resabio de cuando se pensaba que todo el Portafolio usaba bloques de 40 min). ⚠️ Requiere coordinar con el/la profesor/a de Artes (mismo horario, arte latinoamericano/Nueva Canción Chilena desde su disciplina) — logística de tu lado.
 
-**Objetivo(s)** (esquema Habilidad + Contenido + Procedimiento + Actitudinal — ahora incluye el conversatorio, no solo la interpretación):
+**Objetivo(s)** (reordenado: Habilidad+Contenido primero, el conversatorio como Procedimiento, no como fin en sí mismo):
 
-Comunicar en un conversatorio breve lo aprendido sobre la Nueva Canción Chilena, Violeta Parra y Víctor Jara, e interpretar el repertorio trabajado, La Jardinera y Charagua, mediante una presentación musical ante el electivo de Artes, valorando el diálogo entre la música y las artes visuales en la construcción de la identidad cultural chilena.
+Evaluar la relevancia de la Nueva Canción Chilena y el aporte de Violeta Parra y Víctor Jara en la identidad cultural chilena, comunicando lo aprendido en un conversatorio breve, e interpretar el repertorio trabajado, La Jardinera y Charagua, mediante una presentación musical ante el electivo de Artes, valorando el diálogo entre la música y las artes visuales en la construcción de esa identidad.
 
 **Descripción de las actividades para el aprendizaje y las acciones de monitoreo** (1232/3600 caracteres — con el conversatorio previo a la interpretación):
 
