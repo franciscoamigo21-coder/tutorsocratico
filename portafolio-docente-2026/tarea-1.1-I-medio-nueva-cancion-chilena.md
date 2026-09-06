@@ -105,17 +105,17 @@ En la tercera clase juntamos la introducción, la sección A y la sección B par
 
 ---
 
-## Experiencia 3 — Presentación grupal sobre la Nueva Canción Chilena
+## Experiencia 3 — Presentación musical ante el electivo de Artes
 
-**Fecha**: 5 de noviembre de 2026 · **Duración**: 1 clase de 40 min (comprimida de 2 a 1 por el calendario — la investigación se hace como trabajo previo fuera de la clase).
+**Fecha**: 5 de noviembre de 2026 · **Duración**: 1 clase de 40 min. ⚠️ Requiere coordinar con el/la profesor/a de Artes (mismo horario, arte latinoamericano/Nueva Canción Chilena desde su disciplina) — logística de tu lado.
 
-**Objetivo(s)** (borrador):
+**Objetivo(s)** (esquema Habilidad + Contenido + Procedimiento + Actitudinal):
 
-Presentar de manera grupal aspectos históricos, sociales y culturales de la Nueva Canción Chilena investigados previamente, evaluando su relevancia en la construcción de la identidad musical chilena.
+Interpretar el repertorio de la Nueva Canción Chilena trabajado durante la unidad, La Jardinera y Charagua, mediante una presentación musical ante el electivo de Artes, valorando el diálogo entre la música y las artes visuales en la construcción de la identidad cultural chilena.
 
-**Descripción de las actividades para el aprendizaje y las acciones de monitoreo** (borrador, prosa corrida):
+**Descripción de las actividades para el aprendizaje y las acciones de monitoreo** (voz de los estudiantes):
 
-Los estudiantes llegan a esta clase con la investigación ya hecha como trabajo previo: cada grupo investigó un aspecto distinto de la Nueva Canción Chilena, como una figura (Violeta Parra, Víctor Jara), un conjunto (Inti-Illimani, Quilapayún) o el contexto político y social de los años sesenta y setenta. En la clase cada grupo expone su presentación breve, con imágenes y al menos un fragmento de audio. Después de cada exposición el resto del curso comenta o pregunta algo que le llamó la atención, y usamos Mentimeter para que todos voten o comenten de forma anónima qué fue lo que más les interesó de cada grupo. Cerramos armando entre todos un Padlet con los aportes de cada grupo, que queda como mapa colectivo del movimiento; ese Padlet y las respuestas de Mentimeter son la evidencia de esta experiencia.
+Los estudiantes preparan y ensayan una breve presentación musical que reúne los dos repertorios trabajados en la unidad, La Jardinera de Violeta Parra y Charagua de Víctor Jara, ajustando los últimos detalles de afinación, pulso y dinámica antes de la puesta en escena. La presentación se realiza ante el electivo de Artes, que en el mismo horario está estudiando arte latinoamericano y la Nueva Canción Chilena desde su propia disciplina. Después de interpretar ambas piezas, los estudiantes conversan con sus compañeros y compañeras de Artes sobre cómo la música y las artes visuales representan de distintas maneras un mismo momento histórico y cultural, y responden en Mentimeter qué fue lo que más les llamó la atención de esa conversación. Esta instancia les permite reconocer la relevancia de su propio repertorio más allá de la sala de clases de Música.
 
 ---
 
