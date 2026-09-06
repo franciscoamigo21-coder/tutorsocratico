@@ -4,7 +4,7 @@
 **Fecha de grabación**: **1 de octubre de 2026** (jueves)
 **Contenido**: es la Clase 1 de la Experiencia 1 (de 2 clases de 90 min) de `tarea-1.1-I-medio-nueva-cancion-chilena.md` — La Jardinera de Violeta Parra.
 
-**⚠️ Duración real vs. duración grabada**: el Manual pide que el segmento grabado dure ~40 minutos — eso NO es la duración de tu clase completa (90 min), es solo el tramo que se sube a la Plataforma. Estructura del 1 de octubre: primera hora (~40 min) = escucha + contexto histórico + discusión sobre el rol de las mujeres en el movimiento + análisis de la letra (ESTO se graba). Segunda hora (~50 min), misma clase = sección A de la canción (los dos primeros versos): canto + inicio del montaje instrumental por percusión y luego instrumentación completa (esto NO se graba). La canción completa no alcanza a verse este día — se cierra el 8 de octubre en la Clase 2 (no grabada).
+**⚠️ Duración real vs. duración grabada**: el Manual pide que el segmento grabado dure ~40 minutos — eso NO es la duración de tu clase completa (90 min), es solo el tramo que se sube a la Plataforma. Estructura del 1 de octubre: primera hora (~40 min) = pregunta inicial sobre si conocen a Violeta Parra + escucha activa de fragmentos de sus obras + contexto histórico + texto sobre el rol de las mujeres + Kahoot + cierre escuchando La Jardinera y reflexionando sobre el repertorio (ESTO se graba, sin análisis de letra). Segunda hora (~50 min), misma clase = sección A de la canción (los dos primeros versos): registro de instrumento en Padlet + canto + montaje instrumental (esto NO se graba). La canción completa no alcanza a verse este día — se cierra el 8 de octubre en la Clase 2 (no grabada).
 
 Esta clase cumple doble función: es parte real de tu progresión de Módulo 1 y el primer bloque (primera hora) es el que grabas para Módulo 2. Al no incluir canto/montaje, el objetivo trabajado en la ficha de la clase grabada es más acotado que el objetivo general de la Experiencia 1 completa — y eso es correcto: el Manual no exige trabajar el OA completo en el segmento grabado.
 
@@ -17,34 +17,34 @@ Esta clase cumple doble función: es parte real de tu progresión de Módulo 1 y
 
 *(MU1M OA 03, interpretar/cantar, no se trabaja en esta clase específica — se aborda en la Clase 2. Eso es válido, no hace falta forzarlo aquí.)*
 
-**Objetivo(s) trabajado(s) en esta clase específica** (distinto del objetivo general de la Experiencia 1 — este es solo para la ficha de la clase grabada): evaluar el rol de las mujeres en la Nueva Canción Chilena a partir del análisis de un texto de investigación y la reflexión grupal, cuestionando el estereotipo de los conjuntos instrumentales masculinos.
+**Objetivo(s) trabajado(s) en esta clase específica** (distinto del objetivo general de la Experiencia 1 — este es solo para la ficha de la clase grabada): evaluar el rol de las mujeres en la Nueva Canción Chilena a partir de la escucha activa de distintas obras de Violeta Parra, un texto de investigación y la reflexión grupal, cuestionando el estereotipo de los conjuntos instrumentales masculinos.
 
 ---
 
-## Estructura real de la clase (actualizada: con Kahoot y lectura, análisis de letra ahora secundario)
+## Estructura real de la clase (sin análisis de letra; empieza preguntando si la conocen; cierra con La Jardinera)
 
-Escuchan La Jardinera sin contexto previo y responden en Mentimeter qué sienten y de qué creen que habla. Conocen quién fue Violeta Parra. Leen un breve texto sobre el rol de las mujeres en la música y el arte del siglo XX (ver texto sugerido en `tarea-1.1-I-medio-nueva-cancion-chilena.md`). Responden un Kahoot corto para verificar comprensión del texto y del contexto de Violeta Parra. Con esa base, discuten por qué los conjuntos instrumentales del movimiento (Illapu, Quilapayún, Inti-Illimani) eran solo hombres mientras la participación de las mujeres era reducida. Para cerrar, en parejas o tríos, identifican rápidamente una metáfora de la letra (actividad ahora más breve, ya no es el foco principal).
+Parten respondiendo si conocen a Violeta Parra. Escuchan un par de fragmentos breves de distintas obras suyas (sin decir de entrada que son de ella), ejercitando la escucha activa para reconocer si les resulta familiar. Conocen quién fue Violeta Parra. Leen un breve texto sobre el rol de las mujeres en la música y el arte del siglo XX (ver texto en `tarea-1.1-I-medio-nueva-cancion-chilena.md`). Responden un Kahoot corto para verificar comprensión del texto y del contexto de Violeta Parra. Para cerrar la hora, escuchan La Jardinera completa, y ahí hacen la reflexión sobre el repertorio: por qué los conjuntos instrumentales del movimiento (Illapu, Quilapayún, Inti-Illimani) eran solo hombres mientras la participación de las mujeres era reducida.
 
 ## Cómo esto pega contra los 7 indicadores del Módulo 2 (chequeo, no texto para la ficha)
 
 **Ambiente de aula**: la discusión sobre género puede generar opiniones distintas — asegúrate de que se mantenga el trato respetuoso incluso si hay desacuerdo, durante TODA la clase (para Competente).
 
-**Promoción de la participación**: el trabajo en parejas/tríos para identificar metáforas ya es colaboración entre pares, pero ahora es más breve. La discusión grupal sobre el texto también puede estructurarse como colaboración (que reaccionen a lo que dice un compañero, no solo respondan a ti). Para Destacado necesitas que la colaboración ocupe LA MAYOR PARTE del tiempo de la clase — cuida el reparto de minutos.
+**Promoción de la participación**: la reflexión final sobre el repertorio puede estructurarse como colaboración entre pares (que reaccionen a lo que dice un compañero, no solo respondan a ti) para que cuente en este indicador. Sin el trabajo en parejas de metáforas (que se eliminó), esta es ahora la única instancia de colaboración real de la clase — cuídala especialmente para que ocupe buena parte del tiempo, no sea un cierre apurado.
 
-**Contribución de las actividades al logro de los objetivos**: ahora la clase tiene más pasos (escucha, contexto, lectura, Kahoot, discusión, metáforas) — el riesgo de tiempo sube. Define minutos por bloque de antemano: por ejemplo, ~5 escucha, ~5 contexto, ~7 lectura, ~5 Kahoot, ~12 discusión, ~6 metáforas.
+**Contribución de las actividades al logro de los objetivos**: son 6 pasos (pregunta inicial, escucha de fragmentos, contexto, lectura, Kahoot, escucha de La Jardinera + reflexión) — el riesgo de tiempo sigue alto. Ejemplo de reparto: ~3 pregunta inicial, ~6 escucha de fragmentos, ~5 contexto, ~7 lectura, ~5 Kahoot, ~14 escucha de La Jardinera + reflexión.
 
-**Promoción de habilidades para el aprendizaje profundo**: ahora es más sólido que antes — la discusión de género ya no es solo opinión, está anclada en un texto leído, lo que permite pedirles que "argumenten en base al análisis de información" (nivel Competente/Destacado de este indicador), no solo que intuyan.
+**Promoción de habilidades para el aprendizaje profundo**: la reflexión final ya no es solo opinión, está anclada en el texto leído y en lo que escucharon, lo que permite pedirles que "argumenten en base al análisis de información" (nivel Competente/Destacado), no solo que intuyan.
 
-**Uso de conocimientos y experiencias de los/as estudiantes**: la pregunta de Mentimeter antes de dar contexto ya cumple esto. El Kahoot no cuenta como "uso de conocimientos previos" (es chequeo de comprensión de contenido nuevo) — para la segunda instancia que pide Destacado, sigue sirviendo preguntarles qué grupos o cantantes conocen ellos antes de nombrar a Quilapayún/Inti-Illimani.
+**Uso de conocimientos y experiencias de los/as estudiantes**: la pregunta inicial "¿conocen a Violeta Parra?" y el ejercicio de reconocer sus obras por escucha activa YA son una instancia sólida de esto — es literalmente preguntarles qué saben antes de que tú expliques. Para la segunda instancia que pide Destacado, puedes repetir la lógica al final: antes de nombrar tú a Quilapayún/Inti-Illimani, pregúntales qué grupos o cantantes de la época conocen ellos.
 
-**Uso de los desempeños de los/as estudiantes (retroalimentación)**: sin canto en esta clase, este indicador se juega en las respuestas de análisis y discusión, no en lo musical. Por ejemplo: si un/a estudiante nombra una metáfora sin explicarla del todo, en vez de completarla tú, pregúntale "¿por qué crees que representa eso? vuelve a leer esa estrofa" para que sea el/ella quien profundice su propia respuesta. Lo mismo en la discusión de género: si alguien da una respuesta superficial, repregunta para que la argumente mejor. Para Destacado necesitas esto en 4 o más ocasiones durante la clase — con dos actividades de análisis/discusión completas, hay bastante margen para lograrlo.
+**Uso de los desempeños de los/as estudiantes (retroalimentación)**: sin canto en esta clase, este indicador se juega en las respuestas de la reflexión final. Si alguien da una respuesta superficial sobre por qué los conjuntos eran solo hombres, repregunta para que la argumente mejor en vez de completarla tú. Para Destacado necesitas esto en 4 o más ocasiones — con una sola reflexión grupal al final, cuesta más lograrlo que antes (cuando había dos actividades separadas). Vale la pena planificar varias repreguntas dentro de esa misma conversación final.
 
-**Promoción de la equidad de género**: esta es la fortaleza de la clase. La pregunta sobre por qué los conjuntos eran solo hombres mientras las mujeres cantaban, si logras que sean ELLOS quienes la respondan y cuestionen (no que tú les des la respuesta), apunta directo a Destacado. Esto debe quedar reflejado también en la ficha de la clase, no solo en el video.
+**Promoción de la equidad de género**: sigue siendo la fortaleza de la clase. Que sean ELLOS quienes cuestionen el estereotipo de los conjuntos masculinos, apoyados en lo leído y escuchado, apunta directo a Destacado. Debe quedar reflejado también en la ficha de la clase, no solo en el video.
 
 ---
 
 ## Pendiente de tu parte
 
-1. Confirmar la distribución de minutos de los 40 (ahora son 6 bloques: escucha, contexto, lectura, Kahoot, discusión, metáforas) — con más pasos que antes, es más fácil pasarse de tiempo.
-2. Pensar 3-4 momentos concretos donde repreguntes en vez de responder tú, para el indicador de retroalimentación (ver ejemplo más abajo en la versión anterior de este documento / historial de git).
-3. Preparar el Kahoot con preguntas sobre el texto de lectura y el contexto de Violeta Parra (no hace falta que me lo mandes, pero avísame si quieres que te ayude a redactar las preguntas).
+1. Confirmar la distribución de minutos de los 6 bloques — con la reflexión final concentrando ahora tanto el pensamiento crítico como la retroalimentación y la participación, cuídale tiempo suficiente (no la dejes para los últimos 3 minutos).
+2. Preparar el Kahoot con preguntas sobre el texto de lectura y el contexto de Violeta Parra (avísame si quieres que te ayude a redactar las preguntas).
+3. Elegir qué 2-3 fragmentos de obras de Violeta Parra usarás para el ejercicio de escucha activa inicial.
