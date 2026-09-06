@@ -7,6 +7,19 @@
 
 **Orden vigente (actualizado 2026-09-06)**: La Jardinera (Violeta Parra) primero — es la clase grabada del 1 de octubre — después Charagua (Víctor Jara), y se cierra con la presentación grupal.
 
+**Calendario confirmado**: Música con I°C es una vez por semana, los jueves. Entre el 1 de octubre y el cierre de la Plataforma (10 de noviembre) solo caben 6 jueves, así que la Experiencia 3 se comprimió de 2 a 1 clase (la investigación se hace como trabajo previo, la clase es solo para exponer).
+
+| Clase | Fecha | Contenido |
+|---|---|---|
+| Exp. 1 — Clase 1 | 1 de octubre | La Jardinera: contexto + género + letra (GRABADA) |
+| Exp. 1 — Clase 2 | 8 de octubre | La Jardinera: canto + montaje |
+| Exp. 2 — Clase 1 | 15 de octubre | Charagua: contexto + intro y sección A |
+| Exp. 2 — Clase 2 | 22 de octubre | Charagua: sección B |
+| Exp. 2 — Clase 3 | 29 de octubre | Charagua: repertorio completo |
+| Exp. 3 — Clase única | 5 de noviembre | Presentación grupal Nueva Canción Chilena |
+
+Del 6 al 10 de noviembre queda para escribir todo en la Plataforma.
+
 ---
 
 ## a. Curso y letra
@@ -62,13 +75,11 @@ Lo que sigue son **borradores crudos tipo apunte de planificación**, no texto f
 
 Reconocer el aporte de Violeta Parra a la identidad musical chilena analizando la letra de La Jardinera, y cantarla acompañándola con los instrumentos del curso, cuidando su sentido expresivo.
 
-**Descripción de las actividades para el aprendizaje y las acciones de monitoreo** (borrador, prosa corrida):
+**Descripción de las actividades para el aprendizaje y las acciones de monitoreo** (listo para copiar, prosa corrida, monitoreo integrado en el mismo texto porque en la Plataforma es un solo campo):
 
-En la primera clase (grabada) escuchamos La Jardinera en su versión original, sin dar contexto antes. Les pregunto en Mentimeter qué sienten al escucharla y de qué creen que habla. Después les cuento quién fue Violeta Parra y su rol fundacional en la música chilena, y aprovecho de preguntarles por qué creen que en el movimiento de la Nueva Canción Chilena los conjuntos instrumentales más recordados, como Quilapayún o Inti-Illimani, eran solo de hombres, mientras las mujeres aparecían cantando. Dejamos esa pregunta abierta y la discutimos entre todos. Después proyecto la letra y en parejas identifican una imagen o metáfora de la canción, como el rosal de espina gruesa, y explican qué emoción representa. Esta clase no incluye canto ni montaje instrumental — todo el foco está en escuchar, contextualizar y analizar.
+En la primera clase, que es la que grabamos el 1 de octubre, escuchamos La Jardinera en su versión original sin dar contexto antes. Les pregunto en Mentimeter qué sienten al escucharla y de qué creen que habla, y esas respuestas me sirven para ver qué traen de antes. Después les cuento quién fue Violeta Parra y su rol fundacional en la música chilena, y aprovecho de preguntarles por qué creen que en el movimiento de la Nueva Canción Chilena los conjuntos instrumentales más recordados, como Quilapayún o Inti-Illimani, eran solo de hombres, mientras las mujeres aparecían cantando. Dejamos esa pregunta abierta y la discutimos entre todos. Después proyecto la letra y en parejas identifican una imagen o metáfora de la canción, como el rosal de espina gruesa, y explican qué emoción representa; esas respuestas también me sirven para ver si están comprendiendo el sentido de la canción y no solo escuchándola.
 
-En la segunda clase (no grabada) partimos aprendiendo a cantar la canción completa y sacando el acompañamiento en guitarra, y después armamos el acompañamiento completo: la guitarra lleva la armonía, la flauta, la melódica y el metalófono refuerzan la melodía, y el bombo marca un pulso suave. Cantamos todos juntos varias veces, grabamos una versión final y la escuchamos comentando si logramos transmitir el sentido de la canción y no solo cantar las notas correctas.
-
-**Monitoreo**: respuestas de Mentimeter, la discusión oral sobre el rol de las mujeres en el movimiento, la actividad de identificar metáforas en parejas, y la grabación de audio final.
+En la segunda clase aprendemos a cantar la canción completa y sacamos el acompañamiento en guitarra, y después armamos el acompañamiento completo entre todos: la guitarra lleva la armonía, la flauta, la melódica y el metalófono refuerzan la melodía, y el bombo marca un pulso suave. Cantamos todos juntos varias veces, grabamos una versión final y la escuchamos comentando si logramos transmitir el sentido de la canción y no solo cantar las notas correctas — esa grabación queda como evidencia de cómo cerró el montaje.
 
 Ver `tarea-4-clase-grabada-1medio.md` para el detalle de esta clase indicador por indicador contra las 7 rúbricas del Módulo 2.
 
@@ -76,7 +87,7 @@ Ver `tarea-4-clase-grabada-1medio.md` para el detalle de esta clase indicador po
 
 ## Experiencia 2 — "Charagua" (Víctor Jara)
 
-**Fecha**: a definir después de cerrar Experiencia 1 (ver riesgo de calendario abajo) · **Duración**: 3 clases de 40 min.
+**Fecha**: 15 de octubre de 2026 · **Duración**: 3 clases de 40 min (15, 22 y 29 de octubre).
 
 **Objetivo(s)** (borrador):
 
@@ -96,26 +107,23 @@ En la tercera clase juntamos la introducción, la sección A y la sección B par
 
 ## Experiencia 3 — Presentación grupal sobre la Nueva Canción Chilena
 
-**Fecha**: a definir · **Duración**: propongo 2 clases (una de trabajo grupal + una de exposición).
+**Fecha**: 5 de noviembre de 2026 · **Duración**: 1 clase de 40 min (comprimida de 2 a 1 por el calendario — la investigación se hace como trabajo previo fuera de la clase).
 
 **Objetivo(s)** (borrador):
 
-Investigar y presentar de manera grupal aspectos históricos, sociales y culturales de la Nueva Canción Chilena, evaluando su relevancia en la construcción de la identidad musical chilena.
+Presentar de manera grupal aspectos históricos, sociales y culturales de la Nueva Canción Chilena investigados previamente, evaluando su relevancia en la construcción de la identidad musical chilena.
 
 **Descripción de las actividades para el aprendizaje y las acciones de monitoreo** (borrador, prosa corrida):
 
-Los estudiantes se organizan en grupos y cada uno investiga un aspecto distinto de la Nueva Canción Chilena: puede ser una figura como Violeta Parra, Víctor Jara, Inti-Illimani o Quilapayún, o el contexto político y social de los años sesenta y setenta en que surge el movimiento. Cada grupo arma una presentación breve, con imágenes y al menos un fragmento de audio, y la expone al curso. Después de cada presentación el resto del curso hace preguntas o comenta algo que le llamó la atención, y usamos Mentimeter para que todos puedan votar o comentar de forma anónima qué fue lo que más les interesó de cada grupo. Cerramos armando entre todos un Padlet con los aportes de cada grupo, para que quede como un mapa colectivo del movimiento.
-
-**Monitoreo**: la presentación misma como evidencia, las respuestas en Mentimeter, y observación de la participación en las preguntas entre grupos.
+Los estudiantes llegan a esta clase con la investigación ya hecha como trabajo previo: cada grupo investigó un aspecto distinto de la Nueva Canción Chilena, como una figura (Violeta Parra, Víctor Jara), un conjunto (Inti-Illimani, Quilapayún) o el contexto político y social de los años sesenta y setenta. En la clase cada grupo expone su presentación breve, con imágenes y al menos un fragmento de audio. Después de cada exposición el resto del curso comenta o pregunta algo que le llamó la atención, y usamos Mentimeter para que todos voten o comenten de forma anónima qué fue lo que más les interesó de cada grupo. Cerramos armando entre todos un Padlet con los aportes de cada grupo, que queda como mapa colectivo del movimiento; ese Padlet y las respuestas de Mentimeter son la evidencia de esta experiencia.
 
 ---
 
-## ⚠️ Riesgo de calendario — se vuelve más urgente con este orden
+## ✅ Calendario resuelto
 
-7 clases en total (2+3+2) partiendo el 1 de octubre. Si Música con I°C es una vez por semana, esto termina recién a mediados de noviembre — después del cierre de la Plataforma (10 de noviembre, 23:59). **Necesito saber cuántas veces a la semana tienes clase con I°C** para saber si esto alcanza o si hay que comprimir alguna experiencia (por ejemplo, Charagua podría bajar de 3 a 2 clases).
+Confirmado: Música con I°C es una vez por semana (jueves). Con la Experiencia 3 comprimida a 1 clase, las 6 clases totales (2+3+1) calzan exactas entre el 1 de octubre y el 5 de noviembre, dejando del 6 al 10 de noviembre para escribir todo en la Plataforma. Ver tabla de fechas al inicio del documento.
 
 ## Pendiente de tu parte
 
-1. **Cuántas veces a la semana tienes Música con I°C** (crítico para el calendario).
-2. Fechas reales de las Experiencias 2 y 3.
-3. Revisar y reescribir con tu voz los tres objetivos y descripciones antes de pegarlos en la Plataforma.
+1. Confirmar que la compresión de la Experiencia 3 (investigación como trabajo previo, 1 sola clase para exponer) te acomoda.
+2. Revisar y reescribir con tu voz los tres objetivos y descripciones antes de pegarlos en la Plataforma.
