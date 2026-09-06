@@ -17,25 +17,25 @@ Esta clase cumple doble función: es parte real de tu progresión de Módulo 1 y
 
 *(MU1M OA 03, interpretar/cantar, no se trabaja en esta clase específica — se aborda en la Clase 2. Eso es válido, no hace falta forzarlo aquí.)*
 
-**Objetivo(s) trabajado(s) en esta clase específica** (distinto del objetivo general de la Experiencia 1 — este es solo para la ficha de la clase grabada): reconocer el aporte de Violeta Parra a la identidad musical chilena, cuestionando el rol de las mujeres en el movimiento de la Nueva Canción Chilena, a partir del análisis de la letra de La Jardinera.
+**Objetivo(s) trabajado(s) en esta clase específica** (distinto del objetivo general de la Experiencia 1 — este es solo para la ficha de la clase grabada): evaluar el rol de las mujeres en la Nueva Canción Chilena a partir del análisis de un texto de investigación y la reflexión grupal, cuestionando el estereotipo de los conjuntos instrumentales masculinos.
 
 ---
 
-## Estructura real de la clase (confirmada, 40 minutos completos, sin canto)
+## Estructura real de la clase (actualizada: con Kahoot y lectura, análisis de letra ahora secundario)
 
-Escuchan La Jardinera sin contexto previo. Pregunta en Mentimeter sobre qué sienten/de qué creen que habla. Contexto histórico de Violeta Parra. Discusión abierta: por qué los conjuntos instrumentales del movimiento (Quilapayún, Inti-Illimani) eran solo hombres mientras las mujeres cantaban. Análisis de la letra en parejas (identificar una metáfora, ej. el rosal de espina gruesa).
+Escuchan La Jardinera sin contexto previo y responden en Mentimeter qué sienten y de qué creen que habla. Conocen quién fue Violeta Parra. Leen un breve texto sobre el rol de las mujeres en la música y el arte del siglo XX (ver texto sugerido en `tarea-1.1-I-medio-nueva-cancion-chilena.md`). Responden un Kahoot corto para verificar comprensión del texto y del contexto de Violeta Parra. Con esa base, discuten por qué los conjuntos instrumentales del movimiento (Illapu, Quilapayún, Inti-Illimani) eran solo hombres mientras la participación de las mujeres era reducida. Para cerrar, en parejas o tríos, identifican rápidamente una metáfora de la letra (actividad ahora más breve, ya no es el foco principal).
 
 ## Cómo esto pega contra los 7 indicadores del Módulo 2 (chequeo, no texto para la ficha)
 
 **Ambiente de aula**: la discusión sobre género puede generar opiniones distintas — asegúrate de que se mantenga el trato respetuoso incluso si hay desacuerdo, durante TODA la clase (para Competente).
 
-**Promoción de la participación**: el trabajo en parejas para identificar metáforas ya es colaboración entre pares. Para Destacado necesitas que ocupe LA MAYOR PARTE del tiempo de la clase, no solo un momento — cuida el reparto de minutos.
+**Promoción de la participación**: el trabajo en parejas/tríos para identificar metáforas ya es colaboración entre pares, pero ahora es más breve. La discusión grupal sobre el texto también puede estructurarse como colaboración (que reaccionen a lo que dice un compañero, no solo respondan a ti). Para Destacado necesitas que la colaboración ocupe LA MAYOR PARTE del tiempo de la clase — cuida el reparto de minutos.
 
-**Contribución de las actividades al logro de los objetivos**: ahora que el canto quedó fuera, esta clase es más manejable en tiempo: escucha, contexto, discusión de género y análisis de letra. Igual conviene repartir minutos de antemano para que ninguna actividad se coma a las demás — es fácil que la discusión de género se alargue si engancha al curso.
+**Contribución de las actividades al logro de los objetivos**: ahora la clase tiene más pasos (escucha, contexto, lectura, Kahoot, discusión, metáforas) — el riesgo de tiempo sube. Define minutos por bloque de antemano: por ejemplo, ~5 escucha, ~5 contexto, ~7 lectura, ~5 Kahoot, ~12 discusión, ~6 metáforas.
 
-**Promoción de habilidades para el aprendizaje profundo**: la identificación de metáforas en la letra Y la pregunta sobre por qué las mujeres no eran instrumentistas de conjunto son dos oportunidades reales de pensamiento crítico (argumentar en base a lo escuchado/leído, no solo opinar).
+**Promoción de habilidades para el aprendizaje profundo**: ahora es más sólido que antes — la discusión de género ya no es solo opinión, está anclada en un texto leído, lo que permite pedirles que "argumenten en base al análisis de información" (nivel Competente/Destacado de este indicador), no solo que intuyan.
 
-**Uso de conocimientos y experiencias de los/as estudiantes**: la pregunta de Mentimeter antes de dar contexto ya cumple esto. Para Destacado necesitas una segunda instancia — podría ser justo la pregunta sobre los conjuntos instrumentales, si primero les preguntas qué grupos o cantantes conocen ellos antes de que tú nombres a Quilapayún/Inti-Illimani.
+**Uso de conocimientos y experiencias de los/as estudiantes**: la pregunta de Mentimeter antes de dar contexto ya cumple esto. El Kahoot no cuenta como "uso de conocimientos previos" (es chequeo de comprensión de contenido nuevo) — para la segunda instancia que pide Destacado, sigue sirviendo preguntarles qué grupos o cantantes conocen ellos antes de nombrar a Quilapayún/Inti-Illimani.
 
 **Uso de los desempeños de los/as estudiantes (retroalimentación)**: sin canto en esta clase, este indicador se juega en las respuestas de análisis y discusión, no en lo musical. Por ejemplo: si un/a estudiante nombra una metáfora sin explicarla del todo, en vez de completarla tú, pregúntale "¿por qué crees que representa eso? vuelve a leer esa estrofa" para que sea el/ella quien profundice su propia respuesta. Lo mismo en la discusión de género: si alguien da una respuesta superficial, repregunta para que la argumente mejor. Para Destacado necesitas esto en 4 o más ocasiones durante la clase — con dos actividades de análisis/discusión completas, hay bastante margen para lograrlo.
 
@@ -45,5 +45,6 @@ Escuchan La Jardinera sin contexto previo. Pregunta en Mentimeter sobre qué sie
 
 ## Pendiente de tu parte
 
-1. Definir la distribución de minutos de los 40 (escucha, contexto, discusión de género, análisis de letra) para que ninguna se alargue de más.
-2. Pensar 3-4 momentos concretos donde repreguntes en vez de responder tú, para el indicador de retroalimentación (ver ejemplo arriba).
+1. Confirmar la distribución de minutos de los 40 (ahora son 6 bloques: escucha, contexto, lectura, Kahoot, discusión, metáforas) — con más pasos que antes, es más fácil pasarse de tiempo.
+2. Pensar 3-4 momentos concretos donde repreguntes en vez de responder tú, para el indicador de retroalimentación (ver ejemplo más abajo en la versión anterior de este documento / historial de git).
+3. Preparar el Kahoot con preguntas sobre el texto de lectura y el contexto de Violeta Parra (no hace falta que me lo mandes, pero avísame si quieres que te ayude a redactar las preguntas).
