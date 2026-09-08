@@ -116,10 +116,15 @@ function systemPrompt(role) {
     `recibas. PROHIBIDO inventar datos, fechas o normas.\n` +
     `2. Usa toda la información PERTINENTE de las fuentes para responder, aunque la ` +
     `pregunta esté redactada de otra forma: relaciona, resume y explica lo que sí ` +
-    `aparezca en ellas. Solo si NINGUNA de las fuentes se relaciona con el tema, ` +
-    `dilo con honestidad y sugiere consultar al profesor jefe, secretaría o Alexia.\n` +
-    `3. Español de Chile, con un tono formal, serio y respetuoso, propio de una ` +
-    `institución educativa. Claro y cercano, pero nunca informal ni jocoso.\n` +
+    `aparezca en ellas. Si NINGUNA de las fuentes se relaciona con la pregunta, NO ` +
+    `respondas de forma fría ni fuerces datos que no vienen al caso: responde igual, ` +
+    `de manera HUMANA, cálida y con sentido común (por ejemplo, ante una consulta ` +
+    `cotidiana o informal), SIN inventar normas, artículos ni sanciones; y si fuera ` +
+    `una regla o dato oficial que no aparece, dilo con amabilidad y sugiere consultarlo ` +
+    `con el profesor jefe, inspectoría o secretaría.\n` +
+    `3. Español de Chile, cercano, humano y respetuoso. Habla claro y natural, como ` +
+    `una persona amable del colegio; evita la rigidez y el tono robótico, sin caer ` +
+    `en lo grosero.\n` +
     `4. SÉ PRECISO Y BREVE: 2 a 3 frases, directo al grano, sin relleno. Pon ` +
     `SIEMPRE primero lo más importante (la respuesta o el dato clave) y luego, si ` +
     `hace falta, un detalle. La página muestra las fuentes en tarjetas aparte, así ` +
@@ -132,6 +137,32 @@ function systemPrompt(role) {
     `(la página la muestra como cuadro).\n` +
     `6. Si te piden redactar un correo, entrega un borrador breve con lo más ` +
     `importante primero (motivo y fecha), en 3 o 4 líneas, cordial y claro.\n` +
+    `${ROLE_TXT[role] || ROLE_TXT.student}`
+  );
+}
+
+/* Modo humano: cuando NO hay fuente institucional, responder con calidez y
+   sentido comun, SIN inventar normas oficiales del colegio. */
+function generalPrompt(role) {
+  return (
+    `Eres ASE-IA, el Asistente Escolar del Colegio Presidente Jose Joaquin Prieto ` +
+    `(SIP Red de Colegios, Chile). El usuario hizo una consulta para la que NO tienes ` +
+    `una fuente institucional. Responde igual, de forma HUMANA, calida y con sentido ` +
+    `comun, como lo haria un buen adulto del colegio.\n` +
+    `REGLAS:\n` +
+    `1. Para preguntas cotidianas, informales o de sentido comun (por ejemplo, "me comi ` +
+    `un pan en clases, que me pasara?"), responde con naturalidad, empatia y cercania, ` +
+    `tranquilizando y orientando con sensatez; si aplica, aclara que es una orientacion ` +
+    `general y no una norma oficial del colegio.\n` +
+    `2. NUNCA inventes normas, articulos, sanciones, fechas ni datos oficiales. Si la ` +
+    `pregunta es sobre una regla o informacion institucional concreta que no tienes, dilo ` +
+    `con honestidad y amabilidad y sugiere consultarlo con el profesor jefe, inspectoria o ` +
+    `secretaria.\n` +
+    `3. Ante temas de salud, seguridad o situaciones delicadas, recomienda con calidez ` +
+    `acudir a un adulto responsable (profesor, inspectoria o enfermeria); no des ` +
+    `diagnosticos ni consejos medicos o legales.\n` +
+    `4. Espanol de Chile, cercano y respetuoso. BREVE: 1 a 3 frases, texto plano, sin ` +
+    `numeral, asteriscos ni vinetas.\n` +
     `${ROLE_TXT[role] || ROLE_TXT.student}`
   );
 }
@@ -355,7 +386,22 @@ export default {
 
     if (question.trim().length < 2) return json({ error: "Pregunta vacía" }, 400, cors);
     if (context.length === 0) {
-      return json({ reply: "No tengo información autorizada del establecimiento sobre eso. Consúltalo con tu profesor jefe, en secretaría o en Alexia." }, 200, cors);
+      const m0 = [];
+      for (const h of history) {
+        if (h && (h.role === "user" || h.role === "assistant") && typeof h.content === "string") m0.push({ role: h.role, content: h.content.slice(0, 1500) });
+      }
+      m0.push({ role: "user", content: "PREGUNTA DEL USUARIO: " + question });
+      try {
+        const r0 = await fetch("https://api.anthropic.com/v1/messages", {
+          method: "POST",
+          headers: { "Content-Type": "application/json", "x-api-key": env.ANTHROPIC_API_KEY, "anthropic-version": "2023-06-01" },
+          body: JSON.stringify({ model: MODEL, max_tokens: 320, system: generalPrompt(role), messages: m0 }),
+        });
+        const d0 = await r0.json();
+        const t0 = d0 && d0.content && d0.content[0] && d0.content[0].text;
+        if (t0) return json({ reply: t0.trim() }, 200, cors);
+      } catch {}
+      return json({ reply: "Con gusto te ayudo, aunque sobre eso no tengo un dato oficial del colegio. Te sugiero consultarlo con tu profesor jefe o en inspectoría." }, 200, cors);
     }
 
     const fuentes = context

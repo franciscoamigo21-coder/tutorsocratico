@@ -2422,7 +2422,7 @@ function answer(query){
   }
   const cards=workspaceCards(query,ROLE);                       // cuadros visuales (Workspace)
   const docs=retrieve(query,ROLE).map((c,i)=>({index:i+1,...c}));// reglamentos (fuentes citables)
-  if(docs.length===0 && cards.length===0) return {reply:NO_INFO,docCites:[],cards:[]};
+  if(docs.length===0 && cards.length===0) return {reply:NO_INFO,docCites:[],cards:[],general:true};
   let reply;
   if(docs.length) reply=compose(query,docs,convo.length>0);
   else reply="Esto es lo que encontré en tu Google Workspace 👇";
@@ -2725,6 +2725,14 @@ async function ask(text){
     try{
       const res=await fetch(AI_PROXY_URL,{method:"POST",headers:{"Content-Type":"application/json"},
         body:JSON.stringify({question:text,role:ROLE,context:local.docCites.map(c=>({titulo:c.titulo,fragmento:c.fragmento})),history:convo.slice(-6)})});
+      const data=await res.json();
+      if(data&&data.reply) reply=data.reply;
+    }catch(e){ /* respaldo local */ }
+  } else if(AI_PROXY_URL && local.general && !local.email){
+    // Sin fuente institucional: respuesta humana e inteligente (sentido común), sin inventar normas del colegio.
+    try{
+      const res=await fetch(AI_PROXY_URL,{method:"POST",headers:{"Content-Type":"application/json"},
+        body:JSON.stringify({question:text,role:ROLE,context:[],history:convo.slice(-6)})});
       const data=await res.json();
       if(data&&data.reply) reply=data.reply;
     }catch(e){ /* respaldo local */ }
