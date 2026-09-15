@@ -4437,7 +4437,14 @@ function skipIntro(){const i=document.getElementById("intro");if(!i||i.classList
   function revealIntro(){ if(revealed)return; revealed=true; i.classList.add("reveal"); }
   const REVEAL_AT=2.35;
   a.addEventListener("timeupdate",function onT(){ if(a.currentTime>=REVEAL_AT){ revealIntro(); a.removeEventListener("timeupdate",onT); } });
-  setTimeout(revealIntro,2800);   // respaldo si el audio no avanza (autoplay bloqueado)
+  // El clímax visual se dispara con el TIEMPO REAL del audio (queda alineado al sonido,
+  // aunque el autoplay estuviera bloqueado y el audio arranque con el primer toque).
+  // Solo si el audio no logra sonar en ~4,5 s, se revela igual como respaldo.
+  (function(){ const t0=Date.now(); const iv=setInterval(function(){
+      if(revealed){ clearInterval(iv); return; }
+      if(a.currentTime>=REVEAL_AT){ clearInterval(iv); revealIntro(); return; }         // clímax del audio
+      if(a.currentTime<0.1 && Date.now()-t0>=4500){ clearInterval(iv); revealIntro(); } // audio bloqueado: respaldo
+    },200); })();
   ["pointerdown","touchstart","keydown"].forEach(ev=>window.addEventListener(ev,unlockAudioOnce,{once:true,capture:true}));
   // La intro dura lo que dure el audio (recortada, tope 7.5 s); 5.5 s si no hay metadatos.
   // La barra se sincroniza para llenarse justo al final (así nunca parece pegada).
@@ -4452,6 +4459,18 @@ function skipIntro(){const i=document.getElementById("intro");if(!i||i.classList
     setTimeout(()=>fadeIntro(1700),Math.max(0,(dur-1.7))*1000);
     dismiss=setTimeout(skipIntro,dur*1000);
   },{once:true});
+  // Si el autoplay estaba bloqueado, "loadedmetadata" ya fijó los tiempos desde antes de sonar.
+  // En cuanto el audio EMPIEZA a reproducirse de verdad, re-sincronizamos cierre, fade y barra
+  // al momento real del sonido, para que la animación quede alineada al audio (no adelantada).
+  a.addEventListener("playing",function onP(){ a.removeEventListener("playing",onP);
+    const dur=(isFinite(a.duration)&&a.duration>0)?Math.min(a.duration+0.4,8.5):6.0;
+    const remain=Math.max(0.6,dur-a.currentTime);
+    clearTimeout(dismiss);
+    syncBar(remain);
+    setTimeout(()=>fadeIntro(1500),Math.max(0,(remain-1.5))*1000);
+    dismiss=setTimeout(skipIntro,remain*1000);
+  });
+  a.addEventListener("ended",skipIntro,{once:true});
   // Se puede tocar para entrar, pero no en el primer instante (deja lucir el logo y el sonido).
   const startT=Date.now();
   i.addEventListener("click",()=>{ if(Date.now()-startT<1800)return; clearTimeout(dismiss); skipIntro(); });
