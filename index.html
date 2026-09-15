@@ -3204,17 +3204,30 @@ function planRankSubmit(pts){
   list.sort((a,b)=>(b.best||0)-(a.best||0)); planRankSave(list);
   return {list:list,email:email};
 }
-function planRankHTML(pts){
-  const r=planRankSubmit(pts), esc=s=>(""+(s||"")).replace(/</g,"&lt;");
+function planRankRender(list,meEmail,isGlobal){
+  const esc=s=>(""+(s||"")).replace(/</g,"&lt;");
   const medal=["🥇","🥈","🥉"];
-  let rows=r.list.slice(0,6).map((x,i)=>{
-    const me=x.email===r.email;
+  let rows=(list||[]).slice(0,6).map((x,i)=>{
+    const me=x.email===meEmail;
     return '<div class="plrk-row'+(me?" me":"")+'"><span class="plrk-pos">'+(medal[i]||("#"+(i+1)))+'</span>'
       +'<span class="plrk-name">'+esc(x.name||"Docente")+(me?' <b>(tú)</b>':'')+'</span>'
       +'<span class="plrk-pts">'+(x.best||0)+'</span></div>';
   }).join("");
   return '<div class="plrank"><div class="plrk-h">🏅 Ranking de jugadores</div>'+rows
-    +'<div class="plrk-note">Ranking guardado en este dispositivo, por perfil.</div></div>';
+    +'<div class="plrk-note">'+(isGlobal?'Ranking del colegio · todos los docentes.':'Ranking en este dispositivo (aún sin conexión al ranking del colegio).')+'</div></div>';
+}
+function planRankHTML(pts){ const r=planRankSubmit(pts); return planRankRender(r.list,r.email,false); }
+/* Ranking del COLEGIO: sube tu récord y trae el Top; si no hay conexión/KV, usa el local. */
+async function planRankGlobal(container,pts){
+  const rk=container&&container.querySelector("#plRank"); if(!rk)return;
+  rk.innerHTML=planRankHTML(pts);   // respaldo local inmediato
+  if(!AI_CREATE_URL || !AUTH_TOKEN) return;
+  try{
+    const r=await fetch(AI_CREATE_URL+"?resource=score",{method:"POST",headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({credential:AUTH_TOKEN,resource:"score",points:pts})});
+    const d=await r.json();
+    if(d&&d.ranking&&d.ranking.length){ rk.innerHTML=planRankRender(d.ranking,(d.me||"").toLowerCase(),true); }
+  }catch(e){ /* respaldo local ya mostrado */ }
 }
 function startPlanLoader(container,label){
   container.innerHTML='<div class="plgame">'
@@ -3316,7 +3329,7 @@ function startPlanLoader(container,label){
     if(pts>bestPts){ bestPts=pts; planSetBest(pts); rec=true; }
     drawScene(); drawGameOver(rec);
     const sc=container.querySelector("#plScore"); if(sc)sc.textContent="Puntos: "+pts+" · Récord: "+bestPts;
-    const rk=container.querySelector("#plRank"); if(rk) rk.innerHTML=planRankHTML(bestPts);
+    planRankGlobal(container, bestPts);
     const rb=container.querySelector("#plRestart");
     if(rb) rb.innerHTML='<button class="plangen alt" id="plRestartBtn" style="margin-top:10px">↻ Reiniciar juego</button>';
     const btn=container.querySelector("#plRestartBtn"); if(btn) btn.onclick=function(){ restart(); };
