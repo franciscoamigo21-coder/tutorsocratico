@@ -46,7 +46,7 @@ async function verifyGoogle(credential) {
 function roleOf(email) {
   const dom = (email.split("@")[1] || "");
   if (DEV_EMAILS.includes(email)) return "dev";
-  if (dom === "sip.cl") return "staff";
+  if (dom === "sip.cl" || dom.endsWith(".sip.cl")) return "staff";
   return "other";
 }
 function corsHeaders(origin) {
@@ -81,6 +81,29 @@ export default {
     if (!u) return json({ error: "No pudimos verificar tu cuenta." }, 401, cors);
     const role = roleOf(u.email);
     if (role !== "staff" && role !== "dev") return json({ error: "No autorizado" }, 403, cors);
+
+    // ---- Ranking del mini-juego, compartido por todo el colegio (usa el KV RANKING) ----
+    if (body.resource === "score" || body.resource === "ranking") {
+      if (!env.RANKING) return json({ error: "sin-kv" }, 200, cors); // la pagina usa respaldo local
+      const KEY = "board";
+      let board = {};
+      try { const raw = await env.RANKING.get(KEY); if (raw) board = JSON.parse(raw) || {}; } catch {}
+      if (body.resource === "score") {
+        const pts = Math.max(0, Math.min(100000, parseInt(body.points, 10) || 0));
+        const name = (u.name || (u.email.split("@")[0] || "Docente")).toString().slice(0, 60);
+        const cur = board[u.email] || { name: name, best: 0 };
+        if (pts > (cur.best || 0)) cur.best = pts;
+        cur.name = name;
+        board[u.email] = cur;
+        try { await env.RANKING.put(KEY, JSON.stringify(board)); } catch {}
+      }
+      const ranking = Object.keys(board)
+        .map((e) => ({ email: e, name: board[e].name, best: board[e].best || 0 }))
+        .sort((a, b) => (b.best || 0) - (a.best || 0))
+        .slice(0, 20);
+      return json({ ok: true, ranking: ranking, me: u.email }, 200, cors);
+    }
+
     if (!env.ANTHROPIC_API_KEY) return json({ error: "Falta configurar ANTHROPIC_API_KEY" }, 500, cors);
 
     const prompt = (body.prompt || body.question || "").toString().slice(0, 4000);
