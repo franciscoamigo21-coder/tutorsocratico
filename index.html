@@ -43,6 +43,11 @@
   #gate::before{content:"";position:absolute;inset:0;background:
     radial-gradient(600px 300px at 15% 90%, rgba(34,195,230,.25), transparent 60%),
     radial-gradient(600px 300px at 85% 15%, rgba(245,179,1,.18), transparent 60%);pointer-events:none;}
+  /* Franjas laterales institucionales con el collage "miSIP" (arte de estudiantes) */
+  .gside{position:fixed;top:0;bottom:0;width:220px;z-index:1;background-image:url("assets/misip.webp");background-size:cover;background-position:center;pointer-events:none;}
+  .gside.left{left:0;} .gside.right{right:0;transform:scaleX(-1);}
+  .gside::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(6,25,60,.20),rgba(11,61,145,.5) 55%,#0b3d91 100%);}
+  @media(max-width:980px){ .gside{display:none;} }
   #gate .inner{position:relative;z-index:1;max-width:660px;width:100%;}
   #gate .badge{width:132px;height:132px;object-fit:contain;animation:floaty 5s ease-in-out infinite, glowPulse 6s ease-in-out infinite;}
   #gate .pill{display:inline-block;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.28);
@@ -835,6 +840,8 @@
 
 <!-- PANTALLA DE INICIO -->
 <div id="gate">
+  <div class="gside left"></div>
+  <div class="gside right"></div>
   <div class="gorbs"><i></i><i></i><i></i></div>
   <div class="ginner">
     <div class="gcard">
