@@ -15,6 +15,10 @@
  *  3. Settings → Variables and Secrets → Add:
  *        Tipo: Secret   Nombre: ANTHROPIC_API_KEY   Valor: tu clave sk-ant-...
  *     (la MISMA clave de tu Worker principal). Guarda y Deploy.
+ *  4. (OPCIONAL) Imágenes IA en las presentaciones (portada + secciones):
+ *        Tipo: Secret   Nombre: GEMINI_API_KEY   Valor: tu clave de Google AI Studio
+ *     Sin esta clave, las presentaciones se crean igual con su diseño editorial
+ *     (solo que sin ilustraciones generadas por IA). Tiene costo por imagen.
  *  Listo: PLANIFICA vuelve a crear material y presentaciones.
  * ============================================================================
  */
@@ -27,6 +31,9 @@ const ALLOWED_ORIGINS = [
   "https://www.aseia.cl",
 ];
 const MODEL = "claude-sonnet-4-6";
+// Modelo de imágenes de Google (Gemini / Imagen). Requiere el secreto GEMINI_API_KEY.
+// Si quieres imágenes más baratas/rápidas usa "imagen-3.0-fast-generate-001".
+const IMAGE_MODEL = "imagen-3.0-generate-002";
 const GOOGLE_CLIENT_ID = "195849212680-sjfflsv7f96o6742l67ihj5kllitpvj4.apps.googleusercontent.com";
 const DEV_EMAILS = ["franciscoamigo21@gmail.com", "paulina.devia@sip.cl", "jcid@sip.cl", "camila.ortiz@sip.cl", "cesar.cid@sip.cl"];
 
@@ -102,6 +109,37 @@ export default {
         .sort((a, b) => (b.best || 0) - (a.best || 0))
         .slice(0, 20);
       return json({ ok: true, ranking: ranking, me: u.email }, 200, cors);
+    }
+
+    // ---- Ilustraciones con IA (Google Imagen) para portada y secciones ----
+    if (body.resource === "image") {
+      if (!env.GEMINI_API_KEY) return json({ error: "sin-imagen" }, 200, cors); // la pagina omite las imagenes
+      const iprompt = (body.prompt || "").toString().slice(0, 1200);
+      if (iprompt.trim().length < 3) return json({ error: "prompt-vacio" }, 400, cors);
+      const aspect = ["1:1", "3:4", "4:3", "9:16", "16:9"].includes(body.aspect) ? body.aspect : "16:9";
+      let ir;
+      try {
+        ir = await fetch(
+          "https://generativelanguage.googleapis.com/v1beta/models/" + IMAGE_MODEL + ":predict?key=" + encodeURIComponent(env.GEMINI_API_KEY),
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ instances: [{ prompt: iprompt }], parameters: { sampleCount: 1, aspectRatio: aspect } }),
+          }
+        );
+      } catch {
+        return json({ error: "no-conexion-imagen" }, 200, cors);
+      }
+      if (!ir.ok) {
+        let d = ""; try { d = (await ir.text()).slice(0, 200); } catch {}
+        return json({ error: "img-" + ir.status, detalle: d }, 200, cors);
+      }
+      let idata; try { idata = await ir.json(); } catch { return json({ error: "img-parse" }, 200, cors); }
+      const pred = (idata && idata.predictions && idata.predictions[0]) || null;
+      const b64 = pred && (pred.bytesBase64Encoded || (pred.image && pred.image.bytesBase64Encoded));
+      if (!b64) return json({ error: "sin-datos-imagen" }, 200, cors);
+      const mime = (pred && pred.mimeType) || "image/png";
+      return json({ image: "data:" + mime + ";base64," + b64 }, 200, cors);
     }
 
     if (!env.ANTHROPIC_API_KEY) return json({ error: "Falta configurar ANTHROPIC_API_KEY" }, 500, cors);
