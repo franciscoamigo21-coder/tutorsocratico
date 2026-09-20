@@ -1,55 +1,57 @@
-# Tarea 4 — Clase grabada, Módulo 2 (Violeta Parra — La Jardinera)
+# Tarea 4 — Clase grabada, Módulo 2 (Violeta Parra — por qué es importante)
 
 **Curso**: I°C · **Asignatura**: Música
 **Fecha de grabación**: **1 de octubre de 2026** (jueves)
-**Contenido**: es la primera hora de la Experiencia 1 completa de `tarea-1.1-I-medio-nueva-cancion-chilena.md` — historia breve de Violeta Parra + reflexión de género sobre el rol de las mujeres en la Nueva Canción Chilena.
+**Contenido**: es la primera hora de la Clase 1 de la Experiencia 1 completa de `tarea-1.1-I-medio-nueva-cancion-chilena.md` — contexto histórico + el "por qué" de la importancia de Violeta Parra + reflexión de género centrada en ella + Kahoot de verificación.
 
-**Estado**: resincronizado (2026-09-20) con la versión que está guardada en la Plataforma — la unidad SÍ incluye Víctor Jara/Charagua/Nueva Canción Chilena (Experiencia 2), pero la clase grabada específica corresponde solo a la primera hora de la Experiencia 1 (Violeta Parra), que no menciona a Jara.
+**Estado**: resincronizado (2026-09-20, versión definitiva) — sin Víctor Jara, sin Nueva Canción Chilena, sin comparación con conjuntos instrumentales. La reflexión de género es sobre Violeta Parra como mujer, no sobre un movimiento.
 
 **⚠️ Duración real vs. duración grabada**: el Manual pide que el segmento grabado dure ~40 minutos — eso NO es la duración de la clase completa (90 min, con otra clase de 90 min más en esta misma Experiencia 1 el 8 de octubre), es solo el tramo que se sube a la Plataforma.
 
-Estructura del 1 de octubre (primera clase de la Experiencia 1):
-- **Primera hora (~90 min divididos, la porción grabada son los primeros ~40 min)**: los estudiantes responden si conocen a Violeta Parra, escuchan fragmentos breves sin identificarlos de entrada, reconocen quién fue Violeta Parra, leen un texto breve sobre el rol de las mujeres en la música y el arte del siglo XX, escuchan La Jardinera completa y conversan en parejas/tríos sobre por qué los conjuntos instrumentales más recordados de la Nueva Canción Chilena eran mayoritariamente de hombres, compartiendo su reflexión con el curso. Esto es lo que se graba.
-- **Segunda hora de la misma clase**: se anotan en Padlet según instrumento, arman el acompañamiento de la sección A por sección de instrumento, hacen el primer ensamble y graban un audio de avance. Esto NO se graba para el Módulo 2.
+Estructura del 1 de octubre (Clase 1 de la Experiencia 1):
+- **Primera hora (~40 min, GRABADA)**: pregunta inicial (¿conocen a Violeta Parra?), contexto histórico y profundización en por qué es realmente importante (recopiladora de tradición oral, ruptura del molde de género de su época, reconocimiento internacional en el Louvre), cierre con Kahoot de verificación que distingue razones de fondo de razones superficiales. Esto es lo que se graba.
+- **Segunda hora de la misma clase (no grabada)**: presentación de La Jardinera, análisis de la letra, registro de instrumento en Padlet, inicio del montaje de la primera mitad de la canción.
 
-Esta clase cumple doble función: es parte real de tu progresión de Módulo 1 (Experiencia 1 completa) y la primera hora es la que grabas para Módulo 2.
+Esta clase cumple doble función: es parte real de tu progresión de Módulo 1 (Experiencia 1) y la primera hora es la que grabas para Módulo 2.
 
 ---
 
 ## OA trabajados en esta clase específica
 
-- MU1M OA 01 (Apreciar musicalmente) — la escucha activa de los fragmentos y de La Jardinera completa.
-- MU1M OA 07 (Evaluar la relevancia de la música en la construcción de identidades) — el contexto histórico y la reflexión de género sobre los conjuntos instrumentales de la Nueva Canción Chilena.
-- MU1M OA 03 (Cantar y tocar repertorio) — se trabaja recién en la segunda hora (Padlet + inicio del acompañamiento), fuera del segmento grabado.
+- MU1M OA 01 (Apreciar musicalmente) — se retoma brevemente en la pregunta inicial y en cómo conectan lo que ya sabían de Violeta Parra con lo nuevo.
+- MU1M OA 07 (Evaluar la relevancia de la música en la construcción de identidades) — es el foco principal de esta hora: el contexto histórico y el "por qué" de su importancia.
+- MU1M OA 03 (Cantar y tocar repertorio) — no se trabaja en esta hora (queda para la segunda hora, no grabada).
 
-**Objetivo(s) trabajado(s) en esta clase específica** (recorte del objetivo general de la Experiencia 1, solo para la ficha de la clase grabada): reconocer el aporte de Violeta Parra a la identidad musical chilena y cuestionar el rol asignado a las mujeres en los conjuntos instrumentales de la Nueva Canción Chilena, a partir de la escucha activa, un texto de investigación y la reflexión grupal.
+**Objetivo(s) trabajado(s) en esta clase específica** (recorte del objetivo general de la Experiencia 1, solo para la ficha de la clase grabada) (255/500 caracteres):
+
+Reconocer la importancia de Violeta Parra en la identidad musical chilena, distinguiendo razones de fondo de razones superficiales, a partir de la escucha activa y el análisis de su historia y su rol como mujer que rompió los moldes de género de su época.
 
 ---
 
 ## Estructura real de la clase (primera hora, la que se graba)
 
-Los estudiantes parten respondiendo si conocen a Violeta Parra y qué saben de ella. Escuchan un par de fragmentos breves de distintas obras suyas sin que se les diga de entrada que son de ella, para que la escucha activa apunte a reconocer si les resulta familiar su voz o estilo. A partir de eso, conocen quién fue Violeta Parra y su rol en la música chilena, y leen un breve texto de investigación sobre el rol de las mujeres en la música y el arte del siglo XX (participaron sobre todo como cantantes/solistas, mientras los conjuntos instrumentales fueron mayoritariamente de hombres). Para cerrar la hora, escuchan La Jardinera completa y, en parejas o tríos, conversan sobre por qué creen que en la Nueva Canción Chilena los conjuntos instrumentales más recordados (Illapu, Quilapayún, Inti-Illimani) eran mayoritariamente de hombres, apoyándose en el texto leído. Algunos pares comparten su reflexión con el curso y el resto opina, cuestionando entre todos el estereotipo.
+Los estudiantes responden si conocen a Violeta Parra y qué saben de ella. A partir de esa respuesta inicial, se presenta el contexto histórico y se profundiza en por qué su figura es realmente importante para la música chilena, más allá de la idea genérica de que "fue una folclorista famosa": su labor como recopiladora de tradición oral que de otra forma se habría perdido, su ruptura del molde de género de su época al investigar, componer y tocar distintos instrumentos en un ámbito donde eso era poco común para una mujer, y su reconocimiento internacional al ser la primera artista latinoamericana en exponer individualmente en el Museo del Louvre, en 1964. Para cerrar la hora y verificar que comprendieron el por qué de su importancia y no solo datos sueltos, responden un Kahoot con preguntas que distinguen razones superficiales de razones de fondo.
 
 ## Cómo esto pega contra los 7 indicadores del Módulo 2 (chequeo, no texto para la ficha)
 
-**Ambiente de aula**: la discusión de género puede generar comentarios sensibles — cuida el trato respetuoso durante toda la conversación en parejas y en el plenario.
+**Ambiente de aula**: menos riesgo que versiones anteriores con contenido de censura/represión — aquí el contenido es biográfico y de reconocimiento, con menor probabilidad de que se genere un intercambio tenso. Igual cuida el trato respetuoso si surgen comentarios sobre el rol de la mujer en esa época.
 
-**Promoción de la participación**: la conversación en parejas/tríos sobre por qué los conjuntos eran mayoritariamente de hombres ya es colaboración entre pares. Para Destacado (colaboración la mayor parte del tiempo), asegúrate de que ambos integrantes de cada pareja aporten antes de compartir con el curso, no que uno hable y el otro solo escuche.
+**Promoción de la participación**: para que esta hora suba de nivel, no basta con que tú expongas el contexto — construye al menos un momento donde los estudiantes discutan en parejas o compartan en voz alta antes del Kahoot (por ejemplo, "¿cuál de estas razones les parece más importante y por qué?"), para que haya colaboración real, no solo escucha pasiva.
 
-**Contribución de las actividades al logro de los objetivos**: la hora tiene 6 pasos: pregunta inicial, escucha de fragmentos sin identificar, revelación + quién fue Violeta Parra, lectura del texto sobre mujeres en música y arte del s. XX, escucha completa de La Jardinera + conversación en parejas, puesta en común. Reparto sugerido dentro de los ~40 min grabados: ~3 pregunta inicial, ~6 escucha de fragmentos, ~5 quién fue Violeta Parra, ~8 lectura del texto, ~10 escucha de La Jardinera + conversación en parejas, ~8 puesta en común.
+**Contribución de las actividades al logro de los objetivos**: la hora tiene 4 pasos: pregunta inicial, contexto histórico y "por qué" de su importancia, ruptura de género, Kahoot de cierre. Reparto sugerido dentro de los ~40 min: ~5 pregunta inicial, ~15 contexto y por qué es importante, ~10 ruptura de género (recopiladora + instrumentista + Louvre), ~10 Kahoot.
 
-**Promoción de habilidades para el aprendizaje profundo**: la conversación en parejas sobre por qué los conjuntos instrumentales eran mayoritariamente de hombres es la oportunidad de pensamiento crítico — para que sea más que opinión suelta, pídeles que se apoyen en el texto leído, no que respondan solo por intuición.
+**Promoción de habilidades para el aprendizaje profundo**: el punto central de esta hora es justamente distinguir "por qué es importante" de "que es importante" — pídeles que antes de que tú expliques, ellos intenten responder por qué creen que es importante, y luego contrasten su respuesta inicial con lo que aprenden. Eso es más pensamiento crítico que si solo reciben la explicación de entrada.
 
-**Uso de conocimientos y experiencias de los/as estudiantes**: la pregunta inicial "¿conocen a Violeta Parra?" y el ejercicio de reconocer los fragmentos sin que se los identifiques ya cumplen esto. Para una segunda instancia (necesaria para Destacado), antes de leer el texto sobre mujeres en música y arte, pregúntales si conocen otros ejemplos de ámbitos donde históricamente hubo una división de roles por género — así conectas el contenido con lo que ya saben más allá de la música.
+**Uso de conocimientos y experiencias de los/as estudiantes**: la pregunta inicial "¿conocen a Violeta Parra?" ya cumple esto. Para una segunda instancia (necesaria para Destacado), antes de explicar la ruptura del molde de género, pregúntales si conocen otros ejemplos de mujeres que hayan tenido que romper moldes similares en otros ámbitos (no solo música) — así conectas con lo que ya saben más allá de la clase.
 
-**Uso de los desempeños de los/as estudiantes (retroalimentación)**: esta hora es principalmente de escucha y reflexión, no de desempeño instrumental (eso queda para la segunda hora, no grabada). Si quieres un momento de retroalimentación dentro del segmento grabado, puede ser sobre la calidad de los argumentos que dan los pares al compartir su reflexión — detente y pregunta "¿en qué se basan para decir eso, en el texto o en una opinión previa?".
+**Uso de los desempeños de los/as estudiantes (retroalimentación)**: el Kahoot de cierre es la instancia de desempeño de esta hora. Aprovecha los resultados en vivo: si una pregunta sobre "por qué es importante" tiene muchas respuestas equivocadas (que apunten a razones superficiales), detente y aclara antes de pasar a la segunda hora — eso es retroalimentación basada en el desempeño real, no solo revisar el puntaje al final.
 
-**Promoción de la equidad de género**: la conversación sobre por qué los conjuntos instrumentales eran mayoritariamente de hombres es la fortaleza central de esta clase. Que sean ELLOS quienes elaboren la reflexión y no tú quien les dé la respuesta directamente, apunta a Destacado. Debe quedar reflejado en la ficha de la clase, no solo en el video.
+**Promoción de la equidad de género**: la reflexión sobre por qué Violeta Parra romper el molde de su época era poco común para una mujer es la fortaleza de esta hora. Que sean ELLOS quienes elaboren por qué creen que eso era inusual y qué les parece, en vez de que tú les den la respuesta directamente, apunta a Destacado. Debe quedar reflejado en la ficha de la clase, no solo en el video.
 
 ---
 
 ## Pendiente de tu parte
 
-1. Confirmar la distribución de minutos de los 6 pasos de la hora grabada.
-2. Elegir qué fragmentos de obras de Violeta Parra usarás para el ejercicio de escucha activa inicial (sin identificar de entrada).
-3. Preparar o confirmar el texto breve de investigación sobre el rol de las mujeres en la música y el arte del siglo XX que se lee en esta hora.
+1. Confirmar la distribución de minutos de los 4 pasos de la hora grabada.
+2. Elegir/preparar las preguntas del Kahoot de cierre (con distractores que representen razones superficiales, no solo trivia).
+3. Pensar el momento concreto de discusión en parejas o de participación oral antes del Kahoot (ver indicador de participación arriba).

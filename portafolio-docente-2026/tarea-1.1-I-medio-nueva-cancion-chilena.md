@@ -1,19 +1,19 @@
-# Tarea 1.1 — Planificación de las experiencias de aprendizaje — I°C, Nueva Canción Chilena (VIGENTE)
+# Tarea 1.1 — Planificación de las experiencias de aprendizaje — I°C, Violeta Parra (VIGENTE)
 
-**Estado**: sincronizado con lo que ya está guardado en la Plataforma Docentemás (transcrito desde pantallazos el 2026-09-20). Esta es la versión que corre.
+**Estado**: en construcción activa. Este documento va sincronizado con lo que se llena en Docentemás.
 
 **Curso**: I°C · **Asignatura**: Música
-**Unidad**: Nueva Canción Chilena — contexto social, político y de género del movimiento, a través de Violeta Parra (La Jardinera) y Víctor Jara (Charagua), con interpretación vocal/instrumental usando los instrumentos que cada estudiante ya conoce.
+**Unidad**: vida, legado y repertorio de Violeta Parra (La Jardinera) — todo el foco es ella, como mujer que rompió los moldes de género de su época, sin comparaciones con otros artistas ni con el movimiento de la Nueva Canción Chilena.
 
-**⚠️ Historial de pivotes**: el 2026-09-20 se intentó un pivote para sacar a Jara/Charagua/NCCh y dejar solo Violeta en 3 clases. Ese pivote NO se aplicó a la Plataforma — el usuario confirmó que la Plataforma ya tenía esta versión (con Jara/Charagua/NCCh, 5 clases en estructura 2+2+1) guardada y que esa es la que vale. Este archivo quedó resincronizado a esa versión. Si en algún momento se retoma el pivote a "solo Violeta", hay que actualizar Plataforma Y este archivo a la vez — no solo uno de los dos.
+**⚠️ Pivote (2026-09-20, versión definitiva)**: se elimina a Víctor Jara, Charagua, la Nueva Canción Chilena y toda referencia a censura/exilio. Todo gira en torno a Violeta Parra. La reflexión de género se centra en ELLA como mujer (no en comparar conjuntos instrumentales de un movimiento). La unidad pasa a **4 clases distribuidas en 3 experiencias** (2+1+1), con esta lógica pedagógica: clase 1 profundiza en el "por qué" de su importancia (no solo que "fue importante") y empieza el repertorio; clase 2 termina el repertorio y parte la investigación grupal de su historia; clase 3 solidifica el repertorio con matices y hace la exposición grupal; clase 4 es la muestra final ante Artes.
 
-| Experiencia | Fecha | Duración | Repertorio | Eje |
-|---|---|---|---|---|
-| Exp. 1 | 01-10-2026 y 08-10-2026 | 2 clases de 90 min | La Jardinera (Violeta Parra) | Rol de las mujeres en la Nueva Canción Chilena |
-| Exp. 2 | 15-10-2026 y 22-10-2026 | 2 clases de 90 min | Charagua (Víctor Jara) | Contexto social y político de la Nueva Canción Chilena |
-| Exp. 3 | 29-10-2026 | 1 clase de 90 min | La Jardinera + Charagua | Síntesis: conversatorio + presentación musical ante el electivo de Artes |
+| Experiencia | Clases | Fecha | Contenido |
+|---|---|---|---|
+| Exp. 1 | Clase 1 y Clase 2 | 1 y 8 de octubre | Clase 1 hora 1 (**GRABADA**): contexto histórico + por qué es importante Violeta Parra + Kahoot. Hora 2: presentación de La Jardinera + inicio del montaje (primera mitad). Clase 2 hora 1: termina el montaje (segunda mitad) + ensamble. Hora 2: investigación grupal sobre la vida de Violeta Parra (Google Doc). |
+| Exp. 2 | Clase 3 | 15 de octubre | Hora 1: solidificar el repertorio completo, agregar matices y dinámica. Hora 2: exposición grupal de la investigación (Google Forms de retroalimentación entre pares). |
+| Exp. 3 | Clase 4 | 22 de octubre | Muestra final ante el electivo de Artes: conversatorio breve + presentación musical completa. |
 
-La unidad termina el 29 de octubre — queda margen (30 de octubre al 10 de noviembre) antes del cierre de Plataforma.
+Con esto la unidad termina el 22 de octubre — queda margen (23 de octubre al 10 de noviembre) antes del cierre de Plataforma.
 
 ---
 
@@ -34,95 +34,88 @@ MU1M OA 07: Evaluar la relevancia de la música, destacando el singular sentido 
 
 **Instrumentos confirmados de I°C**: guitarra acústica, flauta, batería, bombo, melódica, metalófono.
 
+**Evidencias de aprendizaje que se usan a lo largo de la unidad**: Kahoot (verificación de comprensión), Padlet (registro de instrumento), rúbrica de avance de repertorio (monitoreo del montaje), Documento de Google vía Classroom (investigación grupal), Google Forms (retroalimentación entre pares), Mentimeter (cierre reflexivo con Artes).
+
 ---
 
 ## Repertorio y ficha de contenido (verificado, para que la contextualización sea precisa)
 
 ### "La Jardinera" — Violeta Parra
-- Género: tonada, 1956. **Es vocal** (tiene letra), estructura estrófica.
+- Género: tonada, 1956. **Es vocal** (tiene letra), estructura estrófica (misma melodía, versos distintos).
 - Letra: usa el jardín como metáfora del mundo interior — sanar una pena de amor cuidando las plantas. El rosal de espina gruesa representa el dolor; los "pensamientos felices" que van a crecer representan la alegría que vuelve de a poco.
-- Violeta Parra (1917-1967): folclorista, cantautora e instrumentista, tocaba guitarra, guitarrón y otros instrumentos, recopiló canciones tradicionales por distintas zonas de Chile.
 
-### "Charagua" — Víctor Jara
-- Instrumental, 1970 (álbum "Canto Libre"). Grabada también por Inti-Illimani.
-- Instrumentación característica: tiple, quenas, guitarra, pandero, bombo.
-
-### Contexto de la Nueva Canción Chilena (verificado)
-- Movimiento musical chileno de los años 60-70, vinculado a las transformaciones sociales del gobierno de la Unidad Popular (reforma agraria, nacionalización del cobre) y la crisis económica y política previa a 1973.
-- Tras el golpe de 1973: censura del movimiento, apagón cultural, prohibición no escrita de instrumentos asociados (quena, charango, zampoña), Víctor Jara detenido y asesinado en el Estadio Chile, exilio de conjuntos como Inti-Illimani y Quilapayún.
-- **Ángulo de género**: los conjuntos instrumentales más recordados del movimiento (Illapu, Quilapayún, Inti-Illimani) eran mayoritariamente de hombres; la presencia de mujeres se concentró más en el rol de cantantes/solistas que en el de instrumentistas de conjunto. Violeta Parra es la excepción visible: investigó, compuso y tocó múltiples instrumentos.
-- **⚠️ Contenido delicado**: el golpe de 1973 y la represión posterior deben tratarse con cuidado en el aula — datos verificados, sin banalizar, dejando espacio a que los estudiantes reaccionen sin que el profesor imponga una lectura política cerrada.
+### Violeta Parra — por qué es importante (no solo que lo fue)
+- **(1917-1967)**, nacida en San Carlos, Ñuble. Folclorista, cantautora e instrumentista: tocaba guitarra, guitarrón y otros instrumentos.
+- **Recopiladora**: viajó por distintas zonas de Chile registrando canciones y tradiciones orales campesinas que, sin ese trabajo, muy probablemente se habrían perdido — no solo interpretaba folclore, lo rescataba antes de que desapareciera.
+- **Ruptura de género**: en el folclore chileno de su época existía una división según el género de quien interpretaba — las cantoras se dedicaban principalmente a formas breves como la tonada y la cueca, mientras el canto a lo poeta (payada), de mayor prestigio y extensión, estaba reservado casi exclusivamente a los hombres. Violeta no solo cantó tonadas como La Jardinera, sino que investigó, compuso y tocó múltiples instrumentos — roles poco comunes para una mujer en su época.
+- **Reconocimiento internacional**: en 1964 fue la primera artista latinoamericana en tener una exposición individual en el Museo del Louvre (Musée des Arts Décoratifs, París), donde mostró arpilleras, óleos y esculturas, y donde incluso se sentaba a bordar y cantar frente al público durante la muestra.
+- **Familia**: varios de sus hermanos también fueron artistas, como el poeta Nicanor Parra.
+- Otros datos para la investigación grupal de la Experiencia 1 (Clase 2): su labor como recopiladora folclórica por Chile, su faceta de artista visual y el Louvre, los últimos años de su vida.
 
 ---
 
 ## ⚠️ Regla de oro para esta sección
 
-Lo que sigue es la transcripción de lo que ya está guardado en la Plataforma (no un borrador nuevo). Estos textos son los que YA decidiste y pegaste — quedan aquí como referencia y respaldo, no para que los reescribas de nuevo salvo que quieras ajustar algo puntual.
+Lo que sigue son **borradores tipo apunte de planificación**, no texto final. El Manual exige declarar que la evidencia no fue "elaborada... con uso de herramientas de inteligencia artificial para suplantar su juicio profesional". Antes de pegar cualquier "Objetivo(s)" o "Descripción de actividades" en la Plataforma: **reescríbelo con tus palabras**, corrige lo que no vayas a hacer realmente, agrega tus propios detalles.
 
 ---
 
-## Experiencia 1 — La Jardinera (Violeta Parra) — incluye la clase grabada del Módulo 2
+## Experiencia 1 — Por qué importa Violeta Parra + repertorio completo de La Jardinera (Clases 1 y 2)
 
-**Fecha**: 01-10-2026 y 08-10-2026 · **Duración**: 2 clases de 90 minutos.
+**Fecha**: 1 y 8 de octubre de 2026 · **Duración**: 2 clases de 90 min. La primera hora de la Clase 1 (1 de octubre) es la que se graba para el Módulo 2 — ver `tarea-4-clase-grabada-1medio.md`.
 
-**Objetivo(s)** (318/500 caracteres):
+**Objetivo(s)** (278/500 caracteres):
 
-Evaluar la relevancia de Violeta Parra en la identidad musical chilena, cuestionando el rol asignado a las mujeres en la Nueva Canción Chilena a través de la reflexión grupal, y de la interpretación instrumental del repertorio La Jardinera, valorando la equidad de género y el trabajo en equipo en la práctica musical.
+Reconocer la importancia de Violeta Parra en la identidad musical chilena, investigando en grupos su vida y trayectoria, e interpretar el repertorio completo de La Jardinera con los instrumentos del curso, valorando su rol como mujer que rompió los moldes de género de su época.
 
-**Descripción de las actividades para el aprendizaje y las acciones de monitoreo** (3527/3600 caracteres):
+**Descripción de las actividades para el aprendizaje y las acciones de monitoreo** (2413/3600 caracteres):
 
-En la primera hora de la primera clase, los estudiantes parten respondiendo si conocen a Violeta Parra y qué saben de ella. Después escuchan un par de fragmentos breves de distintas obras suyas, sin que se les diga de entrada que son de ella, apuntando la escucha activa a reconocer si les resulta familiar su voz o su estilo y qué elementos comparten esos fragmentos entre sí. A partir de eso, conocen quién fue Violeta Parra y su rol en la música chilena, y leen un breve texto de investigación sobre el rol de las mujeres en la música y el arte del siglo XX, que explica cómo históricamente ellas participaron sobre todo como cantantes o intérpretes solistas, mientras que los conjuntos instrumentales fueron mayoritariamente hombres. Para finalizar la primera hora de clase, escuchan La Jardinera completa y, en parejas o tríos (en caso de que algún estudiante quede solo), conversan sobre por qué creen que en el movimiento de la Nueva Canción Chilena los conjuntos instrumentales más recordados, como Illapu, Quilapayún o Inti-Illimani, eran mayoritariamente de hombres, aunque las apariciones de las mujeres eran reducidas, apoyándose en el texto leído previamente. Después, algunos pares comparten su reflexión con el curso, y el resto opina si está de acuerdo o agregaría algo, cuestionando entre todos el estereotipo en el arte musical del siglo XX.
+En la primera hora de la primera clase, los estudiantes responden si conocen a Violeta Parra y qué saben de ella. A partir de esa respuesta inicial, se presenta el contexto histórico y se profundiza en por qué su figura es realmente importante para la música chilena, más allá de la idea genérica de que "fue una folclorista famosa": se explica su labor como recopiladora de tradición oral que de otra forma se habría perdido, su ruptura del molde de género de su época al investigar, componer y tocar distintos instrumentos en un ámbito donde eso era poco común para una mujer, y su reconocimiento internacional al ser la primera artista latinoamericana en exponer individualmente en el Museo del Louvre, en 1964. Para verificar que comprendieron el por qué de su importancia y no solo datos sueltos, se cierra la hora con un Kahoot de preguntas que distinguen entre razones superficiales y razones de fondo.
 
-En la segunda hora, ya enfocada en lo instrumental y cantado, los estudiantes se anotan en Padlet con qué instrumento van a tocar, entre guitarra, flauta, batería, bombo, melódica o metalófono, y con esa organización comienzan a interpretar la canción. Aprenden la instrumentación de los dos primeros versos, que corresponden a la sección A, y arman el acompañamiento instrumental. Primero practican el acompañamiento por sección, y luego arman la instrumentación completa entre todos: la guitarra lleva la armonía, la flauta, la melódica y el metalófono refuerzan la melodía, y el bombo marca un pulso suave típico de la tonada. Ensayan de forma independiente por sección de instrumento varias veces, y después hacen el primer ensamble completo de la sección A. Graban un audio de este primer avance y lo escuchan comentando si lograron transmitir el sentido de la canción y no solo tocar las notas correctas; esa grabación queda como evidencia del punto en que quedó el montaje en esta primera clase.
+En la segunda hora, se presenta el repertorio La Jardinera: escuchan la canción completa y analizan su letra, identificando la metáfora del jardín y el rosal de espina gruesa como representación de una pena de amor que se va sanando de a poco. Los estudiantes se anotan en Padlet según el instrumento que van a tocar, entre guitarra, flauta, batería, bombo, melódica o metalófono, y comienzan a montar la primera mitad de la canción por sección de instrumento. Se aplica una rúbrica de avance de repertorio para registrar el punto de partida de cada sección.
 
-En la clase siguiente de 90 minutos, los estudiantes retoman lo logrado la clase anterior: tocan la sección A con el acompañamiento ya armado, para retomar el pulso antes de seguir avanzando. Luego aprenden las secciones restantes, con el mismo ritmo de la sección A y melodía con acompañamiento armónico distinto. Ensayan por sección de instrumento y luego en conjunto, mientras se hace monitoreo con rúbrica de avance por sección. Para cerrar, completan individualmente un formulario en Google Forms donde evalúan su propio avance: si mantuvieron el pulso, si transmitieron el sentido de la canción, qué parte les costó más y qué mejorarían para la siguiente experiencia.
+En la primera hora de la clase siguiente, los estudiantes retoman lo avanzado y montan la segunda mitad de La Jardinera, ensayando por sección hasta lograr un primer ensamble completo de la canción. Se graba un audio de este avance y se actualiza la rúbrica de avance de repertorio para verificar el progreso de cada estudiante.
 
-**⚠️ Clase grabada Módulo 2**: la primera hora de la primera clase (1 de octubre) es la que se graba (~40 min del segmento). Ver `tarea-4-clase-grabada-1medio.md` para el detalle indicador por indicador contra las 7 rúbricas del Módulo 2.
-
----
-
-## Experiencia 2 — Charagua (Víctor Jara)
-
-**Fecha**: 15-10-2026 y 22-10-2026 · **Duración**: 2 clases de 90 minutos.
-
-**Objetivo(s)** (292/500 caracteres):
-
-Reflexionar acerca del contexto social y político que enfrentó la Nueva Canción Chilena a partir de la escucha activa de obras de Víctor Jara, un texto de investigación y la interpretación musical del repertorio Charagua, valorando el trabajo en conjunto y la libertad de expresión artística.
-
-**Descripción de las actividades para el aprendizaje y las acciones de monitoreo**:
-
-En la primera hora de la primera clase, los estudiantes escuchan una obra de Víctor Jara para iniciar la clase, y comparten en voz alta un ejemplo propio: dónde han escuchado esa música o algo sobre Víctor Jara, ya sea en una conversación familiar, en Historia, en una serie o en redes sociales. Después escuchan un par de fragmentos breves de distintas obras de Jara, y leen un breve texto de investigación sobre el contexto social y político de la época: las transformaciones sociales del gobierno de la Unidad Popular, la crisis económica y política previa al año 1973, y la censura posterior que sufrió el movimiento, incluyendo la restricción de ciertos instrumentos, lo ocurrido con Jara y el exilio de conjuntos como Inti-Illimani y Quilapayún. Para cerrar, escuchan Charagua completo y, en parejas o tríos, comparan estas restricciones sociales y políticas con el estereotipo de género visto en La Jardinera. Todas las respuestas de esta hora, el ejemplo personal, la comparación de fragmentos y la reflexión final, quedan registradas en un Documento de Google que se entrega a través de Classroom.
-
-En la segunda hora, ya enfocados en lo instrumental, los estudiantes retoman el rol instrumental que ya tenían asignado desde la Experiencia 1. Primero el bombo y la batería establecen el pulso base de la introducción, sirviendo de referencia para el resto. Después la guitarra aprende el patrón de acompañamiento armónico, y luego la flauta, la melódica y el metalófono aprenden la melodía de la introducción a la sección A, apoyándose en la partitura entregada. Van sumando los instrumentos de a poco hasta lograr la textura completa, ensayando por sección varias veces hasta el primer ensamble completo. Durante estos ensayos, el profesor monitorea el avance de cada grupo con una lista de cotejo simple e interviene con retroalimentación puntual cuando alguien no logra mantener el pulso, confunde las notas o cuando la melodía no se distingue sobre el acompañamiento.
-
-En la clase siguiente, retoman la sección A todos juntos, luego aprenden la sección B por instrumento, ensayando de nuevo el rol de cada instrumento. Hacen progresivamente el ensamble completo de la pieza, poniendo énfasis en criterios de expresividad, y una vez logrado eso graban en audio la versión final, escuchándola y comentando qué mejoraron respecto al repertorio anterior. Para cerrar, completan individualmente un formulario en Google Forms donde reflexionan sobre su avance en el montaje instrumental y sobre la importancia de la Nueva Canción Chilena en la cultura musical del país en el siglo XX, y además coordinan con el resto sobre qué temática de la Nueva Canción Chilena les gustaría abordar en el conversatorio final, entre las opciones: Introducción a la Nueva Canción Chilena, Contexto Político, Contexto Social, El Rol de las Mujeres en el Arte Chileno del Siglo XX, Censura Artística, Repertorio La Jardinera y Repertorio Charagua.
+En la segunda hora, se organizan en grupos para investigar un aspecto distinto de la vida de Violeta Parra que profundice lo visto en la primera clase: su nacimiento y familia (San Carlos, 1917, varios hermanos también artistas, como el poeta Nicanor Parra), su trabajo como recopiladora folclórica viajando por distintas zonas de Chile, su faceta como artista visual que la llevó a exponer en el Museo del Louvre en 1964, y los últimos años de su vida. Cada grupo registra su investigación en un Documento de Google compartido a través de Classroom, que servirá de base para la exposición de la clase siguiente.
 
 ---
 
-## Experiencia 3 — Síntesis: conversatorio + presentación musical ante el electivo de Artes
+## Experiencia 2 — Solidificar el repertorio + exposición grupal (Clase 3)
 
-**Fecha**: 29-10-2026 · **Duración**: 1 clase de 90 minutos. ⚠️ Requiere coordinar con el/la profesor/a de Artes.
+**Fecha**: 15 de octubre de 2026 · **Duración**: 1 clase de 90 min.
 
-**Objetivo(s)** (399/500 caracteres):
+**Objetivo(s)** (256/500 caracteres):
 
-Demostrar la comprensión de la relevancia de la Nueva Canción Chilena y del aporte de Violeta Parra y Víctor Jara en la identidad cultural chilena mediante un conversatorio breve, e interpretar el repertorio trabajado, La Jardinera y Charagua, mediante una presentación musical ante el electivo de Artes, valorando el diálogo entre la música y las artes visuales en la construcción de esa identidad.
+Consolidar la interpretación del repertorio La Jardinera incorporando matices y dinámica expresiva, y comunicar en una exposición grupal lo investigado sobre la vida y el aporte de Violeta Parra, valorando su legado como mujer en la música popular chilena.
 
-**Descripción de las actividades para el aprendizaje y las acciones de monitoreo** (2204/3600 caracteres):
+**Descripción de las actividades para el aprendizaje y las acciones de monitoreo** (824/3600 caracteres):
 
-En los primeros 20 minutos de la clase, los estudiantes preparan la exposición del conversatorio según los temas que el profesor les asigna, considerando las respuestas que dieron en los formularios y encuestas de las experiencias anteriores (Mentimeter y Google Forms), para distribuir según cada tema: la Nueva Canción Chilena, el contexto social y político de la época. Cada estudiante o grupo prepara una intervención breve, de no más de dos minutos, apoyándose en lo trabajado en los documentos de Classroom y en los textos de lectura entregados previamente.
+En la primera hora de esta clase, los estudiantes solidifican la interpretación completa de La Jardinera: repasan la canción de principio a fin y trabajan matices de dinámica y expresividad, cuidando que no solo toquen las notas correctas sino que transmitan el sentido de la canción. Se graba una versión final y se actualiza la rúbrica de avance de repertorio con los resultados de cada estudiante.
 
-En los siguientes 25 minutos, los estudiantes se organizan en los roles instrumentales que ya tenían definidos desde las experiencias anteriores y repasan La Jardinera y Charagua, ajustando los últimos detalles de afinación, pulso y dinámica antes de la presentación.
+En la segunda hora, cada grupo presenta ante el curso, en una intervención breve de un par de minutos, lo investigado en la clase anterior sobre la vida de Violeta Parra. Mientras cada grupo expone, el resto del curso responde un formulario en Google Forms indicando qué aprendió de esa exposición en particular, lo que sirve tanto de evidencia de comprensión como de retroalimentación entre pares para quienes expusieron.
 
-En la segunda hora, el electivo de Artes llega a la sala. Los estudiantes de Música presentan su parte del conversatorio uno después de otro, a modo de conversación, sin PPT ni recursos visuales adicionales, para hacer de la actividad una instancia más íntima. Entre cada intervención, algún estudiante de Artes puede hacer una pregunta corta si algo le interesa, antes de pasar al siguiente turno. Al terminar la presentación musical, los estudiantes de Música y de Artes se juntan en grupos mixtos para conversar sobre cómo la música y las artes visuales representan de distintas maneras un mismo momento histórico y cultural, y cada grupo responde en Mentimeter una idea que haya surgido de esa conversación. Se graba tanto el conversatorio como la presentación musical, y esas grabaciones junto con las respuestas de Mentimeter quedan como evidencia de esta experiencia.
+---
+
+## Experiencia 3 — Muestra final ante el electivo de Artes (Clase 4)
+
+**Fecha**: 22 de octubre de 2026 · **Duración**: 1 clase de 90 min. ⚠️ Requiere coordinar con el/la profesor/a de Artes.
+
+**Objetivo(s)** (298/500 caracteres):
+
+Demostrar la comprensión de la relevancia de Violeta Parra en la identidad cultural chilena mediante un conversatorio breve, e interpretar el repertorio La Jardinera mediante una presentación musical ante el electivo de Artes, valorando el diálogo entre la música y las artes visuales en su legado.
+
+**Descripción de las actividades para el aprendizaje y las acciones de monitoreo** (852/3600 caracteres):
+
+En esta clase, el electivo de Artes llega a la sala. Los estudiantes de Música presentan primero un conversatorio breve que sintetiza lo investigado y expuesto en la clase anterior sobre la vida y el aporte de Violeta Parra, adaptado para una audiencia que no conoce en detalle esa investigación. A continuación, interpretan La Jardinera completa ante el curso de Artes. Al finalizar, ambos cursos se juntan en grupos mixtos para conversar sobre el diálogo entre la música y las artes visuales en el legado de Violeta Parra, dado que ella también fue artista visual y expuso en el Museo del Louvre en 1964, y cada grupo responde en Mentimeter una idea que haya surgido de esa conversación. Se graba tanto el conversatorio como la presentación musical, y esas grabaciones junto con las respuestas de Mentimeter quedan como evidencia de esta experiencia.
 
 ---
 
 ## Calendario
 
-Música con I°C es una vez por semana (jueves). Con las 3 experiencias (2+2+1 clases), la unidad termina el **29 de octubre**, dejando del 30 de octubre al 10 de noviembre de margen antes del cierre de Plataforma.
+Música con I°C es una vez por semana (jueves). Con 4 clases distribuidas en 3 experiencias, la unidad termina el **22 de octubre**, dejando del 23 de octubre al 10 de noviembre de margen antes del cierre de Plataforma.
 
 ## Pendiente de tu parte
 
-1. Coordinar con el/la profesor/a de Artes el horario y espacio para la Experiencia 3 (29 de octubre).
-2. Revisar que esta transcripción coincida exactamente con lo guardado en Plataforma — está hecha a partir de pantallazos, puede haber diferencias menores de palabra a palabra.
-3. `tarea-1.2-fundamentacion.md` y `tarea-4-clase-grabada-1medio.md` ya están resincronizados a esta misma versión.
+1. Coordinar con el/la profesor/a de Artes el horario y espacio para la Experiencia 3 (22 de octubre).
+2. Revisar y reescribir con tu voz los tres objetivos y descripciones antes de pegarlos en la Plataforma.
+3. `tarea-1.2-fundamentacion.md`, `tarea-4-clase-grabada-1medio.md` y `tarea-2-evaluacion-formativa.md` quedan pendientes de resincronizar a esta versión (ver esos archivos).
