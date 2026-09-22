@@ -32,20 +32,19 @@ Mi hipótesis es que, en esos momentos, varios de estos estudiantes no están pe
 
 ## b. Reflexión: ¿qué mantendría o modificaría de sus actitudes/forma de relacionarse, y cómo aportaría al AS?
 
-**Borrador (1875/3600 caracteres)**:
+**Borrador (1878/3600 caracteres)** — ya confirmado que nombrar el error en voz alta es algo que el profesor ya hace, no algo nuevo:
 
 Lo que mantendría de mi forma de relacionarme con ellos es justamente la manera en que trato de motivarlos y acercarme: no tratarlos como simples estudiantes, sino como personas capaces de lograr sus objetivos, algo que puedo hacer con más credibilidad porque yo mismo crecí en un entorno similar al de ellos. Esto no es un discurso motivacional genérico ni externo, es algo que puedo respaldar con mi propia historia, y creo que eso hace una diferencia real en cómo lo reciben, porque no viene de alguien ajeno a su realidad diciéndoles "ustedes pueden", sino de alguien que efectivamente pasó por algo parecido.
 
 Esto aportaría al desarrollo de la tolerancia al error porque, si los estudiantes sienten que su profesor los ve como personas capaces y no como un estereotipo asociado a su comuna, el error deja de confirmar esa creencia limitante ("somos de La Pintana, por eso no podemos") y empieza a poder leerse simplemente como parte normal de aprender un instrumento, igual que le pasaría a cualquier estudiante de cualquier lugar. Al sentir que la valoración que tengo de ellos no depende de si les sale bien a la primera, se reduce el peso del miedo al juicio que identifiqué como uno de los factores detrás de su comportamiento, y con eso debería bajar también la necesidad de evitar el intento para no exponerse a fallar.
 
-Lo que buscaría reforzar de manera más explícita es nombrar el error en el momento en que ocurre, no solo como algo que se corrige técnicamente, sino como una señal de que están intentando algo que les cuesta, y no como una confirmación de que "no pueden" por ser de donde son. Que ese comentario quede dicho en voz alta frente al curso, y no solo pensado por mí, es lo que creo que falta para que la reflexión sobre la tolerancia al error no dependa solo de mi actitud general, sino que se vuelva parte visible de cómo trabajamos en la sala.
+Esto también se refleja en algo que ya hago en clase: nombrar el error en el momento en que ocurre, no solo como algo que se corrige técnicamente, sino como una señal de que están intentando algo que les cuesta, y no como una confirmación de que "no pueden" por ser de donde son. Que ese comentario quede dicho en voz alta frente al curso, y no solo pensado por mí, es parte de cómo trato de que la tolerancia al error no dependa solo de una actitud general de mi parte, sino que se vuelva algo visible y explícito en cómo trabajamos en la sala.
 
-**Chequeo de nivel**: mantiene una actitud (cercanía/motivación desde su propia historia) ✅ + explica CÓMO aporta al AS (el error deja de confirmar la creencia limitante) ✅ → Competente. La última idea (nombrar el error en voz alta como algo que ya haces o que agregarías) es tuya para confirmar — si es algo que YA haces, cámbialo de "buscaría reforzar" a "lo que hago es..." y pasa a fundamentar aún más el mantendría.
+**Chequeo de nivel**: mantiene una actitud (cercanía/motivación desde su propia historia + nombrar el error en voz alta) ✅ + explica CÓMO aporta al AS (el error deja de confirmar la creencia limitante) ✅ → Competente sólido, con los tres elementos presentados como parte de una misma práctica ya existente, no como una promesa de cambio futuro.
 
 ---
 
 ## Pendiente de tu parte
 
 1. Confirma que la frase "ya pero nosotros somos de La Pintana" y el contexto en que la escuchaste (¿en un momento de error musical específico? ¿en varias ocasiones distintas?) están descritos con precisión — el corrector puede pedir que esto sea exacto a lo que pasó, no una generalización.
-2. En la parte (b), dime si "nombrar el error en el momento en que ocurre" es algo que ya haces en tus clases o es algo nuevo que te gustaría incorporar — cambia si va en "mantendría" o en "modificaría".
-3. Reescribe ambos textos con tu voz antes de pegarlos — especialmente la parte de tu propia historia personal, que es lo más tuyo de todo el portafolio y donde menos quiero que suene "hecho por otro".
+2. Reescribe ambos textos con tu voz antes de pegarlos — especialmente la parte de tu propia historia personal, que es lo más tuyo de todo el portafolio y donde menos quiero que suene "hecho por otro".
