@@ -1200,6 +1200,17 @@
         .plagio-banner .plagio-text a.reglamento-btn { display:inline-flex; align-items:center; gap:0.5rem; margin-top:0.85rem; background:#0b3d91; color:#ffffff !important; padding:0.6rem 1.15rem; border-radius:10px; font-weight:700; font-size:0.82rem; text-decoration:none; letter-spacing:0.3px; transition:all 0.2s; }
         .plagio-banner .plagio-text a.reglamento-btn:hover { background:#1a4fb0; box-shadow:0 6px 18px rgba(11,61,145,0.3); text-decoration:none; }
     </style>
+    <!-- Modo EMBEBIDO (dentro de ASE-IA): oculta encabezado y bloque inferior, más conciso -->
+    <style id="embed-style">
+      html.embed-mode .institutional-bar,
+      html.embed-mode .container > header,
+      html.embed-mode .institutional-strip,
+      html.embed-mode .plagio-banner { display:none !important; }
+      html.embed-mode body { background:#ffffff; }
+      html.embed-mode .container { padding-top:10px !important; padding-bottom:14px !important; max-width:100% !important; }
+      html.embed-mode .modo-selector { margin-top:4px !important; }
+    </style>
+    <script>try{if(/[?&]embed=1\b/.test(location.search)){document.documentElement.classList.add('embed-mode');}}catch(e){}</script>
 </head>
 <body>
 
