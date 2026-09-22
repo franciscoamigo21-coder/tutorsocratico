@@ -402,6 +402,7 @@
   #benmodal,#planmodal,#tutormodal{position:fixed;inset:0;z-index:1300;display:none;align-items:center;justify-content:center;padding:18px;background:rgba(8,22,52,.6);backdrop-filter:blur(4px);}
   #benmodal.open,#planmodal.open,#tutormodal.open{display:flex;animation:fadeUp .22s ease both;}
   /* Tutor Socrático (chat interno) */
+  .tutorframe{width:100%;height:min(76vh,680px);border:0;display:block;background:#eef2fb;}
   .tutorwrap{display:flex;flex-direction:column;height:min(64vh,560px);}
   .tutormsgs{flex:1;overflow-y:auto;padding:18px;display:flex;flex-direction:column;gap:12px;background:linear-gradient(180deg,#f5f8ff,#eef3fc);}
   .tmsg{max-width:82%;padding:11px 14px;border-radius:16px;font-size:14px;line-height:1.5;white-space:pre-wrap;word-wrap:break-word;box-shadow:0 6px 16px -12px rgba(11,61,145,.5);}
@@ -1215,7 +1216,7 @@
     </div>
     <div class="docbody" id="tutorBody" style="background:#fff;padding:0"></div>
     <div class="docfoot">
-      <button class="docbtn ghost" type="button" onclick="tutorReset()">Nuevo tema</button>
+      <button class="docbtn ghost" type="button" onclick="window.open('tutorsocratico/index.html','_blank','noopener')">Abrir en grande</button>
       <button class="docbtn ghost" type="button" onclick="closeTutor()">Cerrar</button>
     </div>
   </div>
@@ -3211,64 +3212,18 @@ function descargarPlanWord(){
 }
 function closePlanifica(){ document.getElementById("planmodal").classList.remove("open"); document.body.style.overflow=""; }
 
-/* ============ TUTOR SOCRÁTICO · panel interno (aprende con preguntas) ============ */
-let TUTOR_CONVO=[];
-const TUTOR_WELCOME="¡Hola! 🦉 Soy tu Tutor Socrático. No te daré la respuesta hecha: te ayudaré a pensarla con buenas preguntas.\n\n¿Sobre qué tema, idea o pregunta quieres reflexionar hoy?";
-function tutorUIHTML(){
-  return '<div class="tutorwrap">'
-    +'<div class="tutormsgs" id="tutorMsgs"></div>'
-    +'<form class="tutorform" onsubmit="tutorSend(event)" autocomplete="off">'
-    +'<input id="tutorInput" type="text" placeholder="Escribe tu idea o tu respuesta…" aria-label="Mensaje">'
-    +'<button type="submit" class="tutorsend" id="tutorSendBtn" aria-label="Enviar">➤</button>'
-    +'</form></div>';
-}
-function tutorAdd(text,who){
-  const box=document.getElementById("tutorMsgs"); if(!box)return null;
-  const d=document.createElement("div"); d.className="tmsg "+(who==="user"?"user":"bot"); d.textContent=text;
-  box.appendChild(d); box.scrollTop=box.scrollHeight; return d;
-}
-function tutorTyping(on){
-  const box=document.getElementById("tutorMsgs"); if(!box)return;
-  let t=document.getElementById("tutorTyping");
-  if(on){ if(!t){ t=document.createElement("div"); t.id="tutorTyping"; t.className="tmsg bot typing"; t.textContent="pensando una buena pregunta…"; box.appendChild(t); box.scrollTop=box.scrollHeight; } }
-  else if(t){ t.remove(); }
-}
-function tutorReset(){
-  TUTOR_CONVO=[];
-  const box=document.getElementById("tutorMsgs"); if(box) box.innerHTML="";
-  tutorAdd(TUTOR_WELCOME,"bot");
-  const inp=document.getElementById("tutorInput"); if(inp){ inp.value=""; inp.focus(); }
-}
+/* ============ TUTOR SOCRÁTICO · la app real de aseia.cl/tutorsocratico, embebida ============ */
+const TUTOR_SRC="tutorsocratico/index.html";
 function openTutor(){
-  document.getElementById("tutorBody").innerHTML=tutorUIHTML();
-  tutorReset();
+  const body=document.getElementById("tutorBody");
+  // Se carga una sola vez (mantiene el estado del Tutor mientras dure la sesión).
+  if(!body.querySelector("iframe")){
+    body.innerHTML='<iframe class="tutorframe" src="'+TUTOR_SRC+'" title="Tutor Socrático" allow="microphone; clipboard-write" referrerpolicy="no-referrer"></iframe>';
+  }
   document.getElementById("tutormodal").classList.add("open");
   document.body.style.overflow="hidden";
-  setTimeout(()=>{ const i=document.getElementById("tutorInput"); if(i)i.focus(); },60);
 }
 function closeTutor(){ document.getElementById("tutormodal").classList.remove("open"); document.body.style.overflow=""; }
-async function tutorSend(e){
-  if(e&&e.preventDefault)e.preventDefault();
-  const inp=document.getElementById("tutorInput"), btn=document.getElementById("tutorSendBtn");
-  const t=(inp&&inp.value||"").trim(); if(!t)return;
-  const hist=TUTOR_CONVO.slice(-12);
-  inp.value=""; if(btn)btn.disabled=true;
-  tutorAdd(t,"user"); TUTOR_CONVO.push({role:"user",content:t});
-  tutorTyping(true);
-  let reply="";
-  try{
-    if(!AI_CREATE_URL||!AUTH_TOKEN) throw new Error("sin-conexion");
-    const r=await fetch(AI_CREATE_URL+"?resource=tutor",{method:"POST",headers:{"Content-Type":"application/json"},
-      body:JSON.stringify({credential:AUTH_TOKEN,resource:"tutor",question:t,history:hist})});
-    const d=await r.json();
-    if(d&&d.reply) reply=d.reply;
-  }catch(_){}
-  tutorTyping(false);
-  if(!reply) reply="Uy, no pude conectarme en este momento. Igual sigamos pensando: ¿qué parte del tema te genera más dudas, y por qué crees que es así?";
-  tutorAdd(reply,"bot"); TUTOR_CONVO.push({role:"assistant",content:reply});
-  if(btn)btn.disabled=false;
-  if(inp)inp.focus();
-}
 function planNivelGuia(nivel){
   if(/^(1|2)°?\s*B/i.test(nivel)) return "Es un nivel MUY INICIAL (primeros años de básica): usa frases muy cortas y simples, contenidos muy concretos y lúdicos, números y palabras sencillas; deja espacios para dibujar, unir, colorear o completar; MÁXIMO 3 o 4 actividades muy breves. Evita textos largos, definiciones y vocabulario técnico.";
   if(/^(3|4)°?\s*B/i.test(nivel)) return "Es un nivel básico: lenguaje sencillo y directo, actividades concretas y prácticas, 4 a 5 actividades cortas.";
