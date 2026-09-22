@@ -142,6 +142,47 @@ export default {
       return json({ image: "data:" + mime + ";base64," + b64 }, 200, cors);
     }
 
+    // ---- Tutor Socrático: diálogo que guía con preguntas (no entrega la respuesta hecha) ----
+    if (body.resource === "tutor") {
+      if (!env.ANTHROPIC_API_KEY) return json({ error: "Falta configurar ANTHROPIC_API_KEY" }, 500, cors);
+      const sysTutor =
+        "Eres el TUTOR SOCRÁTICO de ASE-IA, del Colegio Presidente José Joaquín Prieto (SIP Red de Colegios). " +
+        "Tu método es socrático: acompañas el aprendizaje mediante PREGUNTAS que hacen pensar, NO entregando la " +
+        "respuesta hecha. Guías paso a paso para que la persona razone, argumente y defienda sus ideas. " +
+        "Reglas: 1) Responde breve (2 a 5 frases) y termina casi siempre con UNA pregunta que haga avanzar el " +
+        "razonamiento. 2) No resuelvas tareas ni entregues la respuesta final directamente; si insisten, ofrece una " +
+        "pista y otra pregunta. 3) Valora los intentos, corrige con amabilidad y reformula si la persona se traba. " +
+        "4) Adapta el lenguaje a estudiantes escolares; sé cercano, motivador y respetuoso. 5) Español de Chile, " +
+        "claro y sin tecnicismos innecesarios. 6) Si el tema es sensible o de seguridad, deriva con criterio a un " +
+        "adulto o profesional. Mantén el foco en que la persona construya su propio aprendizaje.";
+      const hist = Array.isArray(body.history)
+        ? body.history.slice(-12).map((m) => ({
+            role: m && m.role === "assistant" ? "assistant" : "user",
+            content: String((m && m.content) || "").slice(0, 2000),
+          })).filter((m) => m.content)
+        : [];
+      const q = (body.question || "").toString().slice(0, 3000);
+      if (q.trim().length < 1) return json({ error: "vacio" }, 400, cors);
+      const messages = hist.concat([{ role: "user", content: q }]);
+      let aiT;
+      try {
+        aiT = await fetch("https://api.anthropic.com/v1/messages", {
+          method: "POST",
+          headers: { "Content-Type": "application/json", "x-api-key": env.ANTHROPIC_API_KEY, "anthropic-version": "2023-06-01" },
+          body: JSON.stringify({ model: MODEL, max_tokens: 700, system: sysTutor, messages }),
+        });
+      } catch {
+        return json({ error: "No se pudo contactar a la IA" }, 502, cors);
+      }
+      if (!aiT.ok) {
+        let d = ""; try { d = (await aiT.text()).slice(0, 200); } catch {}
+        return json({ error: "Error IA " + aiT.status, detalle: d }, 502, cors);
+      }
+      const dt = await aiT.json();
+      const bt = (dt.content || []).find((b) => b.type === "text");
+      return json({ reply: (bt && bt.text ? bt.text : "").trim() }, 200, cors);
+    }
+
     if (!env.ANTHROPIC_API_KEY) return json({ error: "Falta configurar ANTHROPIC_API_KEY" }, 500, cors);
 
     const prompt = (body.prompt || body.question || "").toString().slice(0, 4000);
