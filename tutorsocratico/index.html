@@ -1207,9 +1207,23 @@
       html.embed-mode .container > header,
       html.embed-mode .institutional-strip,
       html.embed-mode .plagio-banner { display:none !important; }
-      html.embed-mode body { background:#ffffff; }
-      html.embed-mode .container { padding-top:10px !important; padding-bottom:14px !important; max-width:100% !important; }
+      /* Fondo con vida (no blanco plano) y contenedor centrado */
+      html.embed-mode body { background:radial-gradient(1100px 520px at 50% -8%, #eaf2ff 0%, #eef3fb 45%, #e7eef9 100%) !important; }
+      html.embed-mode .container { padding-top:12px !important; padding-bottom:18px !important; max-width:940px !important; margin:0 auto !important; }
       html.embed-mode .modo-selector { margin-top:6px !important; }
+      html.embed-mode #panel-texto, html.embed-mode #panel-pdf, html.embed-mode #panel-camara { margin-top:4px !important; }
+      html.embed-mode .btn-volver-wrap { margin:0 0 10px !important; }
+      /* Caja de texto como tarjeta elevada con borde degradado */
+      html.embed-mode .input-wrapper { background:linear-gradient(135deg,#6d5efc,#4f8cff 55%,#12b5c9) !important;
+        padding:2.5px !important; border-radius:20px !important; box-shadow:0 20px 46px -24px rgba(17,87,201,.6) !important; }
+      html.embed-mode textarea { background:#ffffff !important; border:0 !important; border-radius:17px !important;
+        font-size:.98rem !important; line-height:1.6 !important; padding:1.25rem 1.5rem !important; height:270px !important; color:#1c2b4a !important; }
+      html.embed-mode textarea:focus { box-shadow:inset 0 0 0 2px rgba(79,140,255,.35) !important; }
+      html.embed-mode textarea::placeholder { color:#8a99b5 !important; }
+      /* Tarjetas de selección de modo, más vivas */
+      html.embed-mode .modo-grid .modo-card,
+      html.embed-mode .modo-card { border-radius:16px !important; box-shadow:0 12px 30px -20px rgba(11,61,145,.5) !important; }
+      html.embed-mode .modo-card:hover { transform:translateY(-3px) !important; box-shadow:0 20px 40px -22px rgba(11,61,145,.6) !important; }
       /* Encabezado institucional compacto (modo embebido dentro de ASE-IA) */
       .embed-head{display:flex;align-items:center;gap:14px;background:linear-gradient(135deg,#eef4ff,#f7faff);
         border:1px solid rgba(11,61,145,.12);border-radius:16px;padding:12px 16px;margin:2px 0 14px;box-shadow:0 8px 22px -16px rgba(11,61,145,.5);}
