@@ -130,7 +130,7 @@
   @keyframes fadeOnly{from{opacity:0;}to{opacity:1;}}
   .quick h3{font-size:11px;text-transform:uppercase;letter-spacing:1.2px;color:var(--muted);margin:0 0 8px;font-weight:700;}
   /* Iconos compactos (la mitad del ancho anterior) → el chat queda más arriba. */
-  .qgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(94px,1fr));gap:7px;}
+  .qgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(94px,1fr));gap:7px;align-items:start;}
   @media(max-width:460px){.qgrid{grid-template-columns:repeat(auto-fill,minmax(72px,1fr));gap:6px;}}
   .qcard{position:relative;display:flex;flex-direction:column;align-items:center;gap:5px;background:var(--card);
     border:1px solid var(--border);border-radius:12px;padding:8px 4px;transition:.18s cubic-bezier(.2,.7,.3,1);text-align:center;box-shadow:var(--shadow-sm);cursor:pointer;}
@@ -145,6 +145,21 @@
     display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;
     white-space:normal;word-break:normal;overflow-wrap:break-word;}
   .qcard .lb .cv{font-size:9px;color:var(--muted);margin-left:2px;}
+  /* ===== Accesos DESTACADOS (Planifica y Tutor Socrático): más grandes y especiales ===== */
+  .qcard.feat{grid-column:span 2;flex-direction:row;justify-content:flex-start;align-items:center;gap:12px;
+    padding:14px 15px;border-radius:18px;border:1.6px solid #bcd4ff;
+    background:linear-gradient(135deg,#ffffff 0%,#eaf1ff 55%,#e6f6f7 100%);
+    box-shadow:0 18px 38px -20px rgba(17,87,201,.55),inset 0 1px 0 rgba(255,255,255,.7);}
+  .qcard.feat::before{content:"";position:absolute;inset:0;border-radius:18px;padding:1.6px;pointer-events:none;
+    background:linear-gradient(135deg,#6d5efc,#4f8cff,#12b5c9);-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;opacity:.55;}
+  .qcard.feat:hover{transform:translateY(-4px);box-shadow:0 26px 50px -20px rgba(17,87,201,.65);border-color:#9dbcff;}
+  .qcard.feat .ic{width:50px;height:50px;border-radius:15px;flex:none;}
+  .qcard.feat .ic svg,.qcard.feat .ic img{width:36px;height:36px;}
+  .qcard.feat .ftx{display:flex;flex-direction:column;align-items:flex-start;min-width:0;flex:1;}
+  .qcard.feat .lb{font-size:13.5px;line-height:1.12;text-align:left;-webkit-line-clamp:2;color:#0b3d91;letter-spacing:0;}
+  .qcard.feat .fsub{font-size:9.5px;font-weight:600;color:#5a6b86;text-align:left;margin-top:3px;line-height:1.25;}
+  .qcard.feat .fstar{position:absolute;top:7px;right:9px;color:#f5b301;font-size:12px;line-height:1;filter:drop-shadow(0 1px 1px rgba(0,0,0,.15));}
+  @media(max-width:460px){ .qcard.feat{grid-column:span 2;padding:11px 12px;gap:9px;} .qcard.feat .ic{width:42px;height:42px;} .qcard.feat .ic svg,.qcard.feat .ic img{width:30px;height:30px;} .qcard.feat .lb{font-size:12px;} }
   /* Cabecera de accesos + botón Vista semanal */
   .quickhead{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:0 0 8px;}
   .quickhead h3{margin:0;}
@@ -1369,7 +1384,7 @@ const B = {
   chatgpt:{lb:"ChatGPT",sub:"IA de OpenAI",url:"https://chatgpt.com",icon:"chatgpt"},
   whatsapp:{lb:"WhatsApp",sub:"Comunicación",url:"https://web.whatsapp.com",icon:"whatsapp"},
   instagram:{lb:"Instagram",sub:"@colegiojjprieto",url:"https://www.instagram.com/colegiojjprieto/?hl=es",icon:"instagram"},
-  tutor:{lb:"Tutor Socrático",sub:"Aprende con preguntas",icon:"tutor",action:"tutor"},
+  tutor:{lb:"Tutor Socrático",sub:"Aprende con preguntas",icon:"tutor",action:"tutor",feature:true},
   colegio:{lb:"Página web",sub:"Sitio oficial del colegio",url:"https://www.josejoaquinprieto.cl",icon:"crest"},
   sip:{lb:"SIP",sub:"Red de Colegios",url:"https://www.sip.cl",icon:"sip"},
   scholar:{lb:"Google Scholar",sub:"Artículos académicos",url:"https://scholar.google.com",icon:"scholar"},
@@ -1383,11 +1398,11 @@ const B = {
   claude:{lb:"Claude",sub:"IA de Anthropic",url:"https://claude.ai",icon:"claude"},
   mineduc:{lb:"Mineduc",sub:"Ministerio de Educación",url:"https://www.mineduc.cl",icon:"mineduc"},
   beneficios:{lb:"Beneficios",sub:"Becas y ayudas",icon:"beneficios",action:"beneficios"},
-  planifica:{lb:"Planifica",sub:"Copiloto docente IA",icon:"planifica",action:"planifica"},
+  planifica:{lb:"Planifica",sub:"Copiloto docente IA",icon:"planifica",action:"planifica",feature:true},
 };
 const LINKS = {
   student:[B.classroom,B.drive,B.correo,B.sheets,B.docsimp,B.alexia,B.scholar,B.scielo,B.colegio],
-  teacher:[B.planifica,B.classroom,B.drive,B.calendar,B.correo,B.sheets,B.docs,B.slides,B.canva,B.aptus,B.capac,B.docsimp,B.notebook,B.gemini,B.chatgpt,B.buk,B.alexia,B.tutor],
+  teacher:[B.planifica,B.tutor,B.classroom,B.drive,B.calendar,B.correo,B.sheets,B.docs,B.slides,B.canva,B.aptus,B.capac,B.docsimp,B.notebook,B.gemini,B.chatgpt,B.buk,B.alexia],
   admin:[B.planifica,B.classroom,B.drive,B.calendar,B.correo,B.sheets,B.docs,B.aptus,B.capac,B.docsimp,B.notebook,B.gemini,B.chatgpt,B.buk,B.mineduc,B.alexia],
   guardian:[B.beneficios,B.alexia,B.correo,B.docsimp,B.whatsapp,B.instagram,B.participacion,B.colegio,B.sip],
 };
@@ -1403,11 +1418,18 @@ function renderQuick(role){
   const mk=document.getElementById("qpopmask");if(mk)mk.classList.remove("on");
   LINKS[role].forEach(b=>{
     if(b.menu&&b.menu.length) g.appendChild(qcardMenu(b));
-    else if(b.action){                                   // tarjeta que abre una función interna (Beneficios, Planifica)
-      const btn=document.createElement("button");btn.type="button";btn.className="qcard";btn.title=b.lb;
+    else if(b.action){                                   // tarjeta que abre una función interna (Beneficios, Planifica, Tutor)
+      const btn=document.createElement("button");btn.type="button";btn.className="qcard"+(b.feature?" feat":"");btn.title=b.lb;
       const ic=document.createElement("span");ic.className="ic";ic.innerHTML=iconMarkup(b);
       const lb=document.createElement("span");lb.className="lb";lb.textContent=b.lb;
-      btn.appendChild(ic);btn.appendChild(lb);btn.onclick=()=>runQuickAction(b.action);g.appendChild(btn);
+      btn.appendChild(ic);
+      if(b.feature){                                       // acceso DESTACADO: título + subtítulo + estrella
+        const tx=document.createElement("span");tx.className="ftx";
+        const sub=document.createElement("span");sub.className="fsub";sub.textContent=b.sub||"";
+        tx.appendChild(lb);tx.appendChild(sub);btn.appendChild(tx);
+        const star=document.createElement("span");star.className="fstar";star.textContent="★";btn.appendChild(star);
+      } else { btn.appendChild(lb); }
+      btn.onclick=()=>runQuickAction(b.action);g.appendChild(btn);
     }
     else{
       const a=document.createElement("a");a.className="qcard";a.href=b.url;a.target="_blank";a.rel="noopener";a.title=b.lb;
