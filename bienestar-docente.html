@@ -1,0 +1,1391 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Aula Serena</title>
+<meta name="description" content="Planificaciones, rúbricas y guías; corrector de evaluaciones por escaneo o PDF; y un espacio de autoayuda para el bienestar laboral docente.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='30' fill='%237fb7a4'/%3E%3Cpath d='M32 50c-10-6-14-14-12-24 8 0 14 5 12 24zm0 0c10-6 14-14 12-24-8 0-14 5-12 24z' fill='%23fff'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+/* =====================================================================
+   AULA SERENA · Paleta calma (salvia, lavanda, cielo y durazno)
+   ===================================================================== */
+:root{
+  --bg:#f3f7f5; --bg2:#eaf2f4;
+  --surface:#ffffff; --surface2:#f7faf9; --line:#dbe7e3;
+  --ink:#2c3e44; --ink2:#5b6f75; --ink3:#8a9ca1;
+  --sage:#6fae98; --sage-d:#4f927c; --sage-l:#e3f2ec;
+  --lav:#9b8fd3; --lav-l:#efecfa;
+  --sky:#6fb3dc; --sky-l:#e5f2fa;
+  --peach:#f2b48f; --peach-l:#fdf0e7;
+  --rose:#e59aa8; --rose-l:#fbecef;
+  --sun:#f3cf72;
+  --ok:#3f9a7b; --mid:#d59b3b; --bad:#d06a6a;
+  --shadow:0 10px 30px -12px rgba(60,100,95,.25);
+  --radius:20px;
+  --grad:linear-gradient(135deg,#bfe3d4 0%,#cfe4f5 50%,#e2dcf7 100%);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#151e22; --bg2:#1a252a;
+    --surface:#1f2c31; --surface2:#24343a; --line:#31454c;
+    --ink:#e4efec; --ink2:#a9bdbd; --ink3:#7f9597;
+    --sage:#7fc3ab; --sage-d:#95d3bd; --sage-l:#22403a;
+    --lav:#b1a6e6; --lav-l:#2d2a45;
+    --sky:#86c3e6; --sky-l:#1f3947;
+    --peach:#f0bf9f; --peach-l:#43332a;
+    --rose:#eaa9b5; --rose-l:#45303a;
+    --ok:#6cc9a5; --mid:#e8b660; --bad:#ec8f8f;
+    --shadow:0 10px 30px -12px rgba(0,0,0,.6);
+    --grad:linear-gradient(135deg,#1f4a40 0%,#1f3a4f 50%,#342e55 100%);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#151e22; --bg2:#1a252a;
+  --surface:#1f2c31; --surface2:#24343a; --line:#31454c;
+  --ink:#e4efec; --ink2:#a9bdbd; --ink3:#7f9597;
+  --sage:#7fc3ab; --sage-d:#95d3bd; --sage-l:#22403a;
+  --lav:#b1a6e6; --lav-l:#2d2a45;
+  --sky:#86c3e6; --sky-l:#1f3947;
+  --peach:#f0bf9f; --peach-l:#43332a;
+  --rose:#eaa9b5; --rose-l:#45303a;
+  --ok:#6cc9a5; --mid:#e8b660; --bad:#ec8f8f;
+  --shadow:0 10px 30px -12px rgba(0,0,0,.6);
+  --grad:linear-gradient(135deg,#1f4a40 0%,#1f3a4f 50%,#342e55 100%);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0; font-family:"Nunito",system-ui,-apple-system,"Segoe UI",sans-serif; color:var(--ink);
+  background:var(--bg);
+  background-image:
+    radial-gradient(900px 500px at 0% -10%, color-mix(in srgb,var(--sage) 22%, transparent), transparent 60%),
+    radial-gradient(800px 500px at 100% 0%, color-mix(in srgb,var(--lav) 20%, transparent), transparent 60%),
+    radial-gradient(700px 500px at 50% 110%, color-mix(in srgb,var(--sky) 18%, transparent), transparent 60%);
+  background-attachment:fixed; min-height:100vh; line-height:1.55;
+}
+h1,h2,h3,h4{font-family:"Quicksand","Nunito",sans-serif; margin:0 0 .4em; line-height:1.25}
+button,input,select,textarea{font:inherit;color:inherit}
+a{color:var(--sage-d)}
+.wrap{max-width:1180px;margin:0 auto;padding:0 16px}
+
+/* ---------- Encabezado ---------- */
+header.top{position:sticky;top:0;z-index:30;backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  background:color-mix(in srgb,var(--bg) 78%, transparent);border-bottom:1px solid var(--line)}
+.topin{display:flex;align-items:center;gap:12px;padding:10px 0}
+.brand{display:flex;align-items:center;gap:10px;min-width:0}
+.brand svg{width:40px;height:40px;flex:none}
+.brand b{font-family:"Quicksand","Nunito",sans-serif;font-size:1.25rem;letter-spacing:.2px}
+.brand small{display:block;color:var(--ink2);font-size:.78rem;margin-top:-2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.topact{margin-left:auto;display:flex;gap:8px;align-items:center}
+.pill{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:7px 12px;cursor:pointer;
+  display:inline-flex;align-items:center;gap:6px;font-weight:700;font-size:.85rem;transition:.2s}
+.pill:hover{border-color:var(--sage);transform:translateY(-1px)}
+.pill{white-space:nowrap}
+@media (max-width:520px){.brand small{display:none}.topin{gap:8px}}
+.pill .dot{width:9px;height:9px;border-radius:50%;background:var(--ink3)}
+.pill.on .dot{background:var(--ok);box-shadow:0 0 0 4px color-mix(in srgb,var(--ok) 25%,transparent)}
+nav.tabs{display:flex;gap:6px;padding:0 0 10px;overflow-x:auto;scrollbar-width:none}
+nav.tabs::-webkit-scrollbar{display:none}
+.tab{flex:none;border:0;border-radius:14px;padding:9px 16px;background:transparent;cursor:pointer;font-weight:800;color:var(--ink2);
+  display:inline-flex;gap:8px;align-items:center;transition:.25s}
+.tab:hover{background:var(--surface)}
+.tab[aria-selected="true"]{background:var(--surface);color:var(--ink);box-shadow:var(--shadow)}
+.tab .tdot{width:10px;height:10px;border-radius:4px}
+
+main{padding:22px 0 60px}
+section.view{display:none;animation:fade .45s ease}
+section.view.on{display:block}
+@keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+/* ---------- Tarjetas y formularios ---------- */
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:20px;box-shadow:var(--shadow)}
+.card + .card{margin-top:16px}
+.grid2{display:grid;grid-template-columns:minmax(300px,380px) 1fr;gap:18px;align-items:start}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.half{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+@media (max-width:900px){.grid2,.grid3,.half{grid-template-columns:1fr}}
+label{display:block;font-weight:700;font-size:.86rem;margin:12px 0 5px;color:var(--ink2)}
+input[type=text],input[type=number],select,textarea{width:100%;border:1.5px solid var(--line);border-radius:12px;background:var(--surface2);
+  padding:10px 12px;outline:none;transition:.2s}
+input:focus,select:focus,textarea:focus{border-color:var(--sage);box-shadow:0 0 0 4px color-mix(in srgb,var(--sage) 20%,transparent)}
+textarea{resize:vertical;min-height:80px}
+.row{display:flex;gap:10px}
+.row > *{flex:1}
+.seg{display:flex;background:var(--surface2);border:1px solid var(--line);border-radius:14px;padding:4px;gap:4px}
+.seg button{flex:1;border:0;background:transparent;border-radius:10px;padding:9px 6px;font-weight:800;cursor:pointer;color:var(--ink2);font-size:.9rem}
+.seg button.on{background:var(--surface);color:var(--ink);box-shadow:0 3px 10px -4px rgba(0,0,0,.2)}
+.btn{border:0;border-radius:14px;padding:11px 18px;font-weight:800;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:8px;transition:.2s}
+.btn.pri{background:linear-gradient(135deg,var(--sage),color-mix(in srgb,var(--sage) 55%,var(--sky)));color:#fff;box-shadow:0 8px 20px -10px var(--sage)}
+.btn.pri:hover{transform:translateY(-2px)}
+.btn.soft{background:var(--sage-l);color:var(--sage-d)}
+.btn.lav{background:var(--lav-l);color:var(--lav)}
+.btn.ghost{background:transparent;border:1.5px solid var(--line)}
+.btn.ghost:hover{border-color:var(--sage)}
+.btn:disabled{opacity:.55;cursor:not-allowed;transform:none}
+.btn.block{width:100%}
+.tools{display:flex;flex-wrap:wrap;gap:8px}
+.chk{display:flex;align-items:center;gap:8px;font-weight:600;color:var(--ink2);margin-top:10px;font-size:.9rem;cursor:pointer}
+.chk input{width:18px;height:18px;accent-color:var(--sage)}
+.hint{font-size:.82rem;color:var(--ink3);margin-top:6px}
+.badge{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:999px;font-size:.78rem;font-weight:800}
+.b-sage{background:var(--sage-l);color:var(--sage-d)} .b-lav{background:var(--lav-l);color:var(--lav)}
+.b-sky{background:var(--sky-l);color:var(--sky)} .b-peach{background:var(--peach-l);color:#b86f45}
+.b-rose{background:var(--rose-l);color:#b8566a}
+:root[data-theme="dark"] .b-peach{color:var(--peach)} :root[data-theme="dark"] .b-rose{color:var(--rose)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .b-peach{color:var(--peach)} :root:not([data-theme="light"]) .b-rose{color:var(--rose)}}
+.sectitle{display:flex;align-items:center;gap:12px;margin-bottom:16px;flex-wrap:wrap}
+.sectitle .ico{width:46px;height:46px;border-radius:14px;display:grid;place-items:center;font-size:1.4rem;flex:none}
+.sectitle p{margin:0;color:var(--ink2)}
+
+/* ---------- Inicio ---------- */
+.hero{position:relative;overflow:hidden;background:var(--grad);border-radius:28px;padding:34px 30px;display:grid;grid-template-columns:1.3fr 1fr;gap:20px;align-items:center;box-shadow:var(--shadow)}
+@media (max-width:800px){.hero{grid-template-columns:1fr;padding:26px 20px}}
+.hero h1{font-size:clamp(1.6rem,3.6vw,2.4rem)}
+.hero p{color:var(--ink2);font-size:1.05rem;max-width:560px}
+.blobwrap{display:grid;place-items:center;min-height:200px}
+.blob{width:190px;height:190px;border-radius:42% 58% 55% 45%/48% 42% 58% 52%;background:radial-gradient(circle at 30% 30%,#fff9, transparent 60%),linear-gradient(135deg,var(--sage),var(--sky) 55%,var(--lav));
+  animation:breathe 8s ease-in-out infinite, morph 14s ease-in-out infinite;display:grid;place-items:center;color:#fff;font-weight:800;font-family:"Quicksand","Nunito",sans-serif;text-shadow:0 1px 6px rgba(0,0,0,.2);box-shadow:0 20px 50px -20px var(--sage)}
+@keyframes breathe{0%,100%{transform:scale(.86)}50%{transform:scale(1.05)}}
+@keyframes morph{0%,100%{border-radius:42% 58% 55% 45%/48% 42% 58% 52%}50%{border-radius:58% 42% 45% 55%/42% 58% 42% 58%}}
+.feat{cursor:pointer;transition:.25s;text-align:left;border:1px solid var(--line)}
+.feat:hover{transform:translateY(-4px)}
+.feat .ico{width:52px;height:52px;border-radius:16px;display:grid;place-items:center;font-size:1.6rem;margin-bottom:10px}
+.feat p{color:var(--ink2);margin:.2em 0 0;font-size:.95rem}
+.quote{font-family:"Quicksand","Nunito",sans-serif;font-size:1.1rem;font-weight:600;color:var(--ink);margin:0}
+.moods{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.mood{border:1.5px solid var(--line);background:var(--surface2);border-radius:16px;padding:8px 10px;cursor:pointer;font-size:1.6rem;line-height:1;transition:.2s;display:flex;flex-direction:column;align-items:center;gap:4px;min-width:64px}
+.mood small{font-size:.68rem;color:var(--ink2);font-weight:700}
+.mood:hover,.mood.on{border-color:var(--sage);background:var(--sage-l);transform:translateY(-2px)}
+.bars{display:flex;gap:6px;align-items:flex-end;height:80px;margin-top:12px}
+.bars div{flex:1;border-radius:8px 8px 4px 4px;background:linear-gradient(180deg,var(--sage),var(--sky));min-height:4px;position:relative}
+.bars div span{position:absolute;bottom:-18px;left:0;right:0;text-align:center;font-size:.66rem;color:var(--ink3)}
+
+/* ---------- Documento generado ---------- */
+.docout{min-height:420px}
+.docpaper{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:26px;outline:none}
+.docpaper:focus{border-color:var(--sage)}
+.docpaper h2{color:var(--sage-d);border-bottom:2px solid var(--sage-l);padding-bottom:6px;margin-top:0}
+.docpaper h3{color:var(--lav);margin-top:1.2em}
+.docpaper table{width:100%;border-collapse:collapse;margin:10px 0 16px;font-size:.92rem}
+.docpaper th,.docpaper td{border:1px solid var(--line);padding:8px 10px;vertical-align:top;text-align:left}
+.docpaper th{background:var(--sage-l);color:var(--ink)}
+.docpaper .box{border-radius:14px;padding:12px 16px;margin:10px 0;border:1px dashed var(--line)}
+.docpaper .box.calm{background:var(--lav-l);border-color:transparent}
+.docpaper .box.tip{background:var(--sky-l);border-color:transparent}
+.docpaper .box.key{background:var(--peach-l);border-color:transparent}
+.docpaper .lines{border-bottom:1px solid var(--line);height:26px}
+.docpaper ol li,.docpaper ul li{margin:4px 0}
+.empty{display:grid;place-items:center;text-align:center;color:var(--ink3);min-height:380px;padding:20px}
+.empty .big{font-size:3rem}
+.note{border-radius:14px;padding:10px 14px;background:var(--sky-l);color:var(--ink);font-size:.88rem;margin-bottom:12px;display:flex;gap:8px;align-items:flex-start}
+.note.warn{background:var(--peach-l)}
+.loader{display:flex;gap:6px;align-items:center;justify-content:center;padding:40px;color:var(--ink2);flex-direction:column}
+.loader .dots{display:flex;gap:6px}
+.loader .dots i{width:12px;height:12px;border-radius:50%;background:var(--sage);animation:bob 1.2s infinite}
+.loader .dots i:nth-child(2){background:var(--sky);animation-delay:.15s}
+.loader .dots i:nth-child(3){background:var(--lav);animation-delay:.3s}
+@keyframes bob{0%,100%{transform:translateY(0);opacity:.6}50%{transform:translateY(-8px);opacity:1}}
+.hist{display:flex;flex-direction:column;gap:6px;margin-top:8px;max-height:220px;overflow:auto}
+.hist button{border:1px solid var(--line);background:var(--surface2);border-radius:10px;padding:8px 10px;text-align:left;cursor:pointer;font-size:.85rem}
+.hist button:hover{border-color:var(--sage)}
+
+/* ---------- Corrector ---------- */
+.steps{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap}
+.step{display:flex;align-items:center;gap:8px;font-weight:800;color:var(--ink2);font-size:.9rem}
+.step b{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;background:var(--sage-l);color:var(--sage-d)}
+.drop{border:2.5px dashed color-mix(in srgb,var(--sage) 55%,var(--line));border-radius:20px;padding:26px 16px;text-align:center;background:var(--surface2);cursor:pointer;transition:.2s}
+.drop.over{background:var(--sage-l);border-color:var(--sage)}
+.drop .big{font-size:2.4rem}
+.prog{height:10px;border-radius:999px;background:var(--surface2);overflow:hidden;border:1px solid var(--line);margin-top:10px}
+.prog i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--sage),var(--sky),var(--lav));transition:width .3s}
+.stu{border:1px solid var(--line);border-radius:18px;padding:16px;margin-top:14px;background:var(--surface)}
+.stuhead{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.stuhead input{max-width:320px;font-weight:800}
+.nota{margin-left:auto;display:flex;align-items:center;gap:10px}
+.nota .n{font-family:"Quicksand","Nunito",sans-serif;font-weight:700;font-size:1.8rem;border-radius:16px;padding:4px 14px}
+.n.ok{background:var(--sage-l);color:var(--ok)} .n.bad{background:var(--rose-l);color:var(--bad)}
+.qgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px;margin-top:12px}
+.q{border:1.5px solid var(--line);border-radius:12px;padding:8px;display:flex;flex-direction:column;gap:4px;font-size:.82rem}
+.q.ok{border-color:color-mix(in srgb,var(--ok) 60%,var(--line));background:color-mix(in srgb,var(--ok) 8%,transparent)}
+.q.bad{border-color:color-mix(in srgb,var(--bad) 60%,var(--line));background:color-mix(in srgb,var(--bad) 7%,transparent)}
+.q.mid{border-color:color-mix(in srgb,var(--mid) 60%,var(--line));background:color-mix(in srgb,var(--mid) 8%,transparent)}
+.q .qh{display:flex;justify-content:space-between;font-weight:800}
+.q input{padding:6px 8px;border-radius:8px;font-size:.85rem}
+.q .k{color:var(--ink3)}
+details{margin-top:10px}
+summary{cursor:pointer;font-weight:700;color:var(--ink2);font-size:.88rem}
+pre.raw{white-space:pre-wrap;background:var(--surface2);border-radius:12px;padding:10px;font-size:.8rem;max-height:220px;overflow:auto;border:1px solid var(--line)}
+.fb{margin-top:10px;border-radius:14px;background:var(--lav-l);padding:10px 14px;font-size:.9rem}
+table.res{width:100%;border-collapse:collapse;font-size:.9rem}
+table.res th,table.res td{padding:8px;border-bottom:1px solid var(--line);text-align:left}
+.tablewrap{overflow-x:auto}
+
+/* ---------- Bienestar ---------- */
+.chatwrap{display:grid;grid-template-columns:1fr 340px;gap:18px;align-items:start}
+@media (max-width:950px){.chatwrap{grid-template-columns:1fr}}
+.chat{display:flex;flex-direction:column;height:min(70vh,640px);min-height:440px;padding:0;overflow:hidden}
+.chathead{display:flex;align-items:center;gap:12px;padding:14px 18px;border-bottom:1px solid var(--line);background:linear-gradient(90deg,var(--sage-l),var(--lav-l))}
+.avatar{width:42px;height:42px;border-radius:50%;background:linear-gradient(135deg,var(--sage),var(--lav));display:grid;place-items:center;color:#fff;font-size:1.3rem;flex:none}
+.msgs{flex:1;overflow-y:auto;padding:18px;display:flex;flex-direction:column;gap:10px;scroll-behavior:smooth}
+.msg{max-width:84%;padding:10px 14px;border-radius:18px;font-size:.95rem;animation:fade .35s}
+.msg.bot{background:var(--surface2);border:1px solid var(--line);border-bottom-left-radius:6px;align-self:flex-start}
+.msg.me{background:linear-gradient(135deg,var(--sage),color-mix(in srgb,var(--sage) 60%,var(--sky)));color:#fff;border-bottom-right-radius:6px;align-self:flex-end}
+.msg p{margin:.3em 0} .msg ul{margin:.3em 0;padding-left:1.2em}
+.msg .acts{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.msg .acts button{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:5px 11px;font-size:.8rem;font-weight:700;cursor:pointer}
+.msg .acts button:hover{border-color:var(--sage)}
+.msg.sos{background:var(--rose-l);border-color:color-mix(in srgb,var(--rose) 50%,transparent)}
+.typing{display:flex;gap:4px;padding:12px 14px}
+.typing i{width:8px;height:8px;border-radius:50%;background:var(--ink3);animation:bob 1s infinite}
+.typing i:nth-child(2){animation-delay:.15s} .typing i:nth-child(3){animation-delay:.3s}
+.chips{display:flex;gap:6px;padding:0 14px 8px;overflow-x:auto;scrollbar-width:none}
+.chips button{flex:none;border:1px solid var(--line);background:var(--surface2);border-radius:999px;padding:6px 12px;font-size:.82rem;font-weight:700;cursor:pointer}
+.chips button:hover{background:var(--sage-l)}
+.composer{display:flex;gap:8px;padding:12px 14px;border-top:1px solid var(--line)}
+.composer textarea{min-height:46px;max-height:120px;border-radius:14px}
+.breath{display:grid;place-items:center;padding:10px 0}
+.circle{width:150px;height:150px;border-radius:50%;display:grid;place-items:center;text-align:center;font-weight:800;color:#fff;
+  background:radial-gradient(circle at 35% 30%,#ffffff70,transparent 55%),linear-gradient(135deg,var(--sky),var(--lav));transform:scale(.6);transition:transform 4s ease-in-out;box-shadow:0 0 0 12px color-mix(in srgb,var(--sky) 15%,transparent)}
+.circle small{display:block;font-weight:600;opacity:.9}
+.pausa{background:var(--peach-l);border-radius:16px;padding:12px 14px;margin-top:10px}
+.gratlist{list-style:none;padding:0;margin:10px 0 0;max-height:160px;overflow:auto}
+.gratlist li{background:var(--surface2);border:1px solid var(--line);border-radius:10px;padding:6px 10px;margin-bottom:6px;font-size:.85rem}
+.sosbox{background:var(--rose-l);border-radius:16px;padding:12px 14px;font-size:.88rem}
+.sosbox b{display:block}
+
+/* ---------- Modal login ---------- */
+.modal{position:fixed;inset:0;background:rgba(20,35,38,.45);backdrop-filter:blur(4px);display:none;place-items:center;z-index:60;padding:16px}
+.modal.on{display:grid}
+.modal .card{max-width:440px;width:100%}
+.toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%) translateY(120px);background:var(--ink);color:var(--bg);padding:10px 18px;border-radius:14px;font-weight:700;z-index:80;transition:.35s;max-width:calc(100% - 32px)}
+.toast.on{transform:translateX(-50%) translateY(0)}
+footer{color:var(--ink3);text-align:center;font-size:.82rem;padding:10px 16px 30px}
+
+/* ---------- Impresión: solo el documento ---------- */
+@media print{
+  body{background:#fff;color:#000}
+  header.top,nav,footer,.noprint,.toast,.modal{display:none!important}
+  section.view{display:none!important}
+  section.view.printing{display:block!important}
+  .card{box-shadow:none;border:0;padding:0}
+  .grid2{display:block}
+  .grid2 > .card:first-child{display:none}
+  .docpaper{border:0;padding:0}
+}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <div class="topin">
+      <div class="brand">
+        <svg viewBox="0 0 64 64" aria-hidden="true"><defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#8fd0b6"/><stop offset=".55" stop-color="#8cc6ea"/><stop offset="1" stop-color="#b4a8ea"/></linearGradient></defs><circle cx="32" cy="32" r="30" fill="url(#lg)"/><path d="M32 51c-10-6-14-15-12-25 8 0 14 6 12 25zm0 0c10-6 14-15 12-25-8 0-14 6-12 25z" fill="#fff"/><circle cx="32" cy="17" r="5" fill="#fff" opacity=".9"/></svg>
+        <div><b>Aula Serena</b><small>Planifica · Corrige · Respira</small></div>
+      </div>
+      <div class="topact">
+        <button class="pill" id="iaPill" type="button" title="Conectar la IA del colegio (opcional)"><span class="dot"></span><span id="iaTxt">Modo local</span></button>
+        <button class="pill" id="themeBtn" type="button" aria-label="Cambiar tema">🌙</button>
+      </div>
+    </div>
+    <nav class="tabs" role="tablist">
+      <button class="tab" role="tab" data-v="inicio" aria-selected="true"><span class="tdot" style="background:var(--sage)"></span>Inicio</button>
+      <button class="tab" role="tab" data-v="plan" aria-selected="false"><span class="tdot" style="background:var(--sky)"></span>Planificador</button>
+      <button class="tab" role="tab" data-v="corr" aria-selected="false"><span class="tdot" style="background:var(--peach)"></span>Corrector</button>
+      <button class="tab" role="tab" data-v="bien" aria-selected="false"><span class="tdot" style="background:var(--lav)"></span>Bienestar</button>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+
+<!-- ======================= INICIO ======================= -->
+<section class="view on" id="v-inicio">
+  <div class="hero">
+    <div>
+      <span class="badge b-sage" id="saludoBadge">Hola</span>
+      <h1>Tu espacio para enseñar con calma</h1>
+      <p>Crea planificaciones, rúbricas y guías en minutos, corrige evaluaciones escaneadas o en PDF y date un momento para ti con nuestro acompañante de bienestar.</p>
+      <div class="tools" style="margin-top:14px">
+        <button class="btn pri" data-go="plan">Crear material</button>
+        <button class="btn ghost" data-go="bien">Tomar una pausa</button>
+      </div>
+    </div>
+    <div class="blobwrap"><div class="blob" id="heroBlob">respira</div></div>
+  </div>
+
+  <div class="grid3" style="margin-top:18px">
+    <button class="card feat" data-go="plan">
+      <div class="ico" style="background:var(--sky-l)">📘</div>
+      <h3>Planificador curricular</h3>
+      <p>Planificaciones clase a clase, rúbricas analíticas con escala de notas y guías de trabajo listas para imprimir.</p>
+    </button>
+    <button class="card feat" data-go="corr">
+      <div class="ico" style="background:var(--peach-l)">📝</div>
+      <h3>Corrector de evaluaciones</h3>
+      <p>Escanea con la cámara o adjunta PDF. Compara con tu pauta, calcula puntaje y nota (escala 1,0 a 7,0).</p>
+    </button>
+    <button class="card feat" data-go="bien">
+      <div class="ico" style="background:var(--lav-l)">🌿</div>
+      <h3>Bienestar laboral</h3>
+      <p>Un acompañante que escucha, orienta con estrategias concretas y te guía en respiraciones y pausas.</p>
+    </button>
+  </div>
+
+  <div class="half" style="margin-top:18px">
+    <div class="card">
+      <h3>¿Cómo llegas hoy?</h3>
+      <p class="hint" style="margin-top:0">Registrarlo toma 2 segundos y te ayuda a notar tus patrones. Queda solo en este navegador.</p>
+      <div class="moods" id="moods"></div>
+      <div class="bars" id="moodBars" aria-label="Estado de ánimo de los últimos 7 días"></div>
+      <div style="height:18px"></div>
+    </div>
+    <div class="card" style="background:var(--grad)">
+      <span class="badge b-lav">Frase del día</span>
+      <p class="quote" id="quote" style="margin-top:10px"></p>
+      <p class="hint" id="quoteTip" style="color:var(--ink2)"></p>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= PLANIFICADOR ======================= -->
+<section class="view" id="v-plan">
+  <div class="sectitle">
+    <div class="ico" style="background:var(--sky-l)">📘</div>
+    <div><h2>Planificador curricular</h2><p>Planificaciones, rúbricas y guías alineadas al currículum nacional.</p></div>
+  </div>
+  <div class="grid2">
+    <div class="card noprint">
+      <div class="seg" id="planTipo">
+        <button class="on" data-t="planificacion">Planificación</button>
+        <button data-t="rubrica">Rúbrica</button>
+        <button data-t="guia">Guía</button>
+      </div>
+      <div class="row">
+        <div><label for="pAsig">Asignatura</label>
+          <select id="pAsig"></select></div>
+        <div><label for="pNivel">Nivel</label>
+          <select id="pNivel"></select></div>
+      </div>
+      <label for="pTema">Tema, unidad u OA</label>
+      <input type="text" id="pTema" placeholder="Ej: Fracciones equivalentes · OA 8">
+      <label for="pObj">Objetivo o descripción (opcional)</label>
+      <textarea id="pObj" placeholder="Ej: Que los estudiantes representen fracciones equivalentes con material concreto y en la recta numérica."></textarea>
+
+      <div id="fPlan">
+        <div class="row">
+          <div><label for="pClases">N.º de clases</label><input type="number" id="pClases" min="1" max="12" value="1"></div>
+          <div><label for="pDur">Minutos por clase</label><input type="number" id="pDur" min="30" max="180" step="5" value="90"></div>
+        </div>
+        <label for="pBloom">Nivel de profundidad</label>
+        <select id="pBloom">
+          <option value="recordar">Recordar</option>
+          <option value="comprender">Comprender</option>
+          <option value="aplicar" selected>Aplicar</option>
+          <option value="analizar">Analizar</option>
+          <option value="evaluar">Evaluar</option>
+          <option value="crear">Crear</option>
+        </select>
+      </div>
+      <div id="fRub" style="display:none">
+        <label for="rCrit">Criterios (uno por línea, opcional)</label>
+        <textarea id="rCrit" placeholder="Si lo dejas vacío, sugerimos criterios propios de la asignatura."></textarea>
+        <div class="row">
+          <div><label for="rNiv">Niveles</label>
+            <select id="rNiv"><option value="4" selected>4 niveles</option><option value="3">3 niveles</option></select></div>
+          <div><label for="rExig">Exigencia (%)</label><input type="number" id="rExig" min="40" max="80" value="60"></div>
+        </div>
+        <label for="rProd">Producto evaluado</label>
+        <input type="text" id="rProd" placeholder="Ej: Informe de laboratorio, disertación, maqueta…">
+      </div>
+      <div id="fGuia" style="display:none">
+        <label for="gConc">Conceptos clave (separados por coma)</label>
+        <input type="text" id="gConc" placeholder="Ej: numerador, denominador, equivalencia">
+        <label for="gTipo">Tipo de guía</label>
+        <select id="gTipo">
+          <option value="aprendizaje">Guía de aprendizaje</option>
+          <option value="ejercitacion">Guía de ejercitación</option>
+          <option value="evaluada">Guía evaluada (con puntaje)</option>
+        </select>
+      </div>
+      <label class="chk"><input type="checkbox" id="pDua" checked> Incluir adecuaciones DUA</label>
+      <label class="chk"><input type="checkbox" id="pCalma" checked> Incluir pausa activa / momento de calma</label>
+
+      <div style="margin-top:16px"><button class="btn pri block" id="pGo">Crear material</button></div>
+      <p class="hint" id="pModeHint"></p>
+
+      <details id="histBox"><summary>Mis materiales recientes</summary><div class="hist" id="hist"></div></details>
+    </div>
+
+    <div class="card docout">
+      <div class="tools noprint" id="docTools" style="display:none;margin-bottom:12px">
+        <button class="btn soft" id="dCopy">Copiar</button>
+        <button class="btn soft" id="dPrint">Imprimir / PDF</button>
+        <button class="btn soft" id="dWord">Descargar Word</button>
+        <button class="btn soft" id="dHtml">Descargar HTML</button>
+        <span class="hint" style="align-self:center">Puedes editar el documento directamente ✏️</span>
+      </div>
+      <div id="docBox">
+        <div class="empty"><div><div class="big">🌱</div><h3>Tu material aparecerá aquí</h3><p>Completa el formulario y presiona <b>Crear material</b>.</p></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= CORRECTOR ======================= -->
+<section class="view" id="v-corr">
+  <div class="sectitle">
+    <div class="ico" style="background:var(--peach-l)">📝</div>
+    <div><h2>Corrector de evaluaciones</h2><p>Escanea o adjunta PDF, revisa lo detectado y obtén puntaje, nota y retroalimentación.</p></div>
+  </div>
+  <div class="grid2">
+    <div class="card noprint">
+      <div class="steps"><div class="step"><b>1</b>Pauta</div></div>
+      <label for="cKey">Pauta de corrección (una pregunta por línea)</label>
+      <textarea id="cKey" style="min-height:170px" placeholder="1: A&#10;2: C&#10;3: V&#10;4: F&#10;5: fotosíntesis, clorofila, luz solar [3]"></textarea>
+      <p class="hint">Alternativas (A–E) o Verdadero/Falso (V/F) se comparan exacto. Para respuestas abiertas escribe palabras clave separadas por coma: se asigna puntaje parcial según cuántas aparezcan. <b>[3]</b> = puntaje de esa pregunta.</p>
+      <div class="row">
+        <div><label for="cPts">Puntaje por defecto</label><input type="number" id="cPts" min="0.5" step="0.5" value="1"></div>
+        <div><label for="cExig">Exigencia (%)</label><input type="number" id="cExig" min="40" max="80" value="60"></div>
+      </div>
+      <button class="btn ghost block" id="cDemo" style="margin-top:10px">Cargar ejemplo</button>
+
+      <div class="steps" style="margin-top:18px"><div class="step"><b>2</b>Respuestas del estudiante</div></div>
+      <div class="drop" id="drop" tabindex="0" role="button" aria-label="Adjuntar archivos">
+        <div class="big">📄</div>
+        <b>Arrastra aquí PDF o fotos</b>
+        <div class="hint">o haz clic para elegir. Cada archivo se corrige como un estudiante.</div>
+      </div>
+      <input type="file" id="cFile" accept="application/pdf,image/*" multiple hidden>
+      <input type="file" id="cCam" accept="image/*" capture="environment" hidden>
+      <div class="tools" style="margin-top:10px">
+        <button class="btn lav" id="cCamBtn" style="flex:1">📷 Escanear con cámara</button>
+        <button class="btn ghost" id="cPasteBtn" style="flex:1">⌨️ Pegar texto</button>
+      </div>
+      <div id="pasteBox" style="display:none">
+        <label for="cPaste">Respuestas (texto)</label>
+        <textarea id="cPaste" placeholder="Nombre: Ana Pérez&#10;1) A  2) C  3) V&#10;5) Las plantas usan la luz solar y la clorofila…"></textarea>
+        <button class="btn soft block" id="cPasteGo" style="margin-top:8px">Corregir texto</button>
+      </div>
+      <div id="cStatus" class="hint"></div>
+      <div class="prog" id="cProg" style="display:none"><i></i></div>
+      <p class="hint">🔒 Los archivos se procesan en tu navegador; no se suben a ningún servidor (salvo que pidas retroalimentación con IA).</p>
+    </div>
+
+    <div class="card">
+      <div class="tools noprint" id="cTools" style="display:none;margin-bottom:10px">
+        <button class="btn soft" id="cCsv">Descargar CSV</button>
+        <button class="btn soft" id="cPrint">Imprimir informe</button>
+        <button class="btn ghost" id="cClear">Limpiar</button>
+      </div>
+      <div id="cSummary"></div>
+      <div id="cList">
+        <div class="empty"><div><div class="big">🍃</div><h3>Aún no hay evaluaciones</h3><p>Escribe la pauta y adjunta las respuestas. Podrás corregir lo detectado antes de cerrar la nota.</p></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= BIENESTAR ======================= -->
+<section class="view" id="v-bien">
+  <div class="sectitle">
+    <div class="ico" style="background:var(--lav-l)">🌿</div>
+    <div><h2>Bienestar laboral</h2><p>Un espacio confidencial para ordenar lo que sientes y encontrar estrategias concretas.</p></div>
+  </div>
+  <div class="chatwrap">
+    <div class="card chat">
+      <div class="chathead">
+        <div class="avatar">🌿</div>
+        <div><b>Sereno</b><div class="hint" style="margin:0" id="chatMode">Acompañante de bienestar docente</div></div>
+        <button class="pill" id="chatReset" style="margin-left:auto" title="Nueva conversación">↺</button>
+      </div>
+      <div class="msgs" id="msgs" aria-live="polite"></div>
+      <div class="chips" id="chips"></div>
+      <form class="composer" id="composer">
+        <textarea id="chatIn" rows="1" placeholder="Cuéntame cómo te sientes…" aria-label="Mensaje"></textarea>
+        <button class="btn pri" type="submit" aria-label="Enviar">➤</button>
+      </form>
+    </div>
+
+    <div>
+      <div class="card">
+        <h3>Respiración guiada</h3>
+        <div class="seg" id="brMode">
+          <button class="on" data-m="caja">Caja</button>
+          <button data-m="478">4-7-8</button>
+          <button data-m="coh">Coherente</button>
+        </div>
+        <div class="breath"><div class="circle" id="circle"><div>Listo<small id="brSub">cuando quieras</small></div></div></div>
+        <button class="btn pri block" id="brGo">Comenzar</button>
+        <p class="hint" id="brInfo">Caja: inhala 4 · sostén 4 · exhala 4 · sostén 4.</p>
+      </div>
+      <div class="card">
+        <h3>Micro‑pausa</h3>
+        <div class="pausa" id="pausa"></div>
+        <button class="btn soft block" id="pausaNext" style="margin-top:10px">Otra idea</button>
+      </div>
+      <div class="card">
+        <h3>Diario de gratitud</h3>
+        <form id="gratForm" class="row"><input type="text" id="gratIn" placeholder="Hoy agradezco…" aria-label="Agradecimiento"><button class="btn soft" style="flex:none">+</button></form>
+        <ul class="gratlist" id="gratList"></ul>
+      </div>
+      <div class="card">
+        <h3>Si necesitas ayuda ahora</h3>
+        <div class="sosbox">
+          <b>Línea de prevención del suicidio: *4141</b>Gratuita, 24/7, desde celulares.
+          <b style="margin-top:6px">Salud Responde: 600 360 7777</b>Orientación en salud 24/7.
+          <b style="margin-top:6px">Emergencias: SAMU 131</b>
+          <p style="margin:.5em 0 0">Si el malestar es de origen laboral, tu mutualidad (ACHS, Mutual de Seguridad o IST) puede evaluarte.</p>
+        </div>
+        <p class="hint">Sereno no reemplaza la atención de un profesional de salud mental.</p>
+      </div>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer>Aula Serena · Colegio Presidente José Joaquín Prieto · SIP Red de Colegios<br>Tus datos quedan en este navegador. La IA es opcional y solo se usa si la conectas.</footer>
+
+<!-- Modal para conectar IA -->
+<div class="modal" id="iaModal" role="dialog" aria-modal="true" aria-labelledby="iaTitle">
+  <div class="card">
+    <h3 id="iaTitle">Conectar la IA del colegio</h3>
+    <p style="color:var(--ink2);margin-top:0">Todo funciona sin conexión a IA. Si inicias sesión con tu cuenta institucional, el material y las respuestas de Sereno serán más específicos.</p>
+    <div id="gBtn" style="min-height:44px;display:grid;place-items:center"></div>
+    <p class="hint" id="iaErr"></p>
+    <div class="tools" style="justify-content:flex-end;margin-top:10px">
+      <button class="btn ghost" id="iaOff" style="display:none">Desconectar</button>
+      <button class="btn soft" id="iaClose">Cerrar</button>
+    </div>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+/* =====================================================================
+   CONFIGURACIÓN · mismo Client ID y mismo Worker que ASE-IA / Fichas.
+   La IA es opcional: si no hay sesión, todo se genera con plantillas locales.
+   ===================================================================== */
+const GOOGLE_CLIENT_ID = "195849212680-sjfflsv7f96o6742l67ihj5kllitpvj4.apps.googleusercontent.com";
+const ASE_IA_API_URL = "https://ase-ia.franciscoamigo21.workers.dev";
+const LS = "aulaSerena.";
+
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
+const esc = s => String(s == null ? "" : s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const pick = a => a[Math.floor(Math.random() * a.length)];
+const norm = s => String(s || "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+function lsGet(k, d) { try { const v = localStorage.getItem(LS + k); return v ? JSON.parse(v) : d; } catch (e) { return d; } }
+function lsSet(k, v) { try { localStorage.setItem(LS + k, JSON.stringify(v)); } catch (e) {} }
+function toast(msg) { const t = $("#toast"); t.textContent = msg; t.classList.add("on"); clearTimeout(t._h); t._h = setTimeout(() => t.classList.remove("on"), 2600); }
+
+/* ---------- Tema ---------- */
+(function () {
+  const saved = lsGet("theme", null);
+  if (saved) document.documentElement.setAttribute("data-theme", saved);
+  const isDark = () => document.documentElement.getAttribute("data-theme") === "dark" ||
+    (!document.documentElement.getAttribute("data-theme") && matchMedia("(prefers-color-scheme: dark)").matches);
+  const upd = () => { $("#themeBtn").textContent = isDark() ? "☀️" : "🌙"; };
+  upd();
+  $("#themeBtn").onclick = () => { const n = isDark() ? "light" : "dark"; document.documentElement.setAttribute("data-theme", n); lsSet("theme", n); upd(); };
+})();
+
+/* ---------- Navegación ---------- */
+function go(v) {
+  $$(".tab").forEach(t => t.setAttribute("aria-selected", t.dataset.v === v ? "true" : "false"));
+  $$("section.view").forEach(s => s.classList.toggle("on", s.id === "v-" + v));
+  lsSet("tab", v);
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+$$(".tab").forEach(t => t.onclick = () => go(t.dataset.v));
+$$("[data-go]").forEach(b => b.onclick = () => go(b.dataset.go));
+
+/* =====================================================================
+   IA OPCIONAL (Google Identity + Worker ASE-IA ?resource=crear)
+   ===================================================================== */
+let IA_CRED = null, IA_USER = null;
+function iaUpdateUI() {
+  const on = !!IA_CRED;
+  $("#iaPill").classList.toggle("on", on);
+  $("#iaTxt").textContent = on ? "IA conectada" : "Modo local";
+  $("#iaOff").style.display = on ? "" : "none";
+  $("#pModeHint").textContent = on ? "Se creará con la IA del colegio (si falla, usamos plantillas locales)." :
+    "Modo local: plantillas pedagógicas listas para ajustar. Conecta la IA para contenido más específico.";
+  $("#chatMode").textContent = on ? "Acompañante de bienestar · IA conectada" : "Acompañante de bienestar docente";
+}
+function loadGIS(cb) {
+  if (window.google && google.accounts && google.accounts.id) return cb();
+  if ($("#gis-sdk")) return setTimeout(() => loadGIS(cb), 250);
+  const s = document.createElement("script");
+  s.id = "gis-sdk"; s.src = "https://accounts.google.com/gsi/client"; s.async = true;
+  s.onload = cb; s.onerror = () => { $("#iaErr").textContent = "No se pudo cargar el inicio de sesión de Google. Revisa tu conexión."; };
+  document.head.appendChild(s);
+}
+async function gCallback(resp) {
+  const cred = resp && resp.credential;
+  if (!cred) return;
+  $("#iaErr").textContent = "Verificando tu cuenta…";
+  try {
+    const r = await fetch(ASE_IA_API_URL + "?resource=me", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ credential: cred }) });
+    const me = await r.json();
+    if (!me || me.error || (me.role !== "staff" && me.role !== "dev")) {
+      $("#iaErr").textContent = "La IA está disponible solo para el equipo del colegio. Puedes seguir usando el modo local.";
+      return;
+    }
+    IA_CRED = cred; IA_USER = me;
+    $("#iaErr").textContent = ""; iaUpdateUI(); $("#iaModal").classList.remove("on");
+    toast("IA conectada. ¡Hola" + (me.name ? ", " + me.name.split(" ")[0] : "") + "!");
+  } catch (e) { $("#iaErr").textContent = "No pudimos verificar tu cuenta. Intenta de nuevo."; }
+}
+$("#iaPill").onclick = () => {
+  $("#iaModal").classList.add("on");
+  loadGIS(() => {
+    try {
+      google.accounts.id.initialize({ client_id: GOOGLE_CLIENT_ID, callback: gCallback });
+      $("#gBtn").innerHTML = "";
+      google.accounts.id.renderButton($("#gBtn"), { theme: "outline", size: "large", shape: "pill", text: "signin_with", locale: "es" });
+    } catch (e) { $("#iaErr").textContent = "No se pudo iniciar Google en este sitio."; }
+  });
+};
+$("#iaClose").onclick = () => $("#iaModal").classList.remove("on");
+$("#iaModal").onclick = e => { if (e.target.id === "iaModal") $("#iaModal").classList.remove("on"); };
+$("#iaOff").onclick = () => { IA_CRED = null; IA_USER = null; iaUpdateUI(); $("#iaModal").classList.remove("on"); toast("Volviste al modo local"); };
+async function askIA(prompt) {
+  if (!IA_CRED) return null;
+  try {
+    const r = await fetch(ASE_IA_API_URL + "?resource=crear", { method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ credential: IA_CRED, prompt: String(prompt).slice(0, 3990) }) });
+    if (r.status === 401) { IA_CRED = null; iaUpdateUI(); toast("Tu sesión de IA expiró; seguimos en modo local."); return null; }
+    const d = await r.json();
+    return (d && d.reply) ? d.reply : null;
+  } catch (e) { return null; }
+}
+
+/* ---------- Markdown mínimo (para respuestas de IA) ---------- */
+function md(src) {
+  const lines = esc(src).replace(/\\\*/g, "&#42;").split(/\r?\n/);
+  let out = "", list = null, table = [];
+  const inline = s => s.replace(/\*\*(.+?)\*\*/g, "<b>$1</b>").replace(/(^|[^*])\*(?!\s)(.+?)\*/g, "$1<i>$2</i>");
+  const closeList = () => { if (list) { out += "</" + list + ">"; list = null; } };
+  const flushTable = () => {
+    if (!table.length) return;
+    const rows = table.filter(r => !/^[\s|:-]+$/.test(r));
+    out += "<table>" + rows.map((r, i) => {
+      const cells = r.replace(/^\||\|$/g, "").split("|").map(c => inline(c.trim()));
+      const tag = i === 0 ? "th" : "td";
+      return "<tr>" + cells.map(c => "<" + tag + ">" + c + "</" + tag + ">").join("") + "</tr>";
+    }).join("") + "</table>";
+    table = [];
+  };
+  for (const raw of lines) {
+    const l = raw.trim();
+    if (/^\|.*\|$/.test(l)) { closeList(); table.push(l); continue; } else flushTable();
+    let m;
+    if (!l) { closeList(); continue; }
+    if ((m = l.match(/^(#{1,4})\s+(.*)$/))) { closeList(); const h = Math.max(2, Math.min(4, m[1].length)); out += `<h${h}>${inline(m[2])}</h${h}>`; continue; }
+    if ((m = l.match(/^[-*•]\s+(.*)$/))) { if (list !== "ul") { closeList(); out += "<ul>"; list = "ul"; } out += "<li>" + inline(m[1]) + "</li>"; continue; }
+    if ((m = l.match(/^\d+[.)]\s+(.*)$/))) { if (list !== "ol") { closeList(); out += "<ol>"; list = "ol"; } out += "<li>" + inline(m[1]) + "</li>"; continue; }
+    if (/^-{3,}$/.test(l)) { closeList(); out += "<hr>"; continue; }
+    closeList(); out += "<p>" + inline(l) + "</p>";
+  }
+  closeList(); flushTable();
+  return out;
+}
+
+/* =====================================================================
+   INICIO: saludo, frase del día y check‑in emocional
+   ===================================================================== */
+(function () {
+  const h = new Date().getHours();
+  $("#saludoBadge").textContent = h < 12 ? "☀️ Buenos días" : h < 20 ? "🌤️ Buenas tardes" : "🌙 Buenas noches";
+  const Q = [
+    ["No tienes que hacerlo todo hoy. Solo lo siguiente, bien hecho.", "Elige una tarea prioritaria y dale 25 minutos sin interrupciones."],
+    ["Cuidarte también es parte de tu trabajo docente.", "Programa hoy una pausa de 5 minutos lejos de pantallas."],
+    ["Una clase imperfecta también enseña. Tú también estás aprendiendo.", "Anota una cosa que salió bien hoy, aunque sea pequeña."],
+    ["Tu calma es contagiosa: el curso regula con tu voz y tu ritmo.", "Antes de entrar a la sala, haz tres respiraciones lentas."],
+    ["Poner límites no es desinterés: es sostenibilidad.", "Define una hora de término para responder mensajes hoy."],
+    ["Pedir ayuda es una competencia profesional, no una debilidad.", "Comparte una duda con un colega de confianza esta semana."],
+    ["Lo que siembras hoy florece en tiempos que no siempre verás.", "Recuerda a un estudiante que avanzó gracias a ti."],
+    ["Descansar no es perder el tiempo: es recuperar la energía para enseñar.", "Hidrátate: deja una botella de agua visible en tu escritorio."]
+  ];
+  const d = new Date(); const q = Q[(d.getFullYear() * 400 + d.getMonth() * 31 + d.getDate()) % Q.length];
+  $("#quote").textContent = "“" + q[0] + "”"; $("#quoteTip").textContent = "Micro‑acción: " + q[1];
+
+  const MOODS = [["😣", "Agotado/a", 1], ["😟", "Tenso/a", 2], ["😐", "Neutral", 3], ["🙂", "Bien", 4], ["😄", "Con energía", 5]];
+  const today = d.toISOString().slice(0, 10);
+  const box = $("#moods");
+  function drawBars() {
+    const log = lsGet("moods", {}); const days = ["D", "L", "M", "M", "J", "V", "S"]; let html = "";
+    for (let i = 6; i >= 0; i--) {
+      const dd = new Date(Date.now() - i * 864e5); const k = dd.toISOString().slice(0, 10); const v = log[k] || 0;
+      html += `<div style="height:${v ? v * 20 : 4}%;opacity:${v ? 1 : .3}" title="${k}: ${v ? MOODS[v - 1][1] : "sin registro"}"><span>${days[dd.getDay()]}</span></div>`;
+    }
+    $("#moodBars").innerHTML = html;
+  }
+  MOODS.forEach(([e, l, v]) => {
+    const b = document.createElement("button"); b.className = "mood"; b.type = "button"; b.innerHTML = e + "<small>" + l + "</small>";
+    if ((lsGet("moods", {})[today]) === v) b.classList.add("on");
+    b.onclick = () => {
+      const log = lsGet("moods", {}); log[today] = v; lsSet("moods", log);
+      $$(".mood").forEach(x => x.classList.remove("on")); b.classList.add("on"); drawBars();
+      toast(v <= 2 ? "Gracias por registrarlo. Sereno está en la pestaña Bienestar si quieres conversar 🌿" : "¡Registrado! Qué bueno saberlo ✨");
+    };
+    box.appendChild(b);
+  });
+  drawBars();
+  $("#heroBlob").onclick = () => { go("bien"); setTimeout(() => $("#brGo").click(), 300); };
+})();
+
+/* =====================================================================
+   PLANIFICADOR (plantillas locales + IA opcional)
+   ===================================================================== */
+const SUBJ = {
+  "Lenguaje y Literatura": { hab: ["Comprensión lectora", "Inferencia e interpretación", "Argumentación", "Producción escrita"],
+    crit: ["Comprensión del texto", "Organización de las ideas", "Uso de evidencia textual", "Coherencia y cohesión", "Ortografía y redacción"],
+    rec: ["Textos impresos o digitales", "Organizadores gráficos", "Diccionario"], act: "lectura guiada con preguntas de inferencia" },
+  "Matemática": { hab: ["Resolver problemas", "Modelar", "Representar", "Argumentar y comunicar"],
+    crit: ["Comprensión del problema", "Estrategia y procedimiento", "Exactitud del resultado", "Representación matemática", "Comunicación del razonamiento"],
+    rec: ["Material concreto", "Pizarra", "Calculadora (si corresponde)", "Guía de ejercicios"], act: "resolución de problemas en parejas con representación concreta, pictórica y simbólica" },
+  "Ciencias Naturales": { hab: ["Observar y plantear preguntas", "Planificar y conducir una investigación", "Analizar evidencias", "Comunicar"],
+    crit: ["Formulación de preguntas e hipótesis", "Procedimiento experimental", "Análisis de datos", "Conclusiones basadas en evidencia", "Comunicación científica"],
+    rec: ["Materiales de laboratorio sencillos", "Videos o simulaciones", "Bitácora científica"], act: "indagación guiada: pregunta, predicción, experimento y registro" },
+  "Historia, Geografía y Cs. Sociales": { hab: ["Pensamiento temporal y espacial", "Análisis de fuentes", "Pensamiento crítico", "Comunicación"],
+    crit: ["Contextualización", "Análisis de fuentes", "Relaciones de causa y consecuencia", "Argumentación", "Comunicación de ideas"],
+    rec: ["Fuentes primarias y secundarias", "Mapas y líneas de tiempo", "Imágenes históricas"], act: "análisis de fuentes en grupos con preguntas guía" },
+  "Inglés": { hab: ["Listening", "Reading", "Speaking", "Writing"],
+    crit: ["Task completion", "Vocabulary", "Grammar accuracy", "Fluency and coherence", "Pronunciation"],
+    rec: ["Flashcards", "Audios", "Worksheets"], act: "role‑play y práctica comunicativa en parejas" },
+  "Educación Física y Salud": { hab: ["Habilidades motrices", "Vida activa y saludable", "Seguridad y juego limpio", "Trabajo en equipo"],
+    crit: ["Ejecución técnica", "Participación y esfuerzo", "Trabajo en equipo", "Seguridad y autocuidado"],
+    rec: ["Conos, balones y aros", "Silbato", "Botella de agua"], act: "circuito por estaciones con desafíos progresivos" },
+  "Artes Visuales": { hab: ["Expresar y crear visualmente", "Apreciar y responder", "Difundir y comunicar"],
+    crit: ["Uso de elementos del lenguaje visual", "Originalidad", "Técnica y oficio", "Reflexión sobre el proceso"],
+    rec: ["Materiales de arte", "Imágenes de referencia", "Bitácora de artista"], act: "taller creativo con observación de referentes" },
+  "Música": { hab: ["Escuchar y apreciar", "Interpretar y crear", "Reflexionar y contextualizar"],
+    crit: ["Precisión rítmica y melódica", "Expresividad", "Trabajo en conjunto", "Reflexión musical"],
+    rec: ["Instrumentos", "Parlante", "Partituras o musicogramas"], act: "práctica instrumental por secciones" },
+  "Tecnología": { hab: ["Resolver problemas tecnológicos", "Diseñar y construir", "Evaluar soluciones"],
+    crit: ["Identificación del problema", "Diseño de la solución", "Construcción del prototipo", "Evaluación y mejora"],
+    rec: ["Materiales reciclados", "Computadores", "Herramientas básicas"], act: "diseño de un prototipo en equipos" },
+  "Orientación": { hab: ["Autoconocimiento", "Relaciones interpersonales", "Bienestar y autocuidado", "Participación"],
+    crit: ["Reflexión personal", "Participación respetuosa", "Escucha activa", "Compromiso con acuerdos"],
+    rec: ["Tarjetas de emociones", "Círculo de conversación", "Bitácora personal"], act: "círculo de diálogo con preguntas reflexivas" },
+  "Filosofía": { hab: ["Pensamiento crítico", "Argumentación", "Diálogo filosófico"],
+    crit: ["Comprensión del problema filosófico", "Calidad argumentativa", "Uso de autores", "Postura propia fundamentada"],
+    rec: ["Textos filosóficos breves", "Dilemas"], act: "diálogo socrático sobre un dilema" },
+  "Religión": { hab: ["Reflexión", "Diálogo", "Valoración de la persona"],
+    crit: ["Comprensión de contenidos", "Reflexión personal", "Participación", "Aplicación a la vida"],
+    rec: ["Textos", "Videos breves"], act: "reflexión guiada en grupos" }
+};
+const NIVELES = ["NT1 (Pre‑kínder)", "NT2 (Kínder)", "1° básico", "2° básico", "3° básico", "4° básico", "5° básico", "6° básico", "7° básico", "8° básico", "I° medio", "II° medio", "III° medio", "IV° medio"];
+const BLOOM = {
+  recordar: { v: ["Identificar", "Reconocer", "Nombrar"], ind: ["Nombra", "Identifica", "Enumera"] },
+  comprender: { v: ["Explicar", "Describir", "Interpretar"], ind: ["Explica con sus palabras", "Describe", "Da ejemplos de"] },
+  aplicar: { v: ["Aplicar", "Resolver", "Utilizar"], ind: ["Resuelve", "Aplica", "Utiliza"] },
+  analizar: { v: ["Analizar", "Comparar", "Relacionar"], ind: ["Compara", "Clasifica", "Distingue"] },
+  evaluar: { v: ["Evaluar", "Argumentar", "Justificar"], ind: ["Justifica", "Valora", "Argumenta"] },
+  crear: { v: ["Crear", "Diseñar", "Proponer"], ind: ["Diseña", "Elabora", "Propone"] }
+};
+$("#pAsig").innerHTML = Object.keys(SUBJ).map(s => `<option>${s}</option>`).join("") + "<option>Otra</option>";
+$("#pNivel").innerHTML = NIVELES.map((n, i) => `<option${i === 7 ? " selected" : ""}>${n}</option>`).join("");
+
+let PTIPO = "planificacion", LAST_DOC = null;
+$$("#planTipo button").forEach(b => b.onclick = () => {
+  $$("#planTipo button").forEach(x => x.classList.toggle("on", x === b)); PTIPO = b.dataset.t;
+  $("#fPlan").style.display = PTIPO === "planificacion" ? "" : "none";
+  $("#fRub").style.display = PTIPO === "rubrica" ? "" : "none";
+  $("#fGuia").style.display = PTIPO === "guia" ? "" : "none";
+  $("#pGo").textContent = { planificacion: "Crear planificación", rubrica: "Crear rúbrica", guia: "Crear guía" }[PTIPO];
+});
+
+function planForm() {
+  const asig = $("#pAsig").value, S = SUBJ[asig] || { hab: ["Comprensión", "Aplicación", "Comunicación", "Pensamiento crítico"], crit: ["Dominio del contenido", "Organización", "Aplicación", "Comunicación", "Responsabilidad"], rec: ["Pizarra", "Guía de trabajo", "Proyector"], act: "trabajo colaborativo guiado" };
+  return {
+    asig, S, nivel: $("#pNivel").value, tema: $("#pTema").value.trim() || "el contenido de la unidad",
+    obj: $("#pObj").value.trim(), clases: Math.max(1, Math.min(12, +$("#pClases").value || 1)),
+    dur: Math.max(30, +$("#pDur").value || 90), bloom: $("#pBloom").value, dua: $("#pDua").checked, calma: $("#pCalma").checked,
+    crit: $("#rCrit").value.split("\n").map(s => s.trim()).filter(Boolean), niv: +$("#rNiv").value, exig: Math.max(40, Math.min(80, +$("#rExig").value || 60)),
+    prod: $("#rProd").value.trim() || "el trabajo", conc: $("#gConc").value.split(",").map(s => s.trim()).filter(Boolean), gtipo: $("#gTipo").value
+  };
+}
+const cap = s => s.charAt(0).toUpperCase() + s.slice(1);
+const lowerFirst = s => /^[A-ZÁÉÍÓÚÑ][a-záéíóúñ]/.test(s) ? s.charAt(0).toLowerCase() + s.slice(1) : s;
+
+function headerTable(f, extra) {
+  return `<table><tr><th>Asignatura</th><td>${esc(f.asig)}</td><th>Nivel</th><td>${esc(f.nivel)}</td></tr>
+  <tr><th>Tema / OA</th><td colspan="3">${esc(f.tema)}</td></tr>${extra || ""}
+  <tr><th>Docente</th><td>&nbsp;</td><th>Fecha</th><td>&nbsp;</td></tr></table>`;
+}
+function genPlan(f) {
+  const B = BLOOM[f.bloom]; const verbo = B.v[0];
+  const objetivo = f.obj || `${verbo} ${f.tema} a través de ${f.S.act}, para fortalecer ${lowerFirst(f.S.hab[0])}.`;
+  const ini = Math.round(f.dur * .15), cie = Math.round(f.dur * .15), des = f.dur - ini - cie;
+  const fases = f.clases === 1 ? ["única"] : Array.from({ length: f.clases }, (_, i) => i === 0 ? "exploración" : i === f.clases - 1 ? "síntesis y evaluación" : (i % 2 ? "práctica guiada" : "profundización"));
+  let h = `<h2>Planificación de clase${f.clases > 1 ? "s · " + f.clases + " sesiones" : ""}</h2>`;
+  h += headerTable(f, `<tr><th>Duración</th><td>${f.clases} × ${f.dur} min</td><th>Profundidad</th><td>${cap(f.bloom)}</td></tr>`);
+  h += `<h3>Objetivo de aprendizaje</h3><p>${esc(objetivo)}</p>`;
+  h += `<h3>Habilidades y actitudes</h3><ul>${f.S.hab.map(x => `<li>${esc(x)}</li>`).join("")}<li>Actitud: trabajo colaborativo, respeto y perseverancia.</li></ul>`;
+  h += `<h3>Indicadores de evaluación</h3><ul>
+    <li>${B.ind[0]} aspectos centrales de ${esc(f.tema)}.</li>
+    <li>${B.ind[1]} ${esc(f.tema)} en situaciones o ejemplos nuevos.</li>
+    <li>${B.ind[2]} su procedimiento o razonamiento de forma oral o escrita.</li>
+    <li>Reflexiona sobre su propio aprendizaje e identifica qué necesita reforzar.</li></ul>`;
+  fases.forEach((fase, i) => {
+    const n = i + 1, last = i === fases.length - 1, first = i === 0;
+    h += `<h3>${f.clases > 1 ? "Clase " + n + " · " + cap(fase) : "Secuencia didáctica"}</h3>
+    <table><tr><th style="width:18%">Momento</th><th>Actividades</th><th style="width:14%">Tiempo</th></tr>
+    <tr><td><b>Inicio</b></td><td><ul>
+      <li>Saludo y ${f.calma ? "<b>momento de calma</b>: 1 minuto de respiración en silencio para llegar a la clase." : "activación del grupo."}</li>
+      <li>${first ? `Activación de conocimientos previos: “¿Qué sabemos sobre ${esc(f.tema)}?” (lluvia de ideas en la pizarra).` : `Recuperación de lo aprendido en la clase anterior con 3 preguntas rápidas (pizarras individuales o mano alzada).`}</li>
+      <li>Se comparte el objetivo de la clase y los criterios de logro en lenguaje simple.</li></ul></td><td>${ini} min</td></tr>
+    <tr><td><b>Desarrollo</b></td><td><ul>
+      ${first ? `<li><b>Modelado:</b> el/la docente presenta ${esc(f.tema)} con un ejemplo resuelto, pensando en voz alta.</li>` : ""}
+      <li><b>Práctica guiada:</b> ${esc(f.S.act)}; el/la docente monitorea y retroalimenta en el momento.</li>
+      <li><b>Práctica ${last && f.clases > 1 ? "evaluativa" : "independiente o colaborativa"}:</b> ${last && f.clases > 1 ? "desafío integrador que aplica todo lo trabajado en la unidad." : "los estudiantes resuelven actividades graduadas (básico → desafío) en parejas o grupos."}</li>
+      ${f.calma ? `<li><b>Pausa activa (2 min):</b> estiramiento de cuello y hombros o respiración 4‑4, para recuperar la atención.</li>` : ""}
+      <li>Revisión colectiva: algunos estudiantes comparten sus respuestas y se corrigen errores frecuentes.</li></ul></td><td>${des} min</td></tr>
+    <tr><td><b>Cierre</b></td><td><ul>
+      <li><b>Ticket de salida:</b> ${last ? "dos preguntas que evidencian el logro del objetivo." : "una pregunta breve sobre lo central de la clase."}</li>
+      <li>Metacognición: “¿Qué aprendí hoy? ¿Qué me costó? ¿Cómo lo resolví?”</li>
+      ${f.calma ? "<li>Cierre amable: reconocer un logro del grupo.</li>" : ""}</ul></td><td>${cie} min</td></tr></table>`;
+  });
+  h += `<h3>Evaluación</h3><ul><li><b>Formativa:</b> monitoreo durante la práctica, preguntas dirigidas, pizarras individuales y ticket de salida.</li>
+    ${f.clases > 1 ? "<li><b>Sumativa:</b> desafío integrador de la última clase, evaluado con rúbrica.</li>" : "<li><b>Retroalimentación:</b> oral y escrita, específica y oportuna, a partir del ticket de salida.</li>"}</ul>`;
+  h += `<h3>Recursos</h3><ul>${f.S.rec.map(r => `<li>${esc(r)}</li>`).join("")}</ul>`;
+  if (f.dua) h += `<h3>Adecuaciones (Diseño Universal para el Aprendizaje)</h3><table>
+    <tr><th>Principio</th><th>Estrategias</th></tr>
+    <tr><td>Múltiples formas de representación</td><td>Apoyo visual, ejemplos concretos, glosario de conceptos clave, instrucciones escritas y orales.</td></tr>
+    <tr><td>Múltiples formas de acción y expresión</td><td>Responder por escrito, oralmente, con dibujos o esquemas; tiempo adicional si es necesario.</td></tr>
+    <tr><td>Múltiples formas de implicación</td><td>Conectar con intereses y experiencias del curso, trabajo colaborativo, metas cortas y refuerzo positivo.</td></tr></table>`;
+  h += `<div class="box tip">💡 Ajusta tiempos y ejemplos a la realidad de tu curso. Esta planificación es un punto de partida.</div>`;
+  return h;
+}
+function escalaNotas(max, exig, step) {
+  const e = exig / 100, rows = [];
+  for (let p = 0; p <= max + 1e-9; p += step) rows.push([+p.toFixed(1), notaChile(p, max, e)]);
+  return rows;
+}
+function notaChile(p, max, e) {
+  if (max <= 0) return 1;
+  const pe = e * max; let n;
+  n = p < pe ? 1 + 3 * (p / pe) : 4 + 3 * ((p - pe) / (max - pe || 1));
+  return Math.max(1, Math.min(7, Math.round(n * 10) / 10));
+}
+function genRubrica(f) {
+  const crit = f.crit.length ? f.crit : f.S.crit;
+  const L4 = [["Logrado", 4], ["Mayormente logrado", 3], ["Parcialmente logrado", 2], ["Por lograr", 1]];
+  const L3 = [["Logrado", 3], ["Parcialmente logrado", 2], ["Por lograr", 1]];
+  const L = f.niv === 3 ? L3 : L4;
+  const D = {
+    4: c => `Demuestra ${c} de manera completa, precisa y autónoma en ${f.prod}, con ejemplos pertinentes sobre ${f.tema}.`,
+    3: c => `Demuestra ${c} de manera adecuada en ${f.prod}; presenta errores menores que no afectan el sentido general.`,
+    2: c => `Demuestra ${c} de manera parcial; hay omisiones o imprecisiones importantes y requiere apoyo.`,
+    1: c => `Aún no demuestra ${c}, o lo hace de manera muy incipiente. Necesita acompañamiento para avanzar.`
+  };
+  const D3 = { 3: D[4], 2: c => `Demuestra ${c} de manera parcial, con algunas imprecisiones u omisiones.`, 1: D[1] };
+  const max = crit.length * L[0][1];
+  let h = `<h2>Rúbrica analítica</h2>` + headerTable(f, `<tr><th>Producto</th><td>${esc(cap(f.prod))}</td><th>Puntaje máximo</th><td>${max} puntos</td></tr>`);
+  h += `<table><tr><th style="width:18%">Criterio</th>${L.map(([n, p]) => `<th>${n} (${p} pts)</th>`).join("")}</tr>`;
+  crit.forEach(c => {
+    const cl = lowerFirst(c);
+    h += `<tr><td><b>${esc(c)}</b></td>${L.map(([, p]) => `<td>${esc((f.niv === 3 ? D3 : D)[p](cl))}</td>`).join("")}</tr>`;
+  });
+  h += `</table><p><b>Puntaje obtenido:</b> ______ / ${max} &nbsp;&nbsp; <b>Nota:</b> ______</p>`;
+  const rows = escalaNotas(max, f.exig, max > 30 ? 2 : 1); const half = Math.ceil(rows.length / 2);
+  h += `<h3>Escala de notas (exigencia ${f.exig}%)</h3><table><tr><th>Puntaje</th><th>Nota</th><th>Puntaje</th><th>Nota</th></tr>`;
+  for (let i = 0; i < half; i++) { const a = rows[i], b = rows[i + half]; h += `<tr><td>${a[0]}</td><td>${a[1].toFixed(1)}</td><td>${b ? b[0] : ""}</td><td>${b ? b[1].toFixed(1) : ""}</td></tr>`; }
+  h += `</table><p class="hint">Nota 4,0 con ${Math.round(max * f.exig / 10) / 10} puntos.</p>`;
+  h += `<h3>Retroalimentación</h3><div class="box key"><b>Fortalezas:</b><div class="lines"></div><div class="lines"></div><b>Para mejorar:</b><div class="lines"></div><div class="lines"></div></div>`;
+  if (f.calma) h += `<div class="box calm">🌿 Sugerencia: comparte la rúbrica con el curso <b>antes</b> de la tarea. Saber cómo serán evaluados reduce la ansiedad y mejora los resultados.</div>`;
+  return h;
+}
+function genGuia(f) {
+  const conc = f.conc.length ? f.conc : ["concepto clave 1", "concepto clave 2", "concepto clave 3"];
+  const eval_ = f.gtipo === "evaluada";
+  const pts = n => eval_ ? ` <span class="badge b-peach">${n} pts</span>` : "";
+  const titulo = { aprendizaje: "Guía de aprendizaje", ejercitacion: "Guía de ejercitación", evaluada: "Guía evaluada" }[f.gtipo];
+  let h = `<h2>${titulo}: ${esc(cap(f.tema))}</h2>`;
+  h += `<table><tr><th>Nombre</th><td colspan="3">&nbsp;</td></tr><tr><th>Curso</th><td>${esc(f.nivel)}</td><th>Fecha</th><td>&nbsp;</td></tr>
+    <tr><th>Asignatura</th><td>${esc(f.asig)}</td><th>${eval_ ? "Puntaje" : "Tiempo"}</th><td>${eval_ ? "____ / 24" : "45 min aprox."}</td></tr></table>`;
+  h += `<div class="box tip"><b>Objetivo:</b> ${esc(f.obj || BLOOM[f.bloom].v[0] + " " + f.tema + ".")}</div>`;
+  h += `<p><b>Instrucciones:</b> Lee con calma cada pregunta. Responde con letra clara. Si tienes dudas, levanta la mano: preguntar es parte de aprender.</p>`;
+  h += `<h3>Para recordar</h3><div class="box key"><ul>${conc.map(c => `<li><b>${esc(cap(c))}:</b> <span style="color:var(--ink3)">(definición breve con tus palabras o las del docente)</span></li>`).join("")}</ul></div>`;
+  h += `<h3>I. Activo lo que sé${pts(4)}</h3><ol>
+    <li>¿Qué sabes sobre ${esc(f.tema)}? Escribe dos ideas.<div class="lines"></div><div class="lines"></div></li>
+    <li>¿Dónde has visto o usado esto en tu vida cotidiana?<div class="lines"></div></li></ol>`;
+  h += `<h3>II. Comprendo${pts(6)}</h3><ol start="3">${conc.slice(0, 3).map(c => `<li>Explica con tus palabras qué es <b>${esc(c)}</b> y da un ejemplo.<div class="lines"></div><div class="lines"></div></li>`).join("")}</ol>`;
+  h += `<h3>III. Aplico${pts(8)}</h3><ol start="${3 + Math.min(3, conc.length)}">
+    <li>Resuelve la siguiente situación relacionada con ${esc(f.tema)}: <span style="color:var(--ink3)">(el/la docente agrega el problema o caso)</span><div class="lines"></div><div class="lines"></div><div class="lines"></div></li>
+    <li>Completa el organizador gráfico relacionando: ${conc.map(esc).join(" · ")}.<table><tr>${conc.map(c => `<th>${esc(cap(c))}</th>`).join("")}</tr><tr>${conc.map(() => "<td style='height:70px'></td>").join("")}</tr></table></li></ol>`;
+  h += `<h3>IV. Desafío${pts(6)}</h3><p>${f.gtipo === "ejercitacion" ? "Crea un ejercicio similar a los anteriores y resuélvelo." : "¿Qué pasaría si…? Propón una pregunta sobre " + esc(f.tema) + " y respóndela argumentando."}</p><div class="lines"></div><div class="lines"></div><div class="lines"></div>`;
+  h += `<h3>¿Cómo me fue?</h3><table><tr><th>Afirmación</th><th>😄 Sí</th><th>🙂 Más o menos</th><th>😟 Aún no</th></tr>
+    ${["Comprendo los conceptos clave.", "Puedo aplicar lo aprendido en un ejemplo nuevo.", "Pedí ayuda cuando la necesité.", "Trabajé con calma y concentración."].map(a => `<tr><td>${a}</td><td></td><td></td><td></td></tr>`).join("")}</table>`;
+  if (f.calma) h += `<div class="box calm">🌿 <b>Rincón de calma:</b> si te sientes bloqueado/a, detente, inhala contando hasta 4, exhala contando hasta 6. Repite 3 veces y vuelve a intentarlo.</div>`;
+  if (f.dua) h += `<p class="hint">DUA: puedes responder con esquemas o dibujos, pedir lectura en voz alta de las preguntas o tiempo adicional.</p>`;
+  return h;
+}
+function iaPromptPlan(f) {
+  const base = `Asignatura: ${f.asig}. Nivel: ${f.nivel}. Tema/OA: ${f.tema}. ${f.obj ? "Descripción: " + f.obj + "." : ""}`;
+  const calma = f.calma ? " Incluye un breve momento de calma o pausa activa para el bienestar del curso." : "";
+  const dua = f.dua ? " Incluye adecuaciones según el Diseño Universal para el Aprendizaje (DUA)." : "";
+  if (PTIPO === "rubrica") return `Crea una RÚBRICA ANALÍTICA en tabla Markdown para evaluar ${f.prod}. ${base} ${f.crit.length ? "Criterios: " + f.crit.join("; ") + "." : "Propón 4 o 5 criterios propios de la asignatura."} Usa ${f.niv} niveles de desempeño con puntaje y descriptores observables y distintos entre niveles. Al final incluye el puntaje máximo y cómo obtener la nota con ${f.exig}% de exigencia (escala 1,0 a 7,0).${calma}`;
+  if (PTIPO === "guia") return `Crea una ${f.gtipo === "evaluada" ? "GUÍA EVALUADA con puntaje por ítem" : f.gtipo === "ejercitacion" ? "GUÍA DE EJERCITACIÓN" : "GUÍA DE APRENDIZAJE"} lista para imprimir. ${base} ${f.conc.length ? "Conceptos clave: " + f.conc.join(", ") + "." : ""} Incluye encabezado (nombre, curso, fecha), objetivo, instrucciones, un recuadro "Para recordar" con definiciones, ítems graduados (activación, comprensión, aplicación con ejercicios o preguntas REALES del tema, y desafío) y una autoevaluación final.${calma}${dua}`;
+  return `Crea una PLANIFICACIÓN de ${f.clases} clase(s) de ${f.dur} minutos. ${base} Nivel de profundidad (Bloom): ${f.bloom}. Incluye OA, objetivo de la clase, habilidades, indicadores de evaluación, y para cada clase una tabla con Inicio, Desarrollo y Cierre con actividades concretas y tiempos; evaluación formativa y recursos.${calma}${dua}`;
+}
+function renderDoc(html, meta) {
+  LAST_DOC = meta;
+  $("#docBox").innerHTML = `<div class="docpaper" id="docPaper" contenteditable="true" spellcheck="true">${html}</div>`;
+  $("#docTools").style.display = "flex";
+}
+$("#pGo").onclick = async () => {
+  const f = planForm();
+  const title = ({ planificacion: "Planificación", rubrica: "Rúbrica", guia: "Guía" }[PTIPO]) + " · " + f.tema;
+  let html = null, viaIA = false;
+  if (IA_CRED) {
+    $("#docBox").innerHTML = `<div class="loader"><div class="dots"><i></i><i></i><i></i></div><div>Creando con calma tu material…</div></div>`;
+    $("#docTools").style.display = "none"; $("#pGo").disabled = true;
+    const r = await askIA(iaPromptPlan(f));
+    $("#pGo").disabled = false;
+    if (r) { html = `<h2>${esc(title)}</h2>` + md(r).replace(/^<h2>.*?<\/h2>/, ""); viaIA = true; }
+    else toast("No pudimos usar la IA ahora; creamos el material con plantillas locales.");
+  }
+  if (!html) html = PTIPO === "rubrica" ? genRubrica(f) : PTIPO === "guia" ? genGuia(f) : genPlan(f);
+  renderDoc(html, { title, tipo: PTIPO });
+  const hist = lsGet("hist", []); hist.unshift({ id: Date.now(), title, html, ia: viaIA }); lsSet("hist", hist.slice(0, 12)); drawHist();
+  if (innerWidth < 900) $("#docBox").scrollIntoView({ behavior: "smooth" });
+};
+function drawHist() {
+  const hist = lsGet("hist", []);
+  $("#hist").innerHTML = hist.length ? "" : `<span class="hint">Aún no hay materiales guardados.</span>`;
+  hist.forEach(it => {
+    const b = document.createElement("button"); b.type = "button";
+    b.innerHTML = `<b>${esc(it.title)}</b><br><span class="hint">${new Date(it.id).toLocaleDateString("es-CL")} ${it.ia ? "· IA" : "· local"}</span>`;
+    b.onclick = () => renderDoc(it.html, { title: it.title }); $("#hist").appendChild(b);
+  });
+}
+drawHist();
+function docHTMLFile() {
+  const body = $("#docPaper").innerHTML, t = esc(LAST_DOC ? LAST_DOC.title : "Documento");
+  return `<!doctype html><html lang="es"><head><meta charset="utf-8"><title>${t}</title><style>body{font-family:Calibri,Arial,sans-serif;color:#2c3e44;max-width:900px;margin:24px auto;padding:0 16px;line-height:1.5}h2{color:#4f927c;border-bottom:2px solid #e3f2ec;padding-bottom:4px}h3{color:#7b6fc0}table{width:100%;border-collapse:collapse;margin:8px 0 14px}th,td{border:1px solid #cfdcd8;padding:6px 8px;vertical-align:top;text-align:left}th{background:#e3f2ec}.box{border-radius:10px;padding:10px 14px;margin:10px 0;background:#f3f1fb}.box.tip{background:#e5f2fa}.box.key{background:#fdf0e7}.lines{border-bottom:1px solid #bbb;height:24px}.hint{color:#8a9ca1;font-size:.85em}.badge{background:#fdf0e7;border-radius:8px;padding:1px 6px;font-size:.8em}</style></head><body>${body}</body></html>`;
+}
+function download(name, content, type) {
+  const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([content], { type })); a.download = name;
+  document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 500);
+}
+const fileBase = () => norm(LAST_DOC ? LAST_DOC.title : "documento").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 60) || "documento";
+$("#dHtml").onclick = () => download(fileBase() + ".html", docHTMLFile(), "text/html");
+$("#dWord").onclick = () => download(fileBase() + ".doc", "\ufeff" + docHTMLFile(), "application/msword");
+$("#dCopy").onclick = async () => {
+  const el = $("#docPaper");
+  try { await navigator.clipboard.write([new ClipboardItem({ "text/html": new Blob([el.innerHTML], { type: "text/html" }), "text/plain": new Blob([el.innerText], { type: "text/plain" }) })]); }
+  catch (e) { try { await navigator.clipboard.writeText(el.innerText); } catch (e2) { const r = document.createRange(); r.selectNodeContents(el); getSelection().removeAllRanges(); getSelection().addRange(r); document.execCommand("copy"); } }
+  toast("Copiado ✔");
+};
+function printView(id) { const s = $("#" + id); s.classList.add("printing"); window.print(); setTimeout(() => s.classList.remove("printing"), 500); }
+$("#dPrint").onclick = () => printView("v-plan");
+
+/* =====================================================================
+   CORRECTOR (pdf.js + Tesseract.js, todo en el navegador)
+   ===================================================================== */
+const PDFJS = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/";
+const TESS = "https://cdn.jsdelivr.net/npm/tesseract.js@5.1.1/dist/tesseract.min.js";
+const loaded = {};
+function loadScript(src) {
+  if (loaded[src]) return loaded[src];
+  return loaded[src] = new Promise((res, rej) => { const s = document.createElement("script"); s.src = src; s.onload = res; s.onerror = () => { delete loaded[src]; rej(new Error("No se pudo cargar " + src)); }; document.head.appendChild(s); });
+}
+let STUDENTS = [];
+function setStatus(msg, frac) {
+  $("#cStatus").textContent = msg || "";
+  const p = $("#cProg"); if (frac == null) { p.style.display = "none"; return; }
+  p.style.display = ""; p.firstElementChild.style.width = Math.round(frac * 100) + "%";
+}
+function parseKey() {
+  const def = +$("#cPts").value || 1, key = [];
+  $("#cKey").value.split(/\r?\n/).forEach(line => {
+    const m = line.match(/^\s*(?:p(?:regunta)?\.?\s*)?(\d{1,3})\s*[).:\-–=]\s*(.+?)\s*$/i); if (!m) return;
+    let ans = m[2], pts = def;
+    const pm = ans.match(/\[\s*(\d+(?:[.,]\d+)?)\s*(?:pts?|puntos?)?\s*\]/i);
+    if (pm) { pts = parseFloat(pm[1].replace(",", ".")); ans = ans.replace(pm[0], "").trim(); }
+    const a = norm(ans).trim();
+    let type = "open", val = ans;
+    if (/^[a-e]$/.test(a)) { type = "alt"; val = a.toUpperCase(); }
+    else if (/^(v|f|verdadero|falso)$/.test(a)) { type = "vf"; val = a[0].toUpperCase(); }
+    const raw = type === "open" ? ans.split(/[,;]/).map(s => s.trim()).filter(Boolean) : [];
+    key.push({ n: +m[1], type, val, raw, kws: raw.map(w => norm(w).replace(/\s+/g, " ")), pts });
+  });
+  return key;
+}
+function extractAnswers(text, key) {
+  const nums = new Set(key.map(k => k.n)); const t = "\n" + text.replace(/\r/g, "") + "\n";
+  const re = /(?:^|[\n\s(])(?:p(?:regunta)?\.?\s*)?(\d{1,3})\s*[).:\-–=]\s*/gi; const marks = []; let m;
+  while ((m = re.exec(t))) { const n = +m[1]; if (nums.has(n)) marks.push({ n, start: m.index, end: re.lastIndex }); }
+  const res = {};
+  marks.forEach((mk, i) => {
+    if (res[mk.n] != null) return;
+    const seg = t.slice(mk.end, i + 1 < marks.length ? marks[i + 1].start : t.length).trim();
+    const k = key.find(x => x.n === mk.n);
+    if (k.type === "alt") { const a = seg.match(/^\(?\s*([a-eA-E])\b/); res[mk.n] = a ? a[1].toUpperCase() : seg.slice(0, 20); }
+    else if (k.type === "vf") { const a = norm(seg).match(/^\(?\s*(verdadero|falso|v|f)\b/); res[mk.n] = a ? a[1][0].toUpperCase() : seg.slice(0, 20); }
+    else res[mk.n] = seg.slice(0, 600);
+  });
+  return res;
+}
+function detectName(text) {
+  const m = text.match(/nombre\s*(?:del estudiante|completo)?\s*[:\-]?\s*([^\n\d]{3,60})/i);
+  return m ? m[1].replace(/curso.*$/i, "").replace(/[_.]{2,}.*/, "").trim() : "";
+}
+function scoreStudent(st, key) {
+  let got = 0, max = 0;
+  st.items = key.map(k => {
+    const given = (st.ans[k.n] || "").toString(); let frac = 0;
+    if (k.type === "alt" || k.type === "vf") frac = norm(given).trim().toUpperCase() === norm(k.val).toUpperCase() ? 1 : 0;
+    else if (k.kws.length) { const g = norm(given).replace(/\s+/g, " "); const hit = k.kws.filter(w => g.includes(w)); frac = hit.length / k.kws.length; }
+    const pts = Math.round(k.pts * frac * 10) / 10; got += pts; max += k.pts;
+    return { k, given, frac, pts };
+  });
+  st.got = Math.round(got * 10) / 10; st.max = max;
+  st.nota = notaChile(st.got, max, (+$("#cExig").value || 60) / 100);
+  return st;
+}
+function feedbackLocal(st) {
+  const wrong = st.items.filter(i => i.frac < 1); const pct = st.max ? st.got / st.max : 0;
+  const open = []; st.items.forEach(i => { if (i.k.type === "open" && i.frac < 1) { const g = norm(i.given).replace(/\s+/g, " "); const miss = i.k.raw.filter((w, j) => !g.includes(i.k.kws[j])); if (miss.length) open.push(`P${i.k.n}: incorporar ${miss.join(", ")}`); } });
+  let s = pct >= .85 ? "¡Excelente trabajo! Demuestras un dominio sólido de los contenidos. " : pct >= .6 ? "Buen trabajo: lograste los aprendizajes centrales. " : "Aún estás en camino y eso está bien: con práctica vas a lograrlo. ";
+  if (!wrong.length) s += "Respondiste correctamente todas las preguntas.";
+  else s += `Te sugiero revisar ${wrong.length === 1 ? "la pregunta" : "las preguntas"} ${wrong.map(i => i.k.n).join(", ")}.`;
+  if (open.length) s += " En desarrollo: " + open.join("; ") + ".";
+  return s;
+}
+function renderStudents() {
+  const key = parseKey();
+  if (!STUDENTS.length) { $("#cList").innerHTML = `<div class="empty"><div><div class="big">🍃</div><h3>Aún no hay evaluaciones</h3><p>Escribe la pauta y adjunta las respuestas.</p></div></div>`; $("#cSummary").innerHTML = ""; $("#cTools").style.display = "none"; return; }
+  $("#cTools").style.display = "flex";
+  STUDENTS.forEach(st => scoreStudent(st, key));
+  const notas = STUDENTS.map(s => s.nota); const prom = notas.reduce((a, b) => a + b, 0) / notas.length;
+  const aprob = notas.filter(n => n >= 4).length;
+  // Preguntas más difíciles del grupo
+  const diff = key.map(k => ({ n: k.n, ok: STUDENTS.filter(s => (s.items.find(i => i.k.n === k.n) || {}).frac === 1).length })).sort((a, b) => a.ok - b.ok).slice(0, 3);
+  $("#cSummary").innerHTML = `<div class="grid3" style="margin-bottom:6px">
+    <div class="card" style="padding:14px;text-align:center"><div class="hint" style="margin:0">Evaluaciones</div><b style="font-size:1.6rem">${STUDENTS.length}</b></div>
+    <div class="card" style="padding:14px;text-align:center"><div class="hint" style="margin:0">Promedio</div><b style="font-size:1.6rem;color:${prom >= 4 ? "var(--ok)" : "var(--bad)"}">${prom.toFixed(1)}</b></div>
+    <div class="card" style="padding:14px;text-align:center"><div class="hint" style="margin:0">Aprobación</div><b style="font-size:1.6rem">${Math.round(aprob / STUDENTS.length * 100)}%</b></div></div>
+    ${STUDENTS.length > 1 && key.length ? `<div class="note">📊 Preguntas con más dificultad: ${diff.map(d => `P${d.n} (${d.ok}/${STUDENTS.length} correctas)`).join(" · ")}. Considera retroalimentarlas con el curso.</div>` : ""}`;
+  $("#cList").innerHTML = "";
+  STUDENTS.forEach((st, si) => {
+    const d = document.createElement("div"); d.className = "stu";
+    d.innerHTML = `<div class="stuhead"><input type="text" value="${esc(st.name)}" aria-label="Nombre del estudiante" placeholder="Nombre del estudiante">
+      <span class="badge b-sky">${esc(st.file)}</span>
+      <div class="nota"><span class="hint" style="margin:0">${st.got} / ${st.max} pts · ${st.max ? Math.round(st.got / st.max * 100) : 0}%</span><span class="n ${st.nota >= 4 ? "ok" : "bad"}">${st.nota.toFixed(1)}</span></div></div>
+      ${!key.length ? `<div class="note warn">Escribe la pauta para corregir.</div>` : ""}
+      <div class="qgrid">${st.items.map(it => `<div class="q ${it.frac === 1 ? "ok" : it.frac > 0 ? "mid" : "bad"}"><div class="qh"><span>P${it.k.n}</span><span>${it.pts}/${it.k.pts}</span></div>
+        <input type="text" data-q="${it.k.n}" value="${esc(it.given)}" placeholder="sin respuesta" aria-label="Respuesta pregunta ${it.k.n}"><span class="k">Pauta: ${esc(it.k.type === "open" ? it.k.raw.join(", ") : it.k.val)}</span></div>`).join("")}</div>
+      <div class="fb"><b>Retroalimentación:</b> <span class="fbt">${esc(st.fb || feedbackLocal(st))}</span></div>
+      <div class="tools noprint" style="margin-top:8px">${IA_CRED ? `<button class="btn lav" data-ia="${si}">✨ Retroalimentación con IA</button>` : ""}<button class="btn ghost" data-del="${si}">Quitar</button></div>
+      <details class="noprint"><summary>Ver texto detectado</summary><pre class="raw">${esc(st.text || "(sin texto)")}</pre></details>`;
+    d.querySelector(".stuhead input").onchange = e => { st.name = e.target.value; };
+    d.querySelectorAll("input[data-q]").forEach(inp => inp.onchange = () => {
+      const k = key.find(x => x.n === +inp.dataset.q);
+      let v = inp.value.trim(); if (k && k.type !== "open") v = v.toUpperCase().slice(0, 1);
+      st.ans[inp.dataset.q] = v; (st.manual = st.manual || {})[inp.dataset.q] = v; st.fb = null; renderStudents();
+    });
+    const del = d.querySelector("[data-del]"); del.onclick = () => { STUDENTS.splice(si, 1); renderStudents(); };
+    const ia = d.querySelector("[data-ia]");
+    if (ia) ia.onclick = async () => {
+      ia.disabled = true; ia.textContent = "Pensando…";
+      const detalle = st.items.map(i => `P${i.k.n} (pauta: ${i.k.type === "open" ? i.k.raw.join(", ") : i.k.val}; ${i.k.pts} pts) respuesta: "${i.given.slice(0, 300)}" → ${i.pts} pts`).join("\n");
+      const r = await askIA(`Redacta una RETROALIMENTACIÓN FORMATIVA breve (máximo 90 palabras), cálida, específica y motivadora, dirigida directamente al estudiante (tuteo), sobre su evaluación de ${$("#pAsig").value}. Puntaje ${st.got}/${st.max}, nota ${st.nota.toFixed(1)}. Menciona una fortaleza concreta y uno o dos pasos claros para mejorar. Sin títulos ni listas.\n\n${detalle}`);
+      if (r) { st.fb = r.replace(/[#*]/g, "").trim(); renderStudents(); } else { ia.disabled = false; ia.textContent = "✨ Reintentar"; toast("No pudimos usar la IA ahora."); }
+    };
+    $("#cList").appendChild(d);
+  });
+}
+["cKey", "cPts", "cExig"].forEach(id => $("#" + id).addEventListener("input", () => { if (STUDENTS.length) { clearTimeout(window._rk); window._rk = setTimeout(() => { STUDENTS.forEach(s => { s.fb = null; s.ans = Object.assign(extractAnswers(s.text || "", parseKey()), s.manual || {}); }); renderStudents(); }, 400); } }));
+function addStudent(text, file) {
+  text = String(text || "").replace(/[ \t\u00a0]+/g, " ");
+  const key = parseKey();
+  if (!key.length) toast("Consejo: escribe primero la pauta para detectar las respuestas.");
+  STUDENTS.push({ file, text, name: detectName(text) || ("Estudiante " + (STUDENTS.length + 1)), ans: extractAnswers(text, key) });
+  renderStudents();
+}
+async function ocrCanvasOrImage(src, label, base, span) {
+  await loadScript(TESS);
+  const res = await Tesseract.recognize(src, "spa", { logger: m => { if (m.status === "recognizing text") setStatus(`Leyendo ${label}… ${Math.round(m.progress * 100)}%`, base + span * m.progress); } });
+  return res.data.text || "";
+}
+function prepImage(file) {
+  // Escala de grises + contraste: mejora el OCR de fotos hechas con celular.
+  return new Promise((res, rej) => {
+    const img = new Image(); img.onload = () => {
+      const s = Math.min(1, 2200 / Math.max(img.width, img.height)); const c = document.createElement("canvas");
+      c.width = img.width * s; c.height = img.height * s; const x = c.getContext("2d"); x.drawImage(img, 0, 0, c.width, c.height);
+      const d = x.getImageData(0, 0, c.width, c.height), p = d.data;
+      for (let i = 0; i < p.length; i += 4) { let g = .299 * p[i] + .587 * p[i + 1] + .114 * p[i + 2]; g = Math.max(0, Math.min(255, (g - 128) * 1.5 + 128)); p[i] = p[i + 1] = p[i + 2] = g; }
+      x.putImageData(d, 0, 0); URL.revokeObjectURL(img.src); res(c);
+    }; img.onerror = rej; img.src = URL.createObjectURL(file);
+  });
+}
+async function handleFiles(files) {
+  files = Array.from(files || []); if (!files.length) return;
+  for (let fi = 0; fi < files.length; fi++) {
+    const file = files[fi], base = fi / files.length, span = 1 / files.length;
+    try {
+      let text = "";
+      if (file.type === "application/pdf" || /\.pdf$/i.test(file.name)) {
+        setStatus(`Abriendo ${file.name}…`, base);
+        await loadScript(PDFJS + "pdf.min.js"); pdfjsLib.GlobalWorkerOptions.workerSrc = PDFJS + "pdf.worker.min.js";
+        const pdf = await pdfjsLib.getDocument({ data: await file.arrayBuffer() }).promise;
+        for (let p = 1; p <= pdf.numPages; p++) {
+          const page = await pdf.getPage(p); const tc = await page.getTextContent();
+          // Reconstruye líneas según la posición vertical del texto.
+          let lastY = null, pt = "";
+          tc.items.forEach(it => { const y = Math.round(it.transform[5]); if (lastY !== null && Math.abs(y - lastY) > 3) pt += "\n"; else if (pt && !pt.endsWith(" ")) pt += " "; pt += it.str; lastY = y; });
+          if (pt.replace(/\s/g, "").length < 15) { // página escaneada: OCR
+            const vp = page.getViewport({ scale: 2 }); const c = document.createElement("canvas"); c.width = vp.width; c.height = vp.height;
+            await page.render({ canvasContext: c.getContext("2d"), viewport: vp }).promise;
+            pt = await ocrCanvasOrImage(c, `${file.name} (pág. ${p})`, base + span * (p - 1) / pdf.numPages, span / pdf.numPages);
+          }
+          text += pt + "\n"; setStatus(`Procesando ${file.name}: página ${p} de ${pdf.numPages}`, base + span * p / pdf.numPages);
+        }
+      } else if (file.type.startsWith("image/")) {
+        setStatus(`Preparando ${file.name}…`, base);
+        text = await ocrCanvasOrImage(await prepImage(file), file.name, base, span);
+      } else { toast("Formato no soportado: " + file.name); continue; }
+      addStudent(text, file.name);
+    } catch (e) { console.error(e); toast("No se pudo leer " + file.name + ". Revisa tu conexión o prueba con otra imagen."); }
+  }
+  setStatus(`Listo. ${files.length} archivo(s) procesado(s). Revisa y ajusta lo detectado si es necesario.`, null);
+}
+const drop = $("#drop");
+drop.onclick = () => $("#cFile").click();
+drop.onkeydown = e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); $("#cFile").click(); } };
+["dragenter", "dragover"].forEach(ev => drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.add("over"); }));
+["dragleave", "drop"].forEach(ev => drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.remove("over"); }));
+drop.addEventListener("drop", e => handleFiles(e.dataTransfer.files));
+$("#cFile").onchange = e => { handleFiles(e.target.files); e.target.value = ""; };
+$("#cCam").onchange = e => { handleFiles(e.target.files); e.target.value = ""; };
+$("#cCamBtn").onclick = () => $("#cCam").click();
+$("#cPasteBtn").onclick = () => { const b = $("#pasteBox"); b.style.display = b.style.display === "none" ? "" : "none"; };
+$("#cPasteGo").onclick = () => { const t = $("#cPaste").value.trim(); if (!t) return toast("Pega primero las respuestas."); addStudent(t, "texto pegado"); $("#cPaste").value = ""; };
+$("#cDemo").onclick = () => {
+  $("#cKey").value = "1: B\n2: D\n3: A\n4: V\n5: F\n6: fotosíntesis, clorofila, luz solar, oxígeno [4]";
+  $("#cPaste").value = "Nombre: Camila Rojas\n1) B\n2) C\n3) A\n4) V\n5) F\n6) Las plantas hacen fotosíntesis gracias a la clorofila y la luz solar.";
+  $("#pasteBox").style.display = ""; toast("Ejemplo cargado: presiona «Corregir texto».");
+};
+$("#cClear").onclick = () => { if (confirm("¿Quitar todas las evaluaciones corregidas?")) { STUDENTS = []; renderStudents(); } };
+$("#cPrint").onclick = () => printView("v-corr");
+$("#cCsv").onclick = () => {
+  const key = parseKey(); const q = s => `"${String(s).replace(/"/g, '""')}"`;
+  const rows = [["Nombre", "Archivo", ...key.map(k => "P" + k.n), "Puntaje", "Máximo", "Nota", "Retroalimentación"].map(q).join(";")];
+  STUDENTS.forEach(s => rows.push([s.name, s.file, ...s.items.map(i => i.pts), s.got, s.max, s.nota.toFixed(1), s.fb || feedbackLocal(s)].map(q).join(";")));
+  download("resultados-evaluacion.csv", "\ufeff" + rows.join("\n"), "text/csv");
+};
+
+/* =====================================================================
+   BIENESTAR · Sereno (motor local empático + IA opcional)
+   ===================================================================== */
+const SOS_RE = /(suicid|matarme|quitarme la vida|no quiero vivir|no vale la pena vivir|autolesion|hacerme dano|cortarme|morirme|desaparecer para siempre|terminar con todo)/;
+const INTENTS = [
+  { id: "saludo", re: /^(hola|buen[oa]s|hey|saludos|que tal)\b/,
+    r: () => [pick(["¡Hola! Me alegra que te des este momento.", "Hola, bienvenido/a a tu espacio de calma."]) + " ¿Cómo llegas hoy a tu jornada?"], a: ["Estoy con estrés", "Tengo mucha carga", "Estoy bien 🙂"] },
+  { id: "gracias", re: /\b(gracias|muy amable|me sirvio|me ayudo)\b/,
+    r: () => ["Gracias a ti por darte este espacio. Recuerda: cuidarte también es parte de enseñar bien. 🌿", "Aquí estaré cuando lo necesites. ¿Quieres cerrar con una respiración breve?"], a: ["Respiración guiada"] },
+  { id: "estres", re: /(estres|agotad|cansad|burnout|quemad|no doy mas|colapsad|sobrepasad|reventad|saturad|exhaust)/,
+    r: () => [pick(["Suena a que llevas mucho tiempo sosteniendo demasiado. Eso cansa, y es completamente comprensible.", "Lo que describes se parece al desgaste que viven muchos docentes. No es falta de capacidad: es exceso de demanda."]),
+      "Algunas ideas que suelen ayudar:\n- **Regla 1‑3‑5:** hoy elige 1 tarea grande, 3 medianas y 5 pequeñas. El resto puede esperar.\n- **Micro‑pausas:** 2 minutos entre clases para respirar, estirarte o tomar agua.\n- **Cierre del día:** anota lo pendiente en un papel antes de salir, así tu mente no lo carga a casa.\n- Si el agotamiento dura semanas, afecta tu sueño o tu ánimo, conversa con un profesional: el burnout se trata.",
+      "¿Qué es lo que más te está drenando energía en este momento?"], a: ["Respiración guiada", "Organizar mi tiempo", "Micro‑pausa"] },
+  { id: "ansiedad", re: /(ansiedad|ansios|nervios|angustia|panico|preocupad|inquiet|miedo|taquicardia|opresion)/,
+    r: () => ["Gracias por contarlo. La ansiedad es la forma que tiene el cuerpo de avisar que algo le importa, pero no tiene que manejarte.",
+      "Prueba ahora mismo la técnica **5‑4‑3‑2‑1**: nombra 5 cosas que ves, 4 que puedes tocar, 3 que escuchas, 2 que hueles y 1 que saboreas. Ancla tu mente al presente.\n\nTambién ayuda exhalar más largo de lo que inhalas (inhala 4, exhala 6): activa el sistema de calma.",
+      "¿La preocupación tiene que ver con algo concreto (una evaluación, una reunión, un curso) o es más general?"], a: ["Respiración 4‑7‑8", "Es por una reunión", "Es algo general"] },
+  { id: "carga", re: /(carga|no alcanzo|no me alcanza|tiempo|correcci|corregir|planificacion|planificar|pendientes|papeleo|informes|trabajo en casa|fin de semana|horas no lectivas)/,
+    r: () => ["La sobrecarga administrativa es una de las principales fuentes de estrés docente. Tiene sentido que te sientas así.",
+      "Algunas estrategias concretas:\n- **Bloques protegidos:** reserva 2 bloques semanales de 45 min solo para corregir o planificar, sin correo ni WhatsApp.\n- **Corrige con foco:** usa rúbricas y pautas (puedes crearlas en el Planificador y corregir en el Corrector de esta misma página).\n- **Reutiliza:** guarda tus materiales y adáptalos en vez de partir de cero.\n- **Negocia prioridades:** si todo es urgente, pregunta a tu jefatura qué va primero.",
+      "¿Qué tarea te quita más tiempo esta semana? Podemos pensar cómo simplificarla."], a: ["Crear una rúbrica", "Corregir más rápido", "Me cuesta decir que no"] },
+  { id: "limites", re: /(decir que no|limites|whatsapp|mensajes|correos|fuera de horario|desconect|de noche|me escriben)/,
+    r: () => ["Poner límites no te hace menos comprometido/a. Te hace sostenible, y eso también protege a tus estudiantes.",
+      "Ideas para cuidar tu tiempo:\n- Define un **horario de respuesta** y comunícalo a apoderados y estudiantes al inicio del semestre.\n- Usa un mensaje breve: *“Recibido, lo reviso en mi horario de atención”*.\n- Silencia notificaciones de grupos de trabajo después de cierta hora.\n- Frase para decir que no con respeto: *“Me gustaría ayudar, pero hoy no puedo asumirlo sin descuidar otra tarea. ¿Qué podemos postergar?”*",
+      "¿En qué situación te cuesta más poner un límite?"], a: ["Con apoderados", "Con mi jefatura", "Conmigo mismo/a"] },
+  { id: "aula", re: /(curso dificil|conducta|disciplina|no me escuchan|desorden|indisciplina|falta de respeto|gritan|pelean|clima de aula|manejo de curso|estudiante agresiv)/,
+    r: () => ["Los cursos desafiantes desgastan mucho, y que te afecte habla de cuánto te importa hacerlo bien.",
+      "Algunas estrategias de manejo de aula que cuidan también tu energía:\n- **Rutinas visibles:** inicio y cierre siempre iguales dan seguridad al grupo.\n- **Menos voz, más señal:** acuerda una señal (mano alzada, cuenta regresiva) en lugar de subir el volumen.\n- **Refuerzo positivo específico:** nombra lo que sí está funcionando.\n- **Conversación breve y privada** con quien interrumpe, no frente al curso.\n- **No estás solo/a:** pide apoyo a convivencia escolar, orientación o profesor jefe.",
+      "¿Hay un momento de la clase en que se complica más?"], a: ["Al inicio", "Después del recreo", "Con un estudiante en particular"] },
+  { id: "apoderados", re: /(apoderad|padres|madre|familia|reclam|me acus)/,
+    r: () => ["Las conversaciones difíciles con familias pueden dejar mucha tensión en el cuerpo. Es normal.",
+      "Para la próxima reunión:\n- Prepara **2 o 3 hechos concretos** y observables (no juicios).\n- Comienza con algo positivo del estudiante.\n- Escucha primero: *“Entiendo que esto le preocupa…”* baja la defensa.\n- Cierra con un **acuerdo concreto** y fecha de seguimiento.\n- Si hay agresión o amenazas, no la enfrentes solo/a: deriva a dirección o convivencia y deja registro.",
+      "¿Quieres que ensayemos cómo empezar esa conversación?"], a: ["Sí, ensayemos", "Fue una situación agresiva"] },
+  { id: "colegas", re: /(colega|jefe|jefa|jefatura|director|utp|companer|clima laboral|conflicto laboral|acoso|hostig|mobbing|me humill|me grita|ley karin)/,
+    r: () => ["Los conflictos en el equipo pesan mucho porque convivimos con ellos todos los días. Gracias por confiarlo.",
+      "Algunas orientaciones:\n- Si es un desacuerdo, busca una conversación privada, en un momento tranquilo, hablando desde tu experiencia (*“yo me sentí…”*).\n- Registra fechas y hechos si la situación se repite.\n- Si hay **acoso laboral, sexual o violencia en el trabajo**, en Chile la **Ley Karin (Ley 21.643)** obliga a los empleadores a tener un protocolo de prevención y un canal de denuncia. Puedes activarlo en tu colegio o acudir a la Dirección del Trabajo.\n- Apóyate en alguien de confianza: no tienes que cargar esto solo/a.",
+      "¿Te gustaría pensar cómo abordar la conversación, o necesitas más bien desahogarte?"], a: ["Quiero desahogarme", "Preparar la conversación"] },
+  { id: "sueno", re: /(dormir|duermo|insomnio|sueno|desvel|despierto de noche|no descanso)/,
+    r: () => ["Dormir mal hace que todo se sienta más difícil al día siguiente. Cuidar el descanso es prioridad.",
+      "Higiene del sueño para días exigentes:\n- Deja de corregir o revisar correos **al menos 1 hora antes** de acostarte.\n- Escribe tus pendientes en papel para “sacarlos” de la cabeza.\n- Horario regular para acostarte y levantarte, incluso el fin de semana.\n- Si despiertas con la mente acelerada, prueba la respiración 4‑7‑8.\n- Si el insomnio dura más de 3 semanas, consulta a un profesional de salud.",
+      "¿Te cuesta más quedarte dormido/a o despiertas durante la noche?"], a: ["Respiración 4‑7‑8", "Me cuesta desconectarme"] },
+  { id: "triste", re: /(triste|desmotivad|sin ganas|vacio|llor|sin sentido|desanim|frustrad|no sirvo|fracas|culpa)/,
+    r: () => ["Siento que estés pasando por esto. Lo que sientes es válido y merece atención, no juicio.",
+      "Algunas cosas que pueden ayudar:\n- Recuerda un momento reciente en que un estudiante aprendió algo gracias a ti. Ese impacto existe aunque hoy no lo veas.\n- Conéctate con alguien: un colega, amigo o familiar. Aislarse suele empeorar el ánimo.\n- Mueve el cuerpo 10 minutos (caminar cuenta).\n- Si la tristeza se mantiene más de dos semanas o afecta tu vida diaria, pide ayuda profesional: es un acto de cuidado.",
+      "¿Quieres contarme qué ha pasado?"], a: ["Diario de gratitud", "Quiero contarte"] },
+  { id: "fisico", re: /(voz|garganta|disfonia|espalda|cuello|dolor de cabeza|cefalea|contractura|dolor)/,
+    r: () => ["El cuerpo también acusa el trabajo docente: la voz, la espalda y la tensión son muy comunes.",
+      "Cuidados rápidos:\n- **Voz:** hidrátate en cada recreo, evita gritar (usa señales), haz pausas de silencio y proyecta desde el abdomen.\n- **Tensión:** gira hombros hacia atrás 10 veces y estira el cuello lateralmente 20 segundos por lado.\n- **Postura:** si corriges mucho, cambia de posición cada 30 minutos.\n- Si la molestia es persistente, consulta. Las enfermedades de origen laboral pueden atenderse en tu mutualidad.",
+      "¿Hace cuánto sientes estas molestias?"], a: ["Micro‑pausa", "Hace poco", "Hace semanas"] },
+  { id: "bien", re: /(estoy bien|feliz|content|motivad|logre|me fue bien|buen dia|tranquil|orgullos)/,
+    r: () => [pick(["¡Qué bueno leer eso! 🌟", "¡Me alegra mucho! ✨"]) + " Vale la pena detenerse a saborear los días buenos.",
+      "¿Qué hizo que hoy fuera un buen día? Anotarlo en el diario de gratitud ayuda a que el cerebro recuerde estos momentos en días difíciles."], a: ["Diario de gratitud"] },
+  { id: "desahogo", re: /(desahog|quiero contarte|quiero hablar|necesito hablar|escuchame)/,
+    r: () => ["Aquí estoy para escucharte, sin juicios y sin apuro. Escribe todo lo que necesites, como te salga."], a: [] },
+  { id: "ensayo", re: /(ensayemos|ensayar|preparar la conversacion|como empiezo)/,
+    r: () => ["Probemos una estructura simple (**DESC**):\n- **Describe** el hecho: *“En las últimas dos semanas…”*\n- **Expresa** cómo te afecta: *“Me preocupa porque…”*\n- **Sugiere** una alternativa: *“Me gustaría que…”*\n- **Consecuencia positiva:** *“Así podremos…”*",
+      "Escríbeme cómo empezarías tú y lo afinamos juntos."], a: [] }
+];
+const FALLBACK = [
+  ["Te leo. Gracias por ponerlo en palabras; eso ya es un primer paso para ordenarlo.", "¿Cómo te está afectando esto en tu día a día: en tu energía, tu sueño o tu ánimo?"],
+  ["Entiendo. A veces cuesta identificar exactamente qué nos pasa, y está bien.", "Si tuvieras que ponerle un número del 1 al 10 a tu nivel de tensión ahora, ¿cuál sería?"],
+  ["Lo que cuentas es importante. Estoy aquí para acompañarte.", "¿Qué es lo que más necesitarías en este momento: desahogarte, una estrategia práctica o un ejercicio para calmarte?"]
+];
+const QUICK = ["Me siento agotado/a", "Tengo ansiedad", "Mucha carga de trabajo", "Curso difícil", "Conflicto con un colega", "No duermo bien", "Poner límites"];
+let chatHist = [], lastIntent = null, fbIdx = 0;
+function addMsg(who, content, opts = {}) {
+  const m = document.createElement("div"); m.className = "msg " + who + (opts.sos ? " sos" : "");
+  m.innerHTML = who === "me" ? esc(content) : md(content);
+  if (opts.acts && opts.acts.length) {
+    const a = document.createElement("div"); a.className = "acts";
+    opts.acts.forEach(t => { const b = document.createElement("button"); b.type = "button"; b.textContent = t; b.onclick = () => actOrSend(t); a.appendChild(b); });
+    m.appendChild(a);
+  }
+  $("#msgs").appendChild(m); $("#msgs").scrollTop = $("#msgs").scrollHeight;
+  chatHist.push({ who, content }); saveChat();
+}
+function saveChat() { lsSet("chat", chatHist.slice(-40)); }
+function actOrSend(t) {
+  const n = norm(t);
+  if (/respiracion|4.7.8/.test(n)) { if (/4.7.8/.test(n)) setBr("478"); $("#brGo").scrollIntoView({ behavior: "smooth", block: "center" }); startBreath(); addMsg("bot", "Te acompaño: sigue el círculo de la derecha 🌬️. Inhala cuando crece, exhala cuando se achica."); return; }
+  if (/micro.?pausa/.test(n)) { nextPausa(); $("#pausa").scrollIntoView({ behavior: "smooth", block: "center" }); addMsg("bot", "Te dejé una micro‑pausa en el panel. Tómate 2 minutos, el resto puede esperar. 🍵"); return; }
+  if (/diario de gratitud/.test(n)) { $("#gratIn").focus(); addMsg("bot", "Anota en el diario algo pequeño que agradezcas hoy: una conversación, un café, un estudiante que sonrió. 🌼"); return; }
+  if (/crear una rubrica/.test(n)) { go("plan"); $$("#planTipo button")[1].click(); return; }
+  if (/corregir mas rapido/.test(n)) { go("corr"); return; }
+  send(t);
+}
+function typing(on) {
+  let t = $("#typing");
+  if (on && !t) { t = document.createElement("div"); t.id = "typing"; t.className = "msg bot typing"; t.innerHTML = "<i></i><i></i><i></i>"; $("#msgs").appendChild(t); $("#msgs").scrollTop = $("#msgs").scrollHeight; }
+  if (!on && t) t.remove();
+}
+function sosReply() {
+  addMsg("bot", "Lo que me cuentas es muy importante y me preocupa tu bienestar. **No estás solo/a** y mereces ayuda ahora mismo.\n\n- **Línea de prevención del suicidio: \\*4141** (gratuita, 24/7, desde celulares)\n- **Salud Responde: 600 360 7777** (24/7)\n- **Emergencias: SAMU 131**\n\nSi puedes, cuéntale ahora a alguien de confianza que esté cerca. ¿Estás en un lugar seguro en este momento?", { sos: true, acts: ["Estoy en un lugar seguro", "Respiración guiada"] });
+}
+async function send(text) {
+  text = String(text || "").trim(); if (!text) return;
+  addMsg("me", text); $("#chatIn").value = ""; autoH();
+  const n = norm(text);
+  if (SOS_RE.test(n)) { typing(true); setTimeout(() => { typing(false); sosReply(); }, 500); return; }
+  typing(true);
+  if (IA_CRED) {
+    const conv = chatHist.slice(-10).map(m => (m.who === "me" ? "Docente: " : "Sereno: ") + m.content.slice(0, 400)).join("\n");
+    const r = await askIA(`Esta vez NO debes crear material pedagógico. Actúa como "Sereno", acompañante de BIENESTAR LABORAL para docentes y asistentes de la educación en Chile, con enfoque en psicología positiva y autocuidado. Responde al último mensaje del docente con calidez y validación emocional, y ofrece 2 o 3 estrategias prácticas y breves (en viñetas) aplicables a la realidad escolar chilena. Termina con UNA pregunta abierta. Máximo 150 palabras, tuteo, sin diagnósticos ni medicamentos. Si hay señales de riesgo, recomienda la línea *4141 o Salud Responde 600 360 7777. No reemplazas a un profesional.\n\nConversación:\n${conv}`);
+    typing(false);
+    if (r) { addMsg("bot", r); return; }
+  }
+  setTimeout(() => {
+    typing(false);
+    let it = INTENTS.find(i => i.re.test(n));
+    if (!it && /^(si|sí|ya|ok|dale|bueno)\b/.test(n) && lastIntent) it = INTENTS.find(i => i.id === "ensayo" && lastIntent === "apoderados") || null;
+    if (it) {
+      lastIntent = it.id; const parts = it.r();
+      parts.forEach((p, i) => setTimeout(() => addMsg("bot", p, i === parts.length - 1 ? { acts: it.a } : {}), i * 650));
+    } else {
+      const f = FALLBACK[fbIdx++ % FALLBACK.length];
+      addMsg("bot", f[0]); setTimeout(() => addMsg("bot", f[1], { acts: ["Una estrategia práctica", "Respiración guiada", "Quiero desahogarme"] }), 600);
+    }
+  }, 700 + Math.random() * 500);
+}
+// "Una estrategia práctica" genérica (va primero para ganarle a «carga» y «límites»)
+INTENTS.unshift({ id: "estrategia", re: /(estrategia practica|organizar mi tiempo|me cuesta desconectarme)/,
+  r: () => ["Aquí va una estrategia sencilla y efectiva para hoy:\n- **Técnica Pomodoro docente:** 25 min de foco en una sola tarea + 5 min de pausa real (lejos de la pantalla).\n- **Lista de cierre:** antes de irte, escribe las 3 prioridades de mañana. Luego, *desconéctate* conscientemente: un ritual (cambiar de ropa, caminar, música) le dice a tu mente que la jornada terminó.",
+    "¿Cuál te gustaría probar primero?"], a: ["Micro‑pausa", "Respiración guiada"] });
+INTENTS.unshift({ id: "seguro", re: /(estoy en un lugar seguro|estoy segur)/,
+  r: () => ["Me alivia saberlo. Gracias por seguir aquí. Te recomiendo de corazón hablar hoy con alguien de confianza y pedir una hora con un profesional de salud mental.", "Si quieres, podemos hacer juntos una respiración para bajar la intensidad de lo que sientes."], a: ["Respiración guiada"] });
+function autoH() { const t = $("#chatIn"); t.style.height = "auto"; t.style.height = Math.min(120, t.scrollHeight) + "px"; }
+$("#chatIn").addEventListener("input", autoH);
+$("#chatIn").addEventListener("keydown", e => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); send($("#chatIn").value); } });
+$("#composer").onsubmit = e => { e.preventDefault(); send($("#chatIn").value); };
+QUICK.forEach(q => { const b = document.createElement("button"); b.type = "button"; b.textContent = q; b.onclick = () => send(q); $("#chips").appendChild(b); });
+function welcome() {
+  const h = new Date().getHours();
+  addMsg("bot", `${h < 12 ? "Buenos días" : h < 20 ? "Buenas tardes" : "Buenas noches"}, soy **Sereno** 🌿. Estoy aquí para escucharte y acompañarte en tu bienestar laboral.\n\nPuedes contarme cómo te sientes con tus propias palabras o elegir un tema abajo. Lo que escribes queda solo en este navegador.`);
+}
+(function () {
+  const saved = lsGet("chat", []);
+  if (saved.length) { saved.forEach(m => { const d = document.createElement("div"); d.className = "msg " + m.who; d.innerHTML = m.who === "me" ? esc(m.content) : md(m.content); $("#msgs").appendChild(d); }); chatHist = saved; }
+  else welcome();
+})();
+$("#chatReset").onclick = () => { chatHist = []; lastIntent = null; $("#msgs").innerHTML = ""; saveChat(); welcome(); };
+
+/* ---------- Respiración guiada ---------- */
+const BR = {
+  caja: { info: "Caja: inhala 4 · sostén 4 · exhala 4 · sostén 4.", steps: [["Inhala", 4, 1], ["Sostén", 4, 1], ["Exhala", 4, .6], ["Sostén", 4, .6]] },
+  "478": { info: "4‑7‑8: inhala 4 · sostén 7 · exhala 8. Ideal para dormir o bajar la ansiedad.", steps: [["Inhala", 4, 1], ["Sostén", 7, 1], ["Exhala", 8, .6]] },
+  coh: { info: "Coherente: inhala 5 · exhala 5. Equilibra el ritmo cardíaco.", steps: [["Inhala", 5, 1], ["Exhala", 5, .6]] }
+};
+let brMode = "caja", brTimer = null, brRunning = false;
+function setBr(m) { brMode = m; $$("#brMode button").forEach(b => b.classList.toggle("on", b.dataset.m === m)); $("#brInfo").textContent = BR[m].info; if (brRunning) { stopBreath(); startBreath(); } }
+$$("#brMode button").forEach(b => b.onclick = () => setBr(b.dataset.m));
+function startBreath() {
+  if (brRunning) return; brRunning = true; $("#brGo").textContent = "Detener";
+  const c = $("#circle"); let i = 0, cycles = 0, left = 0;
+  const run = () => {
+    const st = BR[brMode].steps[i]; left = st[1];
+    c.style.transitionDuration = st[1] + "s"; c.style.transform = `scale(${st[2]})`;
+    const tick = () => {
+      c.innerHTML = `<div>${st[0]}<small>${left}</small></div>`;
+      if (left-- <= 0) { i = (i + 1) % BR[brMode].steps.length; if (i === 0) cycles++; if (cycles >= 6) return stopBreath(true); run(); return; }
+      brTimer = setTimeout(tick, 1000);
+    };
+    tick();
+  };
+  run();
+}
+function stopBreath(done) {
+  clearTimeout(brTimer); brRunning = false; $("#brGo").textContent = "Comenzar";
+  const c = $("#circle"); c.style.transitionDuration = "1.5s"; c.style.transform = "scale(.6)";
+  c.innerHTML = done ? `<div>Muy bien<small>6 ciclos 🌿</small></div>` : `<div>Listo<small>cuando quieras</small></div>`;
+  if (done) toast("Completaste 6 ciclos. Nota cómo está tu cuerpo ahora 🌿");
+}
+$("#brGo").onclick = () => brRunning ? stopBreath() : startBreath();
+
+/* ---------- Micro‑pausas ---------- */
+const PAUSAS = [
+  ["🧘", "Escaneo de 60 segundos", "Cierra los ojos. Recorre tu cuerpo desde la frente hasta los pies y suelta la tensión donde la encuentres (mandíbula, hombros, manos)."],
+  ["💧", "Hidratación consciente", "Toma un vaso de agua lentamente, sintiendo la temperatura. Tu voz y tu concentración te lo agradecerán."],
+  ["🙆", "Estiramiento de cuello y hombros", "Inclina la cabeza hacia cada hombro 20 segundos. Luego gira los hombros hacia atrás 10 veces."],
+  ["🌳", "Mirada lejana", "Mira por la ventana algo lejano durante 20 segundos. Descansa la vista de pantallas y papeles (regla 20‑20‑20)."],
+  ["✍️", "Descarga mental", "Escribe en un papel todo lo que tienes en la cabeza durante 2 minutos. Luego marca solo lo que es para hoy."],
+  ["🚶", "Caminata breve", "Camina 3 minutos por el patio o el pasillo, respirando al ritmo de tus pasos."],
+  ["🤲", "Autocompasión", "Pon una mano en el pecho y dite: “Esto es difícil. Estoy haciendo lo mejor que puedo. Merezco amabilidad”."],
+  ["🎵", "Una canción", "Escucha una canción que te guste, sin hacer nada más. Solo escuchar."],
+  ["🌬️", "Suspiro fisiológico", "Dos inhalaciones cortas por la nariz y una exhalación larga por la boca. Repite 3 veces: baja el estrés rápidamente."]
+];
+let pIdx = Math.floor(Math.random() * PAUSAS.length);
+function nextPausa() { pIdx = (pIdx + 1) % PAUSAS.length; const p = PAUSAS[pIdx]; $("#pausa").innerHTML = `<b>${p[0]} ${p[1]}</b><p style="margin:.3em 0 0">${p[2]}</p>`; }
+nextPausa(); $("#pausaNext").onclick = nextPausa;
+
+/* ---------- Diario de gratitud ---------- */
+function drawGrat() {
+  const g = lsGet("grat", []);
+  $("#gratList").innerHTML = g.length ? g.map(x => `<li>🌼 ${esc(x.t)} <span class="hint">· ${new Date(x.d).toLocaleDateString("es-CL")}</span></li>`).join("") : `<li style="border-style:dashed;color:var(--ink3)">Escribe tres cosas buenas de hoy, por pequeñas que sean.</li>`;
+}
+$("#gratForm").onsubmit = e => { e.preventDefault(); const v = $("#gratIn").value.trim(); if (!v) return; const g = lsGet("grat", []); g.unshift({ t: v, d: Date.now() }); lsSet("grat", g.slice(0, 50)); $("#gratIn").value = ""; drawGrat(); toast("Guardado 🌼"); };
+drawGrat();
+
+/* ---------- Estado inicial ---------- */
+iaUpdateUI();
+$$("#planTipo button")[0].click();
+const t0 = lsGet("tab", "inicio"); if (["inicio", "plan", "corr", "bien"].includes(t0)) go(t0);
+</script>
+</body>
+</html>
