@@ -77,6 +77,16 @@
   .pick:hover{background:#fff;color:var(--azul);transform:translateY(-5px);box-shadow:0 26px 48px -16px rgba(0,0,0,.5);border-color:#fff;}
   .pick:hover::after{opacity:1;left:130%;}
   .pick:active{transform:translateY(-1px) scale(.985);}
+  /* ===== Estado "PRONTO" (bloqueado en Fase 1): visible pero no seleccionable ===== */
+  .pick.soon{cursor:not-allowed;opacity:.62;filter:grayscale(.35);}
+  .pick.soon:hover{transform:none;background:linear-gradient(160deg,rgba(255,255,255,.14),rgba(255,255,255,.05));color:#fff;box-shadow:0 10px 30px -18px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.18);border-color:rgba(255,255,255,.26);}
+  .pick.soon:hover::after{opacity:0;}
+  .soon-badge{position:absolute;top:8px;right:8px;z-index:3;background:linear-gradient(135deg,#f5b301,#e08e00);color:#3a2600;
+    font-size:9px;font-weight:800;letter-spacing:.6px;padding:3px 8px;border-radius:999px;box-shadow:0 6px 14px -6px rgba(224,142,0,.8);text-transform:uppercase;}
+  .qcard.soon{cursor:not-allowed;opacity:.6;filter:grayscale(.4);}
+  .qcard.soon:hover{transform:none;box-shadow:0 10px 30px -18px rgba(11,61,145,.35);border-color:#bcd4ff;}
+  .qcard.soon .soon-badge{top:7px;right:8px;padding:2px 7px;font-size:8.5px;}
+  .qcard.feat.soon::before{opacity:.25;}
   .pick .emo{display:flex;align-items:center;justify-content:center;width:48px;height:48px;border-radius:14px;font-size:26px;line-height:1;
     background:linear-gradient(160deg,rgba(255,255,255,.22),rgba(255,255,255,.06));border:1px solid rgba(255,255,255,.28);
     box-shadow:inset 0 1px 0 rgba(255,255,255,.35);transition:.2s;}
@@ -950,10 +960,10 @@
         <p>Hola 👋 Elige tu perfil e ingresa con tu correo y contraseña. Responderé solo con
            información autorizada del colegio.</p>
         <div class="picker">
-          <button class="pick" onclick="pick('student')"><span class="emo">🎓</span><span class="t">Estudiante</span><span class="d">Correo @alumnos.sip.cl</span></button>
-          <button class="pick" onclick="pick('teacher')"><span class="emo">👩‍🏫</span><span class="t">Docente</span><span class="d">Correo @sip.cl</span></button>
-          <button class="pick" onclick="pick('admin')"><span class="emo">🗂️</span><span class="t">Administrativo</span><span class="d">Correo @sip.cl</span></button>
-          <button class="pick" onclick="pick('guardian')"><span class="emo">👪</span><span class="t">Apoderado</span><span class="d">Correo personal</span></button>
+          <button class="pick" data-role="student" onclick="pick('student')"><span class="emo">🎓</span><span class="t">Estudiante</span><span class="d">Correo @alumnos.sip.cl</span></button>
+          <button class="pick" data-role="teacher" onclick="pick('teacher')"><span class="emo">👩‍🏫</span><span class="t">Docente</span><span class="d">Correo @sip.cl</span></button>
+          <button class="pick" data-role="admin" onclick="pick('admin')"><span class="emo">🗂️</span><span class="t">Administrativo</span><span class="d">Correo @sip.cl</span></button>
+          <button class="pick" data-role="guardian" onclick="pick('guardian')"><span class="emo">👪</span><span class="t">Apoderado</span><span class="d">Correo personal</span></button>
         </div>
       </div>
 
@@ -1263,6 +1273,34 @@ const AI_PROXY_URL = "https://ase-ia.franciscoamigo21.workers.dev";
 const AI_CREATE_URL = "https://ase-ia-planifica.franciscoamigo21.workers.dev";
 
 /* ============================================================================
+ *  FASE 1 (temporal): la implementación parte SOLO para funcionarios
+ *  (docentes y administrativos). Estudiantes y Apoderados quedan como "PRONTO"
+ *  (visibles pero bloqueados) y PLANIFICA queda "PRONTO" dentro de los perfiles.
+ *  Para reactivar TODO más adelante: deja ambas listas vacías  []  (o FASE1_ON=false).
+ * ========================================================================== */
+const FASE1_ON = true;
+const BLOCKED_ROLES   = FASE1_ON ? ["student","guardian"] : [];   // perfiles bloqueados en el login
+const BLOCKED_ACTIONS = FASE1_ON ? ["planifica"]          : [];   // accesos rápidos bloqueados
+function isRoleBlocked(r){ return BLOCKED_ROLES.indexOf(r)>=0; }
+function isActionBlocked(a){ return BLOCKED_ACTIONS.indexOf(a)>=0; }
+/* Marca como "PRONTO" (no seleccionables) los perfiles bloqueados del login. */
+function applyPhase1Gate(){
+  document.querySelectorAll('#gate .pick[data-role]').forEach(function(btn){
+    var r=btn.getAttribute('data-role');
+    var blocked=isRoleBlocked(r);
+    btn.classList.toggle('soon', blocked);
+    btn.disabled = blocked;
+    var old=btn.querySelector('.soon-badge'); if(old) old.remove();
+    if(blocked){
+      var b=document.createElement('span'); b.className='soon-badge'; b.textContent='Pronto';
+      btn.appendChild(b);
+      btn.setAttribute('aria-disabled','true'); btn.title='Disponible próximamente';
+    } else { btn.removeAttribute('aria-disabled'); btn.title=''; }
+  });
+}
+(function(){ function _p(){ try{applyPhase1Gate();}catch(e){} } if(document.readyState==="loading") document.addEventListener("DOMContentLoaded",_p); else _p(); })();
+
+/* ============================================================================
  *  AUTENTICACIÓN CON GOOGLE (opcional)
  *  Deja "" para el modo demo: se muestra la pantalla "Iniciar sesión con Google"
  *  y ASE-IA valida el DOMINIO del correo (docentes @sip.cl, estudiantes
@@ -1419,7 +1457,9 @@ function renderQuick(role){
   LINKS[role].forEach(b=>{
     if(b.menu&&b.menu.length) g.appendChild(qcardMenu(b));
     else if(b.action){                                   // tarjeta que abre una función interna (Beneficios, Planifica, Tutor)
-      const btn=document.createElement("button");btn.type="button";btn.className="qcard"+(b.feature?" feat":"");btn.title=b.lb;
+      const blk=isActionBlocked(b.action);               // Fase 1: acceso bloqueado (PRONTO)
+      const btn=document.createElement("button");btn.type="button";
+      btn.className="qcard"+(b.feature?" feat":"")+(blk?" soon":"");btn.title=blk?(b.lb+" — disponible pronto"):b.lb;
       const ic=document.createElement("span");ic.className="ic";ic.innerHTML=iconMarkup(b);
       const lb=document.createElement("span");lb.className="lb";lb.textContent=b.lb;
       btn.appendChild(ic);
@@ -1427,9 +1467,11 @@ function renderQuick(role){
         const tx=document.createElement("span");tx.className="ftx";
         const sub=document.createElement("span");sub.className="fsub";sub.textContent=b.sub||"";
         tx.appendChild(lb);tx.appendChild(sub);btn.appendChild(tx);
-        const star=document.createElement("span");star.className="fstar";star.textContent="★";btn.appendChild(star);
+        if(!blk){ const star=document.createElement("span");star.className="fstar";star.textContent="★";btn.appendChild(star); }
       } else { btn.appendChild(lb); }
-      btn.onclick=()=>runQuickAction(b.action);g.appendChild(btn);
+      if(blk){ const sb=document.createElement("span");sb.className="soon-badge";sb.textContent="Pronto";btn.appendChild(sb); btn.disabled=true; }
+      else { btn.onclick=()=>runQuickAction(b.action); }
+      g.appendChild(btn);
     }
     else{
       const a=document.createElement("a");a.className="qcard";a.href=b.url;a.target="_blank";a.rel="noopener";a.title=b.lb;
@@ -1508,6 +1550,7 @@ window.addEventListener("resize",()=>closeAllPops());
 // El desplegable NO se cierra al mover la página (queda fijo). Solo se cierra con
 // la X, al elegir una opción, o al tocar fuera.
 function runQuickAction(a){
+  if(isActionBlocked(a)) return;   // Fase 1: acción bloqueada (PRONTO)
   if(a==="weekcal")openCalendar("WEEK");
   else if(a==="monthcal")openCalendar("MONTH");
   else if(a==="agendacal")openCalendar("AGENDA");
@@ -4386,6 +4429,7 @@ function uiSound(){
 }
 let PENDING=null;
 function pick(role){
+  if(isRoleBlocked(role)) return;   // Fase 1: perfil bloqueado (PRONTO)
   uiSound();
   PENDING=role;const i=LOGIN_INFO[role];
   document.getElementById("loginEmo").textContent=i.emo;
