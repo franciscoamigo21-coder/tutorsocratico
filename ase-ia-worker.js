@@ -51,7 +51,7 @@ const DIRECTORY = [];
  *  Planilla de Matrículas). El GOOGLE_CLIENT_ID debe ser el mismo de la página.
  * ========================================================================== */
 const GOOGLE_CLIENT_ID = "195849212680-sjfflsv7f96o6742l67ihj5kllitpvj4.apps.googleusercontent.com";
-const DEV_EMAILS = ["franciscoamigo21@gmail.com", "paulina.devia@sip.cl", "jcid@sip.cl", "camila.ortiz@sip.cl"]; // correos de administración
+const DEV_EMAILS = ["franciscoamigo21@gmail.com", "paulina.devia@sip.cl", "jcid@sip.cl", "camila.ortiz@sip.cl", "cesar.cid@sip.cl", "nardyn.mella@sip.cl", "israel.salas@sip.cl", "claudia.calderon@sip.cl"]; // correos de administración
 async function verifyGoogle(credential) {
   if (!credential || typeof credential !== "string") return null;
   try {

@@ -35,7 +35,7 @@ const MODEL = "claude-sonnet-4-6";
 // Si quieres imágenes más baratas/rápidas usa "imagen-3.0-fast-generate-001".
 const IMAGE_MODEL = "imagen-3.0-generate-002";
 const GOOGLE_CLIENT_ID = "195849212680-sjfflsv7f96o6742l67ihj5kllitpvj4.apps.googleusercontent.com";
-const DEV_EMAILS = ["franciscoamigo21@gmail.com", "paulina.devia@sip.cl", "jcid@sip.cl", "camila.ortiz@sip.cl", "cesar.cid@sip.cl"];
+const DEV_EMAILS = ["franciscoamigo21@gmail.com", "paulina.devia@sip.cl", "jcid@sip.cl", "camila.ortiz@sip.cl", "cesar.cid@sip.cl", "nardyn.mella@sip.cl", "israel.salas@sip.cl", "claudia.calderon@sip.cl"];
 
 async function verifyGoogle(credential) {
   if (!credential || typeof credential !== "string") return null;
