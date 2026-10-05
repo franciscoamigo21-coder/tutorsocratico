@@ -1280,7 +1280,7 @@ const AI_CREATE_URL = "https://ase-ia-planifica.franciscoamigo21.workers.dev";
  * ========================================================================== */
 const FASE1_ON = true;
 const BLOCKED_ROLES   = FASE1_ON ? ["student","guardian"] : [];   // perfiles bloqueados en el login
-const BLOCKED_ACTIONS = FASE1_ON ? ["planifica"]          : [];   // accesos rápidos bloqueados
+const BLOCKED_ACTIONS = [];   // PLANIFICA habilitado para docentes y administrativos
 function isRoleBlocked(r){ return BLOCKED_ROLES.indexOf(r)>=0; }
 function isActionBlocked(a){ return BLOCKED_ACTIONS.indexOf(a)>=0; }
 /* Marca como "PRONTO" (no seleccionables) los perfiles bloqueados del login. */
