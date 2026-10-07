@@ -1352,6 +1352,8 @@ const ICONS={
  slides:'<svg viewBox="0 0 48 48"><path fill="#f4b400" d="M29 4H12a3 3 0 0 0-3 3v34a3 3 0 0 0 3 3h24a3 3 0 0 0 3-3V14z"/><path fill="#f7cb4d" d="M29 4l10 10H29z"/><rect x="15" y="21" width="18" height="12" rx="1.5" fill="#fff"/></svg>',
  canva:'<svg viewBox="0 0 48 48"><defs><linearGradient id="cv" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#7d2ae8"/><stop offset=".5" stop-color="#00c4cc"/><stop offset="1" stop-color="#01f1c4"/></linearGradient></defs><circle cx="24" cy="24" r="20" fill="url(#cv)"/><text x="24" y="32" text-anchor="middle" font-family="Georgia,\'Times New Roman\',serif" font-weight="700" font-size="24" fill="#fff">C</text></svg>',
  aptus:'<svg viewBox="0 0 48 48"><rect x="4" y="4" width="40" height="40" rx="11" fill="#e8412e"/><text x="24" y="32" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-weight="800" font-size="20" fill="#fff">A</text></svg>',
+ corrector:'<svg viewBox="0 0 48 48"><defs><linearGradient id="cor" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2f80ed"/><stop offset="1" stop-color="#17b3a3"/></linearGradient></defs><rect x="4" y="4" width="40" height="40" rx="12" fill="url(#cor)"/><rect x="12" y="10" width="20" height="28" rx="3.5" fill="#fff"/><path stroke="#2f80ed" stroke-width="2" stroke-linecap="round" d="M16 17h12M16 22h12M16 27h7"/><circle cx="31.5" cy="31" r="7.6" fill="#22b573" stroke="#fff" stroke-width="2"/><path fill="none" stroke="#fff" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" d="M28 31.2l2.3 2.3 4.2-4.6"/></svg>',
+ utopie:'<svg viewBox="0 0 48 48"><defs><linearGradient id="uto" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#7a5cff"/><stop offset="1" stop-color="#d44ea0"/></linearGradient></defs><rect x="4" y="4" width="40" height="40" rx="12" fill="url(#uto)"/><path fill="#fff" d="M20.4 12a3 3 0 0 1 6 0c0 1 .6 1.6 1.5 1.6H32a1.6 1.6 0 0 1 1.6 1.6v4.3c0 .9.6 1.5 1.6 1.5a3 3 0 0 1 0 6c-1 0-1.6.6-1.6 1.6V33a1.6 1.6 0 0 1-1.6 1.6h-4.3c-.9 0-1.5.6-1.5 1.6a3 3 0 0 1-6 0c0-1-.6-1.6-1.6-1.6H16A1.6 1.6 0 0 1 14.4 33v-4.4c0-.9-.6-1.5-1.6-1.5a3 3 0 0 1 0-6c1 0 1.6-.6 1.6-1.5V15.2A1.6 1.6 0 0 1 16 13.6h2.9c.9 0 1.5-.6 1.5-1.6z"/></svg>',
  folder:'<svg viewBox="0 0 48 48"><path fill="#f6b429" d="M6 12a3 3 0 0 1 3-3h9l4 4h14a3 3 0 0 1 3 3v3H6z"/><path fill="#ffd15c" d="M6 17h36a3 3 0 0 1 3 3v16a3 3 0 0 1-3 3H9a3 3 0 0 1-3-3z"/></svg>',
  doc:'<svg viewBox="0 0 48 48"><path fill="#1a73e8" d="M28 5H14a3 3 0 0 0-3 3v32a3 3 0 0 0 3 3h20a3 3 0 0 0 3-3V14z"/><path fill="#a7c7fb" d="M28 5l9 9h-9z"/><rect x="16" y="21" width="16" height="2.3" rx="1.1" fill="#fff"/><rect x="16" y="26" width="16" height="2.3" rx="1.1" fill="#fff"/><rect x="16" y="31" width="10" height="2.3" rx="1.1" fill="#fff"/></svg>',
  calweek:'<svg viewBox="0 0 48 48"><rect x="7" y="10" width="34" height="31" rx="4" fill="#fff" stroke="#dadce0"/><rect x="7" y="10" width="34" height="8" rx="4" fill="#1a73e8"/><rect x="12" y="24" width="7" height="12" rx="1.5" fill="#4285F4"/><rect x="21" y="24" width="7" height="12" rx="1.5" fill="#7ba7f5"/><rect x="30" y="24" width="6" height="12" rx="1.5" fill="#4285F4"/></svg>',
@@ -1413,6 +1415,8 @@ const B = {
   drive:{lb:"Drive",sub:"Carpetas del colegio",icon:"drive",menu:DRIVE_LINKS},
   calendar:{lb:"Calendar",sub:"Calendario JJP",icon:"calendar",menu:CAL_MENU},
   aptus:{lb:"Aptus",sub:"Recursos y evaluaciones",url:"https://www.aptus.org/",icon:"aptus"},
+  corrector:{lb:"Corrector SIP",sub:"Corrector de textos",url:"https://corrector.sip.cl",icon:"corrector"},
+  utopie:{lb:"UTOPIE",sub:"Educadoras diferenciales · PIE",url:"https://utopie.cl",icon:"utopie"},
   docsimp:{lb:"Documentos",sub:"Importantes",icon:"folder",menu:DOCS_IMPORTANTES},
   capac:{lb:"Capacitaciones",sub:"Cursos y formación",icon:"capac",menu:CAPAC_LINKS},
   correo:{lb:"Correo",sub:"Gmail",url:"https://mail.google.com",icon:"gmail"},
@@ -1440,7 +1444,7 @@ const B = {
 };
 const LINKS = {
   student:[B.classroom,B.drive,B.correo,B.sheets,B.docsimp,B.alexia,B.scholar,B.scielo,B.colegio],
-  teacher:[B.planifica,B.tutor,B.classroom,B.drive,B.calendar,B.correo,B.sheets,B.docs,B.slides,B.canva,B.aptus,B.capac,B.docsimp,B.notebook,B.gemini,B.chatgpt,B.buk,B.alexia],
+  teacher:[B.planifica,B.tutor,B.classroom,B.drive,B.calendar,B.correo,B.sheets,B.docs,B.slides,B.canva,B.aptus,B.corrector,B.utopie,B.capac,B.docsimp,B.notebook,B.gemini,B.chatgpt,B.buk,B.alexia],
   admin:[B.planifica,B.classroom,B.drive,B.calendar,B.correo,B.sheets,B.docs,B.aptus,B.capac,B.docsimp,B.notebook,B.gemini,B.chatgpt,B.buk,B.mineduc,B.alexia],
   guardian:[B.beneficios,B.alexia,B.correo,B.docsimp,B.whatsapp,B.instagram,B.participacion,B.colegio,B.sip],
 };
