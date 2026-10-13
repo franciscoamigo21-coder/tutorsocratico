@@ -1056,6 +1056,15 @@
       <div class="myp-grid" id="jefGrid" style="margin-top:12px"></div>
     </section>
 
+    <section class="myp" id="piePanel" style="display:none">
+      <div class="myp-head">
+        <div class="myp-av">🧩</div>
+        <div class="myp-id"><div class="myp-name">Programa de Integración</div><div class="myp-sub" id="pieSub">Equipo PIE 2026</div></div>
+      </div>
+      <p style="margin:8px 2px 2px;font-size:12.5px;color:var(--muted);line-height:1.45">Crea tus formatos del PIE con ASE-IA. Elige el material que necesitas:</p>
+      <div class="myp-grid" id="pieGrid" style="margin-top:12px"></div>
+    </section>
+
     <section class="quick">
       <div class="quickhead">
         <h3 id="quickTitle">Accesos rápidos</h3>
@@ -1354,6 +1363,8 @@ const ICONS={
  aptus:'<svg viewBox="0 0 48 48"><rect x="4" y="4" width="40" height="40" rx="11" fill="#e8412e"/><text x="24" y="32" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-weight="800" font-size="20" fill="#fff">A</text></svg>',
  corrector:'<svg viewBox="0 0 48 48"><defs><linearGradient id="cor" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2f80ed"/><stop offset="1" stop-color="#17b3a3"/></linearGradient></defs><rect x="4" y="4" width="40" height="40" rx="12" fill="url(#cor)"/><rect x="12" y="10" width="20" height="28" rx="3.5" fill="#fff"/><path stroke="#2f80ed" stroke-width="2" stroke-linecap="round" d="M16 17h12M16 22h12M16 27h7"/><circle cx="31.5" cy="31" r="7.6" fill="#22b573" stroke="#fff" stroke-width="2"/><path fill="none" stroke="#fff" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" d="M28 31.2l2.3 2.3 4.2-4.6"/></svg>',
  utopie:'<svg viewBox="0 0 48 48"><defs><linearGradient id="uto" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#7a5cff"/><stop offset="1" stop-color="#d44ea0"/></linearGradient></defs><rect x="4" y="4" width="40" height="40" rx="12" fill="url(#uto)"/><path fill="#fff" d="M20.4 12a3 3 0 0 1 6 0c0 1 .6 1.6 1.5 1.6H32a1.6 1.6 0 0 1 1.6 1.6v4.3c0 .9.6 1.5 1.6 1.5a3 3 0 0 1 0 6c-1 0-1.6.6-1.6 1.6V33a1.6 1.6 0 0 1-1.6 1.6h-4.3c-.9 0-1.5.6-1.5 1.6a3 3 0 0 1-6 0c0-1-.6-1.6-1.6-1.6H16A1.6 1.6 0 0 1 14.4 33v-4.4c0-.9-.6-1.5-1.6-1.5a3 3 0 0 1 0-6c1 0 1.6-.6 1.6-1.5V15.2A1.6 1.6 0 0 1 16 13.6h2.9c.9 0 1.5-.6 1.5-1.6z"/></svg>',
+ drivePie:'<svg viewBox="0 0 48 48"><defs><linearGradient id="dpie" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#0ca678"/><stop offset="1" stop-color="#1c7ed6"/></linearGradient></defs><rect x="4" y="4" width="40" height="40" rx="12" fill="url(#dpie)"/><path fill="#fff" d="M9 13a2.5 2.5 0 0 1 2.5-2.5h7l3.2 3.2H36.5A2.5 2.5 0 0 1 39 16.2V17H9z"/><path fill="#fff" fill-opacity=".92" d="M9 19h30v15.3a2.5 2.5 0 0 1-2.5 2.5h-25A2.5 2.5 0 0 1 9 34.3z"/><text x="24" y="32.5" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-weight="800" font-size="11.5" fill="#1c7ed6">PIE</text></svg>',
+ mce:'<svg viewBox="0 0 48 48"><defs><linearGradient id="mceg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#1157c9"/><stop offset="1" stop-color="#17a9c6"/></linearGradient></defs><rect x="4" y="4" width="40" height="40" rx="12" fill="url(#mceg)"/><circle cx="24" cy="24" r="12.5" fill="none" stroke="#fff" stroke-width="2.4" opacity=".65"/><text x="24" y="28.5" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-weight="800" font-size="13" fill="#fff" letter-spacing="1">MCE</text></svg>',
  folder:'<svg viewBox="0 0 48 48"><path fill="#f6b429" d="M6 12a3 3 0 0 1 3-3h9l4 4h14a3 3 0 0 1 3 3v3H6z"/><path fill="#ffd15c" d="M6 17h36a3 3 0 0 1 3 3v16a3 3 0 0 1-3 3H9a3 3 0 0 1-3-3z"/></svg>',
  doc:'<svg viewBox="0 0 48 48"><path fill="#1a73e8" d="M28 5H14a3 3 0 0 0-3 3v32a3 3 0 0 0 3 3h20a3 3 0 0 0 3-3V14z"/><path fill="#a7c7fb" d="M28 5l9 9h-9z"/><rect x="16" y="21" width="16" height="2.3" rx="1.1" fill="#fff"/><rect x="16" y="26" width="16" height="2.3" rx="1.1" fill="#fff"/><rect x="16" y="31" width="10" height="2.3" rx="1.1" fill="#fff"/></svg>',
  calweek:'<svg viewBox="0 0 48 48"><rect x="7" y="10" width="34" height="31" rx="4" fill="#fff" stroke="#dadce0"/><rect x="7" y="10" width="34" height="8" rx="4" fill="#1a73e8"/><rect x="12" y="24" width="7" height="12" rx="1.5" fill="#4285F4"/><rect x="21" y="24" width="7" height="12" rx="1.5" fill="#7ba7f5"/><rect x="30" y="24" width="6" height="12" rx="1.5" fill="#4285F4"/></svg>',
@@ -1415,8 +1426,10 @@ const B = {
   drive:{lb:"Drive",sub:"Carpetas del colegio",icon:"drive",menu:DRIVE_LINKS},
   calendar:{lb:"Calendar",sub:"Calendario JJP",icon:"calendar",menu:CAL_MENU},
   aptus:{lb:"Aptus",sub:"Recursos y evaluaciones",url:"https://www.aptus.org/",icon:"aptus"},
-  corrector:{lb:"Corrector SIP",sub:"Corrector de textos",url:"https://corrector.sip.cl",icon:"corrector"},
-  utopie:{lb:"UTOPIE",sub:"Educadoras diferenciales · PIE",url:"https://utopie.cl",icon:"utopie"},
+  corrector:{lb:"Corrector SIP",sub:"Corrector de textos",url:"https://corrector.sip.cl",icon:"sip"},
+  utopie:{lb:"UTOPIE",sub:"Educadoras diferenciales · PIE",url:"https://www.utopie.cl/",icon:"utopie"},
+  drivePie:{lb:"Drive PIE",sub:"Carpeta del equipo PIE",url:"https://drive.google.com/drive/folders/1fHoxshRRYXmhXMwbTycRfNv-jNFwi-j8?usp=drive_link",icon:"drivePie"},
+  mce:{lb:"MCE",sub:"Modelo de Clase Efectiva",url:"https://mce.sip.cl/documentos/",icon:"mce"},
   docsimp:{lb:"Documentos",sub:"Importantes",icon:"folder",menu:DOCS_IMPORTANTES},
   capac:{lb:"Capacitaciones",sub:"Cursos y formación",icon:"capac",menu:CAPAC_LINKS},
   correo:{lb:"Correo",sub:"Gmail",url:"https://mail.google.com",icon:"gmail"},
@@ -1444,11 +1457,33 @@ const B = {
 };
 const LINKS = {
   student:[B.classroom,B.drive,B.correo,B.sheets,B.docsimp,B.alexia,B.scholar,B.scielo,B.colegio],
-  teacher:[B.planifica,B.tutor,B.classroom,B.drive,B.calendar,B.correo,B.sheets,B.docs,B.slides,B.canva,B.aptus,B.corrector,B.utopie,B.capac,B.docsimp,B.notebook,B.gemini,B.chatgpt,B.buk,B.alexia],
+  teacher:[B.planifica,B.tutor,B.classroom,B.drive,B.calendar,B.correo,B.sheets,B.docs,B.slides,B.canva,B.aptus,B.corrector,B.capac,B.docsimp,B.notebook,B.gemini,B.chatgpt,B.buk,B.alexia],
   admin:[B.planifica,B.classroom,B.drive,B.calendar,B.correo,B.sheets,B.docs,B.aptus,B.capac,B.docsimp,B.notebook,B.gemini,B.chatgpt,B.buk,B.mineduc,B.alexia],
   guardian:[B.beneficios,B.alexia,B.correo,B.docsimp,B.whatsapp,B.instagram,B.participacion,B.colegio,B.sip],
 };
 const ROLE_LABEL={student:"Estudiante",teacher:"Docente",admin:"Administrativo",guardian:"Apoderado"};
+
+/* ============================================================================
+ *  EQUIPOS ESPECIALES (según Nómina Equipo PIE 2026 y Equipo de Gestión).
+ *  - PIE_TEACHERS: educadoras diferenciales y psicopedagogas  -> perfil DOCENTE
+ *  - PIE_ADMINS:   fonoaudiólogas, psicólogas y coordinadoras  -> perfil ADMINISTRATIVO
+ *  - GESTION:      equipo de gestión -> etiqueta "Equipo de Gestión" + acceso MCE
+ *  Todas las personas PIE ven la sección "Programa de Integración", sus formatos
+ *  en PLANIFICA y los accesos a UTOPIE y la carpeta Drive del PIE.
+ * ========================================================================== */
+const PIE_TEACHERS=["texia.vargas@sip.cl","inania.campino@sip.cl","camila.chacon@sip.cl","elisa.poncev@sip.cl","ana.farfan@sip.cl","nancy.sepulveda@sip.cl","camila.castroa@sip.cl","mverap@sip.cl","carla.millanao@sip.cl","belen.pedrero@sip.cl","marcela.vera@sip.cl","ninoska.collinao@sip.cl","javiera.chavez@sip.cl","yessenia.reyes@sip.cl","paula.vives@sip.cl","camila.caroca@sip.cl","nataly.escobar@sip.cl","daniela.leiva@sip.cl","francisca.pavez@sip.cl","cristina.valdebenito@sip.cl","maria.salgado@sip.cl"];
+const PIE_ADMINS=["claudia.gutierrez@sip.cl","carolina.yanez@sip.cl","estefanny.calderon@sip.cl","constanza.valenzuela@sip.cl","javiera.fritis@sip.cl","veronica.campos@sip.cl","carla.pozo@sip.cl","maria.mesa@sip.cl","romina.zapata@sip.cl","elibaeza@sip.cl"];
+const PIE_ALL=PIE_TEACHERS.concat(PIE_ADMINS);
+const GESTION=["bsaavedra@sip.cl","carolina.ilabacac@sip.cl","carolina.contreras@sip.cl","cescobar@sip.cl","dennys.maldonado@sip.cl","elibaeza@sip.cl","francisca.jimenez@sip.cl","francisco.amigo@sip.cl","flinares@sip.cl","israel.salas@sip.cl","jmuller@sip.cl","jaillapan@sip.cl","juan.martinezc@sip.cl","kareen.norambuena@sip.cl","maria.mesa@sip.cl","solesilva@sip.cl","mespinoza@sip.cl","paz.mancilla@sip.cl","nardyn.mella@sip.cl","paulina.devia@sip.cl","romina.zapata@sip.cl","sara.garciadecortazar@sip.cl","slabbe@sip.cl","stefania.lyon@sip.cl","vlletelier@sip.cl","vvasquez@sip.cl"];
+const lcEmail=e=>(e||"").trim().toLowerCase();
+/* SIM_* permite al perfil MAESTRO (dev) simular un tipo de perfil para probar. */
+let SIM_PIE="", SIM_GESTION=false;
+function curEmail(){ return lcEmail(CURRENT&&CURRENT.email); }
+function isPIE(){ return (SIM_PIE==="teacher"||SIM_PIE==="admin") || PIE_ALL.indexOf(curEmail())>=0; }
+function isGestion(){ return SIM_GESTION || GESTION.indexOf(curEmail())>=0; }
+function pieForcedRole(email){ email=lcEmail(email); if(PIE_ADMINS.indexOf(email)>=0)return "admin"; if(PIE_TEACHERS.indexOf(email)>=0)return "teacher"; return null; }
+function pieLabel(){ return isPIE() ? "Programa de Integración" : ""; }
+
 
 function iconMarkup(b){
   if(b.icon==="crest") return '<svg viewBox="0 0 120 120"><use href="#crestSVG"/></svg>';
@@ -1458,7 +1493,13 @@ function renderQuick(role){
   const g=document.getElementById("qgrid");g.innerHTML="";
   document.querySelectorAll("body > .qpop").forEach(p=>p.remove());   // limpia desplegables anteriores del <body>
   const mk=document.getElementById("qpopmask");if(mk)mk.classList.remove("on");
-  LINKS[role].forEach(b=>{
+  // Accesos base del rol + extras según equipo (PIE / Gestión), sin duplicar.
+  let list=(LINKS[role]||[]).slice();
+  const extra=[];
+  if(isPIE()){ extra.push(B.drivePie); extra.push(B.utopie); }
+  if(isGestion()){ extra.push(B.mce); }
+  extra.forEach(b=>{ if(b && list.indexOf(b)<0) list.push(b); });
+  list.forEach(b=>{
     if(b.menu&&b.menu.length) g.appendChild(qcardMenu(b));
     else if(b.action){                                   // tarjeta que abre una función interna (Beneficios, Planifica, Tutor)
       const blk=isActionBlocked(b.action);               // Fase 1: acceso bloqueado (PRONTO)
@@ -2927,13 +2968,15 @@ function avatarInto(elId,photo,fallback){
   else e.textContent=fallback||"A";
 }
 function enter(role,email,name,photo,prof){
+  SIM_PIE=""; SIM_GESTION=false;                                   // se reinicia la simulación de maestro
+  const _forced=(!isDev(email)&&pieForcedRole(email)); if(_forced) role=_forced;  // PIE: perfil según nómina 2026
   ROLE=role;convo.length=0;log.innerHTML="";
   CURRENT={role,email:email||"",name:name||"",photo:photo||"",prof:prof||null};
   const disp=niceName(email,name);
   document.getElementById("whoLabel").textContent=disp;
   document.getElementById("mailLabel").textContent=email||"";
   avatarInto("rbAv",CURRENT.photo,(disp.trim()[0]||"A").toUpperCase());
-  renderQuick(role);renderSugs();buildProfileMenu();renderHelp(role);renderMyPanel();renderJefatura();
+  renderQuick(role);renderSugs();buildProfileMenu();renderHelp(role);renderMyPanel();renderJefatura();renderProgramaPIE();
   if(STAFF(role))loadDirectory();   // carga el directorio de estudiantes desde el Worker (privado)
   const wb=document.getElementById("weekbtn");if(wb)wb.style.display=STAFF(role)?"":"none";  // Calendario JJP: solo funcionarios
   const saludo=name?("¡Hola, "+name.split(" ")[0]+"! 👋"):"¡Hola! 👋";
@@ -3014,6 +3057,25 @@ function jefStudentChanged(){
     card.appendChild(el("div","e",c.e));const l=el("div","l",c.l);if(c.sub){const sm=document.createElement("small");sm.textContent=c.sub;l.appendChild(sm);}
     card.appendChild(l);card.onclick=c.fn;grid.appendChild(card);});
 }
+/* ===== Panel "Programa de Integración" (equipo PIE) ===== */
+function renderProgramaPIE(){
+  const panel=document.getElementById("piePanel"); if(!panel)return;
+  if(!isPIE()){ panel.style.display="none"; return; }
+  const sub=document.getElementById("pieSub"); if(sub) sub.textContent="Equipo PIE 2026"+(isGestion()?" · Equipo de Gestión":"");
+  const grid=document.getElementById("pieGrid"); if(grid){ grid.innerHTML="";
+    const cards=[
+      {e:"📓",l:"Libro de registro",sub:"Registro ministerial PIE",v:"libro_registro"},
+      {e:"📝",l:"Eval. diferenciada",sub:"Papeleta de adecuaciones",v:"papeleta_dif"},
+      {e:"🧠",l:"Test de Conners",sub:"Escala para profesores",v:"test_conners"},
+      {e:"✨",l:"Otro material",sub:"Planificación, guía…",v:""},
+    ];
+    cards.forEach(c=>{ const card=el("div","myp-card"); card.appendChild(el("div","e",c.e));
+      const l=el("div","l",c.l); const sm=document.createElement("small"); sm.textContent=c.sub; l.appendChild(sm); card.appendChild(l);
+      card.onclick=()=>openPlanificaPIE(c.v); grid.appendChild(card); });
+  }
+  panel.style.display="";
+}
+function openPlanificaPIE(tipo){ openPlanifica(); setTimeout(function(){ const sel=document.getElementById("plTipo"); if(sel&&tipo){ sel.value=tipo; if(typeof planTipoChanged==="function")planTipoChanged(); } },80); }
 function renderMyPanel(){
   const panel=document.getElementById("myPanel");if(!panel)return;
   const p=CURRENT.prof;
@@ -3138,6 +3200,10 @@ function closeBeneficios(){ document.getElementById("benmodal").classList.remove
 const PLAN_NIVELES=["1° Básico","2° Básico","3° Básico","4° Básico","5° Básico","6° Básico","7° Básico","8° Básico","I° Medio","II° Medio","III° Medio","IV° Medio"];
 const PLAN_ASIGS=["Lenguaje y Comunicación","Matemática","Historia, Geografía y Cs. Sociales","Ciencias Naturales","Biología","Física","Química","Inglés","Artes Visuales","Música","Educación Física y Salud","Tecnología","Orientación","Religión","Otra"];
 const PLAN_TIPOS=[{v:"planificacion",l:"Planificación de clase"},{v:"guia",l:"Guía de trabajo"},{v:"rubrica",l:"Rúbrica"},{v:"actividades",l:"Sugerencia de actividades de clase"},{v:"presentacion",l:"★ Crea tu presentación"}];
+/* Formatos propios del Programa de Integración (PIE) */
+const PLAN_TIPOS_PIE=[{v:"libro_registro",l:"★ Libro de registro ministerial (PIE)"},{v:"papeleta_dif",l:"★ Papeleta de evaluación diferenciada"},{v:"test_conners",l:"★ Test de Conners (profesores)"}];
+const PIE_TIPO_SET={libro_registro:1,papeleta_dif:1,test_conners:1};
+function isPIETipo(t){ return !!PIE_TIPO_SET[t]; }
 let PLAN_UPLOADED="";
 const PLAN_DUR=["1 clase (45 minutos)","1 clase (90 minutos)","2 clases","3 clases","4 clases","Secuencia didáctica (varias clases)"];
 const PPT_ICON='<svg viewBox="0 0 48 48" width="34" height="34"><rect x="7" y="7" width="34" height="34" rx="5" fill="#C43E1C"/><path fill="#fff" d="M16 14h9c4.4 0 7.5 2.7 7.5 6.9S29.4 28 25 28h-4v7h-5V14zm5 4v6h3.4c1.9 0 3.1-1.1 3.1-3s-1.2-3-3.1-3H21z"/></svg>';
@@ -3193,7 +3259,7 @@ let PLAN_LAST="";
 function planFormHTML(){
   const opt=arr=>arr.map(x=>'<option>'+x+'</option>').join("");
   return '<div class="planwrap"><div class="planform">'
-    +'<div class="planfield"><label>Tipo de material</label><select id="plTipo" onchange="planTipoChanged()">'+PLAN_TIPOS.map(t=>'<option value="'+t.v+'">'+t.l+'</option>').join("")+'</select></div>'
+    +'<div class="planfield"><label>¿Qué tipo de material deseas crear?</label><select id="plTipo" onchange="planTipoChanged()">'+(isPIE()?PLAN_TIPOS_PIE:[]).concat(PLAN_TIPOS).map(t=>'<option value="'+t.v+'">'+t.l+'</option>').join("")+'</select></div>'
     +'<div class="planfield"><label>Asignatura</label><select id="plAsig">'+opt(PLAN_ASIGS)+'</select></div>'
     +'<div class="planfield"><label>Nivel / Curso</label><select id="plNivel">'+opt(PLAN_NIVELES)+'</select></div>'
     +'<div class="planfield" id="plDifWrap" style="display:none"><label>Dificultad de la guía <span class="opt">(1 básica · 4 avanzada)</span></label><select id="plDif"><option value="1">1 · Básica</option><option value="2" selected>2 · Intermedia</option><option value="3">3 · Desafiante</option><option value="4">4 · Avanzada</option></select></div>'
@@ -3301,7 +3367,22 @@ function planNivelGuia(nivel){
   if(/^(5|6|7|8)°?\s*B/i.test(nivel)) return "Es un nivel intermedio: puedes incluir un texto breve y actividades algo más elaboradas, 4 a 6 actividades.";
   return "Es un nivel de enseñanza media: actividades más elaboradas, de análisis y aplicación, con mayor exigencia; 4 a 6 actividades.";
 }
+function piePrompt(tipo,nivel,tema,desc,planBase){
+  const ctx=(tema?("Datos/contexto: "+tema+". "):"")+(desc?("Detalle del profesional: \""+desc+"\". "):"")+(nivel?("Curso/nivel: "+nivel+". "):"")+(planBase?("Base entregada: \""+planBase+"\". "):"");
+  const cierre=" Devuélvelo listo para completar e imprimir, en español de Chile, SIN emojis. Usa encabezados (##), tablas Markdown y líneas de escritura con guiones bajos (______) donde se deba completar a mano. Voz institucional del Colegio Presidente José Joaquín Prieto (SIP).";
+  if(tipo==="libro_registro"){
+    return "Actúa como especialista del Programa de Integración Escolar (PIE). Genera el formato del «Registro de planificación y evaluación de actividades del curso» del Programa de Integración Escolar (Unidad de Educación Especial, MINEDUC), listo para completar. "+ctx
+     +"Incluye: (1) Encabezado con establecimiento, curso, docente de aula, profesional PIE y periodo; (2) una breve descripción del propósito del PIE (favorecer la presencia, la participación y el logro de los aprendizajes de las y los estudiantes con NEE, permanentes o transitorias); (3) una TABLA de registro por clase o sesión con columnas: Fecha · Asignatura/Área · Objetivo de aprendizaje · Estrategias diversificadas (DUA) y apoyos específicos · Trabajo colaborativo y co-docencia · Evaluación y avances de los estudiantes con NEE · Observaciones; (4) una sección de seguimiento del proceso y acuerdos; (5) firmas del profesional PIE y del docente de aula. Deja varias filas en blanco con líneas para completar a mano."+cierre;
+  }
+  if(tipo==="papeleta_dif"){
+    return "Actúa como especialista PIE. Genera el «REGISTRO DE EVALUACIÓN DIFERENCIADA» (papeleta) del colegio, listo para completar. "+ctx
+     +"Incluye los campos: Nombre del estudiante ______, Curso ______, Fecha ______, Asignatura ______ y Profesional que aplica la evaluación diferenciada ______. Luego una TABLA con la columna «ADECUACIÓN REALIZADA» y una columna «X» para marcar, con al menos estas filas: Modificación en el desarrollo, extensión, grado de dificultad o eliminación de ítems; Se adapta el instrumento con más apoyos gráficos e imágenes ilustrativas; Uso de material concreto según asignaturas que lo requieran; Cambio de formato (aumento del tamaño de la letra, destacar instrucciones y/o palabras); Se entregan instrucciones claras y precisas de forma oral; Disminución de la dificultad en partes del instrumento; Ejemplifican las instrucciones. Agrega una fila «Otras adecuaciones» y una línea de firma del profesional."+cierre;
+  }
+  return "Actúa como especialista PIE. Genera la «ESCALA DE EVALUACIÓN PARA PROFESORES ABREVIADA (CONNERS ABREVIADO)», lista para completar. "+ctx
+   +"Incluye: encabezado con Nombre del niño/a ______, Nombre del profesor/a ______, Curso ______ y Fecha ______; una instrucción breve pidiendo marcar con una cruz la magnitud de cada conducta y responder todos los ítems; y una TABLA con columnas: Ítem · NADA · UN POCO · BASTANTE · MUCHO. Incluye los ítems conductuales clásicos (inquieto o demasiado activo; excitable, impulsivo; molesta a otros; no termina lo que empieza; se mueve constantemente en la silla; desatento, se distrae fácilmente; no tolera la frustración; llora fácil y frecuentemente; cambios de humor rápidos; pataletas o conducta explosiva) y un segundo bloque de ítems escolares y socioemocionales (dificultades de lenguaje; no lee al nivel de sus pares; problemas para escribir; olvida lo que aprende; dificultades en aritmética; pierde útiles; responde antes de que finalice la pregunta; dificultad para organizar sus trabajos; rechazo del grupo; tímido o ansioso; triste o decaído; interrumpe a otros; le cuesta respetar turnos; discute mucho; se opone a cumplir sus deberes). Termina con «Observaciones generales» (varias líneas ______) y la firma del profesor/a."+cierre;
+}
 function planPrompt(tipo,asig,nivel,tema,dur,desc,dif,planBase){
+  if(isPIETipo(tipo)) return piePrompt(tipo,nivel,tema,desc,planBase);
   const nombres={planificacion:"una planificación de clase",guia:"una guía de trabajo para estudiantes",rubrica:"una rúbrica de evaluación",actividades:"una sugerencia de actividades de clase"};
   const DIFTXT={
     "1":"NIVEL 1 (MUY FÁCIL): solo reconocer, identificar y completar con ejemplos ya resueltos y mucho apoyo; preguntas muy directas.",
@@ -3568,9 +3649,9 @@ async function generarPlanifica(){
   const tema=(g("plTema").value||"").trim(), dur=(g("plDur").value||"").trim(), desc=(g("plDesc").value||"").trim();
   const dif=(g("plDif")||{}).value||"", planBase=(PLAN_UPLOADED||"").trim().slice(0,4000);
   const res=g("plResult");
-  if(!tema && !desc && !planBase){ res.innerHTML='<div class="ph" style="color:#c0392b">Cuéntame primero el <b>tema</b>, <b>en qué consiste la clase</b> o carga un archivo para crear el material.</div>'; return; }
+  if(!isPIETipo(tipo) && !tema && !desc && !planBase){ res.innerHTML='<div class="ph" style="color:#c0392b">Cuéntame primero el <b>tema</b>, <b>en qué consiste la clase</b> o carga un archivo para crear el material.</div>'; return; }
   if(!AUTH_TOKEN){ res.innerHTML='<div class="ph" style="color:#c0392b">Inicia sesión con tu cuenta institucional de Google para crear material con IA.</div>'; return; }
-  const tipoNom={planificacion:"Planificación de clase",guia:"Guía de trabajo",rubrica:"Rúbrica",actividades:"Sugerencia de actividades de clase"}[tipo]||"Material";
+  const tipoNom={planificacion:"Planificación de clase",guia:"Guía de trabajo",rubrica:"Rúbrica",actividades:"Sugerencia de actividades de clase",libro_registro:"Libro de registro ministerial (PIE)",papeleta_dif:"Papeleta de evaluación diferenciada",test_conners:"Test de Conners"}[tipo]||"Material";
   PLAN_TIPO=tipo; PLAN_TITLE=tema||tipoNom;
   const btnG=g("plGo"); if(btnG)btnG.disabled=true;
   const oldTxt=btnG?btnG.textContent:""; if(btnG)btnG.textContent="Creando…";
@@ -4208,7 +4289,7 @@ function buildProfileMenu(){
   const disp=CURRENT.name||ROLE_LABEL[ROLE];
   document.getElementById("pmName").textContent=disp;
   document.getElementById("pmMail").textContent=CURRENT.email||"—";
-  document.getElementById("pmRole").textContent=ROLE_LABEL[ROLE];
+  document.getElementById("pmRole").textContent=ROLE_LABEL[ROLE]+(isPIE()?" · Programa de Integración":"")+(isGestion()?" · Equipo de Gestión":"");
   if(CURRENT.photo)avatarInto("pmAv",CURRENT.photo,null);
   else document.getElementById("pmAv").textContent=(LOGIN_INFO[ROLE]||{}).emo||"👤";
   const body=document.getElementById("pmBody");body.innerHTML="";
@@ -4217,6 +4298,7 @@ function buildProfileMenu(){
   if(ROLE!=="guardian")acts.push({em:"🔔",t:"Probar recordatorio",action:"testremind"});
   acts.push.apply(acts,ACTIONS[ROLE]||[]);
   body.appendChild(pmSection("⚡","Acciones frecuentes",acts,true));
+  if(isDev(CURRENT.email)) body.appendChild(pmDevSim());   // perfil MAESTRO: simular PIE / Gestión para probar
   body.appendChild(pmPrefs());
   // "Completa los datos de mi perfil" como opción por sí sola.
   body.appendChild(pmSolo("📝","Completa los datos de mi perfil",()=>{closeProfileMenu();openProfileData();}));
@@ -4227,6 +4309,34 @@ function pmSolo(icon,label,onclick){
   const b=document.createElement("button");b.type="button";b.className="pm-solo";
   b.innerHTML='<span class="ci">'+icon+'</span><span>'+label+'</span><span class="cx">→</span>';
   b.onclick=onclick;return b;
+}
+/* Perfil MAESTRO (dev): simular distintos tipos de perfil para probar (PIE / Gestión). */
+function pmDevSim(){
+  const d=el("details","pm-sec");
+  const sm=document.createElement("summary");
+  sm.innerHTML='<span class="ci">🧪</span><span>Maestro: ¿qué tipo de perfil quieres probar?</span><span class="cx">▾</span>';
+  d.appendChild(sm);
+  const wrap=el("div","pm-list"); wrap.style.cssText="padding:8px 12px 12px";
+  const cur = SIM_PIE==="teacher"?"pie-teacher" : SIM_PIE==="admin"?(SIM_GESTION?"pie-admin-gestion":"pie-admin") : (SIM_GESTION?"gestion":"");
+  const sel=document.createElement("select"); sel.className="selsel"; sel.style.width="100%";
+  sel.innerHTML=[
+    ["","Perfil normal (sin simular)"],
+    ["pie-teacher","Docente · Programa de Integración (PIE)"],
+    ["pie-admin","Administrativo · Programa de Integración (PIE)"],
+    ["gestion","Equipo de Gestión (MCE)"],
+    ["pie-admin-gestion","Administrativo PIE + Equipo de Gestión"],
+  ].map(o=>'<option value="'+o[0]+'"'+(o[0]===cur?" selected":"")+'>'+o[1]+'</option>').join("");
+  sel.onchange=function(){
+    const v=sel.value; SIM_PIE=""; SIM_GESTION=false;
+    if(v==="pie-teacher"){ SIM_PIE="teacher"; ROLE="teacher"; }
+    else if(v==="pie-admin"){ SIM_PIE="admin"; ROLE="admin"; }
+    else if(v==="gestion"){ SIM_GESTION=true; }
+    else if(v==="pie-admin-gestion"){ SIM_PIE="admin"; SIM_GESTION=true; ROLE="admin"; }
+    CURRENT.role=ROLE;
+    renderQuick(ROLE); renderProgramaPIE(); renderJefatura(); renderMyPanel();
+    const pr=document.getElementById("pmRole"); if(pr) pr.textContent=ROLE_LABEL[ROLE]+(isPIE()?" · Programa de Integración":"")+(isGestion()?" · Equipo de Gestión":"");
+  };
+  wrap.appendChild(sel); d.appendChild(wrap); return d;
 }
 function pmAbout(){
   const d=el("details","pm-sec");
