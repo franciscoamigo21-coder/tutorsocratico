@@ -1451,7 +1451,7 @@ const B = {
   planifica:{lb:"Planifica",sub:"Copiloto docente IA",icon:"planifica",action:"planifica",feature:true},
 };
 const LINKS = {
-  student:[B.classroom,B.drive,B.correo,B.sheets,B.docsimp,B.alexia,B.scholar,B.scielo,B.colegio],
+  student:[B.tutor,B.classroom,B.drive,B.correo,B.sheets,B.docsimp,B.alexia,B.scholar,B.scielo,B.colegio],
   teacher:[B.planifica,B.tutor,B.classroom,B.drive,B.calendar,B.correo,B.sheets,B.docs,B.slides,B.canva,B.aptus,B.corrector,B.capac,B.docsimp,B.notebook,B.gemini,B.chatgpt,B.buk,B.alexia],
   admin:[B.planifica,B.classroom,B.drive,B.calendar,B.correo,B.sheets,B.docs,B.aptus,B.capac,B.docsimp,B.notebook,B.gemini,B.chatgpt,B.buk,B.mineduc,B.alexia],
   guardian:[B.beneficios,B.alexia,B.correo,B.docsimp,B.whatsapp,B.instagram,B.participacion,B.colegio,B.sip],
@@ -3346,11 +3346,17 @@ function closePlanifica(){ document.getElementById("planmodal").classList.remove
 
 /* ============ TUTOR SOCRÁTICO · la app real de aseia.cl/tutorsocratico, embebida ============ */
 const TUTOR_SRC="tutorsocratico/index.html?embed=1";
+/* Los estudiantes abren el Tutor en modo reflexión/metacognición (defensa oral),
+   no en el modo docente (análisis para el profesor). */
+function tutorSrc(){ return TUTOR_SRC + (ROLE==="student" ? "&student=1" : ""); }
 function openTutor(){
   const body=document.getElementById("tutorBody");
-  // Se carga una sola vez (mantiene el estado del Tutor mientras dure la sesión).
-  if(!body.querySelector("iframe")){
-    body.innerHTML='<iframe class="tutorframe" src="'+TUTOR_SRC+'" title="Tutor Socrático" allow="microphone; clipboard-write" referrerpolicy="no-referrer"></iframe>';
+  const want=tutorSrc();
+  const ifr=body.querySelector("iframe");
+  if(!ifr){
+    body.innerHTML='<iframe class="tutorframe" src="'+want+'" title="Tutor Socrático" allow="microphone; clipboard-write" referrerpolicy="no-referrer"></iframe>';
+  } else if(ifr.getAttribute("src")!==want){
+    ifr.setAttribute("src",want);   // cambia de modo si cambió el perfil (p. ej. maestro simulando)
   }
   document.getElementById("tutormodal").classList.add("open");
   document.body.style.overflow="hidden";

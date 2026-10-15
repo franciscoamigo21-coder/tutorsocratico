@@ -1242,19 +1242,31 @@
     <script>
       try{ if(/[?&]embed=1\b/.test(location.search)){
         document.documentElement.classList.add('embed-mode');
+        var IS_STUDENT=/[?&]student=1\b/.test(location.search);
+        if(IS_STUDENT) document.documentElement.classList.add('embed-student');
         document.addEventListener('DOMContentLoaded', function(){
           try{
             var cont=document.querySelector('.container'); if(!cont) return;
-            if(document.querySelector('.embed-head')) return;
             var robot=document.querySelector('.logo-container img');
             var sip=document.querySelector('.jjp-logo');
-            var h=document.createElement('div'); h.className='embed-head';
-            h.innerHTML=
-              (robot?'<img class="eh-robot" alt="Tutor Socrático" src="'+robot.src+'">':'')
-              +'<div class="eh-text"><div class="eh-title">Tutor Socrático</div>'
-              +'<div class="eh-desc">Te acompaña a preparar y <b>defender tu trabajo</b> con preguntas de reflexión, como en una evaluación oral. Pega un texto, sube un PDF o toma una foto y genera tu guía.</div></div>'
-              +(sip?'<img class="eh-sip" alt="SIP Red de Colegios" src="'+sip.src+'">':'');
-            cont.insertBefore(h, cont.firstChild);
+            var desc=IS_STUDENT
+              ? 'Reflexiona sobre tu propio trabajo y prepárate para defenderlo con seguridad. Pega tu texto, sube tu PDF o toma una foto y <b>practica tus preguntas de defensa oral</b> y de metacognición.'
+              : 'Te acompaña a preparar y <b>defender tu trabajo</b> con preguntas de reflexión, como en una evaluación oral. Pega un texto, sube un PDF o toma una foto y genera tu guía.';
+            if(!document.querySelector('.embed-head')){
+              var h=document.createElement('div'); h.className='embed-head';
+              h.innerHTML=
+                (robot?'<img class="eh-robot" alt="Tutor Socrático" src="'+robot.src+'">':'')
+                +'<div class="eh-text"><div class="eh-title">Tutor Socrático</div>'
+                +'<div class="eh-desc">'+desc+'</div></div>'
+                +(sip?'<img class="eh-sip" alt="SIP Red de Colegios" src="'+sip.src+'">':'');
+              cont.insertBefore(h, cont.firstChild);
+            }
+            if(IS_STUDENT){
+              var ti=document.querySelector('.modo-titulo');
+              if(ti) ti.innerHTML='<i class="fas fa-wand-magic-sparkles"></i> ¿Cómo quieres preparar tu defensa?';
+              var intro=document.querySelector('.modo-intro');
+              if(intro) intro.textContent='Elige cómo ingresar tu trabajo. Reflexionarás sobre lo que hiciste y prepararás tus preguntas de defensa oral.';
+            }
           }catch(e){}
         });
       }}catch(e){}
