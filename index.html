@@ -1098,11 +1098,6 @@
 <!-- Recordatorios emergentes de ASE-IA (calendario) -->
 <div id="toasts"></div>
 
-<!-- Música de ambiente (arpa chilena) + control para detenerla -->
-<audio id="bgm" src="assets/cuecas-fondas.mp3" loop preload="none"></audio>
-<button id="bgmBtn" class="bgmbtn on" type="button" onclick="toggleBgm()" aria-label="Música de ambiente" title="Música de ambiente">
-  <span class="bgm-ic" aria-hidden="true">♪</span><span class="bgm-tx">Detener música</span>
-</button>
 
 <!-- Modal del Calendario del Colegio JJP (Vista semanal / Mes / Agenda) -->
 <div id="calModal" onclick="if(event.target===this)closeCal()">
@@ -1288,7 +1283,7 @@ const AI_CREATE_URL = "https://ase-ia-planifica.franciscoamigo21.workers.dev";
  *  Para reactivar TODO más adelante: deja ambas listas vacías  []  (o FASE1_ON=false).
  * ========================================================================== */
 const FASE1_ON = true;
-const BLOCKED_ROLES   = FASE1_ON ? ["student","guardian"] : [];   // perfiles bloqueados en el login
+const BLOCKED_ROLES   = FASE1_ON ? ["guardian"] : [];   // perfiles bloqueados en el login (Estudiante habilitado)
 const BLOCKED_ACTIONS = [];   // PLANIFICA habilitado para docentes y administrativos
 function isRoleBlocked(r){ return BLOCKED_ROLES.indexOf(r)>=0; }
 function isActionBlocked(a){ return BLOCKED_ACTIONS.indexOf(a)>=0; }
@@ -4832,34 +4827,7 @@ function skipIntro(){const i=document.getElementById("intro");if(!i||i.classList
   vel=15;frame(); // giro de bienvenida
 })();
 
-/* ============ MÚSICA DE AMBIENTE (arpa chilena, volumen bajito) ============ */
-(function(){
-  const bgm=document.getElementById("bgm"), btn=document.getElementById("bgmBtn");
-  if(!bgm||!btn) return;
-  const KEY="aseia_bgm";
-  bgm.volume=0.12;                       // bien bajita, no invasiva
-  let on; try{ on=(localStorage.getItem(KEY)||"on")!=="off"; }catch(_){ on=true; }
-  function paint(){
-    btn.classList.toggle("on",on); btn.classList.toggle("off",!on);
-    const tx=btn.querySelector(".bgm-tx"); if(tx) tx.textContent=on?"Detener música":"Poner música";
-    btn.title=on?"Música de ambiente (tocando)":"Música de ambiente (silenciada)";
-  }
-  function introVisible(){ const i=document.getElementById("intro"); return i && !i.classList.contains("done") && getComputedStyle(i).opacity!=="0"; }
-  function tryPlay(){
-    if(!on || !bgm.paused || introVisible()) return;   // espera a que termine la intro
-    const p=bgm.play(); if(p&&p.catch) p.catch(()=>{});
-  }
-  window.toggleBgm=function(){
-    on=!on; try{ localStorage.setItem(KEY,on?"on":"off"); }catch(_){}
-    if(on){ tryPlay(); } else { try{ bgm.pause(); }catch(_){} }
-    paint();
-  };
-  // Arranca con el primer gesto del usuario (política de autoplay), ya pasada la intro.
-  ["pointerdown","click","keydown","touchstart"].forEach(ev=>document.addEventListener(ev,tryPlay,{capture:true}));
-  // Reintenta apenas la intro se oculte.
-  setInterval(()=>{ if(on && bgm.paused && !introVisible()) tryPlay(); },1500);
-  paint();
-})();
+
 </script>
 </body>
 </html>
