@@ -28,20 +28,33 @@ Al no contar con una herramienta efectiva de detección de utilización de IA en
 
 **Reflexión grupal**: a partir de la evidencia recogida, primero nos cuestionamos la estrategia de acercamiento de la tecnología a los estudiantes, dado que la respuesta de puño y letra distaba mucho de lo enviado por plataformas. Intentamos un criterio común vía el método RACES (usado en Lenguaje e Historia), pero en reuniones posteriores reformulamos la planificación porque RACES no integraba cabalmente a las cinco disciplinas (apunta a respuesta argumentativa basada en una fuente, no sirve igual para Música o Artes).
 
-**Acuerdos**: a partir de los resultados en las cinco áreas y la percepción de los/as profesores/as de las asignaturas artísticas, se reformuló la estrategia sustituyendo el método RACES por el método de creación de textos paso a paso, que permite a todas las disciplinas medir de la misma manera el análisis de las respuestas de desarrollo, estandarizando un criterio de evaluación propio del estudiante en el "tutor socrático".
+**Acuerdos**: a partir de los resultados en las cinco áreas y la percepción de los/as profesores/as de las asignaturas artísticas, se reformuló la estrategia priorizando el método de creación de textos paso a paso por sobre RACES, que permite a todas las disciplinas medir de la misma manera el análisis de las respuestas de desarrollo, estandarizando un criterio de evaluación propio del estudiante en el "tutor socrático". RACES no se descartó por completo: quedó como método complementario (no principal), disponible para quienes ya lo usaban en Lenguaje e Historia, ya que no estaba instaurado en la cultura de evaluación de las asignaturas no troncales como Música o Artes.
+
+**⚠️ Corrección (2026-10-19)**: la versión original de este párrafo decía "sustituyendo", lo que contradice 5.2 — se corrige aquí para que ambas secciones sean consistentes entre sí.
 
 ---
 
 ## 5.2 Diálogo pedagógico en torno a la implementación del trabajo colaborativo
 
-**Pendiente** — ver más abajo, una vez transcritos los audios.
+**Estado**: redactado (2026-10-19) a partir de las notas reales del documento original + lo confirmado directamente por el profesor (no se usó transcripción de audio — ver nota de privacidad más abajo).
 
-**Notas sueltas del documento original (sin redactar como texto corrido)**:
+En nuestras reuniones de trabajo colaborativo, antes de llegar a un acuerdo sobre la estrategia a implementar, discutimos varias hipótesis sobre el origen del problema. La que concentró más consenso fue que la inmediatez con la que los estudiantes acceden hoy a la información y a la inteligencia artificial está instaurada culturalmente, y eso hace que no se den el tiempo para reflexionar antes de responder, más que tratarse de una intención deliberada de copiar. Esta hipótesis se conectó directamente con nuestras propias prácticas, porque quienes trabajamos en Lenguaje e Historia veníamos usando el método RACES para guiar la construcción de una respuesta argumentativa a partir de una fuente, pensando que esa misma estructura podía servir como criterio común para las cinco asignaturas.
+
+La discusión se hizo concreta a partir de una pregunta real de la experiencia interdisciplinaria entre Historia, Artes y Música: ¿cómo los procesos democráticos posteriores a la caída del Muro de Berlín permiten que el arte genere y produzca nuevas temáticas?, pidiendo justificar la respuesta con un ejemplo de la exposición Sensation. Al revisar en conjunto las respuestas que los estudiantes dieron a esa pregunta, nos dimos cuenta de que aplicar RACES tal cual no tenía sentido para Música y Artes, porque la estructura de la respuesta esperada —apoyada en el análisis de una fuente escrita— no calza con asignaturas donde la evaluación es mucho más práctica y de ejecución.
+
+Esto no significó que descartáramos RACES: decidimos dejarlo como un método complementario y no como el principal, porque no estaba instaurado en la cultura de evaluación de las asignaturas no troncales, y exigirlo como estructura única habría sido forzar un criterio ajeno a disciplinas como Música o Artes. En su lugar, priorizamos el método de creación de textos paso a paso, que sí permite medir de la misma manera el proceso de construcción de una respuesta en las cinco áreas, dejando a RACES disponible como apoyo puntual para quienes ya lo veníamos usando en Lenguaje e Historia.
+
+Desde Música planteamos con más fuerza el cuestionamiento a que RACES funcionara como método principal, precisamente porque nuestra asignatura es la más alejada de ese tipo de evaluación escrita y estructurada. En esa misma línea surgió la propuesta de contar con una herramienta tecnológica propia del colegio que nos permitiera verificar si una respuesta era genuina sin depender de la memoria o criterio individual de cada docente, lo que terminó dando origen al tutor socrático (ASE-IA).
+
+En ese mismo proceso discutimos el rol que nos corresponde como docentes frente a la IA: coincidimos en que no se trataba de prohibirla, sino de enseñar su uso con criterio, como una herramienta auxiliar que apoye el pensamiento del estudiante sin reemplazarlo. Nos interesaba que, más allá de aprobar una evaluación, nuestros estudiantes fueran capaces de sostener una opinión propia, sustentada en lo que leen y viven, porque esa capacidad de argumentar les sirve no solo en lo académico, sino en la toma de decisiones cotidianas y en su formación como ciudadanos críticos.
+
+**Notas sueltas del documento original (insumo base, ya integrado arriba)**:
 - Necesidad observada: deficiencia en la redacción de respuestas que implican demostrar pensamiento crítico y reflexivo.
 - Hipótesis: estudiantes delegan respuestas individuales a IA al pensar por escrito, y desconocen cómo formular una respuesta completa.
 - Perspectivas: (1) necesidad de modelar la forma en que los estudiantes responden; (2) hacer un uso positivo de la IA como herramienta auxiliar desde el conocimiento metacognitivo de los estudiantes; (3) fomento de un aprendizaje profundo.
-- Cómo aprenden los estudiantes: desde una dimensión conceptual y procedimental, y desde sus experiencias socioculturales, donde la inmediatez [frase cortada en el documento original].
 - Rol y misión como docentes: rol fundamental y modelador, formar seres pensantes y reflexivos capaces de usar la IA con criterio; que los estudiantes construyan sus propias opiniones sustentadas en experiencias y lecturas, más allá de lo académico (toma de decisiones, ciudadanía consciente).
+
+**⚠️ Nota de privacidad/veracidad**: no se transcribieron los audios de las reuniones (los modelos de reconocimiento de voz no se pudieron descargar en este entorno por restricciones de red) y, por decisión explícita, tampoco se generó una atribución simulada de frases a los 8 participantes reales — eso habría significado inventar citas atribuidas a colegas identificados por nombre y RUT, lo cual no corresponde. El texto de arriba se construyó en voz colectiva ("nosotros"), igual que 5.1 y 5.3, a partir de las notas reales del documento y de la confirmación directa del profesor sobre el contenido de las reuniones.
 
 ---
 
