@@ -378,6 +378,41 @@
   #regModal .regfallback a{color:var(--azul);font-weight:700;}
   #regModal .regfoot{padding:9px 14px;font-size:11px;color:var(--muted);text-align:center;border-top:1px solid #eef1f6;background:#fafbfe;}
   @media(max-width:640px){ #regModal{padding:0;} #regModal .regcard{height:100vh;max-width:100%;border-radius:0;} }
+  /* ===== Guía "Sácale el máximo provecho" ===== */
+  #guiaModal{position:fixed;inset:0;z-index:1350;display:none;align-items:flex-start;justify-content:center;padding:26px 16px;overflow:auto;background:rgba(8,22,52,.62);backdrop-filter:blur(5px);}
+  #guiaModal.open{display:flex;animation:fadeUp .22s ease both;}
+  #guiaModal .guiacard{position:relative;background:#fff;border-radius:24px;width:100%;max-width:880px;overflow:hidden;box-shadow:0 40px 90px -24px rgba(0,0,0,.6);margin:auto;}
+  #guiaModal .guiax{position:absolute;top:14px;right:14px;z-index:5;background:rgba(255,255,255,.22);border:none;color:#fff;width:36px;height:36px;border-radius:11px;font-size:16px;cursor:pointer;transition:background .15s ease;}
+  #guiaModal .guiax:hover{background:rgba(255,255,255,.4);}
+  .guiahero{position:relative;padding:30px 26px 26px;color:#fff;background:linear-gradient(135deg,#0b3d91 0%,#1f6feb 52%,#17b3b0 100%);overflow:hidden;}
+  .guiahero::after{content:"";position:absolute;right:-40px;top:-40px;width:200px;height:200px;border-radius:50%;background:rgba(255,255,255,.08);}
+  .guiahero .ghrow{display:flex;align-items:center;gap:15px;position:relative;z-index:2;}
+  .guiahero .ghbot{width:62px;height:62px;border-radius:17px;background:rgba(255,255,255,.16);padding:7px;flex-shrink:0;box-shadow:0 10px 24px -10px rgba(0,0,0,.4);}
+  .guiahero .ghbot img,.guiahero .ghbot svg{width:100%;height:100%;object-fit:contain;border-radius:11px;}
+  .guiahero .ghname{font-family:'Montserrat',sans-serif;font-weight:800;font-size:13px;letter-spacing:2px;opacity:.9;text-transform:uppercase;}
+  .guiahero h2{margin:3px 0 0;font-family:'Montserrat',sans-serif;font-size:24px;line-height:1.14;font-weight:800;}
+  .guiahero p{margin:12px 0 0;font-size:14px;line-height:1.6;opacity:.95;max-width:62ch;position:relative;z-index:2;}
+  .guiahero .ghcrest{position:absolute;right:22px;bottom:18px;width:52px;height:52px;opacity:.9;z-index:2;}
+  .guiabody{padding:22px 22px 10px;}
+  .guiagrid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+  .gcard{border:1px solid #e9eef7;border-radius:17px;padding:16px 16px 15px;background:linear-gradient(170deg,#fbfdff,#f3f7ff);transition:transform .15s ease,box-shadow .15s ease,border-color .15s ease;}
+  .gcard:hover{transform:translateY(-2px);box-shadow:0 16px 32px -20px rgba(17,87,201,.55);border-color:#cfe0ff;}
+  .gcard .gc-h{display:flex;align-items:center;gap:10px;}
+  .gcard .gc-ic{width:38px;height:38px;flex-shrink:0;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:20px;background:var(--grad-azul);box-shadow:0 7px 16px -8px rgba(11,61,145,.75);}
+  .gcard .gc-ic svg{width:26px;height:26px;}
+  .gcard .gc-t{font-family:'Montserrat',sans-serif;font-weight:800;font-size:14.5px;color:var(--azul-ink);line-height:1.2;}
+  .gcard .gc-d{font-size:12.8px;color:var(--muted);line-height:1.55;margin:9px 0 0;}
+  .gchips{display:flex;flex-wrap:wrap;gap:6px;margin-top:11px;}
+  .gchip{border:1px solid #d7e4ff;background:#fff;color:var(--azul);border-radius:999px;padding:5px 11px;font-size:11.6px;font-weight:600;cursor:pointer;transition:background .14s ease,color .14s ease,transform .14s ease;font-family:inherit;}
+  .gchip:hover{background:var(--grad-azul);color:#fff;border-color:transparent;transform:translateY(-1px);}
+  .gstep{display:flex;gap:11px;align-items:flex-start;margin-top:12px;}
+  .gstep .gn{width:25px;height:25px;flex-shrink:0;border-radius:50%;background:var(--grad-azul);color:#fff;font-weight:800;font-size:12.5px;display:flex;align-items:center;justify-content:center;}
+  .gstep .gt{font-size:12.8px;color:var(--text);line-height:1.5;}
+  .gstep .gt b{color:var(--azul-ink);}
+  .gsec-t{font-family:'Montserrat',sans-serif;font-weight:800;font-size:12px;letter-spacing:1.3px;text-transform:uppercase;color:var(--muted);margin:22px 2px 11px;}
+  .guiafoot{text-align:center;font-size:12px;color:var(--muted);padding:16px;border-top:1px solid #eef1f6;background:#fafbfe;margin-top:14px;}
+  .guiafoot b{color:var(--azul);}
+  @media(max-width:640px){ .guiagrid{grid-template-columns:1fr;} .guiahero h2{font-size:20px;} .guiahero .ghcrest{display:none;} #guiaModal{padding:0;} #guiaModal .guiacard{border-radius:0;min-height:100vh;} }
 
   /* ===== Panel personalizado (apoderado / estudiante) ===== */
   .myp{margin:0 0 16px;background:linear-gradient(160deg,#ffffff,#eef4ff);border:1px solid #dbe7ff;border-radius:20px;padding:14px 16px;box-shadow:0 16px 34px -24px rgba(17,87,201,.45);}
@@ -1297,9 +1332,16 @@
     </div>
     <div class="regframewrap">
       <iframe id="regFrame" title="Reglamento Interno" referrerpolicy="no-referrer"></iframe>
-      <div class="regfallback">Si el documento no se muestra, <a id="regOpen" target="_blank" rel="noopener">ábrelo en pantalla completa →</a></div>
     </div>
     <div class="regfoot">Documento oficial · Colegio Presidente José Joaquín Prieto · SIP Red de Colegios</div>
+  </div>
+</div>
+
+<!-- Guía: cómo sacarle el máximo provecho a ASE-IA -->
+<div id="guiaModal" onclick="if(event.target===this)closeGuia()">
+  <div class="guiacard">
+    <button class="guiax" onclick="closeGuia()" aria-label="Cerrar">✕</button>
+    <div id="guiaBody"></div>
   </div>
 </div>
 
@@ -1372,6 +1414,7 @@ const ICONS={
  beneficios:'<svg viewBox="0 0 48 48"><circle cx="24" cy="24" r="18" fill="#F5B301"/><circle cx="24" cy="24" r="18" fill="none" stroke="#D99400" stroke-width="2"/><path fill="#fff" d="M24 13l3.2 6.5 7.2 1-5.2 5.1 1.2 7.2L24 29.4 17.6 32.8l1.2-7.2-5.2-5.1 7.2-1z"/></svg>',
  planifica:'<svg viewBox="0 0 48 48"><defs><linearGradient id="plg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#6d5efc"/><stop offset=".55" stop-color="#4f8cff"/><stop offset="1" stop-color="#12b5c9"/></linearGradient></defs><rect x="4" y="4" width="40" height="40" rx="12" fill="url(#plg)"/><rect x="12" y="11" width="17" height="26" rx="3.5" fill="#fff"/><path stroke="#4f8cff" stroke-width="2.1" stroke-linecap="round" d="M16 18h9M16 23h9M16 28h6"/><path d="M29 31.5l7.6-7.6 3.5 3.5-7.6 7.6-4.2.7z" fill="#ffd34d" stroke="#e5a800" stroke-width="1.1" stroke-linejoin="round"/><path fill="#fff" d="M34 10.5l1.1 2.7 2.7 1.1-2.7 1.1-1.1 2.7-1.1-2.7-2.7-1.1 2.7-1.1z"/></svg>',
  tutor:'<svg viewBox="0 0 48 48"><defs><linearGradient id="ttg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#0e7c86"/><stop offset="1" stop-color="#1f9bd6"/></linearGradient></defs><rect x="4" y="4" width="40" height="40" rx="12" fill="url(#ttg)"/><path fill="#fff" d="M11 16a4 4 0 0 1 4-4h18a4 4 0 0 1 4 4v10a4 4 0 0 1-4 4H21l-6.5 5.5V30H15a4 4 0 0 1-4-4z"/><path fill="none" stroke="#0e7c86" stroke-width="2.6" stroke-linecap="round" d="M20 19.5a4 4 0 1 1 5.2 3.9c-1 .3-1.6 1-1.6 2.1v.4"/><circle cx="23.5" cy="28.4" r="1.8" fill="#0e7c86"/><path fill="#ffd34d" d="M35.5 8.5l1 2.6 2.6 1-2.6 1-1 2.6-1-2.6-2.6-1 2.6-1z"/></svg>',
+ guia:'<svg viewBox="0 0 48 48"><defs><linearGradient id="gug" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#1f6feb"/><stop offset=".55" stop-color="#2a8cf0"/><stop offset="1" stop-color="#17b3b0"/></linearGradient></defs><rect x="4" y="4" width="40" height="40" rx="12" fill="url(#gug)"/><path fill="#fff" d="M24 14c-3-2.2-6.4-2.6-9.5-2.2-.9.1-1.5.9-1.5 1.8v16.1c0 1 .9 1.8 1.9 1.7 2.8-.3 5.9.1 9.1 2.1z"/><path fill="#dbeafe" d="M24 14c3-2.2 6.4-2.6 9.5-2.2.9.1 1.5.9 1.5 1.8v16.1c0 1-.9 1.8-1.9 1.7-2.8-.3-5.9.1-9.1 2.1z"/><path fill="none" stroke="#1f6feb" stroke-width="1.6" stroke-linecap="round" d="M24 15.5v18"/><path fill="#ffd34d" d="M35.8 8.2l1 2.7 2.7 1-2.7 1-1 2.7-1-2.7-2.7-1 2.7-1z"/></svg>',
  gmail:'<svg viewBox="0 0 48 48"><path fill="#4caf50" d="M45 16.2l-5 2.75-5 4.75V40h7a3 3 0 0 0 3-3z"/><path fill="#1e88e5" d="M3 16.2l3.6 1.7L13 23.7V40H6a3 3 0 0 1-3-3z"/><path fill="#e53935" d="M35 11.2L24 19.45 13 11.2 12 17l1 6.7 11 8.25 11-8.25 1-6.7z"/><path fill="#c62828" d="M3 12.3V16.2l10 7.5V11.2L9.9 8.86A4.3 4.3 0 0 0 3 12.3z"/><path fill="#fbc02d" d="M45 12.3V16.2l-10 7.5V11.2l3.1-2.34A4.3 4.3 0 0 1 45 12.3z"/></svg>',
  drive:'<svg viewBox="0 0 87.3 78"><path fill="#0066da" d="M6.6 66.85l3.85 6.65c.8 1.4 1.95 2.5 3.3 3.3l13.75-23.8H0c0 1.55.4 3.1 1.2 4.5z"/><path fill="#00ac47" d="M43.65 25L29.9 1.2c-1.35.8-2.5 1.9-3.3 3.3l-25.4 44A9.06 9.06 0 0 0 0 53h27.5z"/><path fill="#ea4335" d="M73.55 76.8c1.35-.8 2.5-1.9 3.3-3.3l1.6-2.75 7.65-13.25c.8-1.4 1.2-2.95 1.2-4.5H59.8l5.85 11.5z"/><path fill="#00832d" d="M43.65 25L57.4 1.2c-1.35-.8-2.9-1.2-4.5-1.2H34.4c-1.6 0-3.15.45-4.5 1.2z"/><path fill="#2684fc" d="M59.8 53H27.5L13.75 76.8c1.35.8 2.9 1.2 4.5 1.2h50.8c1.6 0 3.15-.45 4.5-1.2z"/><path fill="#ffba00" d="M73.4 26.5l-12.7-22c-.8-1.4-1.95-2.5-3.3-3.3L43.65 25 59.8 53h27.45c0-1.55-.4-3.1-1.2-4.5z"/></svg>',
  calendar:'<svg viewBox="0 0 48 48"><rect x="9" y="10" width="30" height="29" rx="4" fill="#fff" stroke="#dadce0"/><rect x="9" y="10" width="30" height="8" rx="4" fill="#4285F4"/><text x="24" y="35" text-anchor="middle" font-family="Arial,sans-serif" font-weight="700" font-size="16" fill="#4285F4">31</text></svg>',
@@ -1489,12 +1532,13 @@ const B = {
   mineduc:{lb:"Mineduc",sub:"Ministerio de Educación",url:"https://www.mineduc.cl",icon:"mineduc"},
   beneficios:{lb:"Beneficios",sub:"Becas y ayudas",icon:"beneficios",action:"beneficios"},
   planifica:{lb:"Planifica",sub:"Copiloto docente IA",icon:"planifica",action:"planifica",feature:true},
+  guia:{lb:"Guía ASE-IA",sub:"Sácale el máximo provecho",icon:"guia",action:"guia",feature:true},
 };
 const LINKS = {
-  student:[B.tutor,B.classroom,B.drive,B.correo,B.sheets,B.docsimp,B.alexia,B.scholar,B.scielo,B.colegio],
-  teacher:[B.planifica,B.tutor,B.classroom,B.drive,B.calendar,B.correo,B.sheets,B.docs,B.slides,B.canva,B.aptus,B.corrector,B.capac,B.docsimp,B.notebook,B.gemini,B.chatgpt,B.buk,B.alexia],
-  admin:[B.planifica,B.classroom,B.drive,B.calendar,B.correo,B.sheets,B.docs,B.aptus,B.capac,B.docsimp,B.notebook,B.gemini,B.chatgpt,B.buk,B.mineduc,B.alexia],
-  guardian:[B.beneficios,B.alexia,B.correo,B.docsimp,B.whatsapp,B.instagram,B.participacion,B.colegio,B.sip],
+  student:[B.tutor,B.guia,B.classroom,B.drive,B.correo,B.sheets,B.docsimp,B.alexia,B.scholar,B.scielo,B.colegio],
+  teacher:[B.planifica,B.tutor,B.guia,B.classroom,B.drive,B.calendar,B.correo,B.sheets,B.docs,B.slides,B.canva,B.aptus,B.corrector,B.capac,B.docsimp,B.notebook,B.gemini,B.chatgpt,B.buk,B.alexia],
+  admin:[B.planifica,B.guia,B.classroom,B.drive,B.calendar,B.correo,B.sheets,B.docs,B.aptus,B.capac,B.docsimp,B.notebook,B.gemini,B.chatgpt,B.buk,B.mineduc,B.alexia],
+  guardian:[B.beneficios,B.guia,B.alexia,B.correo,B.docsimp,B.whatsapp,B.instagram,B.participacion,B.colegio,B.sip],
 };
 const ROLE_LABEL={student:"Estudiante",teacher:"Docente",admin:"Administrativo",guardian:"Apoderado"};
 
@@ -1639,6 +1683,7 @@ function runQuickAction(a){
   else if(a==="beneficios")openBeneficios();
   else if(a==="planifica")openPlanifica();
   else if(a==="tutor")openTutor();
+  else if(a==="guia")openGuia();
 }
 /* ============ CALENDARIO JJP · agenda / semana / mes (solo funcionarios) ============ */
 const STAFF=r=>(r==="teacher"||r==="admin");
@@ -2183,14 +2228,14 @@ const SYNGROUPS=[
   ["celular","celulares","telefono","telefonos","dispositivo","dispositivos","movil","moviles","musica","audifonos"],
   ["atraso","atrasos","atrasado","atrasados","atrasada","atrasar","puntualidad","tardanza","tarde","presentacion","uniforme","vestimenta"],
   ["falta","faltas","leve","leves","grave","graves","gravisima","gravisimas","sancion","sanciones","sancionar","disciplinaria","medida","castigo","conducta","comportamiento","portarse","porto","comporto","comporta","comportan","comporte"],
-  ["apelacion","apelar","reconsideracion","reconsiderar","recurso","injusta","desmedida"],
-  ["acoso","bullying","matonaje","hostigamiento","ciberacoso","violencia"],
+  ["apelacion","apelar","apelo","apela","apele","apelando","reconsideracion","reconsiderar","reconsidera","recurso","injusta","injusto","desmedida","desmedido","apelacion"],
+  ["acoso","bullying","matonaje","hostigamiento","ciberacoso","violencia","violento","violenta","violentos","pelea","peleas","pelear","peleando","peleo","peleamos","pegar","pegan","pego","pegaron","pegando","pegandome","golpe","golpes","golpear","golpeo","golpearon","golpeando","golpeada","golpeado","empujar","empujon","empujones","empuja","patada","patadas","punete","puñete","agredido","agredida","agredieron","molestan","molestando","amenaza","amenazan","amenazaron","amenazando"],
   ["expulsion","expulsar","matricula","cancelacion","condicionalidad","baja","ausente"],
   ["derecho","derechos","deberes","obligacion","obligaciones"],
   ["conflicto","conflictos","mediacion","colaborativa","dialogo","pacifica"],
   ["suicidio","suicida","autolesion","autolesiva","autolesivas","ideacion","mental","triste","tristeza","depresion","depresivo","angustia","animo"],
   ["sexual","sexuales","connotacion","abuso"],
-  ["maltrato","agrede","agredir","agresor","agresion"],
+  ["maltrato","agrede","agreden","agredir","agredido","agredida","agresor","agresion","golpear","golpeo","pegar","pegan"],
   ["necesidades","especiales","inclusion","multidisciplinario"],
   ["penal","delito","delitos"],
   ["horario","horarios","jornada","entrada","entran","entrar","ingreso","salida","salidas","salen","salir","recreo","recreos","almuerzo","colacion"],
@@ -2204,7 +2249,7 @@ const SYNGROUPS=[
 ];
 function words(s){return normalize(s).split(" ").filter(w=>w.length>2);}
 /* Palabras vacías: verbos/pronombres genéricos que no aportan al significado. */
-const STOP=new Set(["pasa","paso","pasar","hago","hace","hacer","hacen","caso","cual","cuales","como","donde","cuando","cuanto","cuanta","cuantos","cuantas","tengo","tiene","tienen","tienes","dice","dicen","decir","puedo","puede","pueden","podria","necesito","necesita","quiero","quiere","usar","uso","usa","usan","utilizar","llego","llega","clase","clases","hora","horas","resultado","resultados","clasico","clima","quien","quienes","mundial","gano","gana","ganar","sobre","acerca","algun","alguna","algunos","algo","favor","dime","explica","explicame","cuentame","saber","informacion","ayuda","ayudame","esta","este","estos","estas","para","por","con","del","los","las","una","unos","unas","muy","mas","pero","tambien","entonces","cosa","cosas","aqui","alli","donde","cuales","porque","segun","cada","todo","toda","todos","todas"]);
+const STOP=new Set(["pasa","paso","pasar","hago","hace","hacer","hacen","caso","cual","cuales","como","donde","cuando","cuanto","cuanta","cuantos","cuantas","tengo","tiene","tienen","tienes","dice","dicen","decir","puedo","puede","pueden","podria","necesito","necesita","quiero","quiere","usar","uso","usa","usan","utilizar","llego","llega","clase","clases","hora","horas","resultado","resultados","clasico","clima","quien","quienes","mundial","gano","gana","ganar","sobre","acerca","algun","alguna","algunos","algo","favor","dime","explica","explicame","cuentame","saber","informacion","ayuda","ayudame","esta","este","estos","estas","para","por","con","del","los","las","una","unos","unas","muy","mas","pero","tambien","entonces","cosa","cosas","aqui","alli","donde","cuales","porque","segun","cada","todo","toda","todos","todas","estan","estando","estar","estoy","estamos","estaba","estaban","estuvo","esten","estes","siendo","sera","seran","sido","haciendo","hecho","alumno","alumnos","alumna","alumnas","estudiante","estudiantes","companero","companeros","companera","companeras","colegio","escuela","establecimiento","comunidad","educativa","educativo","educacion","persona","personas","gente","nino","ninos","nina","ninas","adolescente","adolescentes","alguien","cualquier","cualquiera","respecto","forma","formas","manera","maneras","parte","partes","momento","situacion","situaciones","tema","temas","vez","veces","ejemplo","ejemplos","etc","entre","hasta","desde","durante","mientras","aunque","sino","ademas","cuyo","cuya","dentro","fuera"]);
 /* Acrónimos/siglas cortas que sí importan (se conservan pese a tener ≤3 letras). */
 const KEEP=new Set(["pei","dec","sip","cra"]);
 function qWords(q){return words(q).filter(w=>(w.length>3||KEEP.has(w))&&!STOP.has(w));}
@@ -2235,8 +2280,10 @@ function retrieve(query,role){
     base.forEach(w=>{
       if(inSet(d._tw,w)) s+=3;
       else if(inSet(d._bw,w)) s+=2;
-      else { const g=groupOf(w); if(g){ if(g.some(m=>inSet(d._tw,m))) s+=1.5; else if(g.some(m=>inSet(d._bw,m))) s+=1; } }
+      else { const g=groupOf(w); if(g){ if(g.some(m=>inSet(d._tw,m))) s+=2.5; else if(g.some(m=>inSet(d._bw,m))) s+=1.5; } }
     });
+    // Prefiere el inciso principal (protocolo/definición) por sobre sub-fragmentos.
+    if(s>0 && /protocolo|definicion/i.test(normalize(d.t))) s+=0.6;
     return {d,s};
   }).filter(r=>r.s>0).sort((a,b)=>b.s-a.s);
   // Umbral: una coincidencia temática en el título (directa o por sinónimo, >=1.5)
@@ -2741,13 +2788,84 @@ function openReglamento(titulo,fragmento){
   const page=regPageFor(fragmento);
   const sub=(titulo||"").split("·").slice(1).join("·").trim()||"Inciso citado";
   document.getElementById("regSub").textContent=sub;
-  const url=REG_PDF_URL+"#page="+page+"&view=FitH";
+  const url=REG_PDF_URL+"#toolbar=0&navpanes=0&statusbar=0&page="+page+"&view=FitH";
   document.getElementById("regFrame").src=url;
-  document.getElementById("regOpen").href=url;
   document.getElementById("regModal").classList.add("open");
   document.body.style.overflow="hidden";
 }
 function closeReg(){ document.getElementById("regModal").classList.remove("open"); const f=document.getElementById("regFrame"); if(f)f.src="about:blank"; document.body.style.overflow=""; }
+/* ============ GUÍA · cómo sacarle el máximo provecho a ASE-IA ============ */
+function gCard(icon,titulo,desc,chips){
+  const isSvg=/^</.test(icon);
+  const ic='<span class="gc-ic">'+(isSvg?icon:icon)+'</span>';
+  let ch="";
+  if(chips&&chips.length){ ch='<div class="gchips">'+chips.map(q=>'<button class="gchip" data-q="'+q.replace(/"/g,"&quot;")+'">'+q+'</button>').join("")+'</div>'; }
+  return '<div class="gcard"><div class="gc-h">'+ic+'<span class="gc-t">'+titulo+'</span></div><div class="gc-d">'+desc+'</div>'+ch+'</div>';
+}
+function guiaHTML(role){
+  const staff=(role==="teacher"||role==="admin");
+  const robot='<img src="assets/ase-ia-robot-clasico.png" alt="ASE-IA" onerror="this.outerHTML=\'<svg viewBox=\\\'0 0 120 120\\\'><use href=\\\'#mascot\\\'/></svg>\'">';
+  const hero='<div class="guiahero"><div class="ghrow"><div class="ghbot">'+robot+'</div>'
+    +'<div><div class="ghname">ASE-IA · Guía rápida</div><h2>Sácale el máximo provecho a tu asistente escolar</h2></div></div>'
+    +'<p>ASE-IA reúne en un solo lugar el reglamento del colegio, tus herramientas y la inteligencia artificial para ayudarte cada día. Aquí tienes las mejores formas de usarla.</p>'
+    +'<svg class="ghcrest" viewBox="0 0 120 120"><use href="#crestSVG"/></svg></div>';
+
+  const cards=[];
+  // 1. Preguntar
+  const exAsk = role==="guardian"
+    ? ["¿Qué pasa si mi pupilo falta a clases?","¿Cómo justifico una inasistencia?","Reglas del uniforme","Uso de celulares en clases"]
+    : (staff
+      ? ["¿Qué dice el reglamento sobre celulares?","Protocolo de accidentes escolares","Faltas graves y sus medidas","¿Cómo se calcula el promedio?"]
+      : ["¿Qué pasa si falto a una prueba?","¿Cómo apelo una sanción?","Reglas del uniforme","¿Qué hago frente al bullying?"]);
+  cards.push(gCard("💬","Pregúntale lo que necesites",
+    "Escribe en lenguaje natural sobre reglamento, evaluación, convivencia, fechas o tus deberes y derechos. ASE-IA te responde al instante y cita el documento oficial. Toca un ejemplo para probar:",
+    exAsk));
+  // 2. Reglamento embebido
+  cards.push(gCard("📕","El reglamento, abierto justo donde aplica",
+    "Bajo cada respuesta aparecen las fichas citadas. Al tocarlas, el <b>Reglamento Interno</b> se abre <b>dentro de ASE-IA</b> y salta directo al inciso exacto. Sin salir de la app, sin buscar páginas.",
+    null));
+  // 3. PLANIFICA (staff)
+  if(staff) cards.push(gCard(ICONS.planifica,"PLANIFICA · tu copiloto docente",
+    "Genera planificaciones, evaluaciones y rúbricas alineadas al currículum y al sello SIP, además de imágenes con IA para tus materiales. Incluye formatos del Programa de Integración (PIE).",
+    null));
+  // 4. Tutor Socrático (no apoderado)
+  if(role!=="guardian") cards.push(gCard(ICONS.tutor,"Tutor Socrático",
+    (role==="student"
+      ? "Aprende de verdad: en vez de darte la respuesta, te guía con preguntas para que llegues tú. Ideal para preparar pruebas y defender tus ideas."
+      : "Una IA que enseña con el método socrático: acompaña a tus estudiantes con preguntas que desarrollan su pensamiento, con modo de reflexión y metacognición."),
+    null));
+  // 5. Accesos
+  const accDesc = role==="guardian"
+    ? "Desde el menú llegas en un clic a Alexia (notas y asistencia), beneficios y becas, correos y los documentos importantes del colegio."
+    : "Classroom, Drive, Calendar, correos, horarios de cursos, jefaturas, Alexia y más, siempre a un toque desde los accesos rápidos.";
+  cards.push(gCard("🚀","Todo el colegio, a un clic",accDesc,null));
+  // 6. Correos guiados (staff)
+  if(staff) cards.push(gCard("✉️","Redacta correos guiado",
+    "ASE-IA arma el correo paso a paso (motivo, tono y destinatario) y lo abre listo en Gmail para que solo revises y envíes.",
+    null));
+  // 7. Beneficios (apoderado)
+  if(role==="guardian") cards.push(gCard("🎁","Beneficios y becas",
+    "Consulta becas, ayudas y requisitos para apoyar la trayectoria escolar de tu pupilo, con los enlaces oficiales a mano.",
+    null));
+
+  const grid='<div class="guiabody"><div class="guiagrid">'+cards.join("")+'</div>'
+    +'<div class="gsec-t">3 tips para preguntar mejor</div>'
+    +'<div class="gstep"><span class="gn">1</span><span class="gt"><b>Ve al grano con palabras clave.</b> “uniforme”, “condicionalidad”, “accidente escolar” funcionan mejor que frases largas.</span></div>'
+    +'<div class="gstep"><span class="gn">2</span><span class="gt"><b>Una cosa a la vez.</b> Si tienes dos dudas, pregúntalas por separado para respuestas más precisas.</span></div>'
+    +'<div class="gstep"><span class="gn">3</span><span class="gt"><b>Abre la ficha citada.</b> Ahí tienes el texto oficial completo y, en el reglamento, el inciso exacto.</span></div>'
+    +'<div class="guiafoot">Hecho con cariño para la comunidad educativa · <b>aseia.cl</b> · Colegio Presidente José Joaquín Prieto</div></div>';
+
+  return hero+grid;
+}
+function openGuia(){
+  const body=document.getElementById("guiaBody");
+  body.innerHTML=guiaHTML(ROLE);
+  body.querySelectorAll(".gchip").forEach(c=>c.onclick=()=>guiaAsk(c.getAttribute("data-q")));
+  document.getElementById("guiaModal").classList.add("open");
+  document.body.style.overflow="hidden";
+}
+function closeGuia(){ document.getElementById("guiaModal").classList.remove("open"); document.body.style.overflow=""; }
+function guiaAsk(q){ closeGuia(); if(q && typeof ask==="function") ask(q); }
 function openSource(titulo,fragmento){
   document.getElementById("srcTitle").textContent=titulo;
   document.getElementById("srcBody").textContent=fragmento||"(Sin detalle disponible.)";
@@ -2757,7 +2875,7 @@ function openSource(titulo,fragmento){
   document.getElementById("srcModal").classList.add("open");
 }
 function closeSource(){document.getElementById("srcModal").classList.remove("open");}
-document.addEventListener("keydown",e=>{if(e.key==="Escape"){closeSource();closeReg();}});
+document.addEventListener("keydown",e=>{if(e.key==="Escape"){closeSource();closeReg();closeGuia();}});
 
 /* Cuadro de fuente: muestra el reglamento citado con su texto textual (pantallazo). */
 function srcCardEl(c){
