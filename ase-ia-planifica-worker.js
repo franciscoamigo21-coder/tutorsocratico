@@ -31,6 +31,10 @@ const ALLOWED_ORIGINS = [
   "https://www.aseia.cl",
 ];
 const MODEL = "claude-sonnet-4-6";
+// Modelo para el CHAT con fundamento (grounding) en los documentos del colegio.
+// Usa Opus 4.8 para entender mejor la consulta y elegir las fichas correctas; si no
+// estuviera disponible, el worker reintenta con MODEL (Sonnet) automáticamente.
+const CHAT_MODEL = "claude-opus-4-8";
 // Modelo de imágenes de Google (Gemini / Imagen). Requiere el secreto GEMINI_API_KEY.
 // Si quieres imágenes más baratas/rápidas usa "imagen-3.0-fast-generate-001".
 const IMAGE_MODEL = "imagen-3.0-generate-002";
@@ -181,6 +185,72 @@ export default {
       const dt = await aiT.json();
       const bt = (dt.content || []).find((b) => b.type === "text");
       return json({ reply: (bt && bt.text ? bt.text : "").trim() }, 200, cors);
+    }
+
+    // ===== CHAT con fundamento (grounding): la IA entiende la consulta, elige las
+    // fichas oficiales correctas y responde SOLO con ellas. Devuelve {reply, used}. =====
+    if (body.resource === "chat") {
+      if (!env.ANTHROPIC_API_KEY) return json({ error: "Falta configurar ANTHROPIC_API_KEY" }, 500, cors);
+      const q = (body.question || "").toString().slice(0, 1500);
+      if (q.trim().length < 1) return json({ error: "vacio" }, 400, cors);
+      const ctx = Array.isArray(body.context) ? body.context.slice(0, 8) : [];
+      const hist = Array.isArray(body.history)
+        ? body.history.slice(-6).map((m) => ({
+            role: m && m.role === "assistant" ? "assistant" : "user",
+            content: String((m && m.content) || "").slice(0, 1200),
+          })).filter((m) => m.content)
+        : [];
+      let sys, userContent;
+      if (ctx.length) {
+        sys =
+          "Eres ASE-IA, asistente escolar del Colegio Presidente José Joaquín Prieto (SIP Red de Colegios). " +
+          "Respondes ÚNICAMENTE con la información de las FICHAS oficiales entregadas abajo (reglamentos y documentos del colegio). " +
+          "NO inventes normas, cifras, plazos ni datos que no estén en las fichas. Si la respuesta no está en ellas, dilo con claridad y sugiere a quién consultar. " +
+          "Primero entiende la intención real de la pregunta; luego elige la(s) ficha(s) que de verdad la responden e IGNORA las que no vienen al caso. " +
+          "Escribe en español de Chile, claro y breve (2 a 6 frases), con tono cercano y respetuoso. " +
+          "Responde EXCLUSIVAMENTE con un objeto JSON válido, sin texto adicional ni bloques de código, con esta forma exacta: " +
+          '{"reply":"<tu respuesta>","fuentes":[<números de las fichas realmente usadas, de mayor a menor relevancia>]}.';
+        const fichas = ctx.map((c, i) => "[Ficha " + (i + 1) + "] " + (c.titulo || "") + "\n" + (c.fragmento || "").toString().slice(0, 1400)).join("\n\n");
+        userContent = "PREGUNTA DEL USUARIO:\n" + q + "\n\nFICHAS OFICIALES DISPONIBLES:\n" + fichas;
+      } else {
+        sys =
+          "Eres ASE-IA, asistente escolar del Colegio Presidente José Joaquín Prieto (SIP Red de Colegios). " +
+          "No tienes una ficha oficial para esta consulta. Responde con sentido común y de forma útil, SIN inventar normas, cifras ni protocolos específicos del colegio. " +
+          "Si corresponde, sugiere revisar el reglamento o consultar a un adulto o profesional. Español de Chile, claro y breve. " +
+          'Responde EXCLUSIVAMENTE con un objeto JSON válido: {"reply":"<tu respuesta>","fuentes":[]}.';
+        userContent = "PREGUNTA DEL USUARIO:\n" + q;
+      }
+      const messages = hist.concat([{ role: "user", content: userContent }]);
+      const callModel = (model) =>
+        fetch("https://api.anthropic.com/v1/messages", {
+          method: "POST",
+          headers: { "Content-Type": "application/json", "x-api-key": env.ANTHROPIC_API_KEY, "anthropic-version": "2023-06-01" },
+          body: JSON.stringify({ model, max_tokens: 600, system: sys, messages }),
+        });
+      let aiR;
+      try {
+        aiR = await callModel(CHAT_MODEL);
+        if (!aiR.ok && (aiR.status === 400 || aiR.status === 404)) aiR = await callModel(MODEL); // respaldo de modelo
+      } catch {
+        return json({ error: "No se pudo contactar a la IA" }, 502, cors);
+      }
+      if (!aiR.ok) {
+        let d = ""; try { d = (await aiR.text()).slice(0, 200); } catch {}
+        return json({ error: "Error IA " + aiR.status, detalle: d }, 502, cors);
+      }
+      const dr = await aiR.json();
+      const br = (dr.content || []).find((b) => b.type === "text");
+      const raw = (br && br.text ? br.text : "").trim();
+      let reply = raw, used = [];
+      try {
+        const s = raw.replace(/^```(?:json)?\s*/i, "").replace(/```\s*$/i, "").trim();
+        const obj = JSON.parse(s);
+        if (obj && typeof obj.reply === "string") {
+          reply = obj.reply.trim();
+          if (Array.isArray(obj.fuentes)) used = obj.fuentes.filter((n) => Number.isInteger(n) && n >= 1);
+        }
+      } catch {}
+      return json({ reply, used }, 200, cors);
     }
 
     if (!env.ANTHROPIC_API_KEY) return json({ error: "Falta configurar ANTHROPIC_API_KEY" }, 500, cors);
