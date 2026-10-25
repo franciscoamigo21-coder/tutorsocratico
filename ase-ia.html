@@ -360,6 +360,24 @@
   #srcModal .x button{background:var(--grad-azul);color:#fff;border:none;border-radius:12px;padding:10px 20px;font-weight:700;font-family:inherit;cursor:pointer;}
   #srcModal .srcopen{align-items:center;gap:8px;margin-top:17px;background:var(--grad-azul);color:#fff;text-decoration:none;border-radius:13px;padding:12px 18px;font-weight:800;font-size:13.5px;box-shadow:0 12px 24px -13px rgba(11,61,145,.85);transition:filter .15s ease,transform .15s ease;}
   #srcModal .srcopen:hover{filter:brightness(1.06);transform:translateY(-1px);}
+  /* Visor embebido del Reglamento Interno (dentro del sello ASE-IA) */
+  #regModal{position:fixed;inset:0;z-index:1300;display:none;align-items:center;justify-content:center;padding:18px;background:rgba(8,22,52,.62);backdrop-filter:blur(4px);}
+  #regModal.open{display:flex;animation:fadeUp .2s ease both;}
+  #regModal .regcard{background:#fff;border-radius:20px;width:100%;max-width:1000px;height:90vh;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 36px 80px -22px rgba(0,0,0,.6);}
+  #regModal .reghead{display:flex;align-items:center;gap:12px;padding:13px 16px;background:var(--grad-azul);color:#fff;}
+  #regModal .reglogo{width:40px;height:40px;flex-shrink:0;background:rgba(255,255,255,.16);border-radius:11px;display:flex;align-items:center;justify-content:center;padding:5px;}
+  #regModal .reglogo svg{width:100%;height:100%;}
+  #regModal .regttl{flex:1;min-width:0;}
+  #regModal .reg-t{font-weight:800;font-size:13px;line-height:1.2;opacity:.92;}
+  #regModal .reg-s{font-family:'Montserrat',sans-serif;font-weight:800;font-size:15.5px;line-height:1.25;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  #regModal .regx{background:rgba(255,255,255,.18);border:none;color:#fff;width:34px;height:34px;border-radius:10px;font-size:15px;cursor:pointer;flex-shrink:0;transition:background .15s ease;}
+  #regModal .regx:hover{background:rgba(255,255,255,.32);}
+  #regModal .regframewrap{position:relative;flex:1;min-height:0;background:#eef2f7;}
+  #regModal #regFrame{width:100%;height:100%;border:0;display:block;}
+  #regModal .regfallback{position:absolute;left:0;right:0;bottom:0;text-align:center;font-size:12px;color:var(--muted);background:rgba(255,255,255,.9);padding:6px 10px;}
+  #regModal .regfallback a{color:var(--azul);font-weight:700;}
+  #regModal .regfoot{padding:9px 14px;font-size:11px;color:var(--muted);text-align:center;border-top:1px solid #eef1f6;background:#fafbfe;}
+  @media(max-width:640px){ #regModal{padding:0;} #regModal .regcard{height:100vh;max-width:100%;border-radius:0;} }
 
   /* ===== Panel personalizado (apoderado / estudiante) ===== */
   .myp{margin:0 0 16px;background:linear-gradient(160deg,#ffffff,#eef4ff);border:1px solid #dbe7ff;border-radius:20px;padding:14px 16px;box-shadow:0 16px 34px -24px rgba(17,87,201,.45);}
@@ -1263,6 +1281,25 @@
     <p id="srcBody"></p>
     <a id="srcOpen" class="srcopen" target="_blank" rel="noopener" style="display:none"></a>
     <div class="x"><button onclick="closeSource()">Cerrar</button></div>
+  </div>
+</div>
+
+<!-- Visor del Reglamento Interno dentro del sello de ASE-IA (abre justo en el inciso) -->
+<div id="regModal" onclick="if(event.target===this)closeReg()">
+  <div class="regcard">
+    <div class="reghead">
+      <div class="reglogo"><svg data-crest viewBox="0 0 120 120"><use href="#crestSVG"/></svg></div>
+      <div class="regttl">
+        <div class="reg-t">Reglamento Interno de Convivencia Escolar</div>
+        <div class="reg-s" id="regSub">Inciso citado</div>
+      </div>
+      <button class="regx" onclick="closeReg()" aria-label="Cerrar">✕</button>
+    </div>
+    <div class="regframewrap">
+      <iframe id="regFrame" title="Reglamento Interno" referrerpolicy="no-referrer"></iframe>
+      <div class="regfallback">Si el documento no se muestra, <a id="regOpen" target="_blank" rel="noopener">ábrelo en pantalla completa →</a></div>
+    </div>
+    <div class="regfoot">Documento oficial · Colegio Presidente José Joaquín Prieto · SIP Red de Colegios</div>
   </div>
 </div>
 
@@ -2685,53 +2722,57 @@ function clean(t){return (t||"")
   .replace(/[ \t]+\n/g,"\n")               // espacios al final de línea
   .replace(/\s+([.,;:])/g,"$1").trim();}
 /* Modal de fuente. */
-/* Mapea el título de una ficha citada al documento oficial del colegio al que pertenece. */
+/* Mapa inciso→página del Reglamento Interno (generado desde el PDF oficial). */
+const REG_PAGES={"eneducacionparvularialaalteraciondelasanaconvive":2,"elreglamentointernodeconvivenciaescolardelcolegi":7,"losestudiantestienenderechoarecibirunaeducacionq":9,"losestudiantesdebenasistireingresarpuntualmentea":10,"lospadresyapoderadosdebeneducaryapoyarlosproceso":11,"conformealaleyn21801elcolegioprohibeelusodedispo":157,"lafaltaalapresentacionpersonalylosatrasosseconsi":21,"lasfaltasseclasificansegunsugravedadlasfaltasgra":31,"todoestudianteoapoderadoqueconsiderequeunasancio":22,"elcolegiocuentaconunprotocolodeactuacionfrenteas":49,"elestablecimientodebeabrirsiempreelprotocolodeac":44,"losconflictosdebenabordarseformativamentecomouna":17,"todaslasfaltasgravesseacompanandealmenosunamedid":17,"paradeterminarunamedidaseconsideranfactoresatenu":22,"laleyn20084regulalaresponsabilidadpenaldelosadol":21,"lacondicionalidaddematriculaesunestadotransitori":39,"laexpulsionylacancelaciondematriculasonlasmedida":32,"elcolegiopuededardebajalamatriculadeunestudiante":43,"cuandounestudianteconnecesidadeseducativasespeci":41,"elcolegiocuentaconunprotocolofrentealaideacionsu":59,"esteprotocoloestablececomoactuaelcolegiofrenteau":68,"frentealmaltratodeunadultoaunestudianteelencarga":49,"elreglamentocontemplafaltascometidasporpadresmad":3,"losprofesoresdebenejercerlafunciondocentedeforma":14,"buenaconvivenciacoexistenciaarmonicadelosmiembro":5,"delitoaccionuomisionvoluntariapenadaporlaleyart1":5,"violenciaescolarformasderelacioncaracterizadaspo":45,"negociacionentrelaspartesdelconflictosinterceros":6,"lasmedidasformativasensenanalestudiantelasconsec":17,"antefaltaslevesygraveselcolegiopuedeofrecergesti":20,"todoalumnooapoderadoqueconsidereunasancioninjust":22,"sonfaltaslevesconductasdebajoimpactoporejemploin":23,"sonfaltasgravesentreotrasfaltarelrespetoaunestud":28,"sonfaltasdegravedadextremaentreotrasagredirfisic":32,"parafaltasdegravedadextremaeldirectorformulacarg":35,"lacondicionalidadesunestadotransitorioparaunestu":40,"sedadebajalamatriculadealumnoscon40diashabilesco":43,"elcolegiosiempreabreesteprotocoloantedenunciaoso":49,"anteideacionsuicidaintentooautolesioncualquierpe":61,"antesospechaoconocimientodehechosdeconnotacionse":68,"seactivaantesospechaodenunciademaltratodeunadult":77,"sonfaltasdelapoderadoentreotrasagredirfisicaover":139,"antesospechaocertezadeconsumoportemicrotraficoot":96,"segarantizaelderechoalaeducacionsistemadeevaluac":94,"conformealaley21120segarantizaelderechoalaidenti":119,"porsalidapedagogicaseentiendetodaactividadfuerad":98,"accidenteescolartodalesionqueunestudiantesufraac":100,"lascamarassonuninstrumentodeseguridadydisuasionp":141,"elcolegioentregachromebooksparausoeducativoelapo":106,"lajornadaescolarcomienzaalas0750yfinalizacomomax":145,"prebasicay1a4basicobuzodelcolegioconpoleradecuel":146,"todoadultoexternodebeexhibirsuceduladeidentidade":151,"paraserpromovidoserequierealmenos85deasistenciac":150,"contratodematriculaacuerdoentreapoderadoycolegio":128,"elconsejoescolarespresididoporeldirectoreintegra":124,"elcolegioreconocelasconductaspositivasdelosestud":126,"encargadosdeconvivenciaescolardennysmaldonadogon":151,"elmediooficialdecomunicacionconelapoderadoeselco":12,"estereglamentointernodelcolegiojosejoaquinprieto":7,"estereglamentoregulalasrelacionesentreelcolegioy":7,"generamosimpactoenlatrayectoriaeducativadenuestr":8,"lasociedaddeinstruccionprimariahoysipreddecolegi":8,"aenrelacionalaprendizajearecibirunaeducacionquel":9,"aenrelacionalaprendizajeasistireingresarpuntualm":10,"aenrelacionalaprendizajeaserinformadosporelsoste":10,"aenrelacionalaprendizajeeducarasusestudiantesapo":11,"atrabajarenunambientetoleranteyderespetomutuoaqu":14,"ejercerlafunciondocenteenformaidoneayresponsable":14,"ejercersufuncionenformaidoneayresponsablerespeta":14,"aconducirlarealizaciondelproyectoeducativodelcol":15,"liderarelcolegioasucargosobrelabasedesusresponsa":15,"aestableceryejercerunproyectoeducativoconlaparti":15,"cumplirconlosrequisitosparamantenerelreconocimie":16,"gestioncolaborativadeconflictoselestablecimiento":18,"mediacionmecanismomedianteelcualelresponsabledel":19,"enelcasodequeelestablecimientoeducacionalofrezca":20,"1cada5faltasalapresentacionpersonaloatrasoselapo":21,"1enrazondelafechadepublicaciondelacircularn181de":22,"sinperjuiciodeloanterioryenconformidadconelprinc":22,"desatenderointerrumpirlaclaserealizarotraactivid":23,"notraercomunicacionojustificativofirmadosporelap":24,"2respectodeestafaltaseaplicaratambienlamedidaped":24,"eladultodelcolegioqueobservalafaltaconversaconel":25,"expresarseverbalofisicamenteatravesdegestosoacci":27,"subiroenviararchivosanunciarotransmitircualquier":29,"1iniciodelprocedimientoypersonaresponsablecualqu":30,"cualquierotragestionquesirvaparaaclararloshechos":30,"eldirectorpodraaplicarlamedidadisciplinariadeexp":32,"condicionalidaddematriculasinnecesidaddeabrirelp":33,"fprocedimientogeneraldeexpulsionocancelaciondema":33,"eldirectorrealizaraunaformulaciondecargosoinform":33,"razonesporlasquesellegoalaconvicciondequesereali":34,"resumendeladecisiondelamedidadeexpulsionocancela":34,"copiadelreglamentointernoactualizadodocumentosqu":35,"elcolegionotificaraalapoderadoayalestudianteenes":39,"esteprocedimientonotieneporfinalidadcambiarladec":39,"11paraefectosdelpresenteprotocolosiempreseentend":39,"enelcasoqueunalumnocometaunafaltagravesubdirecto":40,"larevisiondelestadodecondicionalidadserarealizad":40,"enelcasodequeunalumnoseencuentrecondicionalsedeb":41,"sepodracancelarlamatriculaoexpulsaraunalumnocond":41,"elprocedimientoseraaplicadoporcualquierdelassigu":42,"1encasoqueunaestudianteseausenteinjustificadamen":43,"lagestionesrealizadaselmediodecontactoutilizadod":43,"comoprimeraopcionsiempresedeberautilizarlainform":44,"losestablecimientoseducacionalestienenlaobligaci":44,"12paraefectosdelpresenteprotocolosiempreseentend":44,"enelcasoqueloshechosdeviolenciaescolarafectengra":45,"danoevidenciablealaintegridaddelindividuoyaseain":45,"denunciadeuncasodeviolenciaescolarcualquierinteg":46,"elfuncionariodelcolegioquerecibaladenunciadebera":46,"sedeberanestablecermedidasderesguardodirigidasal":47,"realizaraentrevistaconcadaestudianteagredidoylev":47,"secitaraviatelefonicaalosapoderadosdecadaestudia":48,"entrevistaraacadaestudianteoadultodenunciadocomo":48,"citaraviatelefonicaalosapoderadosdecadaestudiant":48,"elinformeserarevisadoenconjuntoconalmenostresfun":49,"denunciadeuncasodeviolenciaescolareldocenteoasis":53,"encasodequeladenunciasearecibidaporalgunintegran":54,"encasoqueelsupuestoagresorseaunfuncionariooestud":46,"realizaraentrevistaconcadadocenteoasistentedelae":54,"citacionaapoderadosdealumnossupuestamenteagresor":48,"serevisaranlosespaciosdondeserealizanlosactosdem":55,"elorientadorpsicologoyosubdirectordeformaciondel":58,"loscolegioscuentanconunequipopreventivoyoequipod":58,"entrevistaraelolaestudianteenunespacioprivadomos":59,"1informaralequipodeconvivenciasobreelriesgodetec":61,"1informaraldirectordirectorcontactaraalospadresa":61,"dependiendodelniveldeafectacionentregadoporlapau":61,"elsubdirectordeformacionorientadordelciclopsicol":63,"sedebenestableceraccionesposterioresarealizarcon":64,"tanprontocomoseaposibleorganizarunareunionconlos":67,"segunseanlosdeseosdelafamiliasepodraayudaradifun":67,"elequipoacargodelaimplementaciondelprotocolodebe":68,"elobjetivodelpresenteprotocoloesindagarsobrelosh":68,"aperturadelprotocoloenelcasodequecualquiermiembr":90,"informacionalpersonaldelcolegioseevaluaralainfor":72,"explicarlasituacionenterminosgeneralessinindivid":73,"enelcasodelosestudiantesestasaccionesseabordaran":89,"denunciadeuncasodemaltratocualquierintegrantedel":75,"apoderadohostigareiteradamenteaunfuncionariodele":79,"enconformidadaloestablecidoenelarticulo175delcod":82,"desernecesarioalgunmiembrodelequipodeformacionid":86,"realizarunseguimientoformativodelestudiantedeman":86,"unavezcumplidoslos7o30diasdeinvestigacionsegunlo":89,"laaplicaciondeesteprotocolonobuscaestablecerbajo":90,"estasaccionesseabordaranatravesdelplandeeducacio":98,"porsalidapedagogicaentendemostodaactividadqueenv":98,"copiafichasalidapedagogicaconlasfirmaspertinente":99,"laseguridadescolareselconjuntodecondicionesmedid":100,"enatencionalasleyes1674420067ds313delministeriod":101,"gastosdetrasladoycualquierotronecesarioparaeloto":102,"encasoqueunestudiantequeseencuentreprotegidopore":102,"mantenerlosnumerosdeemergenciavisiblesdentrodele":102,"cualquierintegrantedelacomunidadeducativatieneel":103,"eladultoqueestabaacargodelestudiantealmomentodel":104,"cadacolegioatravesdesucomitedeseguridadescolarre":104,"generarenlacomunidadeducativaunaactituddeautopro":105,"representantesdeestudiantesdecursosyonivelessupe":105,"laplataformaqueutiliceelestablecimientoconsusest":107,"proporcionarchromebooksparausoeducacionalalosest":107,"antesdelaultimasemanadeclasesalfinaldelanoescola":108,"losestudiantessonlosunicosresponsablesdelasaplic":108,"losestudiantesnopuedenusaroinstalarningunsistema":108,"laescuelautilizaunfiltrodecontenidosdeinternetto":109,"alosestudiantesselespermitirainstalaraplicacione":109,"acadaestudianteseleasignaraelmismochromebookdura":109,"sepodranprestarchromebooksalosestudiantesqueteng":110,"fondosdepantallaofensivosoinadecuadosnopodranusa":110,"losestudiantesingresaranasuschromebooksusandolaa":111,"selesmotivaalosestudiantesausarsuschromebooksene":111,"losestudiantessonresponsablesdelcuidadogeneralde":111,"nocomanibebanadacuandoesteusandosuchromebooksins":111,"lapantalladelchromebookpuededanarsesiseleponenob":112,"bajoningunacircunstanciadebedejarsesinsupervisio":112,"sipreddecolegiossecomprometearepararoreemplazare":113,"bajoningunacircunstanciadebeabrirointentarabrire":113,"respetesevoyamostrarrespetopormimismoatravesdemi":113,"conlafirmadelestudianteysuspadrestutoresaceptany":114,"todamedidadeberaseradoptadaconelconsentimientopr":119,"seexponenacontinuacionlasformasdecomunicacionent":120,"elobjetivodelprogramadeorientacionvocacionaldela":121,"ensipreddecolegiosexisteundepartamentodeinnovaci":121,"laplanificacioncurricularesunelementocentralqueb":122,"ensipreddecolegioslaevaluacionseconsideracomouna":122,"lainvestigacionpedagogicaensipreddecolegiosconsi":123,"parasipreddecolegioslapoliticadecapacitaciondebe":123,"elconsejodeprofesoresesunorganismodecaractercons":124,"definicionelcolegiodacumplimientoalaexigencialeg":124,"losestudianteslospadresmadresyapoderadoslosprofe":125,"lodesignaelequipodirectivoparaelanoescolardandoa":125,"elcolegioquetieneestecomiteeslideradoporelencarg":126,"seconsagraelderechodetodopadremadreapoderadoyest":126,"elcolegiodestacalasconductaspositivasqueseenmarc":126,"losestablecimientosquecuentanconreconocimientoof":128,"esuncontratoentreelapoderadoyelcolegioqueestable":128,"eselterminoinmediatodelcontratodematriculaqueseo":128,"segunlodisponelasuperintendenciadeeducacionelret":128,"lalimpiezayaseoquitalasuciedadeimpurezasdesuperf":130,"lalimpiezayaseodelasdependenciasseraunprocedimie":131,"todoelpersonaldestinadoadesarrollartareasdelimpi":132,"retirarmascarillasereemplazapornuevamascarillaol":133,"sipreddecolegiosreconoceyvaloraelrolinsustituibl":134,"fomentarlapreocupaciondesusmiembrosporlaformacio":135,"loscentrosdepadresquedeseenobtenerpersonalidadju":136,"loscentrosdepadresquenotenganpersonalidadjuridic":137,"eldirectordelestablecimientoeducacionalnotificar":137,"suspenderelusodellocalescolarporunmessuspenderel":138,"nofacilitarelusodellocalescolardurante1a30diasno":140,"1finalidaddelascamaraslascamarasdeseguridadsonun":141,"lasfaltassussancionesyprocedimientosseentiendenc":142,"elestablecimientoeducacionalimpartiraeducacionre":145,"eluniformeestablecidoparalosylasestudiantesdepre":146,"eluniformeregularquedebenutilizarlosylasestudian":146,"eluniformeregulardelosylasestudiantesde5aivmedio":146,"serefierealosadultosquenotrabajanenelcolegiooens":148,"portarlaagendaescolaradiariolosestudiantesde7aiv":148,"elcolegiofijarasuhorariodefuncionamientoaprincip":148,"cadacolegiosereservaelderechoadecidirlaconformac":149,"losestudiantespuedentraeralmuerzodesucasaalinici":149,"sonaquellasactividadesquetienenporfinalidadentre":149,"1bloque2bloque3bloque915a9301115a11301250a13157a":150,"lasuspensiondeclasesseproducecuandounestablecimi":150,"laeducacionesunderechodetodaslaspersonascorrespo":150,"sedejaexpresamenteestablecidoqueelcolegionosehac":151,"mariasoledadsilvaalvarezcarolinaescobaravilaisra":152,"enelcasoquelaencargadanoestedisponibleelencargad":103,"avconchaytoro3459puentealtoregionmetropolitanaca":153,"seautorizaelusodelcelularcomomaterialpedagogicou":154,"desregulacionemocionalusodeldispositivocomoherra":154,"eldispositivoseraretiradopreventivamenteporeldoc":155,"sibienlaleyn21801establecelaprohibiciongeneralde":156,"ademaslapresentesolicituddebeproponerlascondicio":156,"paraactividadescurriculareseldirectorodirectorae":158,"informaroportunamentealospadresmadresyapoderados":159,"identificaralestudianteindicarlaexcepcionsolicit":161,"nohabilitausolibreoirrestrictoselimitaexclusivam":160,"acreditacionelprofesionalacargodelestablecimient":156,"espaciospermitidoscondicionesdesupervisionplazod":161};
+const REG_PDF_URL="reglamento-interno.pdf";
+/* Firma de texto (coincide con el generador Python): solo letras/dígitos, 48 chars. */
+function regSig(x){ return (x||"").normalize("NFKD").replace(/[̀-ͯ]/g,"").toLowerCase().replace(/[^a-z0-9]/g,"").slice(0,48); }
+function regPageFor(fragmento){ return REG_PAGES[regSig(fragmento)]||1; }
+/* Mapea el título de una ficha citada al documento del colegio al que pertenece. */
 function sourceDocLink(titulo){
   const t=(titulo||"");
-  if(/^Reglamento de Evaluaci/i.test(t)) return {em:"📗",lb:"Reglamento de Evaluación",url:"https://www.josejoaquinprieto.cl/protocolos-sip/reglamento-de-evaluacion/"};
-  if(/^Reglamento Interno/i.test(t))     return {em:"📕",lb:"Reglamento Interno",url:"https://www.josejoaquinprieto.cl/protocolos-sip/reglamento-interno/"};
-  if(/\bPEI\b|Proyecto Educativo/i.test(t)) return {em:"📘",lb:"Proyecto Educativo",url:"https://www.josejoaquinprieto.cl/protocolos-sip/proyecto-educativo-institucional/"};
+  if(/^Reglamento de Evaluaci/i.test(t)) return {em:"📗",lb:"Reglamento de Evaluación"};
+  if(/^Reglamento Interno/i.test(t))     return {em:"📕",lb:"Reglamento Interno",pdf:true};
+  if(/\bPEI\b|Proyecto Educativo/i.test(t)) return {em:"📘",lb:"Proyecto Educativo"};
   return null;
 }
-/* Enlace que salta directo al inciso dentro del documento oficial (scroll-to-text del navegador). */
-function incisoDeepLink(doc,titulo,fragmento){
-  if(!doc) return "#";
-  let anchor=((titulo||"").split("·").pop()||"").trim();           // nombre del inciso
-  if(anchor.length<4) anchor=((fragmento||"").trim().split(/\s+/).slice(0,8).join(" "));
-  anchor=anchor.replace(/["']/g,"").trim();
-  return anchor ? (doc.url+"#:~:text="+encodeURIComponent(anchor)) : doc.url;
+/* Abre el Reglamento Interno embebido (dentro del sello ASE-IA) justo en el inciso. */
+function openReglamento(titulo,fragmento){
+  const page=regPageFor(fragmento);
+  const sub=(titulo||"").split("·").slice(1).join("·").trim()||"Inciso citado";
+  document.getElementById("regSub").textContent=sub;
+  const url=REG_PDF_URL+"#page="+page+"&view=FitH";
+  document.getElementById("regFrame").src=url;
+  document.getElementById("regOpen").href=url;
+  document.getElementById("regModal").classList.add("open");
+  document.body.style.overflow="hidden";
 }
+function closeReg(){ document.getElementById("regModal").classList.remove("open"); const f=document.getElementById("regFrame"); if(f)f.src="about:blank"; document.body.style.overflow=""; }
 function openSource(titulo,fragmento){
   document.getElementById("srcTitle").textContent=titulo;
   document.getElementById("srcBody").textContent=fragmento||"(Sin detalle disponible.)";
-  const doc=sourceDocLink(titulo), tag=document.getElementById("srcTag"), open=document.getElementById("srcOpen");
-  if(doc){
-    tag.textContent="Inciso de "+doc.lb;
-    open.href=incisoDeepLink(doc,titulo,fragmento);
-    open.innerHTML=doc.em+"&nbsp; Abrir este inciso en el "+doc.lb+" oficial →";
-    open.style.display="inline-flex";
-  }else{
-    tag.textContent="Fuente institucional";
-    open.style.display="none";
-  }
+  const doc=sourceDocLink(titulo);
+  document.getElementById("srcTag").textContent=doc?("Inciso de "+doc.lb):"Fuente institucional";
+  const open=document.getElementById("srcOpen"); if(open)open.style.display="none";
   document.getElementById("srcModal").classList.add("open");
 }
 function closeSource(){document.getElementById("srcModal").classList.remove("open");}
-document.addEventListener("keydown",e=>{if(e.key==="Escape")closeSource();});
+document.addEventListener("keydown",e=>{if(e.key==="Escape"){closeSource();closeReg();}});
 
 /* Cuadro de fuente: muestra el reglamento citado con su texto textual (pantallazo). */
 function srcCardEl(c){
   const card=el("div","srccard");
   const doc=sourceDocLink(c.titulo);
-  card.title=doc?("Abrir el inciso en el "+doc.lb):"Ver texto completo";
+  const pdf=doc&&doc.pdf;   // Reglamento Interno → visor embebido en el inciso
+  card.title=pdf?"Abrir el Reglamento Interno justo en este inciso":(doc?("Ver el inciso del "+doc.lb):"Ver texto completo");
   const ic=el("div","si");ic.textContent=doc?doc.em:"📄";
   const b=el("div","sc-b");
   b.appendChild(el("div","sc-t",c.titulo));
   const frag=(c.fragmento||"").trim();
   b.appendChild(el("div","sc-q","“"+frag.slice(0,150)+(frag.length>150?"…":"")+"”"));
-  b.appendChild(el("div","sc-m",doc?("Abrir el inciso · "+doc.lb+" →"):"Ver texto completo →"));
+  b.appendChild(el("div","sc-m",pdf?"Abrir el inciso en el Reglamento Interno →":(doc?("Ver el inciso · "+doc.lb+" →"):"Ver texto completo →")));
   card.appendChild(ic);card.appendChild(b);
-  card.onclick=()=>openSource(c.titulo,c.fragmento);
+  card.onclick=pdf?(()=>openReglamento(c.titulo,c.fragmento)):(()=>openSource(c.titulo,c.fragmento));
   return card;
 }
 /* Cuadro tipo lista (tareas, eventos, materiales del Workspace). */
