@@ -1516,7 +1516,7 @@ const B = {
   drive:{lb:"Drive",sub:"Carpetas del colegio",icon:"drive",menu:DRIVE_LINKS},
   calendar:{lb:"Calendar",sub:"Calendario JJP",icon:"calendar",menu:CAL_MENU},
   aptus:{lb:"Aptus",sub:"Recursos y evaluaciones",url:"https://www.aptus.org/",icon:"aptus"},
-  corrector:{lb:"Corrector SIP",sub:"Corrector de textos",url:"https://corrector.sip.cl",icon:"sip"},
+  corrector:{lb:"Corrector SIP",sub:"Corrector de textos",url:"https://corrector.sip.cl",img:"assets/sip-corrector.png"},
   utopie:{lb:"UTOPIE",sub:"Educadoras diferenciales · PIE",url:"https://www.utopie.cl/",icon:"utopie"},
   drivePie:{lb:"Drive PIE",sub:"Carpeta del equipo PIE",url:"https://drive.google.com/drive/folders/1fHoxshRRYXmhXMwbTycRfNv-jNFwi-j8?usp=drive_link",icon:"drivePie"},
   mce:{lb:"MCE",sub:"Modelo de Clase Efectiva",url:"https://mce.sip.cl/documentos/",icon:"mce"},
@@ -1577,6 +1577,7 @@ function pieLabel(){ return isPIE() ? "Programa de Integración" : ""; }
 
 
 function iconMarkup(b){
+  if(b.img) return '<img src="'+b.img+'" alt="" style="border-radius:22%">';
   if(b.icon==="crest") return '<svg viewBox="0 0 120 120"><use href="#crestSVG"/></svg>';
   return ICONS[b.icon]||"";
 }
