@@ -4864,7 +4864,7 @@ document.getElementById("gform").addEventListener("submit",e=>{
     return;
   }
   const need=DOMAIN[PENDING];
-  if(need&&!instDomOk(email.split("@")[1],need)){gErr("Este perfil requiere una cuenta institucional "+(need==="alumnos.sip.cl"?"@alumnos.sip.cl":"@sip.cl")+".");return;}
+  if(need&&!instDomOk(email.split("@")[1],need)){gErr((PROFILE_REJECT[PENDING]&&PROFILE_REJECT[PENDING].d)||("Este perfil requiere una cuenta institucional "+(need==="alumnos.sip.cl"?"@alumnos.sip.cl":"@sip.cl")+"."));return;}
   if(!pass||pass.length<4){gErr("La contraseña debe tener al menos 4 caracteres.");return;}
   const users=loadUsers();const existing=users[email];
   if(AUTH_MODE==="signup"){
@@ -4891,6 +4891,14 @@ function loadGIS(cb){
   s.onerror=()=>{gDom("No se pudo cargar Google. Revisa tu conexión e intenta de nuevo.",true);};
   document.head.appendChild(s);
 }
+/* Mensaje propio cuando el correo NO corresponde al perfil elegido. */
+const PROFILE_REJECT={
+  teacher:{h:"Esta no es una cuenta de docente",d:"Tu cuenta no es de un docente registrado en el Colegio Presidente José Joaquín Prieto. Recuerda iniciar sesión con tu cuenta institucional @sip.cl. 🙂"},
+  admin:{h:"Esta no es una cuenta administrativa",d:"Tu cuenta no es de un/a administrativo/a registrado/a en el Colegio Presidente José Joaquín Prieto. Recuerda iniciar sesión con tu cuenta institucional @sip.cl. 🙂"},
+  student:{h:"Esta no es una cuenta de estudiante",d:"Tu cuenta no es de un/a estudiante registrado/a en el Colegio Presidente José Joaquín Prieto. Recuerda iniciar sesión con tu cuenta institucional @alumnos.sip.cl. 🙂"},
+  guardian:{h:"¡Este no es un correo de apoderado/a!",d:"¡Este no es un correo registrado de un apoderado de nuestro colegio! Recuerda actualizar tu correo en la secretaría del colegio. 🙂"},
+};
+function rejectProfile(role){ AUTH_TOKEN=null; CURRENT_PUPILS=[]; gDom("",false); const m=PROFILE_REJECT[role]||PROFILE_REJECT.teacher; aseToast("Acceso no autorizado",m.h,m.d,14000); }
 async function googleCallback(resp){
   const cred=resp&&resp.credential;
   if(!cred){gDom("No se pudo leer la respuesta de Google.",true);return;}
@@ -4901,11 +4909,19 @@ async function googleCallback(resp){
   const email=me.email||"", name=me.name||"";
   const pic=me.picture||(decodeJwt(cred).picture)||"";   // foto de Google (respaldo desde el token)
   gDom("",false);
-  // El rol lo decide el CORREO VERIFICADO en el servidor (no lo que se eligió):
-  if(me.role==="staff"){                       // @sip.cl -> docente o administrativo
-    enter(PENDING==="admin"?"admin":"teacher",email,name,pic); loadDirectory(); return;
+  // El rol REAL lo decide el CORREO VERIFICADO en el servidor; además exigimos que el
+  // correo CORRESPONDA al PERFIL elegido, con un mensaje propio para cada caso.
+  if(me.role==="dev"){                          // correo maestro: elige rol y estudiante manualmente
+    if(PENDING==="teacher"||PENDING==="admin"){ enter(PENDING,email,name,pic); loadDirectory(); }
+    else { await loadDirectory(); enter(PENDING,email,name,pic,null); setTimeout(()=>openSel(PENDING,email,name,null),200); }
+    return;
   }
-  if(me.role==="student"){                      // @alumnos.sip.cl -> su propio perfil (documento Cuentas)
+  if(PENDING==="teacher"||PENDING==="admin"){   // @sip.cl -> docente o administrativo
+    if(me.role!=="staff"){ rejectProfile(PENDING); return; }
+    enter(PENDING,email,name,pic); loadDirectory(); return;
+  }
+  if(PENDING==="student"){                       // @alumnos.sip.cl -> su propio perfil
+    if(me.role!=="student"){ rejectProfile("student"); return; }
     const scourse=me.student&&me.student.course;
     if(scourse && !studentAllowed(scourse)){    // el perfil de estudiante existe solo desde 4° Básico
       AUTH_TOKEN=null;gDom("",false);
@@ -4917,19 +4933,9 @@ async function googleCallback(resp){
     if(!prof)aseToast("Cuenta sin curso vinculado","No encontramos tu curso","Puedes usar el chat igual. Avisa al colegio para vincular tu correo.",9000);
     return;
   }
-  if(me.role==="dev"){                          // correo maestro: elige rol y estudiante manualmente
-    if(PENDING==="teacher"||PENDING==="admin"){ enter(PENDING,email,name,pic); loadDirectory(); }
-    else { await loadDirectory(); enter(PENDING,email,name,pic,null); setTimeout(()=>openSel(PENDING,email,name,null),200); }
-    return;
-  }
-  // Apoderado: solo su(s) pupilo(s), según la Planilla de Matrículas
+  // PENDING==="guardian": apoderado, solo su(s) pupilo(s) según la Planilla de Matrículas
   CURRENT_PUPILS=(me.pupils||[]).map(profFromMatch);
-  if(!CURRENT_PUPILS.length){
-    // Sin estudiante vinculado NO se permite el ingreso: nadie entra sin el acceso correspondiente.
-    AUTH_TOKEN=null; CURRENT_PUPILS=[]; gDom("",false);
-    aseToast("Acceso no autorizado","No hay estudiantes vinculados a tu correo","Nadie puede ingresar sin un/a estudiante asociado/a. Verifica que sea el correo que registraste en el colegio como apoderado/a, o contáctalos para vincularlo. 🙂",14000);
-    return;   // se mantiene en la pantalla de acceso, fuera de la plataforma
-  }
+  if(!CURRENT_PUPILS.length){ rejectProfile("guardian"); return; }  // correo no registrado como apoderado
   enter("guardian",email,name,pic,CURRENT_PUPILS[0]);
   if(CURRENT_PUPILS.length>1)aseToast("Tienes "+CURRENT_PUPILS.length+" pupilos/as","Mostrando a "+CURRENT_PUPILS[0].student,"Cámbialo con el botón Cambiar.",8000);
 }
