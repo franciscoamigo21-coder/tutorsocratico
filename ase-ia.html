@@ -7,8 +7,8 @@
 <meta http-equiv="Pragma" content="no-cache" />
 <meta http-equiv="Expires" content="0" />
 <title>ASE-IA · Asistente Escolar · Colegio Presidente José Joaquín Prieto</title>
-<link rel="icon" type="image/png" href="assets/ase-ia-robot-sip.png" />
-<link rel="apple-touch-icon" href="assets/ase-ia-robot-sip.png" />
+<link rel="icon" type="image/png" href="assets/ase-ia-robot-main.png" />
+<link rel="apple-touch-icon" href="assets/ase-ia-robot-main.png" />
 <meta name="description" content="ASE-IA · Asistente Escolar de Inteligencia Artificial del Colegio Presidente José Joaquín Prieto (SIP Red de Colegios). Responde solo con información institucional autorizada." />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -325,6 +325,15 @@
   .typing{display:flex;gap:5px;padding:14px 16px;background:#fff;border:1px solid var(--border);border-radius:18px;border-bottom-left-radius:6px;}
   .tdot{width:7px;height:7px;border-radius:50%;background:#9fb0c8;animation:b 1s infinite ease-in-out;}
   .tdot:nth-child(2){animation-delay:.15s;}.tdot:nth-child(3){animation-delay:.3s;}
+  /* Transición bonita pensar → responder */
+  .av-think{animation:avbob 1.25s ease-in-out infinite;transform-origin:center bottom;filter:drop-shadow(0 4px 8px rgba(17,87,201,.28));}
+  @keyframes avbob{0%,100%{transform:translateY(0) rotate(-2deg);}50%{transform:translateY(-3px) rotate(2deg);}}
+  .av-answer{animation:avpop .42s cubic-bezier(.2,.85,.3,1.25) both;}
+  @keyframes avpop{0%{opacity:0;transform:scale(.55) translateY(4px);}60%{opacity:1;transform:scale(1.08);}100%{opacity:1;transform:scale(1);}}
+  .row.bot.thinking .typing{animation:thglow 1.6s ease-in-out infinite;}
+  @keyframes thglow{0%,100%{box-shadow:0 0 0 0 rgba(47,107,237,0);}50%{box-shadow:0 6px 18px -8px rgba(47,107,237,.45);}}
+  .row.leaving{opacity:0;transform:translateY(-5px) scale(.98);transition:opacity .2s ease,transform .2s ease;}
+  @media (prefers-reduced-motion:reduce){.av-think,.av-answer,.row.bot.thinking .typing{animation:none;}}
   @keyframes b{0%,80%,100%{transform:translateY(0);opacity:.5;}40%{transform:translateY(-5px);opacity:1;}}
   .sugs{display:flex;flex-wrap:wrap;gap:8px;padding:14px 16px 4px;background:#fff;border-top:1px solid #eef2f9;}
   .sug{border:1px solid #e2e9f6;color:var(--azul);background:#f6f9ff;border-radius:999px;padding:8px 15px;font-size:12.5px;cursor:pointer;font-family:inherit;font-weight:600;transition:.15s;}
@@ -490,6 +499,7 @@
   /* Tutor Socrático (chat interno) */
   .tutorframe{width:100%;height:100%;min-height:60vh;border:0;display:block;background:#eef2fb;}
   #tutormodal .doccard{max-width:1080px;height:92vh;}
+  .tutordesc{padding:10px 16px;font-size:12.8px;line-height:1.5;color:var(--azul-ink);background:linear-gradient(160deg,#eef5ff,#e7fbf6);border-bottom:1px solid #e2ecfb;}
   @media(max-width:640px){ #tutormodal .doccard{height:94vh;} }
   .tutorwrap{display:flex;flex-direction:column;height:min(64vh,560px);}
   .tutormsgs{flex:1;overflow-y:auto;padding:18px;display:flex;flex-direction:column;gap:12px;background:linear-gradient(180deg,#f5f8ff,#eef3fc);}
@@ -973,7 +983,7 @@
       <span class="ihalo"></span>
       <span class="iflash"></span>
       <span class="iring"></span>
-      <img class="ilogo" alt="ASE-IA" src="assets/ase-ia-robot-sip.png"
+      <img class="ilogo" alt="ASE-IA" src="assets/ase-ia-robot-main.png"
            onerror="this.outerHTML='<svg class=\'ilogo\' viewBox=\'0 0 120 120\'><use href=\'#mascot\'/></svg>'">
     </div>
     <div class="iname">ASE<b>-IA</b></div>
@@ -1000,9 +1010,9 @@
       <span class="bdiv"></span>
       <div class="coin3d" id="coin" aria-label="ASE-IA · arrástralo para girarlo">
         <div class="coinInner" id="coinInner">
-          <img class="face front" alt="ASE-IA" src="assets/ase-ia-robot-sip.png"
+          <img class="face front" alt="ASE-IA" src="assets/ase-ia-robot-main.png"
                onerror="this.outerHTML='<svg class=\'face front\' viewBox=\'0 0 120 120\'><use href=\'#mascot\'/></svg>'">
-          <img class="face back" alt="" src="assets/ase-ia-robot-sip.png"
+          <img class="face back" alt="" src="assets/ase-ia-robot-main.png"
                onerror="this.style.display='none'">
         </div>
       </div>
@@ -1063,7 +1073,7 @@
 
   <header class="app-h"><div class="in">
     <div class="brand" onclick="showGate()" title="Volver al inicio" role="button" tabindex="0" style="cursor:pointer">
-      <img class="av-brand badge-src" alt="ASE-IA" width="42" height="42" style="object-fit:contain" src="assets/ase-ia-robot-sip.png"
+      <img class="av-brand badge-src" alt="ASE-IA" width="42" height="42" style="object-fit:contain" src="assets/ase-ia-robot-main.png"
            onerror="this.outerHTML='<svg viewBox=\'0 0 120 120\' width=\'42\' height=\'42\'><use href=\'#mascot\'/></svg>'">
       <div><div class="name">ASE<b>-IA</b></div><div class="sub">Asistente Escolar de Inteligencia Artificial</div></div>
     </div>
@@ -1086,7 +1096,7 @@
 
   <div class="shell">
     <section class="hero">
-      <img class="badge" alt="ASE-IA" src="assets/ase-ia-robot-sip.png"
+      <img class="badge" alt="ASE-IA" src="assets/ase-ia-robot-main.png"
            onerror="this.outerHTML='<svg class=\'badge\' viewBox=\'0 0 120 120\'><use href=\'#mascot\'/></svg>'">
       <div>
         <h1>Tu asistente escolar con <span class="g">Inteligencia Artificial</span></h1>
@@ -1136,7 +1146,7 @@
 
     <div class="wrap"><div class="chat">
       <div class="chead">
-        <img class="badge" alt="ASE-IA" src="assets/ase-ia-robot-sip.png"
+        <img class="badge" alt="ASE-IA" src="assets/ase-ia-robot-main.png"
              onerror="this.outerHTML='<svg class=\'badge\' viewBox=\'0 0 120 120\'><use href=\'#mascot\'/></svg>'">
         <div><div class="h">ASE-IA</div><div class="s"><span class="dot"></span> Asistente Escolar · en línea</div></div>
         <button class="fsbtn" id="fsBtn" type="button" onclick="toggleFS()" title="Pantalla completa" aria-label="Pantalla completa"><span id="fsIcon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3M16 3h3a2 2 0 0 1 2 2v3M8 21H5a2 2 0 0 1-2-2v-3M16 21h3a2 2 0 0 0 2-2v-3"/></svg></span></button>
@@ -1186,7 +1196,7 @@
 <!-- Modal de acceso institucional -->
 <div id="gmodal" onclick="if(event.target===this)closeGoogle()">
   <div class="gcard2">
-    <div class="gbrand"><img alt="ASE-IA" src="assets/ase-ia-robot-sip.png" onerror="this.outerHTML='<svg viewBox=\'0 0 120 120\'><use href=\'#mascot\'/></svg>'"><span>ASE<b>-IA</b></span></div>
+    <div class="gbrand"><img alt="ASE-IA" src="assets/ase-ia-robot-main.png" onerror="this.outerHTML='<svg viewBox=\'0 0 120 120\'><use href=\'#mascot\'/></svg>'"><span>ASE<b>-IA</b></span></div>
     <h3 id="gmTitle">Iniciar sesión</h3>
     <p id="gmSub">Ingresa a tu perfil del colegio</p>
     <form id="gform" autocomplete="off">
@@ -1207,7 +1217,7 @@
 <!-- Modal: elegir curso y estudiante (perfil de apoderado / estudiante) -->
 <div id="selmodal" onclick="if(event.target===this)closeSel()">
   <div class="gcard2">
-    <div class="gbrand"><img alt="ASE-IA" src="assets/ase-ia-robot-sip.png" onerror="this.outerHTML='<svg viewBox=\'0 0 120 120\'><use href=\'#mascot\'/></svg>'"><span>ASE<b>-IA</b></span></div>
+    <div class="gbrand"><img alt="ASE-IA" src="assets/ase-ia-robot-main.png" onerror="this.outerHTML='<svg viewBox=\'0 0 120 120\'><use href=\'#mascot\'/></svg>'"><span>ASE<b>-IA</b></span></div>
     <h3 id="selTitle">Elige tu curso y estudiante</h3>
     <p id="selSub">Personalizamos tu perfil con la información del colegio</p>
     <label class="sellbl" id="selLblCurso">Curso</label>
@@ -1226,7 +1236,7 @@
 <!-- Modal: completar los datos de mi perfil -->
 <div id="pdmodal" onclick="if(event.target===this)closeProfileData()">
   <div class="gcard2">
-    <div class="gbrand"><img alt="ASE-IA" src="assets/ase-ia-robot-sip.png" onerror="this.outerHTML='<svg viewBox=\'0 0 120 120\'><use href=\'#mascot\'/></svg>'"><span>ASE<b>-IA</b></span></div>
+    <div class="gbrand"><img alt="ASE-IA" src="assets/ase-ia-robot-main.png" onerror="this.outerHTML='<svg viewBox=\'0 0 120 120\'><use href=\'#mascot\'/></svg>'"><span>ASE<b>-IA</b></span></div>
     <h3>Completa los datos de mi perfil</h3>
     <p>Se guardan solo en este dispositivo, de forma privada.</p>
     <div id="pdBody"></div>
@@ -1306,6 +1316,7 @@
       <h4>Tutor Socrático</h4>
       <button class="docx" type="button" onclick="closeTutor()" aria-label="Cerrar">✕</button>
     </div>
+    <div class="tutordesc" id="tutorDesc"></div>
     <div class="docbody" id="tutorBody" style="background:#fff;padding:0"></div>
     <div class="docfoot">
       <button class="docbtn ghost" type="button" onclick="window.open('tutorsocratico/index.html','_blank','noopener')">Abrir en grande</button>
@@ -1528,7 +1539,7 @@ const B = {
   capac:{lb:"Capacitaciones",sub:"Cursos y formación",icon:"capac",menu:CAPAC_LINKS},
   correo:{lb:"Correo",sub:"Gmail",url:"https://mail.google.com",icon:"gmail"},
   alexia:{lb:"Alexia",sub:"Notas y asistencia",url:"https://josejoaquinprieto.alexiaeducl.com/ACWeb/paginas/Home/HomeProgDidactica.aspx",img:"assets/alexia.png"},
-  notebook:{lb:"Notebook Gemini",sub:"Cuaderno IA con Gemini",url:"https://notebooklm.google.com",img:"assets/notebook.png"},
+  notebook:{lb:"Gemini Notebook",sub:"Cuaderno IA con Gemini",url:"https://notebooklm.google.com",img:"assets/notebook.png"},
   gemini:{lb:"Gemini",sub:"IA de Google",url:"https://gemini.google.com",img:"assets/gemini.png"},
   chatgpt:{lb:"ChatGPT",sub:"IA de OpenAI",url:"https://chatgpt.com",icon:"chatgpt"},
   whatsapp:{lb:"WhatsApp",sub:"Comunicación",url:"https://web.whatsapp.com",icon:"whatsapp"},
@@ -1606,7 +1617,7 @@ function renderQuick(role){
       btn.appendChild(ic);
       if(b.feature){                                       // acceso DESTACADO: título + subtítulo + estrella
         const tx=document.createElement("span");tx.className="ftx";
-        const sub=document.createElement("span");sub.className="fsub";sub.textContent=b.sub||"";
+        const sub=document.createElement("span");sub.className="fsub";sub.textContent=(b.action==="tutor"&&TUTOR_DESC[ROLE])?TUTOR_DESC[ROLE].card:(b.sub||"");
         tx.appendChild(lb);tx.appendChild(sub);btn.appendChild(tx);
         if(!blk){ const star=document.createElement("span");star.className="fstar";star.textContent="★";btn.appendChild(star); }
       } else { btn.appendChild(lb); }
@@ -2913,12 +2924,12 @@ function answer(query){
 /* ============ AVATAR / BADGE ============ */
 let BADGE_OK=false;
 function badgeMarkup(sz){return BADGE_OK
-  ? '<img src="assets/ase-ia-robot-sip.png" width="'+sz+'" height="'+sz+'" alt="ASE-IA" style="object-fit:contain">'
+  ? '<img src="assets/ase-ia-robot-main.png" width="'+sz+'" height="'+sz+'" alt="ASE-IA" style="object-fit:contain">'
   : '<svg viewBox="0 0 120 120" width="'+sz+'" height="'+sz+'"><use href="#mascot"/></svg>';}
 (function(){
   const im=new Image();
   im.onload=function(){BADGE_OK=true;};
-  im.src="assets/ase-ia-robot-sip.png";
+  im.src="assets/ase-ia-robot-main.png";
   const c=new Image();
   c.onload=function(){document.querySelectorAll('svg[data-crest]').forEach(function(n){
     const el=document.createElement('img');el.src='assets/logo-sip.png';el.width=n.getAttribute('width');el.height=n.getAttribute('height');
@@ -2935,7 +2946,15 @@ const SUGS={
 };
 const log=document.getElementById("log");
 function el(t,c,x){const e=document.createElement(t);if(c)e.className=c;if(x!=null)e.textContent=x;return e;}
-function avatarEl(){const w=el("span");w.innerHTML=badgeMarkup(30);const n=w.firstElementChild;if(n)n.setAttribute("class","av");return n||w;}
+const ROBOT_IMG={think:"assets/ase-ia-think.png",answer:"assets/ase-ia-answer.png"};
+function avatarEl(variant){
+  const src=ROBOT_IMG[variant]||"assets/ase-ia-robot-main.png";
+  const w=el("span");
+  w.innerHTML = BADGE_OK ? '<img src="'+src+'" width="30" height="30" alt="ASE-IA" style="object-fit:contain">'
+                         : '<svg viewBox="0 0 120 120" width="30" height="30"><use href="#mascot"/></svg>';
+  const n=w.firstElementChild; if(n) n.setAttribute("class","av"+(variant?(" av-"+variant):""));
+  return n||w;
+}
 /* Limpia el formato Markdown (##, **, viñetas, `código`, citas [n]) para que el
    texto se vea natural, en prosa, sin caracteres sobrantes. */
 function clean(t){return (t||"")
@@ -3014,10 +3033,10 @@ function openReglamento(docId,titulo,fragmento){
   document.getElementById("regSub").textContent=sub;
   const full=document.getElementById("regFull"); if(full) full.href=REG_DOC.pdf+"#page="+page;
   regShow(page);
-  document.getElementById("regModal").classList.add("open");
+  document.getElementById("regModal").classList.add("open");ovOpened("regModal");
   document.body.style.overflow="hidden";
 }
-function closeReg(){ document.getElementById("regModal").classList.remove("open"); const im=document.getElementById("regImg"); if(im)im.removeAttribute("src"); document.body.style.overflow=""; }
+function closeReg(){ document.getElementById("regModal").classList.remove("open"); const im=document.getElementById("regImg"); if(im)im.removeAttribute("src"); document.body.style.overflow=""; ovClosed("regModal"); }
 /* ============ GUÍA · cómo sacarle el máximo provecho a ASE-IA ============ */
 function gCard(icon,titulo,desc,chips){
   const ic='<span class="giac-ic">'+icon+'</span>';
@@ -3027,7 +3046,7 @@ function gCard(icon,titulo,desc,chips){
 }
 function guiaHTML(role){
   const staff=(role==="teacher"||role==="admin");
-  const robot='<img src="assets/ase-ia-robot-sip.png" alt="ASE-IA" onerror="this.outerHTML=\'<svg viewBox=\\\'0 0 120 120\\\'><use href=\\\'#mascot\\\'/></svg>\'">';
+  const robot='<img src="assets/ase-ia-robot-main.png" alt="ASE-IA" onerror="this.outerHTML=\'<svg viewBox=\\\'0 0 120 120\\\'><use href=\\\'#mascot\\\'/></svg>\'">';
   const hero='<div class="guiahero"><div class="ghrow"><div class="ghbot">'+robot+'</div>'
     +'<div><div class="ghname">ASE-IA · Guía rápida</div><h2>Sácale el máximo provecho a tu asistente escolar</h2></div></div>'
     +'<p>ASE-IA reúne en un solo lugar el reglamento del colegio, tus herramientas y la inteligencia artificial para ayudarte cada día. Aquí tienes las mejores formas de usarla.</p>'
@@ -3084,10 +3103,10 @@ function openGuia(){
   const body=document.getElementById("guiaBody");
   body.innerHTML=guiaHTML(ROLE);
   body.querySelectorAll(".giachip").forEach(c=>c.onclick=()=>guiaAsk(c.getAttribute("data-q")));
-  document.getElementById("guiaModal").classList.add("open");
+  document.getElementById("guiaModal").classList.add("open");ovOpened("guiaModal");
   document.body.style.overflow="hidden";
 }
-function closeGuia(){ document.getElementById("guiaModal").classList.remove("open"); document.body.style.overflow=""; }
+function closeGuia(){ document.getElementById("guiaModal").classList.remove("open"); document.body.style.overflow=""; ovClosed("guiaModal"); }
 function guiaAsk(q){ closeGuia(); if(q && typeof ask==="function") ask(q); }
 function openSource(titulo,fragmento){
   document.getElementById("srcTitle").textContent=titulo;
@@ -3095,9 +3114,24 @@ function openSource(titulo,fragmento){
   const doc=sourceDocLink(titulo);
   document.getElementById("srcTag").textContent=doc?("Inciso de "+doc.lb):"Fuente institucional";
   const open=document.getElementById("srcOpen"); if(open)open.style.display="none";
-  document.getElementById("srcModal").classList.add("open");
+  document.getElementById("srcModal").classList.add("open");ovOpened("srcModal");
 }
-function closeSource(){document.getElementById("srcModal").classList.remove("open");}
+function closeSource(){document.getElementById("srcModal").classList.remove("open");ovClosed("srcModal");}
+/* ===== El botón "atrás" del teléfono cierra SOLO la pestaña/modal abierta ===== */
+let OV_STACK=[], OV_HIDERS={}, OV_POPPING=false;
+function ovRegister(id,hide){ OV_HIDERS[id]=hide; }
+function ovOpened(id){ if(OV_STACK.indexOf(id)>=0)return; OV_STACK.push(id); try{history.pushState({ov:id},"");}catch(_){} }
+function ovClosed(id){ const i=OV_STACK.lastIndexOf(id); if(i<0)return; OV_STACK.splice(i,1); if(!OV_POPPING){try{history.back();}catch(_){}} }
+window.addEventListener("popstate",function(){
+  if(!OV_STACK.length)return;
+  OV_POPPING=true;
+  const id=OV_STACK[OV_STACK.length-1], hide=OV_HIDERS[id];
+  try{ hide&&hide(); }catch(_){}
+  OV_POPPING=false;
+});
+/* Registro de cada overlay → su función de cierre (declaraciones hoisted). */
+ovRegister("regModal",closeReg); ovRegister("srcModal",closeSource); ovRegister("guiaModal",closeGuia);
+ovRegister("tutormodal",closeTutor); ovRegister("benmodal",closeBeneficios); ovRegister("planmodal",closePlanifica);
 document.addEventListener("keydown",e=>{
   if(e.key==="Escape"){closeSource();closeReg();closeGuia();return;}
   const rm=document.getElementById("regModal");
@@ -3170,7 +3204,7 @@ function renderRich(msg,raw){
 }
 function add(text,who,extra){
   const row=el("div","row "+who);
-  if(who==="bot")row.appendChild(avatarEl());
+  if(who==="bot")row.appendChild(avatarEl("answer"));
   const msg=el("div","msg");
   if(who==="bot") renderRich(msg,text); else msg.textContent=text;
   if(extra){
@@ -3189,11 +3223,11 @@ function add(text,who,extra){
 }
 let typingRow=null;
 function typing(on){
-  if(on&&!typingRow){typingRow=el("div","row bot");typingRow.appendChild(avatarEl());
+  if(on&&!typingRow){typingRow=el("div","row bot thinking");typingRow.appendChild(avatarEl("think"));
     const t=el("div","typing");t.appendChild(el("span","tlabel","ASE-IA está pensando…"));
     t.appendChild(el("span","tdot"));t.appendChild(el("span","tdot"));t.appendChild(el("span","tdot"));
     typingRow.appendChild(t);log.appendChild(typingRow);log.scrollTop=log.scrollHeight;}
-  else if(!on&&typingRow){typingRow.remove();typingRow=null;}
+  else if(!on&&typingRow){const r=typingRow;typingRow=null;r.classList.add("leaving");setTimeout(()=>{try{r.remove();}catch(_){}},220);}
 }
 function renderSugs(){const box=document.getElementById("sugs");box.innerHTML="";SUGS[ROLE].forEach(s=>{const b=el("button","sug",s);b.type="button";b.onclick=(s===EMAIL_SUG)?(()=>emailStart()):(()=>ask(s));box.appendChild(b);});}
 /* ============ PANTALLA COMPLETA del chat (expandir / reducir) ============ */
@@ -3613,8 +3647,8 @@ function renderBeneficios(){
   body.innerHTML=h; body.scrollTop=0;
 }
 function setBenFilter(c){ BEN_FILTER=c; renderBeneficios(); }
-function openBeneficios(){ BEN_FILTER="Todos"; renderBeneficios(); document.getElementById("benmodal").classList.add("open"); document.body.style.overflow="hidden"; }
-function closeBeneficios(){ document.getElementById("benmodal").classList.remove("open"); document.body.style.overflow=""; }
+function openBeneficios(){ BEN_FILTER="Todos"; renderBeneficios(); document.getElementById("benmodal").classList.add("open");ovOpened("benmodal"); document.body.style.overflow="hidden"; }
+function closeBeneficios(){ document.getElementById("benmodal").classList.remove("open"); document.body.style.overflow=""; ovClosed("benmodal"); }
 
 /* ============ PLANIFICA · copiloto pedagógico con IA (perfil docente) ============ */
 const PLAN_NIVELES=["1° Básico","2° Básico","3° Básico","4° Básico","5° Básico","6° Básico","7° Básico","8° Básico","I° Medio","II° Medio","III° Medio","IV° Medio"];
@@ -3635,7 +3669,7 @@ const MCE_WORDMARK_SVG='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 250
 function planHeroHTML(){
   const mem="data:image/png;base64,"+MEMBRETE_B64, sel="data:image/png;base64,"+SELLO_B64, mce="data:image/png;base64,"+MCE_B64;
   return '<div class="planhero">'
-    +'<div class="ph-robot"><img src="assets/ase-ia-robot-sip.png" alt="ASE-IA" onerror="this.style.display=\'none\'"></div>'
+    +'<div class="ph-robot"><img src="assets/ase-ia-robot-main.png" alt="ASE-IA" onerror="this.style.display=\'none\'"></div>'
     +'<div class="ph-t">PLANIFICA <span>con ASE-IA</span></div>'
     +'<div class="ph-s">Crea material profesional para tu clase, listo para imprimir con la hoja institucional del colegio.</div>'
     +'<div class="ph-align">'
@@ -3734,7 +3768,7 @@ async function planLoadFile(e){
     setUp("No se pudo leer el archivo. Intenta con otro (TXT, PDF o Word).");
   }
 }
-function openPlanifica(){ const hs=document.getElementById("planHeadSip"); if(hs&&!hs.src)hs.src="data:image/png;base64,"+SIP_WHITE_B64; document.getElementById("planBody").innerHTML=planFormHTML(); planTipoChanged(); PLAN_LAST=""; planShowDocButtons(false); document.getElementById("planmodal").classList.add("open"); document.body.style.overflow="hidden"; }
+function openPlanifica(){ const hs=document.getElementById("planHeadSip"); if(hs&&!hs.src)hs.src="data:image/png;base64,"+SIP_WHITE_B64; document.getElementById("planBody").innerHTML=planFormHTML(); planTipoChanged(); PLAN_LAST=""; planShowDocButtons(false); document.getElementById("planmodal").classList.add("open");ovOpened("planmodal"); document.body.style.overflow="hidden"; }
 /* Descarga en PDF real (rasteriza el documento institucional con html2pdf). */
 const HTML2PDF_CDN="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js";
 function loadHtml2Pdf(){ return new Promise(res=>{ if(window.html2pdf){res(true);return;} let s=document.getElementById("h2p-lib"); if(s){let t=0;const iv=setInterval(()=>{if(window.html2pdf){clearInterval(iv);res(true);}else if(++t>60){clearInterval(iv);res(false);}},150);return;} s=document.createElement("script");s.id="h2p-lib";s.src=HTML2PDF_CDN;s.onload=()=>res(!!window.html2pdf);s.onerror=()=>res(false);document.head.appendChild(s); }); }
@@ -3767,15 +3801,24 @@ function descargarPlanWord(){
   const a=document.createElement("a"); a.href=URL.createObjectURL(blob); a.download=planFileName("doc");
   document.body.appendChild(a); a.click(); setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove();},1500);
 }
-function closePlanifica(){ document.getElementById("planmodal").classList.remove("open"); document.body.style.overflow=""; }
+function closePlanifica(){ document.getElementById("planmodal").classList.remove("open"); document.body.style.overflow=""; ovClosed("planmodal"); }
 
 /* ============ TUTOR SOCRÁTICO · la app real de aseia.cl/tutorsocratico, embebida ============ */
+/* Descripción del Tutor Socrático enfocada en cada perfil (tarjeta + panel). */
+const TUTOR_DESC={
+  student:{card:"Aprende reflexionando",panel:"Aprende pensando: te guío con preguntas (reflexión y metacognición) para que construyas y defiendas tus propias ideas, en vez de darte la respuesta hecha."},
+  teacher:{card:"Detecta IA y guía por OA",panel:"Pensado para el aula: ayuda a detectar el uso de IA en los trabajos y a educar con el método socrático —desarrollando la reflexión y el pensamiento crítico del estudiante— alineado al logro de los Objetivos de Aprendizaje (OA)."},
+  admin:{card:"Aprendizaje socrático y uso de IA",panel:"Acompaña el aprendizaje con método socrático: reflexión, pensamiento crítico y uso responsable de la IA, como apoyo a la labor pedagógica y formativa del colegio."},
+  guardian:{card:"Aprender pensando, no copiando",panel:"Acompaña a tu pupilo/a a aprender pensando: en vez de entregar respuestas, lo guía con preguntas que desarrollan su razonamiento y autonomía."},
+};
+function tutorDesc(){ return TUTOR_DESC[ROLE]||TUTOR_DESC.student; }
 const TUTOR_SRC="tutorsocratico/index.html?embed=1";
 /* Los estudiantes abren el Tutor en modo reflexión/metacognición (defensa oral),
    no en el modo docente (análisis para el profesor). */
 function tutorSrc(){ return TUTOR_SRC + (ROLE==="student" ? "&student=1" : ""); }
 function openTutor(){
   const body=document.getElementById("tutorBody");
+  const dsc=document.getElementById("tutorDesc"); if(dsc) dsc.textContent=tutorDesc().panel;
   const want=tutorSrc();
   const ifr=body.querySelector("iframe");
   if(!ifr){
@@ -3783,10 +3826,10 @@ function openTutor(){
   } else if(ifr.getAttribute("src")!==want){
     ifr.setAttribute("src",want);   // cambia de modo si cambió el perfil (p. ej. maestro simulando)
   }
-  document.getElementById("tutormodal").classList.add("open");
+  document.getElementById("tutormodal").classList.add("open");ovOpened("tutormodal");
   document.body.style.overflow="hidden";
 }
-function closeTutor(){ document.getElementById("tutormodal").classList.remove("open"); document.body.style.overflow=""; }
+function closeTutor(){ document.getElementById("tutormodal").classList.remove("open"); document.body.style.overflow=""; ovClosed("tutormodal"); }
 function planNivelGuia(nivel){
   if(/^(1|2)°?\s*B/i.test(nivel)) return "Es un nivel MUY INICIAL (primeros años de básica): usa frases muy cortas y simples, contenidos muy concretos y lúdicos, números y palabras sencillas; deja espacios para dibujar, unir, colorear o completar; MÁXIMO 3 o 4 actividades muy breves. Evita textos largos, definiciones y vocabulario técnico.";
   if(/^(3|4)°?\s*B/i.test(nivel)) return "Es un nivel básico: lenguaje sencillo y directo, actividades concretas y prácticas, 4 a 5 actividades cortas.";
@@ -3872,7 +3915,7 @@ function stripEmojis(s){
 }
 /* Pantalla de carga entretenida: mini-juego del robot ASE-IA (estilo dinosaurio). */
 let ASEIA_SPRITE=null;
-(function(){ try{ const im=new Image(); im.onload=()=>{ASEIA_SPRITE=im;}; im.src="assets/ase-ia-robot-sip.png"; }catch(_){} })();
+(function(){ try{ const im=new Image(); im.onload=()=>{ASEIA_SPRITE=im;}; im.src="assets/ase-ia-robot-main.png"; }catch(_){} })();
 /* Récord del mini-juego guardado por PERFIL (correo), no por sesión: persiste siempre. */
 function planBestKey(){ return "aseia_gamebest_"+((CURRENT&&CURRENT.email)||"anon").toLowerCase(); }
 function planBest(){ try{
