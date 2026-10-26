@@ -957,15 +957,7 @@
 <!-- Escudo y mascota de respaldo (SVG) -->
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
   <g id="crestSVG">
-    <circle cx="60" cy="60" r="58" fill="#0b3d91" stroke="#f5b301" stroke-width="4"/>
-    <circle cx="60" cy="60" r="46" fill="none" stroke="#f5b301" stroke-width="1.4"/>
-    <path id="arcT" d="M 20 60 A 40 40 0 0 1 100 60" fill="none"/><path id="arcB" d="M 22 60 A 38 38 0 0 0 98 60" fill="none"/>
-    <text fill="#f5b301" font-family="Montserrat,sans-serif" font-weight="700" font-size="8.4" letter-spacing="1.5"><textPath href="#arcT" startOffset="50%" text-anchor="middle">RED DE COLEGIOS</textPath></text>
-    <text fill="#f5b301" font-family="Montserrat,sans-serif" font-weight="600" font-size="6.4" letter-spacing="1"><textPath href="#arcB" startOffset="50%" text-anchor="middle">DESDE 1856 · EDUCANDO CON EXCELENCIA</textPath></text>
-    <text x="60" y="52" text-anchor="middle" fill="#f5b301" font-family="Montserrat,sans-serif" font-weight="800" font-size="25" letter-spacing="2">SIP</text>
-    <text x="60" y="65" text-anchor="middle" fill="#fff" font-family="Montserrat,sans-serif" font-weight="700" font-size="7.2">Presidente</text>
-    <text x="60" y="74" text-anchor="middle" fill="#fff" font-family="Montserrat,sans-serif" font-weight="700" font-size="7.2">José Joaquín</text>
-    <text x="60" y="83" text-anchor="middle" fill="#fff" font-family="Montserrat,sans-serif" font-weight="700" font-size="7.2">Prieto</text>
+    <image href="assets/logo-sip.png" x="0" y="0" width="120" height="120" preserveAspectRatio="xMidYMid meet"/>
   </g>
   <g id="mascot">
     <rect x="28" y="26" width="64" height="52" rx="24" fill="#17423f"/><rect x="34" y="32" width="52" height="40" rx="19" fill="#fff"/>
@@ -1593,7 +1585,7 @@ function pieLabel(){ return isPIE() ? "Programa de Integración" : ""; }
 
 function iconMarkup(b){
   if(b.img) return '<img src="'+b.img+'" alt="" style="border-radius:22%">';
-  if(b.icon==="crest") return '<svg viewBox="0 0 120 120"><use href="#crestSVG"/></svg>';
+  if(b.icon==="crest") return '<img src="assets/logo-sip.png" alt="Colegio" style="object-fit:contain">';
   return ICONS[b.icon]||"";
 }
 function renderQuick(role){
