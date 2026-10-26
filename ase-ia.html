@@ -1489,11 +1489,8 @@ const PLANIF_SUBJECTS=[
 ];
 /* Cursos y capacitaciones (solo funcionarios). */
 const CAPAC_LINKS=[
-  {em:"🎓",lb:"Modelo de Clase Efectiva",url:"https://student.getcircles.org/dashboard"},
-];
-const DRIVE_LINKS=[
-  {em:"🏫",lb:"Colegio JJP",url:"https://drive.google.com/drive/folders/1s4MJFkCJVt-tJcbOLA5lTSVPwtqPecGY"},
-  {em:"🗂️",lb:"Planificaciones",staff:true,submenu:PLANIF_SUBJECTS},
+  {img:"assets/circles.png",lb:"Circles",url:"https://student.getcircles.org/dashboard"},
+  {img:"assets/achs.png",lb:"ACHS",url:"https://achsvirtual.achs.cl/inicio/trabajador"},
 ];
 /* Documentos importantes. staff:true = solo funcionarios (docentes/administrativos);
    sin staff = visibles para todos los perfiles. */
@@ -1520,7 +1517,8 @@ const CAL_MENU=[
 ];
 const B = {
   classroom:{lb:"Classroom",sub:"Tareas y clases",url:"https://classroom.google.com",icon:"classroom"},
-  drive:{lb:"Drive",sub:"Carpetas del colegio",icon:"drive",menu:DRIVE_LINKS},
+  drive:{lb:"Drive",sub:"Carpeta Colegio JJP",url:"https://drive.google.com/drive/folders/1s4MJFkCJVt-tJcbOLA5lTSVPwtqPecGY",icon:"drive"},
+  planif:{lb:"Planificaciones",sub:"Por asignatura",icon:"folder",menu:PLANIF_SUBJECTS},
   calendar:{lb:"Calendar",sub:"Calendario JJP",img:"assets/calendar.png",menu:CAL_MENU},
   aptus:{lb:"Aptus",sub:"Recursos y evaluaciones",url:"https://www.aptus.org/",img:"assets/aptus.png"},
   corrector:{lb:"Corrector SIP",sub:"Corrector de textos",url:"https://corrector.sip.cl",img:"assets/sip-corrector.png"},
@@ -1555,8 +1553,8 @@ const B = {
 };
 const LINKS = {
   student:[B.tutor,B.guia,B.classroom,B.drive,B.correo,B.sheets,B.docsimp,B.alexia,B.scholar,B.scielo,B.colegio],
-  teacher:[B.planifica,B.tutor,B.guia,B.classroom,B.drive,B.calendar,B.correo,B.sheets,B.docs,B.slides,B.canva,B.aptus,B.corrector,B.capac,B.docsimp,B.notebook,B.gemini,B.chatgpt,B.buk,B.alexia],
-  admin:[B.planifica,B.guia,B.classroom,B.drive,B.calendar,B.correo,B.sheets,B.docs,B.aptus,B.capac,B.docsimp,B.notebook,B.gemini,B.chatgpt,B.buk,B.mineduc,B.alexia],
+  teacher:[B.planifica,B.tutor,B.guia,B.classroom,B.drive,B.planif,B.calendar,B.correo,B.sheets,B.docs,B.slides,B.canva,B.aptus,B.corrector,B.capac,B.docsimp,B.notebook,B.gemini,B.chatgpt,B.buk,B.alexia],
+  admin:[B.planifica,B.guia,B.classroom,B.drive,B.planif,B.calendar,B.correo,B.sheets,B.docs,B.aptus,B.capac,B.docsimp,B.notebook,B.gemini,B.chatgpt,B.buk,B.mineduc,B.alexia],
   guardian:[B.beneficios,B.guia,B.alexia,B.correo,B.docsimp,B.whatsapp,B.instagram,B.participacion,B.colegio,B.sip],
 };
 const ROLE_LABEL={student:"Estudiante",teacher:"Docente",admin:"Administrativo",guardian:"Apoderado"};
@@ -1636,7 +1634,8 @@ function popItem(it){
     else{n.target="_blank";n.rel="noopener";n.onclick=e=>e.stopPropagation();}}
   const pend=(!it.url||it.url==="#")&&!it.action;
   n.className="qpop-i"+(pend?" pending":"");
-  n.innerHTML='<span class="qp-em">'+(it.em||"📁")+'</span><span>'+it.lb+'</span>'+(pend?'<span class="qp-soon">pronto</span>':'');
+  const emo=it.img?'<img src="'+it.img+'" alt="" style="width:19px;height:19px;object-fit:contain;border-radius:5px;vertical-align:middle">':(it.em||"📁");
+  n.innerHTML='<span class="qp-em">'+emo+'</span><span>'+it.lb+'</span>'+(pend?'<span class="qp-soon">pronto</span>':'');
   return n;
 }
 /* Tarjeta de acceso con menú desplegable (Drive, Calendar, Documentos importantes…). */
