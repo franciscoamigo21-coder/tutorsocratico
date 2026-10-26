@@ -1380,7 +1380,7 @@ const AI_CREATE_URL = "https://ase-ia-planifica.franciscoamigo21.workers.dev";
  *  Para reactivar TODO más adelante: deja ambas listas vacías  []  (o FASE1_ON=false).
  * ========================================================================== */
 const FASE1_ON = true;
-const BLOCKED_ROLES   = FASE1_ON ? ["guardian"] : [];   // perfiles bloqueados en el login (Estudiante habilitado)
+const BLOCKED_ROLES   = FASE1_ON ? ["guardian","student"] : [];   // perfiles bloqueados en el login (Estudiante bloqueado temporalmente)
 const BLOCKED_ACTIONS = [];   // PLANIFICA habilitado para docentes y administrativos
 function isRoleBlocked(r){ return BLOCKED_ROLES.indexOf(r)>=0; }
 function isActionBlocked(a){ return BLOCKED_ACTIONS.indexOf(a)>=0; }
@@ -1553,8 +1553,8 @@ const B = {
 };
 const LINKS = {
   student:[B.tutor,B.guia,B.classroom,B.drive,B.correo,B.sheets,B.docsimp,B.alexia,B.scholar,B.scielo,B.colegio],
-  teacher:[B.planifica,B.tutor,B.guia,B.classroom,B.drive,B.planif,B.calendar,B.correo,B.sheets,B.docs,B.slides,B.canva,B.aptus,B.corrector,B.capac,B.docsimp,B.notebook,B.gemini,B.chatgpt,B.buk,B.alexia],
-  admin:[B.planifica,B.guia,B.classroom,B.drive,B.planif,B.calendar,B.correo,B.sheets,B.docs,B.aptus,B.capac,B.docsimp,B.notebook,B.gemini,B.chatgpt,B.buk,B.mineduc,B.alexia],
+  teacher:[B.planifica,B.tutor,B.guia,B.classroom,B.drive,B.planif,B.calendar,B.correo,B.sheets,B.docs,B.slides,B.canva,B.aptus,B.corrector,B.capac,B.docsimp,B.gemini,B.chatgpt,B.buk,B.alexia],
+  admin:[B.guia,B.classroom,B.drive,B.planif,B.calendar,B.correo,B.sheets,B.docs,B.aptus,B.corrector,B.capac,B.docsimp,B.gemini,B.chatgpt,B.buk,B.mineduc,B.alexia],
   guardian:[B.beneficios,B.guia,B.alexia,B.correo,B.docsimp,B.whatsapp,B.instagram,B.participacion,B.colegio,B.sip],
 };
 const ROLE_LABEL={student:"Estudiante",teacher:"Docente",admin:"Administrativo",guardian:"Apoderado"};
@@ -3038,9 +3038,16 @@ function gCard(icon,titulo,desc,chips){
 function guiaHTML(role){
   const staff=(role==="teacher"||role==="admin");
   const robot='<img src="assets/ase-ia-robot-main.png" alt="ASE-IA" onerror="this.outerHTML=\'<svg viewBox=\\\'0 0 120 120\\\'><use href=\\\'#mascot\\\'/></svg>\'">';
+  const heroP = role==="guardian"
+    ? "ASE-IA reúne el reglamento del colegio, la información de tu pupilo/a y la inteligencia artificial para acompañarte cada día."
+    : role==="admin"
+      ? "ASE-IA reúne el reglamento y los documentos del colegio, tus herramientas de gestión y la inteligencia artificial para apoyar la labor del colegio cada día."
+      : role==="teacher"
+        ? "ASE-IA reúne el reglamento del colegio, tus herramientas de aula y la inteligencia artificial para enseñar y acompañar mejor cada día."
+        : "ASE-IA reúne el reglamento del colegio, tus herramientas y la inteligencia artificial para ayudarte a aprender cada día.";
   const hero='<div class="guiahero"><div class="ghrow"><div class="ghbot">'+robot+'</div>'
     +'<div><div class="ghname">ASE-IA · Guía rápida</div><h2>Sácale el máximo provecho a tu asistente escolar</h2></div></div>'
-    +'<p>ASE-IA reúne en un solo lugar el reglamento del colegio, tus herramientas y la inteligencia artificial para ayudarte cada día. Aquí tienes las mejores formas de usarla.</p>'
+    +'<p>'+heroP+' Aquí tienes las mejores formas de usarla.</p>'
     +'<svg class="ghcrest" viewBox="0 0 120 120"><use href="#crestSVG"/></svg></div>';
 
   const cards=[];
@@ -3057,15 +3064,17 @@ function guiaHTML(role){
   cards.push(gCard("📕","El reglamento, abierto justo donde aplica",
     "Bajo cada respuesta aparecen las fichas citadas. Al tocarlas, el <b>Reglamento Interno</b> se abre <b>dentro de ASE-IA</b> y salta directo al inciso exacto. Sin salir de la app, sin buscar páginas.",
     null));
-  // 3. PLANIFICA (staff)
-  if(staff) cards.push(gCard(ICONS.planifica,"PLANIFICA · tu copiloto docente",
+  // 3. PLANIFICA (solo docente)
+  if(role==="teacher") cards.push(gCard(ICONS.planifica,"PLANIFICA · tu copiloto docente",
     "Genera planificaciones, evaluaciones y rúbricas alineadas al currículum y al sello SIP, además de imágenes con IA para tus materiales. Incluye formatos del Programa de Integración (PIE).",
+    null));
+  // 3b. Documentos y gestión (solo administrativo)
+  if(role==="admin") cards.push(gCard("🗂️","Documentos y gestión",
+    "Accede rápido a los reglamentos, el PEI, planillas, horarios, Alexia, BUK, Aptus y los documentos institucionales, todo desde el menú de accesos.",
     null));
   // 4. Tutor Socrático (no apoderado)
   if(role!=="guardian") cards.push(gCard(ICONS.tutor,"Tutor Socrático",
-    (role==="student"
-      ? "Aprende de verdad: en vez de darte la respuesta, te guía con preguntas para que llegues tú. Ideal para preparar pruebas y defender tus ideas."
-      : "Una IA que enseña con el método socrático: acompaña a tus estudiantes con preguntas que desarrollan su pensamiento, con modo de reflexión y metacognición."),
+    (TUTOR_DESC[role]&&TUTOR_DESC[role].panel) || "Una IA que enseña con el método socrático: acompaña con preguntas que desarrollan el pensamiento, la reflexión y la metacognición.",
     null));
   // 5. Accesos
   const accDesc = role==="guardian"
