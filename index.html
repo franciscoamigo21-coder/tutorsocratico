@@ -1040,6 +1040,8 @@
         <div class="picker">
           <button class="pick" data-role="teacher" onclick="pick('teacher')"><span class="emo">👩‍🏫</span><span class="t">Docente</span><span class="d">Correo @sip.cl</span></button>
           <button class="pick" data-role="admin" onclick="pick('admin')"><span class="emo">🗂️</span><span class="t">Administrativo</span><span class="d">Correo @sip.cl</span></button>
+          <button class="pick" data-role="orientador" onclick="pick('orientador')"><span class="emo">🧭</span><span class="t">Orientador(a)</span><span class="d">Correo @sip.cl</span></button>
+          <button class="pick" data-role="pie" onclick="pick('pie')"><span class="emo">🧩</span><span class="t">Programa de Integración</span><span class="d">Correo @sip.cl</span></button>
           <button class="pick" data-role="student" onclick="pick('student')"><span class="emo">🎓</span><span class="t">Estudiante</span><span class="d">Correo @alumnos.sip.cl</span></button>
           <button class="pick" data-role="guardian" onclick="pick('guardian')"><span class="emo">👪</span><span class="t">Apoderado</span><span class="d">Correo personal</span></button>
         </div>
@@ -1506,6 +1508,11 @@ const PLANIF_SUBJECTS=[
   {em:"💻",lb:"Tecnología",url:"https://drive.google.com/drive/folders/1GmDG3_9Vj8Vo-wWsEF_kvPQ3ex17E3-2?usp=drive_link"},
   {em:"💭",lb:"Filosofía",url:"https://drive.google.com/drive/folders/1hvWX45fj7Q9q-XkOGWLu7RWUrZx6b1Id?usp=drive_link"},
 ];
+/* Horarios del colegio (acceso directo para funcionarios: inspectoría, orientación, PIE y docentes). */
+const HORARIOS_MENU=[
+  {em:"🕐",lb:"Horarios de cursos",url:"https://drive.google.com/file/d/1rYUtwEkKYzIoPAx9z9E_QpHE74sgdJ7y/view?usp=drivesdk"},
+  {em:"👩‍🏫",lb:"Horarios de profesores",url:"https://drive.google.com/file/d/1uxpH-2n0qudkpGW9NOv6KHVBw9jhsjJs/view?usp=drivesdk"},
+];
 /* Cursos y capacitaciones (solo funcionarios). */
 const CAPAC_LINKS=[
   {img:"assets/circles.png",lb:"Circles",url:"https://student.getcircles.org/dashboard"},
@@ -1542,6 +1549,8 @@ const B = {
   aptus:{lb:"Aptus",sub:"Recursos y evaluaciones",url:"https://www.aptus.org/",img:"assets/aptus.png"},
   corrector:{lb:"Corrector SIP",sub:"Corrector de textos",url:"https://corrector.sip.cl",img:"assets/sip-corrector.png"},
   dominiolector:{lb:"Dominio Lector",sub:"Evaluación lectora SIP",url:"https://dominiolector.sip.cl/",img:"assets/sip-corrector.png"},
+  horarios:{lb:"Horarios",sub:"Cursos y profesores",icon:"folder",menu:HORARIOS_MENU},
+  orientacion:{lb:"Orientación",sub:"Material y recursos",url:"https://drive.google.com/drive/folders/1sTX2Hv7ra6cVzYIIVXODoNMgI_LXB62E?usp=drive_link",icon:"folder"},
   utopie:{lb:"UTOPIE",sub:"Educadoras diferenciales · PIE",url:"https://www.utopie.cl/",img:"assets/utopie.png"},
   drivePie:{lb:"Drive PIE",sub:"Carpeta del equipo PIE",url:"https://drive.google.com/drive/folders/1fHoxshRRYXmhXMwbTycRfNv-jNFwi-j8?usp=drive_link",icon:"drivePie"},
   mce:{lb:"MCE",sub:"Modelo de Clase Efectiva",url:"https://mce.sip.cl/documentos/",img:"assets/sip-corrector.png"},
@@ -1573,11 +1582,15 @@ const B = {
 };
 const LINKS = {
   student:[B.tutor,B.guia,B.classroom,B.drive,B.correo,B.sheets,B.docsimp,B.alexia,B.scholar,B.scielo,B.colegio],
-  teacher:[B.planifica,B.tutor,B.guia,B.classroom,B.drive,B.planif,B.calendar,B.correo,B.sheets,B.docs,B.slides,B.canva,B.aptus,B.corrector,B.dominiolector,B.capac,B.docsimp,B.gemini,B.chatgpt,B.buk,B.alexia],
-  admin:[B.guia,B.classroom,B.drive,B.planif,B.calendar,B.correo,B.sheets,B.docs,B.aptus,B.corrector,B.dominiolector,B.capac,B.docsimp,B.gemini,B.chatgpt,B.buk,B.mineduc,B.alexia],
+  teacher:[B.planifica,B.tutor,B.guia,B.classroom,B.drive,B.planif,B.calendar,B.horarios,B.correo,B.sheets,B.docs,B.slides,B.canva,B.aptus,B.corrector,B.dominiolector,B.capac,B.docsimp,B.gemini,B.chatgpt,B.buk,B.alexia],
+  admin:[B.guia,B.classroom,B.drive,B.planif,B.calendar,B.horarios,B.correo,B.sheets,B.docs,B.aptus,B.corrector,B.dominiolector,B.capac,B.docsimp,B.gemini,B.chatgpt,B.buk,B.mineduc,B.alexia],
+  orientador:[B.planifica,B.tutor,B.guia,B.classroom,B.drive,B.calendar,B.horarios,B.orientacion,B.correo,B.sheets,B.docs,B.aptus,B.corrector,B.dominiolector,B.capac,B.docsimp,B.gemini,B.chatgpt,B.alexia],
+  pie:[B.planifica,B.tutor,B.guia,B.classroom,B.drive,B.planif,B.calendar,B.horarios,B.correo,B.sheets,B.docs,B.aptus,B.corrector,B.dominiolector,B.capac,B.docsimp,B.gemini,B.chatgpt,B.alexia],
   guardian:[B.beneficios,B.guia,B.alexia,B.correo,B.docsimp,B.whatsapp,B.instagram,B.participacion,B.colegio,B.sip],
 };
-const ROLE_LABEL={student:"Estudiante",teacher:"Docente",admin:"Administrativo",guardian:"Apoderado"};
+const ROLE_LABEL={student:"Estudiante",teacher:"Docente",admin:"Administrativo",guardian:"Apoderado",orientador:"Orientador(a)",pie:"Programa de Integración"};
+/* Etiqueta para el título de "Accesos rápidos" (plural natural por perfil). */
+const ROLE_QUICK_LABEL={student:"estudiantes",teacher:"docentes",admin:"administrativos",guardian:"apoderados",orientador:"orientadores/as",pie:"el equipo PIE"};
 
 /* ============================================================================
  *  EQUIPOS ESPECIALES (según Nómina Equipo PIE 2026 y Equipo de Gestión).
@@ -1595,7 +1608,7 @@ const lcEmail=e=>(e||"").trim().toLowerCase();
 /* SIM_* permite al perfil MAESTRO (dev) simular un tipo de perfil para probar. */
 let SIM_PIE="", SIM_GESTION=false;
 function curEmail(){ return lcEmail(CURRENT&&CURRENT.email); }
-function isPIE(){ return (SIM_PIE==="teacher"||SIM_PIE==="admin") || PIE_ALL.indexOf(curEmail())>=0; }
+function isPIE(){ return ROLE==="pie" || (SIM_PIE==="teacher"||SIM_PIE==="admin") || PIE_ALL.indexOf(curEmail())>=0; }
 function isGestion(){ return SIM_GESTION || GESTION.indexOf(curEmail())>=0; }
 function pieForcedRole(email){ email=lcEmail(email); if(PIE_ADMINS.indexOf(email)>=0)return "admin"; if(PIE_TEACHERS.indexOf(email)>=0)return "teacher"; return null; }
 function pieLabel(){ return isPIE() ? "Programa de Integración" : ""; }
@@ -1689,7 +1702,7 @@ function renderQuick(role){
     }
     g.appendChild(el);
   });
-  document.getElementById("quickTitle").textContent="Accesos rápidos para "+ROLE_LABEL[role].toLowerCase()+"s";
+  document.getElementById("quickTitle").textContent="Accesos rápidos para "+(ROLE_QUICK_LABEL[role]||((ROLE_LABEL[role]||"").toLowerCase()+"s"));
 }
 /* Crea un ítem del desplegable (enlace, acción o pendiente). */
 function popItem(it){
@@ -1779,7 +1792,7 @@ function runQuickAction(a){
   else if(a==="docPGCE")openReglamento("pgce","Gestión de la Convivencia","");
 }
 /* ============ CALENDARIO JJP · agenda / semana / mes (solo funcionarios) ============ */
-const STAFF=r=>(r==="teacher"||r==="admin");
+const STAFF=r=>(r==="teacher"||r==="admin"||r==="orientador"||r==="pie");
 function calEmbedUrl(mode){
   // Mismo aspecto visual de Google Calendar, vinculado al calendario JJP.
   return "https://calendar.google.com/calendar/embed?src="+encodeURIComponent(CAL_ID)
@@ -1870,7 +1883,7 @@ function aseToast(kicker,title,sub,ms){
 }
 function showReminder(ev,t){aseToast("⏰ Recordatorio de ASE-IA","En "+REMIND_MIN+" minutos: "+ev.t,"Hoy a las "+fmtHM(t)+" · Calendario del Colegio",10000);}
 function checkReminders(){
-  if(!(ROLE==="student"||ROLE==="teacher"||ROLE==="admin"))return;
+  if(!(ROLE==="student"||STAFF(ROLE)))return;
   if(PREFS.reminders===false)return;
   const now=Date.now();
   CAL_EVENTS.forEach(ev=>{
@@ -1883,7 +1896,7 @@ function checkReminders(){
 let reminderTimer=null;
 function startReminders(){
   if(reminderTimer)clearInterval(reminderTimer);
-  if(ROLE==="student"||ROLE==="teacher"||ROLE==="admin"){checkReminders();reminderTimer=setInterval(checkReminders,30000);}
+  if(ROLE==="student"||STAFF(ROLE)){checkReminders();reminderTimer=setInterval(checkReminders,30000);}
 }
 function testReminder(){aseToast("⏰ Recordatorio de ASE-IA","En 10 minutos: ejemplo de actividad","Así te avisaré antes de cada evento del calendario. 🙂",9000);}
 
@@ -2890,7 +2903,7 @@ function studentStep(list,onDone){
 }
 function emailPerson(){
   const rec=EFLOW.rec;
-  if((ROLE==="teacher"||ROLE==="admin")&&!rec.inst){
+  if(STAFF(ROLE)&&!rec.inst){
     if(STUDENTS.length){
       let list=STUDENTS.filter(s=>s.course===EFLOW.courseCode);
       if(!list.length)list=STUDENTS.filter(s=>sameCourse(s.course,EFLOW.course));
@@ -2927,7 +2940,7 @@ function emailBuild(tone){EFLOW.tone=tone;
   const nombre=EFLOW.name||(ROLE==="guardian"?"[nombre de su pupilo/a]":"[nombre del estudiante]");
   const detalle=EFLOW.detail||"[describa brevemente la situación]";
   let saludo;
-  if(ROLE==="teacher"||ROLE==="admin"){
+  if(STAFF(ROLE)){
     saludo = rec.id==="apoderado" ? ("Estimado/a apoderado/a de "+nombre+":")
       : rec.id==="estudiante" ? (tone==="cercano" ? ("Hola "+firstName(nombre)+":") : ("Estimado/a estudiante "+nombre+":"))
       : rec.id==="jefe" ? "Estimado/a profesor/a jefe:" : "Estimado equipo:";
@@ -2943,6 +2956,8 @@ function emailBuild(tone){EFLOW.tone=tone;
   let firma;
   if(ROLE==="teacher") firma=(CURRENT.name||"[Su nombre]")+(EFLOW.asig?(", profesor/a de "+EFLOW.asig):", docente");
   else if(ROLE==="admin") firma=(CURRENT.name||"[Su nombre]")+(EFLOW.asig?(", profesor/a de "+EFLOW.asig):", Equipo Colegio Presidente José Joaquín Prieto");
+  else if(ROLE==="orientador") firma=(CURRENT.name||"[Su nombre]")+", Orientador/a · Colegio Presidente José Joaquín Prieto";
+  else if(ROLE==="pie") firma=(CURRENT.name||"[Su nombre]")+", Programa de Integración (PIE) · Colegio Presidente José Joaquín Prieto";
   else if(ROLE==="student") firma=(CURRENT.name||"[Tu nombre]")+", estudiante"+(EFLOW.course?(" de "+EFLOW.course):"");
   else firma=(CURRENT.name||"[Su nombre]")+", apoderado/a de "+nombre;
   const cuerpo = purpose.motivo.replace(/\{curso\}/g,cursoTxt).replace(/\{asig\}/g,asig).replace(/\{nombre\}/g,nombre).replace(/\{detalle\}/g,detalle);
@@ -2950,7 +2965,7 @@ function emailBuild(tone){EFLOW.tone=tone;
   const subject = purpose.subject+(course?(" · "+course):"");
   const tName=(TONES.find(t=>t.id===tone)||{}).t||"";
   let toEmail="";
-  if(ROLE==="teacher"||ROLE==="admin"){ if(rec.id==="estudiante")toEmail=EFLOW.stEmail||""; else if(rec.id==="apoderado")toEmail=EFLOW.apEmail||""; }
+  if(STAFF(ROLE)){ if(rec.id==="estudiante")toEmail=EFLOW.stEmail||""; else if(rec.id==="apoderado")toEmail=EFLOW.apEmail||""; }
   const base = purpose.art ? (", basado en "+purpose.art) : "";
   const reply = "Listo. Este es tu borrador en tono "+tName.toLowerCase()+base+". Revísalo y ábrelo en Gmail con el botón:\n\n"+body;
   add(reply,"bot",{mail:{url:gmailComposeUrl(subject,body,toEmail)}});
@@ -3001,6 +3016,8 @@ const SUGS={
   teacher:[EMAIL_SUG,"¿Qué dice el protocolo de desregulación emocional?","¿Qué es una falta grave según el reglamento?","¿Qué protocolo hay frente al acoso escolar?","¿Qué es la condicionalidad de matrícula?","¿Cómo se calcula la promoción?"],
   admin:[EMAIL_SUG,"¿Qué dice el protocolo de accidentes escolares?","¿Cómo es el procedimiento de expulsión?","¿Qué establece el reglamento sobre el uso de cámaras?","¿Cuáles son los deberes del equipo directivo?","¿Cómo se conforma el Consejo Escolar?"],
   guardian:[EMAIL_SUG,"¿Cuáles son mis deberes como apoderado?","¿Cómo justifico una inasistencia?","¿Puede mi pupilo usar el celular en el colegio?","¿Qué pasa con los atrasos?","¿Cómo apelo una sanción?"],
+  orientador:[EMAIL_SUG,"¿Qué dice el protocolo de desregulación emocional?","¿Qué protocolo hay frente al acoso escolar?","¿Qué establece el Plan de Gestión de la Convivencia?","¿Cómo se aborda la violencia escolar?","¿Qué es la condicionalidad de matrícula?"],
+  pie:[EMAIL_SUG,"¿Qué dice el reglamento sobre evaluación diferenciada?","¿Qué protocolo hay frente al acoso escolar?","¿Qué dice el protocolo de desregulación emocional?","¿Cómo se calcula la promoción?","¿Qué establece el PEI sobre inclusión?"],
 };
 const log=document.getElementById("log");
 function el(t,c,x){const e=document.createElement(t);if(c)e.className=c;if(x!=null)e.textContent=x;return e;}
@@ -3103,7 +3120,7 @@ function gCard(icon,titulo,desc,chips){
   return '<div class="giacard"><div class="giac-h">'+ic+'<span class="giac-t">'+titulo+'</span></div><div class="giac-d">'+desc+'</div>'+ch+'</div>';
 }
 function guiaHTML(role){
-  const staff=(role==="teacher"||role==="admin");
+  const staff=STAFF(role);
   const robot='<img src="assets/ase-ia-robot-main.png" alt="ASE-IA" onerror="this.outerHTML=\'<svg viewBox=\\\'0 0 120 120\\\'><use href=\\\'#mascot\\\'/></svg>\'">';
   const heroP = role==="guardian"
     ? "ASE-IA reúne el reglamento del colegio, la información de tu pupilo/a y la inteligencia artificial para acompañarte cada día."
@@ -3132,7 +3149,7 @@ function guiaHTML(role){
     "Bajo cada respuesta aparecen las fichas citadas. Al tocarlas, el <b>Reglamento Interno</b> se abre <b>dentro de ASE-IA</b> y salta directo al inciso exacto. Sin salir de la app, sin buscar páginas.",
     null));
   // 3. PLANIFICA (solo docente)
-  if(role==="teacher") cards.push(gCard(ICONS.planifica,"PLANIFICA · tu copiloto docente",
+  if(role==="teacher"||role==="pie"||role==="orientador") cards.push(gCard(ICONS.planifica,"PLANIFICA · tu copiloto docente",
     "Genera planificaciones, evaluaciones y rúbricas alineadas al currículum y al sello SIP, además de imágenes con IA para tus materiales. Incluye formatos del Programa de Integración (PIE).",
     null));
   // 3b. Documentos y gestión (solo administrativo)
@@ -3296,7 +3313,7 @@ function typing(on){
     typingRow.appendChild(t);log.appendChild(typingRow);log.scrollTop=log.scrollHeight;}
   else if(!on&&typingRow){const r=typingRow;typingRow=null;r.classList.add("leaving");setTimeout(()=>{try{r.remove();}catch(_){}},220);}
 }
-function renderSugs(){const box=document.getElementById("sugs");box.innerHTML="";SUGS[ROLE].forEach(s=>{const b=el("button","sug",s);b.type="button";b.onclick=(s===EMAIL_SUG)?(()=>emailStart()):(()=>ask(s));box.appendChild(b);});}
+function renderSugs(){const box=document.getElementById("sugs");box.innerHTML="";(SUGS[ROLE]||SUGS.teacher||[]).forEach(s=>{const b=el("button","sug",s);b.type="button";b.onclick=(s===EMAIL_SUG)?(()=>emailStart()):(()=>ask(s));box.appendChild(b);});}
 /* ============ PANTALLA COMPLETA del chat (expandir / reducir) ============ */
 const FS_EXPAND='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3M16 3h3a2 2 0 0 1 2 2v3M8 21H5a2 2 0 0 1-2-2v-3M16 21h3a2 2 0 0 0 2-2v-3"/></svg>';
 const FS_COMPRESS='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3v3a2 2 0 0 1-2 2H3M21 8h-3a2 2 0 0 1-2-2V3M3 16h3a2 2 0 0 1 2 2v3M16 21v-3a2 2 0 0 1 2-2h3"/></svg>';
@@ -3490,7 +3507,7 @@ function avatarInto(elId,photo,fallback){
 }
 function enter(role,email,name,photo,prof){
   SIM_PIE=""; SIM_GESTION=false;                                   // se reinicia la simulación de maestro
-  const _forced=(!isDev(email)&&pieForcedRole(email)); if(_forced) role=_forced;  // PIE: perfil según nómina 2026
+  if(role==="teacher"||role==="admin"){ const _forced=(!isDev(email)&&pieForcedRole(email)); if(_forced) role=_forced; }  // PIE: perfil según nómina 2026 (no aplica si eligió Orientador/PIE)
   ROLE=role;convo.length=0;log.innerHTML="";
   CURRENT={role,email:email||"",name:name||"",photo:photo||"",prof:prof||null};
   const disp=niceName(email,name);
@@ -3539,7 +3556,7 @@ const JEFATURAS={
 function renderJefatura(){
   const panel=document.getElementById("jefPanel");if(!panel)return;
   const course=JEFATURAS[(CURRENT.email||"").toLowerCase()];
-  if(!course||!(ROLE==="teacher"||ROLE==="admin")){panel.style.display="none";return;}
+  if(!course||!STAFF(ROLE)){panel.style.display="none";return;}
   const label=(COURSES.find(c=>c.c===course)||{}).l||course;
   document.getElementById("jefSub").textContent="Profesor/a jefe · "+label;
   const sel=document.getElementById("jefStudent");const prev=sel.value;
@@ -3877,6 +3894,8 @@ const TUTOR_DESC={
   teacher:{card:"Detecta IA y guía por OA",panel:"Pensado para el aula: ayuda a detectar el uso de IA en los trabajos y a educar con el método socrático —desarrollando la reflexión y el pensamiento crítico del estudiante— alineado al logro de los Objetivos de Aprendizaje (OA)."},
   admin:{card:"Aprendizaje socrático y uso de IA",panel:"Acompaña el aprendizaje con método socrático: reflexión, pensamiento crítico y uso responsable de la IA, como apoyo a la labor pedagógica y formativa del colegio."},
   guardian:{card:"Aprender pensando, no copiando",panel:"Acompaña a tu pupilo/a a aprender pensando: en vez de entregar respuestas, lo guía con preguntas que desarrollan su razonamiento y autonomía."},
+  orientador:{card:"Aprendizaje socrático y uso de IA",panel:"Acompaña la formación con método socrático: reflexión, pensamiento crítico, habilidades socioemocionales y uso responsable de la IA, como apoyo a la labor de orientación."},
+  pie:{card:"Aprendizaje socrático e inclusión",panel:"Acompaña el aprendizaje con método socrático y mirada inclusiva: preguntas que desarrollan la reflexión y la autonomía, respetando los distintos ritmos y estilos de aprendizaje del estudiantado PIE."},
 };
 function tutorDesc(){ return TUTOR_DESC[ROLE]||TUTOR_DESC.student; }
 const TUTOR_SRC="tutorsocratico/index.html?embed=1";
@@ -4644,7 +4663,7 @@ async function openDoc(kind){
   if(kind==="notas" && ROLE==="student"){ aseToast("Solo para apoderados","El informe de notas está disponible para el apoderado/a","Pídeselo a tu apoderado/a, que puede verlo desde su perfil.",8000); return; }
   const quien=ROLE==="guardian"?("de "+((p&&p.student)?p.student:"su pupilo/a")):"tuyo";
   if(!AUTH_TOKEN){ aseToast("Inicia sesión con Google","Para ver documentos personales entra con tu cuenta de Google","No están disponibles con el acceso de respaldo.",8000); return; }
-  const needsPick=(ROLE==="teacher"||ROLE==="admin"||isDev(CURRENT.email));
+  const needsPick=(STAFF(ROLE)||isDev(CURRENT.email));
   if(needsPick && !(p&&p.email)){ aseToast("Elige un estudiante","Primero selecciona un estudiante","Usa el botón Cambiar para elegirlo.",7000); return; }
   aseToast("Cargando…","Buscando el "+lbl,"Un momento por favor.",3500);
   const target=(p&&p.email)||"";   // correo del pupilo (apoderado/maestro); vacío si es el propio estudiante
@@ -4833,7 +4852,7 @@ function buildProfileMenu(){
   const disp=CURRENT.name||ROLE_LABEL[ROLE];
   document.getElementById("pmName").textContent=disp;
   document.getElementById("pmMail").textContent=CURRENT.email||"—";
-  document.getElementById("pmRole").textContent=ROLE_LABEL[ROLE]+(isPIE()?" · Programa de Integración":"")+(isGestion()?" · Equipo de Gestión":"");
+  document.getElementById("pmRole").textContent=ROLE_LABEL[ROLE]+((isPIE()&&ROLE!=="pie")?" · Programa de Integración":"")+(isGestion()?" · Equipo de Gestión":"");
   if(CURRENT.photo)avatarInto("pmAv",CURRENT.photo,null);
   else document.getElementById("pmAv").textContent=(LOGIN_INFO[ROLE]||{}).emo||"👤";
   const body=document.getElementById("pmBody");body.innerHTML="";
@@ -4878,7 +4897,7 @@ function pmDevSim(){
     else if(v==="pie-admin-gestion"){ SIM_PIE="admin"; SIM_GESTION=true; ROLE="admin"; }
     CURRENT.role=ROLE;
     renderQuick(ROLE); renderProgramaPIE(); renderJefatura(); renderMyPanel();
-    const pr=document.getElementById("pmRole"); if(pr) pr.textContent=ROLE_LABEL[ROLE]+(isPIE()?" · Programa de Integración":"")+(isGestion()?" · Equipo de Gestión":"");
+    const pr=document.getElementById("pmRole"); if(pr) pr.textContent=ROLE_LABEL[ROLE]+((isPIE()&&ROLE!=="pie")?" · Programa de Integración":"")+(isGestion()?" · Equipo de Gestión":"");
   };
   wrap.appendChild(sel); d.appendChild(wrap); return d;
 }
@@ -4912,8 +4931,8 @@ const PDATA_KEY="aseia_pdata_v1";
 function loadPData(){try{return JSON.parse(localStorage.getItem(PDATA_KEY))||{};}catch(_){return {};}}
 /* Predicados de visibilidad por perfil (según el ROL con el que se está usando la app,
    no según si el correo es maestro): así cada perfil ve solo sus propias preguntas. */
-const isStaffRole=()=>ROLE==="teacher"||ROLE==="admin";
-const isTeacherRole=()=>ROLE==="teacher";
+const isStaffRole=()=>STAFF(ROLE);
+const isTeacherRole=()=>ROLE==="teacher"||ROLE==="orientador"||ROLE==="pie";
 const ROLES_COLEGIO=["Docente de asignatura","Profesor/a jefe","Directivo/a","Jefe/a de UTP (Coordinación)","Inspector/a General","Orientador/a","Psicólogo/a","Educador/a diferencial (PIE)","Asistente de la educación","Administrativo/a","Auxiliar de servicios","Otro"];
 const PDATA_FIELDS=[
   {k:"nombre",l:"Nombre completo",t:"text"},
@@ -5039,7 +5058,7 @@ window.addEventListener("popstate",e=>{ showScreen((e.state&&e.state.screen)||"g
 history.replaceState({screen:"gate"},"");  // estado inicial
 
 /* ============ ACCESO CON GOOGLE (dominios institucionales) ============ */
-const DOMAIN={teacher:"sip.cl",student:"alumnos.sip.cl",admin:"sip.cl"}; // apoderado: libre
+const DOMAIN={teacher:"sip.cl",student:"alumnos.sip.cl",admin:"sip.cl",orientador:"sip.cl",pie:"sip.cl"}; // apoderado: libre
 /* Acepta CUALQUIER dominio de la familia sip.cl (subdominios incluidos):
    @sip.cl, @algo.sip.cl (staff) y @alumnos.sip.cl, @alumnos.algo.sip.cl (estudiante). */
 function instDomOk(dom,need){ dom=(dom||"").toLowerCase().trim();
@@ -5065,6 +5084,8 @@ const LOGIN_INFO={
   student:{emo:"🎓",t:"Estudiante",d:"Ingresa con tu cuenta @alumnos.sip.cl",dom:"Debes usar tu cuenta @alumnos.sip.cl",ph:"nombre.apellido@alumnos.sip.cl"},
   teacher:{emo:"👩‍🏫",t:"Docente",d:"Ingresa con tu cuenta @sip.cl",dom:"Debes usar tu cuenta @sip.cl",ph:"nombre.apellido@sip.cl"},
   admin:{emo:"🗂️",t:"Administrativo",d:"Ingresa con tu cuenta @sip.cl",dom:"Debes usar tu cuenta @sip.cl",ph:"nombre.apellido@sip.cl"},
+  orientador:{emo:"🧭",t:"Orientador(a)",d:"Ingresa con tu cuenta @sip.cl",dom:"Debes usar tu cuenta @sip.cl",ph:"nombre.apellido@sip.cl"},
+  pie:{emo:"🧩",t:"Programa de Integración",d:"Ingresa con tu cuenta @sip.cl",dom:"Debes usar tu cuenta @sip.cl",ph:"nombre.apellido@sip.cl"},
   guardian:{emo:"👪",t:"Apoderado",d:"Ingresa con tu correo personal",dom:"Puedes usar tu correo personal",ph:"tu.correo@gmail.com"},
 };
 /* Sonido sutil de interfaz (al elegir perfil). Usa WebAudio; se activa con el gesto del clic. */
@@ -5193,6 +5214,8 @@ function loadGIS(cb){
 const PROFILE_REJECT={
   teacher:{h:"Esta no es una cuenta de docente",d:"Tu cuenta no es de un docente registrado en el Colegio Presidente José Joaquín Prieto. Recuerda iniciar sesión con tu cuenta institucional @sip.cl. 🙂"},
   admin:{h:"Esta no es una cuenta administrativa",d:"Tu cuenta no es de un/a administrativo/a registrado/a en el Colegio Presidente José Joaquín Prieto. Recuerda iniciar sesión con tu cuenta institucional @sip.cl. 🙂"},
+  orientador:{h:"Esta no es una cuenta de funcionario/a",d:"El perfil de Orientación es para funcionarios/as del Colegio Presidente José Joaquín Prieto. Recuerda iniciar sesión con tu cuenta institucional @sip.cl. 🙂"},
+  pie:{h:"Esta no es una cuenta de funcionario/a",d:"El perfil del Programa de Integración (PIE) es para funcionarios/as del Colegio Presidente José Joaquín Prieto. Recuerda iniciar sesión con tu cuenta institucional @sip.cl. 🙂"},
   student:{h:"Esta no es una cuenta de estudiante",d:"Tu cuenta no es de un/a estudiante registrado/a en el Colegio Presidente José Joaquín Prieto. Recuerda iniciar sesión con tu cuenta institucional @alumnos.sip.cl. 🙂"},
   guardian:{h:"¡Este no es un correo de apoderado/a!",d:"¡Este no es un correo registrado de un apoderado de nuestro colegio! Recuerda actualizar tu correo en la secretaría del colegio. 🙂"},
 };
@@ -5210,11 +5233,11 @@ async function googleCallback(resp){
   // El rol REAL lo decide el CORREO VERIFICADO en el servidor; además exigimos que el
   // correo CORRESPONDA al PERFIL elegido, con un mensaje propio para cada caso.
   if(me.role==="dev"){                          // correo maestro: elige rol y estudiante manualmente
-    if(PENDING==="teacher"||PENDING==="admin"){ enter(PENDING,email,name,pic); loadDirectory(); }
+    if(STAFF(PENDING)){ enter(PENDING,email,name,pic); loadDirectory(); }
     else { await loadDirectory(); enter(PENDING,email,name,pic,null); setTimeout(()=>openSel(PENDING,email,name,null),200); }
     return;
   }
-  if(PENDING==="teacher"||PENDING==="admin"){   // @sip.cl -> docente o administrativo
+  if(PENDING==="teacher"||PENDING==="admin"||PENDING==="orientador"||PENDING==="pie"){   // @sip.cl -> funcionario (docente, administrativo, orientación o PIE)
     if(me.role!=="staff"){ rejectProfile(PENDING); return; }
     enter(PENDING,email,name,pic); loadDirectory(); return;
   }
