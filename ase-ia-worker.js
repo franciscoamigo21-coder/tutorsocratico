@@ -52,6 +52,24 @@ const DIRECTORY = [];
  * ========================================================================== */
 const GOOGLE_CLIENT_ID = "195849212680-sjfflsv7f96o6742l67ihj5kllitpvj4.apps.googleusercontent.com";
 const DEV_EMAILS = ["franciscoamigo21@gmail.com", "paulina.devia@sip.cl", "jcid@sip.cl", "camila.ortiz@sip.cl", "cesar.cid@sip.cl", "nardyn.mella@sip.cl", "israel.salas@sip.cl", "claudia.calderon@sip.cl"]; // correos de administración
+/* Profesores/as jefe 2026 (correo -> curso). Solo el jefe de un curso puede
+   editar la nómina de ESE curso; los correos de administración (DEV) pueden editar cualquiera. */
+const JEFATURAS_W = {
+  "gloria.venegas@sip.cl":"PK A","jmuller@sip.cl":"PK B","afuenzalida@sip.cl":"PK C","vmunoz@sip.cl":"PK D",
+  "kbravo@sip.cl":"K A","apalominos@sip.cl":"K B","cmunozv@sip.cl":"K C",
+  "lucas.fanoni@sip.cl":"1 A","camila.ortiz@sip.cl":"1 B","allison.espinoza@sip.cl":"1 C",
+  "carolina.ilabacac@sip.cl":"2 A","carolina.ilabaca@sip.cl":"2 A","sasha.diaz@sip.cl":"2 B","constanza.alvarez@sip.cl":"2 C",
+  "arlette.canalesa@sip.cl":"3 A","betzabett.morgado@sip.cl":"3 B","dcifuentes@sip.cl":"3 C",
+  "vvasquez@sip.cl":"4 A","fabi.munoz@sip.cl":"4 B","francisco.gonzalez@sip.cl":"4 C",
+  "vlletelier@sip.cl":"5 A","genesis.navarro@sip.cl":"5 B","stefania.lyon@sip.cl":"5 C",
+  "paz.mancilla@sip.cl":"6 A","teresa.galloso@sip.cl":"6 B","israel.salas@sip.cl":"6 C",
+  "marcela.moreno@sip.cl":"7 A","paulina.devia@sip.cl":"7 B","sofia.vidal@sip.cl":"7 C",
+  "mespinoza@sip.cl":"8 A","carolina.correa@sip.cl":"8 B","francisco.amigo@sip.cl":"8 C",
+  "isabel.corrales@sip.cl":"P A","jean.morales@sip.cl":"P B","yessenia.castro@sip.cl":"P C",
+  "javiera.azaharvich@sip.cl":"S A","jcid@sip.cl":"S B","juan.chavarria@sip.cl":"S C",
+  "claudia.caravante@sip.cl":"T A","kareen.norambuena@sip.cl":"T B","juan.martinezc@sip.cl":"T C",
+  "lissette.acevedo@sip.cl":"C A","danilo.wimmer@sip.cl":"C B","renato.aliste@sip.cl":"C C"
+};
 async function verifyGoogle(credential) {
   if (!credential || typeof credential !== "string") return null;
   try {
@@ -206,7 +224,25 @@ export default {
       if (!u) return json({ error: "No pudimos verificar tu cuenta." }, 401, cors);
       const p = profileFor(u);
       if (p.role !== "staff" && p.role !== "dev") return json({ error: "No autorizado" }, 403, cors);
-      return new Response(JSON.stringify({ students: DIRECTORY }), { status: 200, headers: secure });
+      // Nómina base + ediciones de cada profesor/a jefe (se reflejan para todos).
+      let students = DIRECTORY.slice();
+      if (env.TUTORIAS) {
+        try {
+          const lst = await env.TUTORIAS.list({ prefix: "jefatura:" });
+          for (const k of (lst.keys || [])) {
+            const raw = await env.TUTORIAS.get(k.name); if (!raw) continue;
+            const d = JSON.parse(raw);
+            const course = k.name.slice("jefatura:".length);
+            if (d.removed && d.removed.length) students = students.filter((s) => {
+              if (String(s.c || "").toUpperCase() !== course) return true;
+              const em = String(s.e || "").toLowerCase(), nm = String(s.n || "").toLowerCase();
+              return !d.removed.includes(em) && !d.removed.includes(nm);
+            });
+            if (d.added && d.added.length) d.added.forEach((a) => students.push({ n: a.name, c: course, e: a.email || "", ae: a.apEmail || "" }));
+          }
+        } catch (e) { /* si falla el merge, al menos devuelve la nómina base */ }
+      }
+      return new Response(JSON.stringify({ students }), { status: 200, headers: secure });
     }
     // ---- Documento de un estudiante (informe de notas/personalidad, certificado) ----
     // Se guardan en R2 (bucket privado enlazado como DOCS) con clave
@@ -227,6 +263,87 @@ export default {
       if (!obj) return new Response(JSON.stringify({ ready: false, reason: "sin-doc" }), { status: 200, headers: secure });
       const b64 = bufToB64(await obj.arrayBuffer());
       return new Response(JSON.stringify({ ready: true, pdf: b64 }), { status: 200, headers: secure });
+    }
+
+    // ---- JEFATURA · el profesor/a jefe edita su nómina y sube documentos ----
+    // Las ediciones se guardan en KV (TUTORIAS, clave "jefatura:<curso>") y el
+    // directorio las aplica para TODOS. Los documentos van a R2 (DOCS) o, si no
+    // hay bucket, a KV. Solo el jefe de ese curso (o un correo DEV) puede editar.
+    if (resource === "jefatura") {
+      const u = await verifyGoogle(body.credential);
+      if (!u) return json({ error: "No pudimos verificar tu cuenta." }, 401, cors);
+      const p = profileFor(u);
+      if (p.role !== "staff" && p.role !== "dev") return json({ error: "No autorizado" }, 403, cors);
+      if (!env.TUTORIAS) return json({ error: "Falta configurar el almacenamiento (KV TUTORIAS)" }, 500, cors);
+      const action = String(body.action || "get");
+      const course = String(body.course || "").trim().toUpperCase();
+      const email = u.email;
+      const isDev = DEV_EMAILS.includes(email);
+      const jefeCourse = JEFATURAS_W[email] || null;
+      const canEdit = isDev || (!!jefeCourse && jefeCourse === course);
+      const key = "jefatura:" + course;
+      const load = async () => { const raw = await env.TUTORIAS.get(key); return raw ? JSON.parse(raw) : { added: [], removed: [], docs: [] }; };
+      const save = async (d) => { await env.TUTORIAS.put(key, JSON.stringify(d)); };
+
+      if (action === "get") {
+        if (!course) return json({ error: "Falta el curso" }, 400, cors);
+        const d = await load();
+        return json({ ok: true, course, canEdit, added: d.added || [], removed: d.removed || [],
+          docs: (d.docs || []).map((x) => ({ id: x.id, filename: x.filename, note: x.note || "", size: x.size || 0, at: x.at || 0, by: x.by || "" })) }, 200, cors);
+      }
+      if (!canEdit) return json({ error: "Solo el profesor/a jefe de este curso puede editar su nómina." }, 403, cors);
+
+      if (action === "addStudent") {
+        const d = await load();
+        const st = { name: String(body.name || "").trim(), email: String(body.email || "").trim().toLowerCase(), apEmail: String(body.apEmail || "").trim().toLowerCase(), course };
+        if (!st.name) return json({ error: "Falta el nombre del estudiante" }, 400, cors);
+        d.added = (d.added || []).filter((x) => !(st.email && x.email && x.email === st.email) && x.name.toLowerCase() !== st.name.toLowerCase());
+        d.added.push(st);
+        d.removed = (d.removed || []).filter((r) => r !== st.name.toLowerCase() && !(st.email && r === st.email));
+        await save(d); return json({ ok: true }, 200, cors);
+      }
+      if (action === "removeStudent") {
+        const d = await load();
+        const k2 = String(body.key || body.email || body.name || "").trim().toLowerCase();
+        if (!k2) return json({ error: "Falta identificar al estudiante" }, 400, cors);
+        const before = (d.added || []).length;
+        d.added = (d.added || []).filter((x) => String(x.email || "").toLowerCase() !== k2 && x.name.toLowerCase() !== k2);
+        if ((d.added || []).length === before) { d.removed = d.removed || []; if (!d.removed.includes(k2)) d.removed.push(k2); }
+        await save(d); return json({ ok: true }, 200, cors);
+      }
+      if (action === "restoreStudent") {
+        const d = await load();
+        const k2 = String(body.key || "").trim().toLowerCase();
+        d.removed = (d.removed || []).filter((r) => r !== k2);
+        await save(d); return json({ ok: true }, 200, cors);
+      }
+      if (action === "uploadDoc") {
+        const d = await load();
+        const filename = String(body.filename || "documento").slice(0, 120);
+        const b64 = String(body.dataBase64 || "");
+        if (!b64) return json({ error: "Archivo vacío" }, 400, cors);
+        if (b64.length > 7 * 1024 * 1024) return json({ error: "El archivo es muy grande (máx. ~5 MB)." }, 400, cors);
+        const id = "d" + Date.now().toString(36);
+        if (env.DOCS) { const bytes = Uint8Array.from(atob(b64), (c) => c.charCodeAt(0)); await env.DOCS.put("jefdoc__" + course + "__" + id, bytes); }
+        else { await env.TUTORIAS.put("jefdocdata:" + course + ":" + id, b64); }
+        d.docs = d.docs || []; d.docs.push({ id, filename, note: String(body.note || "").slice(0, 200), size: b64.length, at: Date.now(), by: email });
+        await save(d); return json({ ok: true, id }, 200, cors);
+      }
+      if (action === "getDoc") {
+        const id = String(body.id || ""); let b64 = null;
+        if (env.DOCS) { const obj = await env.DOCS.get("jefdoc__" + course + "__" + id); if (obj) b64 = bufToB64(await obj.arrayBuffer()); }
+        if (!b64) b64 = await env.TUTORIAS.get("jefdocdata:" + course + ":" + id);
+        if (!b64) return json({ error: "No encontrado" }, 404, cors);
+        return json({ ok: true, data: b64 }, 200, cors);
+      }
+      if (action === "deleteDoc") {
+        const d = await load(); const id = String(body.id || "");
+        d.docs = (d.docs || []).filter((x) => x.id !== id);
+        if (env.DOCS) await env.DOCS.delete("jefdoc__" + course + "__" + id);
+        await env.TUTORIAS.delete("jefdocdata:" + course + ":" + id);
+        await save(d); return json({ ok: true }, 200, cors);
+      }
+      return json({ error: "Acción no reconocida" }, 400, cors);
     }
 
     // ---- CREACIÓN de material pedagógico con IA (PLANIFICA · solo docentes/admin) ----
