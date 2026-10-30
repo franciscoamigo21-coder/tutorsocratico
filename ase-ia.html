@@ -443,6 +443,34 @@
   .guiafoot{text-align:center;font-size:12px;color:var(--muted);padding:16px;border-top:1px solid #eef1f6;background:#fafbfe;margin-top:14px;}
   .guiafoot b{color:var(--azul);}
   @media(max-width:640px){ .guiagrid{grid-template-columns:1fr;} .guiahero h2{font-size:20px;} .guiahero .ghcrest{display:none;} #guiaModal{padding:0;} #guiaModal .guiacard{border-radius:0;min-height:100vh;} }
+  /* ===== Horario visual de profesor/a ===== */
+  #phModal{position:fixed;inset:0;z-index:1360;display:none;align-items:center;justify-content:center;padding:18px;background:rgba(8,22,52,.64);backdrop-filter:blur(5px);}
+  #phModal.open{display:flex;animation:fadeUp .2s ease both;}
+  #phModal .phcard{position:relative;background:var(--card);border-radius:22px;width:100%;max-width:880px;max-height:92vh;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 40px 90px -24px rgba(0,0,0,.6);}
+  .phhead{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px 18px;background:var(--grad-azul);color:#fff;}
+  .phhead h3{margin:2px 0 0;font-size:18px;font-weight:800;line-height:1.15;}
+  .phtag{font-size:10.5px;text-transform:uppercase;letter-spacing:1.3px;color:#dbe7ff;font-weight:700;}
+  .phx{background:rgba(255,255,255,.16);border:none;color:#fff;width:34px;height:34px;border-radius:50%;font-size:16px;cursor:pointer;flex:none;}
+  .phx:hover{background:rgba(255,255,255,.28);}
+  .phbody{padding:14px;overflow:auto;background:var(--bg);}
+  .phweek{display:grid;grid-template-columns:repeat(5,1fr);gap:9px;}
+  .phday{background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;}
+  .phday h4{margin:0;padding:8px 6px;font-size:12px;font-weight:800;text-align:center;color:#fff;background:linear-gradient(135deg,#1a73e8,#0b3d91);text-transform:uppercase;letter-spacing:.4px;}
+  .phblocks{padding:7px;display:flex;flex-direction:column;gap:6px;min-height:40px;}
+  .phblk{background:linear-gradient(160deg,#f6f9ff,#eef3fc);border:1px solid #e2ebfb;border-radius:9px;padding:6px 7px;}
+  .phblk .ph-t{font-size:10.5px;font-weight:700;color:#0b3d91;letter-spacing:-.2px;}
+  .phblk .ph-c{font-size:12.5px;font-weight:800;color:var(--text);margin-top:1px;}
+  .phblk.now{border-color:#16a34a;background:linear-gradient(160deg,#eafaf0,#dff5e8);box-shadow:0 0 0 2px rgba(22,163,74,.25);}
+  .phblk.now .ph-t{color:#0b7a36;}
+  .phempty{font-size:11px;color:var(--muted);text-align:center;padding:8px 2px;font-style:italic;}
+  .phnowtag{display:inline-block;margin-left:5px;font-size:9px;font-weight:800;color:#fff;background:#16a34a;border-radius:6px;padding:1px 5px;vertical-align:middle;letter-spacing:.3px;}
+  @media(max-width:640px){ #phModal{padding:0;} #phModal .phcard{max-height:100vh;height:100vh;border-radius:0;max-width:100%;}
+    .phweek{grid-template-columns:1fr;gap:7px;} .phday{flex-direction:row;align-items:stretch;}
+    .phday h4{writing-mode:vertical-rl;transform:rotate(180deg);padding:6px 4px;min-width:30px;display:flex;align-items:center;justify-content:center;}
+    .phblocks{flex:1;flex-direction:row;flex-wrap:wrap;} .phblk{flex:1 1 120px;} }
+  .horbtn{display:inline-flex;align-items:center;gap:9px;margin-top:12px;padding:10px 16px;border-radius:13px;border:none;cursor:pointer;font-family:inherit;
+    background:linear-gradient(135deg,#1a73e8,#0b3d91);color:#fff;font-size:13px;font-weight:800;box-shadow:0 10px 22px -12px rgba(11,61,145,.75);transition:.15s;}
+  .horbtn:hover{filter:brightness(1.07);transform:translateY(-1px);}
 
   /* ===== Panel personalizado (apoderado / estudiante) ===== */
   .myp{margin:0 0 16px;background:linear-gradient(160deg,#ffffff,#eef4ff);border:1px solid #dbe7ff;border-radius:20px;padding:14px 16px;box-shadow:0 16px 34px -24px rgba(17,87,201,.45);}
@@ -1381,6 +1409,18 @@
   </div>
 </div>
 
+<!-- Modal: horario visual de un/a profesor/a (se arma desde los datos oficiales) -->
+<div id="phModal" onclick="if(event.target===this)closeProfHorario()">
+  <div class="phcard">
+    <div class="phhead">
+      <div><div class="phtag">Horario del profesor/a</div><h3 id="phName">—</h3></div>
+      <button class="phx" onclick="closeProfHorario()" aria-label="Cerrar">✕</button>
+    </div>
+    <div class="phbody" id="phBody"></div>
+    <div class="phfoot">📅 Horario oficial 2026 · Colegio Presidente José Joaquín Prieto</div>
+  </div>
+</div>
+
 <script>
 /* ============================================================================
  *  CONEXIÓN A UNA API DE IA (modo online, opcional)
@@ -1512,6 +1552,7 @@ const PLANIF_SUBJECTS=[
 const HORARIOS_MENU=[
   {em:"🕐",lb:"Horarios de cursos",url:"https://drive.google.com/file/d/1rYUtwEkKYzIoPAx9z9E_QpHE74sgdJ7y/view?usp=drivesdk"},
   {em:"👩‍🏫",lb:"Horarios de profesores",url:"https://drive.google.com/file/d/1uxpH-2n0qudkpGW9NOv6KHVBw9jhsjJs/view?usp=drivesdk"},
+  {em:"🧩",lb:"Horario Equipo PIE 2026",action:"docPIEHor"},
 ];
 /* Cursos y capacitaciones (solo funcionarios). */
 const CAPAC_LINKS=[
@@ -1790,6 +1831,7 @@ function runQuickAction(a){
   else if(a==="docParv")openReglamento("parv","Reglamento de Párvulos","");
   else if(a==="docDEC")openReglamento("dec","Desregulación Emocional","");
   else if(a==="docPGCE")openReglamento("pgce","Gestión de la Convivencia","");
+  else if(a==="docPIEHor")openReglamento("piehor","Horario Equipo PIE 2026","");
 }
 /* ============ CALENDARIO JJP · agenda / semana / mes (solo funcionarios) ============ */
 const STAFF=r=>(r==="teacher"||r==="admin"||r==="orientador"||r==="pie");
@@ -3071,6 +3113,7 @@ const REG_DOCS={
   parv:{base:"parv/p",  total:68,  pdf:"reglamento-parvulos.pdf",   title:"Reglamento de Educación Parvularia",        pages:PARV_PAGES},
   dec: {base:"dec/p",   total:38,  pdf:"protocolo-dec.pdf",         title:"Protocolo de Desregulación Emocional (DEC)",pages:DEC_PAGES},
   pgce:{base:"pgce/p",  total:41,  pdf:"gestion-convivencia.pdf",   title:"Plan de Gestión de la Convivencia Escolar", pages:PGCE_PAGES},
+  piehor:{base:"horpie/p", total:39, pdf:"horario-equipo-pie.pdf",  title:"Horario Equipo PIE 2026"},
 };
 let REG_DOC=REG_DOCS.ri, REG_CUR=1;
 function regPad(n){ return (n<10?"00":n<100?"0":"")+n; }
@@ -3216,6 +3259,7 @@ window.addEventListener("popstate",function(){
 /* Registro de cada overlay → su función de cierre (declaraciones hoisted). */
 ovRegister("regModal",closeReg); ovRegister("srcModal",closeSource); ovRegister("guiaModal",closeGuia);
 ovRegister("tutormodal",closeTutor); ovRegister("benmodal",closeBeneficios); ovRegister("planmodal",closePlanifica);
+ovRegister("phModal",closeProfHorario);
 document.addEventListener("keydown",e=>{
   if(e.key==="Escape"){closeSource();closeReg();closeGuia();return;}
   const rm=document.getElementById("regModal");
@@ -3297,6 +3341,9 @@ function add(text,who,extra){
       a.href=mob?toMailto(extra.mail.url):extra.mail.url;
       if(!mob){a.target="_blank";a.rel="noopener";}
       a.innerHTML=GMAIL_ICON+"<span>"+(mob?"Abrir en tu correo y enviar":"Abrir Gmail y redactar")+"</span>";msg.appendChild(a);}
+    if(extra.horarioProfe){const b=document.createElement("button");b.type="button";b.className="horbtn";
+      const n=extra.horarioProfe;b.innerHTML='📅 <span>Haz clic para ver el horario de '+n.replace(/</g,"&lt;")+'</span>';
+      b.onclick=()=>openProfHorario(n);msg.appendChild(document.createElement("br"));msg.appendChild(b);}
     if(extra.docCites&&extra.docCites.length){const box=el("div","srccards");
       extra.docCites.forEach(c=>box.appendChild(srcCardEl(c)));msg.appendChild(box);}
   }
@@ -3451,11 +3498,206 @@ function answerHorarioProfe(q){
   if(dow>=1&&dow<=5)out+="\n\nHorario de hoy ("+HP_DIANOM[dia]+"):\n"+hpListaDia(g,dia);
   return out;
 }
+/* ===== Horario visual del profesor/a (botón → abre imagen/tabla verificable, como los reglamentos) ===== */
+function openProfHorario(nombre){
+  const g=PROF_HORARIOS[nombre]; if(!g)return;
+  document.getElementById("phName").textContent=nombre;
+  const d=new Date(), hoy=HP_DIAKEY[d.getDay()], ahoraMin=d.getHours()*60+d.getMinutes();
+  const esc=s=>(s||"").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+  let html='<div class="phweek">';
+  ["lu","ma","mi","ju","vi"].forEach(dn=>{
+    const arr=g[dn]||[], esHoy=(dn===hoy);
+    html+='<div class="phday"><h4>'+HP_DIANOM[dn]+(esHoy?'<span class="phnowtag">HOY</span>':'')+'</h4><div class="phblocks">';
+    if(!arr.length){ html+='<div class="phempty">Sin clases</div>'; }
+    else arr.forEach(e=>{
+      const activo=esHoy && ahoraMin>=hpMin(e[0]) && ahoraMin<hpMin(e[1]);
+      html+='<div class="phblk'+(activo?' now':'')+'"><div class="ph-t">'+e[0]+'–'+e[1]+'</div><div class="ph-c">'+esc(e[2])+'</div></div>';
+    });
+    html+='</div></div>';
+  });
+  html+='</div>';
+  document.getElementById("phBody").innerHTML=html;
+  document.getElementById("phModal").classList.add("open"); ovOpened("phModal"); document.body.style.overflow="hidden";
+}
+function closeProfHorario(){ document.getElementById("phModal").classList.remove("open"); document.body.style.overflow=""; ovClosed("phModal"); }
+
+/* ============================================================================
+ *  ANOTACIONES ALEXIA · catálogo de faltas (Reglamento Interno) para que la
+ *  comunidad consulte: "¿qué anotación corresponde a un estudiante que come en
+ *  clases?" -> "En Alexia es una FALTA LEVE, N° 1 inciso ii.". Faltas leves,
+ *  graves y gravísimas transcritas del listado oficial de Alexia.
+ * ========================================================================== */
+const ALEXIA_LEVES=[
+  ["1","Desatender o interrumpir la clase, realizar otra actividad o tener una actitud indiferente hacia las actividades del proceso de enseñanza-aprendizaje."],
+  ["1 · i","Utilizar celulares, aparatos grabadores y reproductores, alarmas sonoras, parlantes y otros objetos que perturben el curso normal de las clases sin la previa autorización del docente a cargo."],
+  ["1 · ii","Comer, masticar chicle, ingerir líquidos salvo agua."],
+  ["1 · iii","Presentarse sin el material necesario en el momento oportuno para su aprendizaje y/o tareas, trabajos u otros."],
+  ["1 · iv","Interrumpir el desarrollo normal de la clase."],
+  ["2","Infringir las debidas normas de seguridad establecidas en clase, utilizar material en forma indebida o poner en funcionamiento aparatos (radios, data, televisores o equipos de laboratorio) sin la debida autorización."],
+  ["3","Salir de la sala sin autorización, durante los cambios de horas."],
+  ["4","Toda inasistencia no justificada."],
+  ["5","Presentarse al colegio sin su agenda escolar."],
+  ["6","No traer comunicación o justificativo firmados por el apoderado en los casos en que es solicitado."],
+  ["7","Alterar el aseo del colegio."],
+  ["8","No traer a clases los dispositivos electrónicos que le hubiere proporcionado el establecimiento (chromebooks). Es deber de cada estudiante llevar su chromebook cargado al colegio."],
+  ["9","En el contexto de clases a distancia, el uso de plataformas tecnológicas del colegio para fines no académicos (chat de clases, videollamadas, classroom, entre otros)."],
+  ["10","Demostraciones afectivas leves con contacto físico, tales como besos, abrazos prolongados, etc."],
+  ["11","No presentar justificación ante la ausencia del estudiante a una evaluación."],
+  ["12","Negarse a rendir una evaluación."],
+  ["13","No entregar trabajos en la fecha indicada por el docente."],
+  ["14","Utilizar fondos de pantalla ofensivos o inadecuados."],
+  ["15","Manifestar verbalmente, con gestos o actitudes, una falta de cortesía y de baja intensidad hacia un compañero o compañera."],
+  ["16","Utilizar dispositivos móviles (celular, reloj inteligente, tablet, etc.) en cualquier momento de la jornada escolar, que no hayan sido autorizados por el establecimiento."]
+];
+const ALEXIA_GRAVES=[
+  ["1","Expresarse verbal o físicamente, a través de gestos o acciones que denoten falta de respeto en contra de cualquier estudiante (presencial, por escrito o por plataformas digitales)."],
+  ["2","Manifestar verbalmente, con gestos o actitudes, una falta de cortesía y de baja intensidad hacia un funcionario. También constituye falta de respeto desatender reiteradamente la instrucción de un docente o asistente (al menos tres veces), como negarse a entregar el celular al docente cuando corresponda."],
+  ["3","Copiar, enviar o recibir mensajes a través del celular, calculadora u otro durante una evaluación, sin la autorización expresa del docente."],
+  ["4","Prestar o solicitar los trabajos académicos a otros estudiantes para que obtengan una evaluación mejor (trabajos de investigación, maquetas, mapas, entre otros)."],
+  ["5","No ingresar a clases, estando en el colegio."],
+  ["6","Realizar cualquier tipo de venta de artículos en general al interior del colegio."],
+  ["7","Fumar cigarrillos en las cercanías del colegio, en sus calles de acceso o en otro lugar vistiendo el uniforme del colegio."],
+  ["8","Rayar o dañar las murallas, baños y en general cualquier mobiliario o pared del colegio."],
+  ["9","Dañar, maltratar y/o usar inadecuadamente los medios audiovisuales, computadores, TV, data, cámaras de video, implementos de educación física, de biblioteca, de laboratorio o cualquier objeto equivalente."],
+  ["10","Dañar o maltratar bienes materiales propios y/o de otros integrantes de la comunidad educativa (lentes ópticos, libros, estuches, mochilas, etc.)."],
+  ["11","Mantener o realizar conductas sexuales en actividades pedagógicas (presenciales u online) del establecimiento educacional."],
+  ["12","Facilitar el ingreso al colegio de personas extrañas a la comunidad educativa sin la autorización respectiva."],
+  ["13","Obstruir o dificultar el desarrollo de un simulacro de operación PISE o de cualquier otro plan de emergencia del colegio."],
+  ["14","Hacer comentarios despectivos u ofensivos respecto a las materias, tareas o actividades encomendadas que impliquen falta de respeto implícita o explícita a estudiantes o profesores."],
+  ["15","Fotografiar, grabar o filmar a cualquier persona en actividades pedagógicas (presenciales u online) sin el consentimiento de ésta."],
+  ["16","Instalar aplicaciones webs inapropiadas, fondos de pantalla ofensivos o inadecuados en los dispositivos electrónicos que proporcione el establecimiento."],
+  ["17","Separarse del grupo curso durante una salida pedagógica."],
+  ["18","Expresarse verbal o físicamente, con gestos o acciones que denoten falta de respeto en contra de cualquier funcionario o cualquier otro adulto dentro del colegio."],
+  ["19","Plagiar, adulterar, falsificar, sustraer, destruir, dañar, ocultar o sustituir documentos oficiales del colegio (pruebas, certificados, actas de notas, libros de clases u otra documentación)."],
+  ["20","Amenazar o agredir física, psicológica o verbalmente a integrantes de la comunidad educativa o a algún trabajador externo, dentro o fuera del colegio, incluso por redes sociales (Facebook, WhatsApp, Instagram, TikTok, Messenger, Telegram, Snapchat, e-mail, etc.)."],
+  ["21","Realizar acciones con la intención de poner en peligro la integridad física de las personas (trompos, pelotazos, puntapiés, puñetes, estrellones, enfrentamiento cuerpo a cuerpo, etc.)."],
+  ["22","Fumar cualquier sustancia en el establecimiento educacional (se incluyen los vaporizadores o vapers)."],
+  ["23","Participar en actos vandálicos dentro o fuera del colegio."],
+  ["24","Consumir, comprar, portar o ingresar al colegio o sus cercanías alcohol, drogas y/o estupefacientes psicotrópicos, en cualquier actividad o salida organizada por el colegio."],
+  ["25","Poner en riesgo de cualquier forma la seguridad de la comunidad educativa."],
+  ["26","Realizar o promover acciones u omisiones que entorpezcan las actividades académicas planificadas o el normal funcionamiento del colegio."],
+  ["27","Usar elementos contundentes para agredir a una persona o causar daño al colegio."],
+  ["28","Sustraer, hurtar o robar cualquier objeto de propiedad de algún integrante de la comunidad educativa."],
+  ["29","Realizar actos de Acoso Escolar o Bullying, sea de manera personal o a través de medios digitales (Facebook, Twitter, Instagram u otro medio de difusión)."],
+  ["30","Realizar conductas sexuales que involucren la genitalidad o partes íntimas del cuerpo (posturas sexuales, exhibir el cuerpo desnudo, ver pornografía, tener relaciones sexuales) en actividades pedagógicas del establecimiento."],
+  ["31","Ingresar al colegio y luego retirarse, durante la jornada, sin autorización por escrito del equipo directivo del colegio."],
+  ["32","Hacer uso indebido de timbres y símbolos oficiales de la Institución."],
+  ["33","Suplantar la identidad de otro estudiante, o participar en la suplantación de una persona, por cualquier medio."],
+  ["34","Herir, golpear o maltratar sin causar lesión a otro, aun cuando no produzca incapacidad ni dé lugar a licencia médica."],
+  ["35","Que la Comisión Especial de Profesores estime que el alumno incumple o cumple de manera incompleta los compromisos de conducta, medidas de apoyo pedagógico y psicosocial de la condicionalidad de matrícula."],
+  ["36","Realizar acciones que pongan en peligro la salud de las personas (negarse a usar mascarilla cuando la autoridad sanitaria lo demande, asistir al colegio con una enfermedad contagiosa de gravedad, etc.)."],
+  ["37","Estar dentro del establecimiento educacional encapuchado y/o tapándose el rostro."],
+  ["38","No cumplir con algún compromiso formal de conducta que esté por escrito."],
+  ["39","Inasistencia deliberada a cualquier actividad escolar sin justificación."],
+  ["40","Negarse a cumplir la normativa institucional sobre el no uso de dispositivos móviles durante la jornada escolar, pese a la indicación de un funcionario del establecimiento."],
+  ["R1","(Reglamento de uso de tecnología) Subir o enviar archivos, anunciar o transmitir cualquier contenido ilegal o contrario al Reglamento Interno (ofensas, garabatos, pornografía, entre otros)."],
+  ["R2","(Reglamento de uso de tecnología) Suplantar la identidad de algún compañero(a) o miembro de la comunidad educativa."],
+  ["R3","(Reglamento de uso de tecnología) Invadir la privacidad personal de otros, incluyendo la divulgación de direcciones y/o teléfonos particulares de docentes o estudiantes."],
+  ["R4","(Reglamento de uso de tecnología) Falsificar encabezamientos o manipular identificadores para enmascarar el origen de cualquier contenido transmitido."],
+  ["R5","(Reglamento de uso de tecnología) Subir, anunciar o transmitir publicidad no solicitada, materiales de promoción, 'cadenas' u otra forma de petición u ofrecimiento."],
+  ["R6","(Reglamento de uso de tecnología) Subir, anunciar o transmitir material que contenga virus u otro código diseñado para interrumpir, destruir o limitar la funcionalidad de software, hardware o equipos."],
+  ["R8","(Reglamento de uso de tecnología) Uso del correo electrónico para beneficios financieros o comerciales personales."],
+  ["R9","(Reglamento de uso de tecnología) Ingresar en forma indebida a recursos o entidades sin autorización, incluyendo el acceso a archivos de otros estudiantes, de profesores o información confidencial."]
+];
+const ALEXIA_GRAVISIMAS=[
+  ["1","Agredir física o psicológicamente a algún integrante de la comunidad educativa dejando a la víctima demente, inútil para el trabajo, impedida de un miembro importante o deforme."],
+  ["2","Activar o lanzar bombas dentro del colegio que generen impacto o daños a la infraestructura o a la salud de los integrantes de la comunidad educativa."],
+  ["3","Venta o distribución de drogas o alcohol."],
+  ["4","Uso, porte, posesión y tenencia de armas, de fuego o de cualquier tipo, o artefactos incendiarios."],
+  ["5","Agresiones de carácter sexual tales como tocaciones, violación o producir material pornográfico. Los hechos constitutivos de delito deberán estar respaldados por una sentencia judicial."],
+  ["6","Agredir física o psicológicamente a algún integrante de la comunidad educativa de modo que se produzca una enfermedad o incapacidad para asistir al trabajo o al establecimiento por más de 30 días."],
+  ["7","Amenazas a la vida o a la integridad de las personas de la comunidad escolar."],
+  ["8","Actos de violencia escolar que afecten gravemente la convivencia escolar."],
+  ["9","Prender fuego dentro del establecimiento educacional a cualquier tipo de objeto, poniendo en riesgo a la comunidad educativa o la infraestructura."],
+  ["10","Uso inadecuado de tecnologías como hackeo de cuentas u otros."],
+  ["11","Hechos que afecten gravemente la convivencia escolar conforme a lo establecido en el artículo 6 d) del DFL N°2 del Ministerio de Educación."]
+];
+const ALEXIA_SEVS=[
+  {k:"leve",lbl:"LEVE",items:ALEXIA_LEVES},
+  {k:"grave",lbl:"GRAVE",items:ALEXIA_GRAVES},
+  {k:"gravisima",lbl:"GRAVÍSIMA",items:ALEXIA_GRAVISIMAS}
+];
+function afNorm(s){return (s||"").normalize("NFD").replace(/[̀-ͯ]/g,"").toLowerCase();}
+/* Pistas directas para las consultas más frecuentes (conducta -> severidad y número). */
+const ALEXIA_HINTS=[
+  {re:/\b(come|comer|comiendo|comida|almorz|colacion|chicle|masticar|bebida|jugo|ingerir)\b/,sev:"leve",ref:"1 · ii"},
+  {re:/\b(sin material|no trae.*(material|cuaderno|utiles)|sin.*utiles|sin cuaderno|olvid.*material)\b/,sev:"leve",ref:"1 · iii"},
+  {re:/\bsin agenda|no trae.*agenda|olvid.*agenda\b/,sev:"leve",ref:"5"},
+  {re:/\b(inasistencia|falta|falto|ausencia).*(no justificad|sin justific)|no justific.*(inasistencia|ausencia|falta)\b/,sev:"leve",ref:"4"},
+  {re:/\b(sin justificativo|no trae.*justificativo|no trae.*comunicacion|comunicacion sin firmar)\b/,sev:"leve",ref:"6"},
+  {re:/\b(no entrega|no entrego|no entregar).*(trabajo|tarea|prueba|informe)|trabajo.*fuera de plazo|tarea atrasada\b/,sev:"leve",ref:"13"},
+  {re:/\bno justific.*(evaluacion|prueba)\b/,sev:"leve",ref:"11"},
+  {re:/\b(negarse|se niega|no quiere).*(rendir|dar).*(evaluacion|prueba)\b/,sev:"leve",ref:"12"},
+  {re:/\b(beso|abrazo|pololeo|demostracion.*afectiv)\b/,sev:"leve",ref:"10"},
+  {re:/\b(sale|salir|salio).*(sala|aula).*(sin autorizacion|sin permiso)|salir de la sala\b/,sev:"leve",ref:"3"},
+  {re:/\binterrump.*(clase|desarrollo)|desaten.*(clase)|molest.*(clase)\b/,sev:"leve",ref:"1 · iv"},
+  {re:/\b(celular|telefono|movil|dispositivo).*(clase|sin autorizacion)\b/,sev:"leve",ref:"1 · i"},
+  {re:/\b(celular|telefono|movil|reloj inteligente|smartwatch|tablet).*(jornada|colegio|momento)|uso.*celular\b/,sev:"leve",ref:"16"},
+  {re:/\b(copiar|copia|copio|soplar|torpedo).*(prueba|evaluacion|examen)|copiando\b/,sev:"grave",ref:"3"},
+  {re:/\b(fumar|fumando).*(cigarr|tabaco)\b/,sev:"grave",ref:"7"},
+  {re:/\b(vaper|vapear|vaporizador)\b/,sev:"grave",ref:"22"},
+  {re:/\b(raya|rayar|rayo|daña|dañar|grafiti).*(muralla|pared|baño|mobiliario|mesa|silla)\b/,sev:"grave",ref:"8"},
+  {re:/\b(bullying|acoso escolar|cyberbullying|hostigamiento)\b/,sev:"grave",ref:"29"},
+  {re:/\b(garabato|grosería|insulto|falta de respeto|irrespet|grita).*(profesor|docente|funcionario|inspector)|irrespet.*funcionario\b/,sev:"grave",ref:"18"},
+  {re:/\b(garabato|insulto|falta de respeto).*(compañer|estudiante|alumno)\b/,sev:"grave",ref:"1"},
+  {re:/\b(amenaza|amenazar).*(agred|golpe|redes)|agred.*(verbal|psicolog)\b/,sev:"grave",ref:"20"},
+  {re:/\b(pelea|peleando|golpe|golpear|puñete|patada|empuj).*(compañer|estudiante|alumno|persona)|se agarr.*combo\b/,sev:"grave",ref:"21"},
+  {re:/\b(consumo|consumir|tomar|beber).*(alcohol|droga|marihuana)|alcohol.*colegio|droga.*colegio\b/,sev:"grave",ref:"24"},
+  {re:/\b(roba|robar|hurt|sustra).*(objeto|celular|dinero|pertenencia)\b/,sev:"grave",ref:"28"},
+  {re:/\b(venta|vender|distribu).*(droga|alcohol)\b/,sev:"gravisima",ref:"3"},
+  {re:/\b(arma|pistola|cuchillo|navaja|cortaplum|artefacto incendiario)\b/,sev:"gravisima",ref:"4"},
+  {re:/\b(tocacion|abuso sexual|acoso sexual|violacion)\b/,sev:"gravisima",ref:"5"},
+  {re:/\bbomba|explosiv\b/,sev:"gravisima",ref:"2"},
+  {re:/\b(hacke|hackear|hacker)\b/,sev:"gravisima",ref:"10"},
+  {re:/\b(prender fuego|incendi|quemar)\b/,sev:"gravisima",ref:"9"}
+];
+const AF_STOP=new Set(("de la el los las un una y o a en que se su sus al con para por del no es un una como una estudiante estudiantes alumno alumna alumnos clase clases colegio alexia anotacion anotacion anotar falta faltas observacion numero corresponde correspondiente cual cuales esta este seria hace hizo esta algun alguna").split(" "));
+function afTokens(s){return afNorm(s).replace(/[^a-z0-9ñ ]/g," ").split(/\s+/).filter(w=>w.length>=4&&!AF_STOP.has(w));}
+function afFind(sev,ref){const S=ALEXIA_SEVS.find(x=>x.k===sev);if(!S)return null;const it=S.items.find(p=>p[0]===ref);return it?{sev:S.k,lbl:S.lbl,ref:it[0],t:it[1]}:null;}
+function esTemaAlexia(nq){
+  return /(anotacion|anotar|observacion|en alexia|que falta|cual falta|cual es la falta|tipo de falta|falta corresponde|falta leve|falta grave|falta gravisim|como registr|como anoto|que numero|clasific|que tan grave|es leve o grave)/.test(nq);
+}
+function afFormat(hit,extra){
+  const art=hit.lbl==="GRAVÍSIMA"?"una falta GRAVÍSIMA":(hit.lbl==="GRAVE"?"una falta GRAVE":"una falta LEVE");
+  let out="📋 En Alexia corresponde a "+art+".\n\n• N° "+hit.ref+": "+hit.t;
+  if(extra&&extra.length){ out+="\n\nTambién podría aplicar:\n"+extra.map(e=>"• "+e.lbl+" N° "+e.ref+": "+e.t).join("\n"); }
+  out+="\n\nRegístrala en Alexia según corresponda. Ante dudas, consulta con Convivencia Escolar. 🙂";
+  return out;
+}
+function answerAlexiaFalta(q){
+  const nq=afNorm(q);
+  if(!esTemaAlexia(nq)) return null;
+  // 1) ¿pide un número puntual? "falta leve número 5", "grave 29", "grave r1"
+  const sevM = /gravisim/.test(nq) ? "gravisima" : (/\bgrave/.test(nq) ? "grave" : (/\bleve/.test(nq) ? "leve" : null));
+  const numM = nq.match(/(?:numero|n[°ºo]\.?|inciso|#)\s*(r?\s*\d{1,2})/) || nq.match(/\b(?:leve|grave|gravisim\w*)\s+(r?\s*\d{1,2})\b/);
+  if(sevM && numM){ const ref=numM[1].replace(/\s+/g,"").toUpperCase(); const hit=afFind(sevM,ref); if(hit) return afFormat(hit,null); }
+  // 2) Pistas directas (conducta frecuente)
+  for(const h of ALEXIA_HINTS){ if(h.re.test(nq)){ const hit=afFind(h.sev,h.ref); if(hit) return afFormat(hit,null); } }
+  // 3) Puntaje por palabras clave sobre todo el catálogo
+  const qtok=afTokens(q);
+  if(!qtok.length) return "En Alexia las anotaciones se clasifican en faltas LEVES, GRAVES y GRAVÍSIMAS. Cuéntame la conducta (por ejemplo, «come en clases» o «no entrega el trabajo») y te indico el número que corresponde. 🙂";
+  let best=[];
+  ALEXIA_SEVS.forEach(S=>S.items.forEach(p=>{
+    const words=afNorm(p[1]).replace(/[^a-z0-9ñ ]/g," ").split(/\s+/);
+    let sc=0; qtok.forEach(w=>{ const stem=w.slice(0,Math.max(4,w.length-1)); if(words.some(fw=>fw.startsWith(stem)||w.startsWith(fw.slice(0,Math.max(4,fw.length-1))))) sc++; });
+    if(sc>0) best.push({sev:S.k,lbl:S.lbl,ref:p[0],t:p[1],s:sc});
+  }));
+  if(!best.length) return "No encontré una falta que calce exactamente con eso. En Alexia las anotaciones son LEVES, GRAVES o GRAVÍSIMAS. Reformula la conducta (por ejemplo, «usa el celular en clases») y te digo el número. 🙂";
+  best.sort((a,b)=>b.s-a.s);
+  const top=best[0];
+  const extra=best.slice(1).filter(x=>x.s>=top.s-0 && (x.ref!==top.ref||x.lbl!==top.lbl)).slice(0,2);
+  return afFormat(top, extra.length?extra:null);
+}
 async function ask(text){
   text=(text||"").trim();if(!text)return;
   document.getElementById("sugs").innerHTML="";add(text,"user");document.getElementById("q").value="";typing(true);
   const _hp=answerHorarioProfe(text);
-  if(_hp){ await new Promise(r=>setTimeout(r,300)); typing(false); add(_hp,"bot"); speak(_hp); convo.push({role:"user",content:text}); convo.push({role:"assistant",content:clean(_hp)}); return; }
+  if(_hp){ await new Promise(r=>setTimeout(r,300)); typing(false);
+    // Botón para ver la IMAGEN/tabla del horario del profesor (verificable), salvo en la desambiguación.
+    const pn=(HP_CTX&&HP_CTX.nombre&&PROF_HORARIOS[HP_CTX.nombre]&&!/^Hay varios profes/.test(_hp))?HP_CTX.nombre:null;
+    add(_hp,"bot",pn?{horarioProfe:pn}:null); speak(_hp); convo.push({role:"user",content:text}); convo.push({role:"assistant",content:clean(_hp)}); return; }
+  const _af=answerAlexiaFalta(text);
+  if(_af){ await new Promise(r=>setTimeout(r,300)); typing(false); add(_af,"bot"); speak(_af); convo.push({role:"user",content:text}); convo.push({role:"assistant",content:clean(_af)}); return; }
   const local=answer(text);
   let reply=local.reply;
   let shownCites=local.docCites;            // fichas que se muestran bajo la respuesta
@@ -3735,8 +3977,9 @@ function openBeneficios(){ BEN_FILTER="Todos"; renderBeneficios(); document.getE
 function closeBeneficios(){ document.getElementById("benmodal").classList.remove("open"); document.body.style.overflow=""; ovClosed("benmodal"); }
 
 /* ============ PLANIFICA · copiloto pedagógico con IA (perfil docente) ============ */
-const PLAN_NIVELES=["1° Básico","2° Básico","3° Básico","4° Básico","5° Básico","6° Básico","7° Básico","8° Básico","I° Medio","II° Medio","III° Medio","IV° Medio"];
-const PLAN_ASIGS=["Lenguaje y Comunicación","Matemática","Historia, Geografía y Cs. Sociales","Ciencias Naturales","Biología","Física","Química","Inglés","Artes Visuales","Música","Educación Física y Salud","Tecnología","Orientación","Religión","Filosofía","Otra"];
+const PLAN_NIVELES=["Pre-Kínder","Kínder","1° Básico","2° Básico","3° Básico","4° Básico","5° Básico","6° Básico","7° Básico","8° Básico","I° Medio","II° Medio","III° Medio","IV° Medio"];
+const PLAN_ASIGS=["Lenguaje y Comunicación","Matemática","Historia, Geografía y Cs. Sociales","Ciencias Naturales","Biología","Física","Química","Inglés","Artes Visuales","Música","Educación Física y Salud","Tecnología","Orientación","Religión","Filosofía",
+  "Párvulos · Identidad y Autonomía","Párvulos · Convivencia y Ciudadanía","Párvulos · Corporalidad y Movimiento","Párvulos · Lenguaje Verbal","Párvulos · Lenguajes Artísticos","Párvulos · Exploración del Entorno Natural","Párvulos · Comprensión del Entorno Sociocultural","Párvulos · Pensamiento Matemático","Educación Parvularia (general)","Otra"];
 const PLAN_TIPOS=[{v:"planificacion",l:"Planificación de clase"},{v:"guia",l:"Guía de trabajo"},{v:"rubrica",l:"Rúbrica"},{v:"actividades",l:"Sugerencia de actividades de clase"},{v:"presentacion",l:"★ Crea tu presentación"}];
 /* Formatos propios del Programa de Integración (PIE) */
 const PLAN_TIPOS_PIE=[{v:"libro_registro",l:"★ Libro de registro ministerial (PIE)"},{v:"papeleta_dif",l:"★ Papeleta de evaluación diferenciada"},{v:"test_conners",l:"★ Test de Conners (profesores)"}];
