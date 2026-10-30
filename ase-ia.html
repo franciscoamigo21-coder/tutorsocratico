@@ -471,6 +471,42 @@
   .horbtn{display:inline-flex;align-items:center;gap:9px;margin-top:12px;padding:10px 16px;border-radius:13px;border:none;cursor:pointer;font-family:inherit;
     background:linear-gradient(135deg,#1a73e8,#0b3d91);color:#fff;font-size:13px;font-weight:800;box-shadow:0 10px 22px -12px rgba(11,61,145,.75);transition:.15s;}
   .horbtn:hover{filter:brightness(1.07);transform:translateY(-1px);}
+  /* ===== Editar nómina (profesor jefe) ===== */
+  .jefedit-btn{margin-left:auto;background:linear-gradient(135deg,#1a73e8,#0b3d91);color:#fff;border:none;border-radius:999px;
+    padding:7px 13px;font-size:12px;font-weight:800;cursor:pointer;font-family:inherit;white-space:nowrap;box-shadow:0 8px 18px -10px rgba(11,61,145,.8);}
+  .jefedit-btn:hover{filter:brightness(1.08);transform:translateY(-1px);}
+  #jefModal{position:fixed;inset:0;z-index:1365;display:none;align-items:center;justify-content:center;padding:18px;background:rgba(8,22,52,.64);backdrop-filter:blur(5px);}
+  #jefModal.open{display:flex;animation:fadeUp .2s ease both;}
+  #jefModal .jefcard{position:relative;background:var(--card);border-radius:22px;width:100%;max-width:640px;max-height:92vh;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 40px 90px -24px rgba(0,0,0,.6);}
+  .jefhead{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px 18px;background:var(--grad-azul);color:#fff;}
+  .jefhead h3{margin:2px 0 0;font-size:18px;font-weight:800;}
+  .jefbody{padding:16px;overflow:auto;background:var(--bg);}
+  .jef-sec{margin-bottom:16px;}
+  .jef-sec h4{margin:0 0 8px;font-size:13.5px;font-weight:800;color:var(--text);}
+  .jef-count{font-weight:700;color:var(--muted);font-size:12px;}
+  .jef-hint{margin:0 0 8px;font-size:11.5px;color:var(--muted);line-height:1.35;}
+  .jef-form,.jef-upload{display:flex;flex-direction:column;gap:7px;}
+  .jef-form input,.jef-upload input[type=text],.jef-upload input[type=email],.jef-upload input[type=file]{width:100%;padding:9px 11px;border:1px solid var(--border);border-radius:10px;font-family:inherit;font-size:13px;background:var(--card);color:var(--text);}
+  .jef-add{align-self:flex-start;background:linear-gradient(135deg,#16a34a,#0b7a36);color:#fff;border:none;border-radius:10px;padding:9px 16px;font-weight:800;font-size:13px;cursor:pointer;font-family:inherit;box-shadow:0 8px 18px -10px rgba(11,122,54,.8);}
+  .jef-add:hover{filter:brightness(1.07);} .jef-add:disabled{opacity:.6;cursor:default;}
+  .jef-list{display:flex;flex-direction:column;gap:5px;max-height:240px;overflow:auto;border:1px solid var(--border);border-radius:12px;padding:7px;background:var(--card);}
+  .jef-row{display:flex;align-items:center;gap:9px;padding:7px 9px;border-radius:9px;background:var(--bg);}
+  .jef-row .nm{flex:1;font-size:13px;font-weight:600;color:var(--text);line-height:1.2;}
+  .jef-row .nm small{display:block;font-weight:500;color:var(--muted);font-size:10.5px;}
+  .jef-row .tagadd{font-size:9px;font-weight:800;color:#0b7a36;background:#dff5e8;border-radius:6px;padding:1px 6px;}
+  .jef-rm{background:#fdecec;color:#c0392b;border:none;border-radius:8px;width:28px;height:28px;font-size:15px;font-weight:800;cursor:pointer;flex:none;line-height:1;}
+  .jef-rm:hover{background:#f9d4d4;}
+  .jef-row.gone .nm{text-decoration:line-through;opacity:.5;}
+  .jef-restore{background:#eaf1ff;color:#0b3d91;border:none;border-radius:8px;padding:0 10px;height:28px;font-size:11px;font-weight:800;cursor:pointer;flex:none;}
+  .jef-empty{font-size:12px;color:var(--muted);text-align:center;padding:12px 2px;font-style:italic;}
+  .jef-docs{display:flex;flex-direction:column;gap:6px;margin-top:9px;}
+  .jef-doc{display:flex;align-items:center;gap:9px;padding:8px 10px;border:1px solid var(--border);border-radius:10px;background:var(--card);}
+  .jef-doc .dn{flex:1;font-size:12.5px;font-weight:700;color:var(--text);word-break:break-word;}
+  .jef-doc .dn small{display:block;font-weight:500;color:var(--muted);font-size:10.5px;}
+  .jef-dl{background:var(--grad-azul);color:#fff;border:none;border-radius:8px;padding:0 11px;height:30px;font-size:12px;font-weight:800;cursor:pointer;flex:none;}
+  .jef-msg{padding:9px 12px;border-radius:10px;font-size:12.5px;font-weight:600;margin-top:4px;}
+  .jef-msg.ok{background:#dff5e8;color:#0b7a36;} .jef-msg.err{background:#fdecec;color:#c0392b;}
+  @media(max-width:640px){ #jefModal{padding:0;} #jefModal .jefcard{max-height:100vh;height:100vh;border-radius:0;max-width:100%;} }
 
   /* ===== Panel personalizado (apoderado / estudiante) ===== */
   .myp{margin:0 0 16px;background:linear-gradient(160deg,#ffffff,#eef4ff);border:1px solid #dbe7ff;border-radius:20px;padding:14px 16px;box-shadow:0 16px 34px -24px rgba(17,87,201,.45);}
@@ -1158,6 +1194,7 @@
       <div class="myp-head">
         <div class="myp-av">🧑‍🏫</div>
         <div class="myp-id"><div class="myp-name">Jefatura de curso</div><div class="myp-sub" id="jefSub"></div></div>
+        <button type="button" class="jefedit-btn" id="jefEditBtn" onclick="openJefEdit()">✏️ Editar lista</button>
       </div>
       <label class="sellbl" style="margin:10px 2px 5px">Estudiante del curso</label>
       <select id="jefStudent" class="selsel" onchange="jefStudentChanged()"><option value="">Selecciona un estudiante…</option></select>
@@ -1418,6 +1455,43 @@
     </div>
     <div class="phbody" id="phBody"></div>
     <div class="phfoot">📅 Horario oficial 2026 · Colegio Presidente José Joaquín Prieto</div>
+  </div>
+</div>
+
+<!-- Modal: el profesor/a jefe edita su nómina y sube documentos (se guarda y se refleja para todos) -->
+<div id="jefModal" onclick="if(event.target===this)closeJefEdit()">
+  <div class="jefcard">
+    <div class="jefhead">
+      <div><div class="phtag">Editar lista de estudiantes</div><h3 id="jefEditTitle">Jefatura</h3></div>
+      <button class="phx" onclick="closeJefEdit()" aria-label="Cerrar">✕</button>
+    </div>
+    <div class="jefbody" id="jefEditBody">
+      <div class="jef-sec">
+        <h4>➕ Agregar estudiante</h4>
+        <div class="jef-form">
+          <input id="jefNewName" type="text" placeholder="Nombre y apellido" autocomplete="off">
+          <input id="jefNewEmail" type="email" placeholder="Correo del estudiante (opcional)" autocomplete="off">
+          <input id="jefNewAp" type="email" placeholder="Correo del apoderado (opcional)" autocomplete="off">
+          <button type="button" class="jef-add" id="jefAddBtn" onclick="jefAddStudent()">Agregar a la lista</button>
+        </div>
+      </div>
+      <div class="jef-sec">
+        <h4>👥 Estudiantes del curso <span id="jefCount" class="jef-count"></span></h4>
+        <div id="jefList" class="jef-list"><div class="jef-empty">Cargando…</div></div>
+      </div>
+      <div class="jef-sec">
+        <h4>📎 Documentos del curso</h4>
+        <p class="jef-hint">Sube la nómina actualizada u otros documentos (PDF, imagen, Excel; máx. ~5 MB). Quedan guardados para el curso.</p>
+        <div class="jef-upload">
+          <input id="jefFile" type="file" accept=".pdf,.png,.jpg,.jpeg,.webp,.xlsx,.xls,.csv,.doc,.docx">
+          <input id="jefFileNote" type="text" placeholder="Nota (opcional): p. ej. «Nómina octubre»" autocomplete="off">
+          <button type="button" class="jef-add" id="jefUpBtn" onclick="jefUploadDoc()">Subir documento</button>
+        </div>
+        <div id="jefDocs" class="jef-docs"></div>
+      </div>
+      <div id="jefMsg" class="jef-msg" style="display:none"></div>
+    </div>
+    <div class="phfoot">🔒 Los cambios se guardan de forma segura y se reflejan para todo el colegio.</div>
   </div>
 </div>
 
@@ -3259,7 +3333,7 @@ window.addEventListener("popstate",function(){
 /* Registro de cada overlay → su función de cierre (declaraciones hoisted). */
 ovRegister("regModal",closeReg); ovRegister("srcModal",closeSource); ovRegister("guiaModal",closeGuia);
 ovRegister("tutormodal",closeTutor); ovRegister("benmodal",closeBeneficios); ovRegister("planmodal",closePlanifica);
-ovRegister("phModal",closeProfHorario);
+ovRegister("phModal",closeProfHorario); ovRegister("jefModal",closeJefEdit);
 document.addEventListener("keydown",e=>{
   if(e.key==="Escape"){closeSource();closeReg();closeGuia();return;}
   const rm=document.getElementById("regModal");
@@ -3818,7 +3892,119 @@ function renderJefatura(){
       sel.parentNode.insertBefore(msg, sel.nextSibling); }
     msg.innerHTML='No pudimos cargar la nómina del curso. <button type="button" onclick="retryDirectory()" style="background:var(--grad-azul);color:#fff;border:none;border-radius:9px;padding:6px 12px;font-weight:700;font-family:inherit;font-size:12.5px;cursor:pointer;margin-left:4px">Reintentar</button>';
   } else if(msg){ msg.remove(); }
+  const eb=document.getElementById("jefEditBtn"); if(eb) eb.style.display=AUTH_TOKEN?"":"none";  // editar requiere sesión Google
   panel.style.display="";
+}
+/* ============ JEFATURA · el profesor/a jefe edita su nómina y sube documentos ============
+   Todo se guarda en el Worker (KV) y el directorio lo aplica para TODOS. */
+let JEF_COURSE="", JEF_DATA={added:[],removed:[],docs:[],canEdit:false};
+function jefCourse(){ return (JEFATURAS[(CURRENT.email||"").toLowerCase()]||"").toUpperCase(); }
+async function jefApi(action,extra){
+  const body=Object.assign({credential:AUTH_TOKEN,action,course:JEF_COURSE},extra||{});
+  const res=await fetch(AI_PROXY_URL+"?resource=jefatura",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)});
+  let data=null; try{ data=await res.json(); }catch(e){}
+  if(!res.ok){ throw new Error((data&&data.error)||("Error "+res.status)); }
+  return data;
+}
+function jefMsg(text,ok){ const m=document.getElementById("jefMsg"); if(!m)return; m.style.display=text?"":"none"; m.className="jef-msg "+(ok?"ok":"err"); m.textContent=text||""; }
+async function openJefEdit(){
+  JEF_COURSE=jefCourse();
+  if(!JEF_COURSE){ aseToast("Jefatura","Sin curso de jefatura","No encontramos un curso asignado a tu cuenta.",7000); return; }
+  if(!AUTH_TOKEN){ aseToast("Inicia sesión con Google","Para editar la lista","Entra con tu cuenta Google del colegio; con el acceso de respaldo no se puede guardar.",9000); return; }
+  const label=(COURSES.find(c=>c.c===JEF_COURSE)||{}).l||JEF_COURSE;
+  document.getElementById("jefEditTitle").textContent="Jefatura · "+label;
+  document.getElementById("jefList").innerHTML='<div class="jef-empty">Cargando…</div>';
+  document.getElementById("jefDocs").innerHTML=""; jefMsg("",true);
+  document.getElementById("jefModal").classList.add("open"); ovOpened("jefModal"); document.body.style.overflow="hidden";
+  try{ JEF_DATA=await jefApi("get"); jefRenderList(); jefRenderDocs(); }
+  catch(e){ document.getElementById("jefList").innerHTML='<div class="jef-empty">No se pudo cargar: '+(e.message||"error")+'</div>'; }
+}
+function closeJefEdit(){ document.getElementById("jefModal").classList.remove("open"); document.body.style.overflow=""; ovClosed("jefModal"); }
+function jefRenderList(){
+  const box=document.getElementById("jefList"); if(!box)return;
+  const esc=s=>(s||"").replace(/</g,"&lt;").replace(/"/g,"&quot;");
+  const addedKeys=new Set((JEF_DATA.added||[]).map(a=>(a.email||a.name||"").toLowerCase()));
+  const cur=STUDENTS.filter(s=>s.course===JEF_COURSE).sort((a,b)=>apellidoKey(a.name).localeCompare(apellidoKey(b.name),"es"));
+  document.getElementById("jefCount").textContent="("+cur.length+")";
+  let html="";
+  if(!cur.length) html+='<div class="jef-empty">Aún no hay estudiantes en la lista.</div>';
+  cur.forEach(s=>{
+    const key=(s.email||s.name||"").toLowerCase();
+    const isAdded=addedKeys.has(key);
+    html+='<div class="jef-row"><div class="nm">'+esc(s.name)+(isAdded?' <span class="tagadd">agregado</span>':'')+(s.email?'<small>'+esc(s.email)+'</small>':'')+'</div>'
+      +'<button type="button" class="jef-rm" title="Quitar" onclick="jefRemoveStudent(\''+esc(key).replace(/'/g,"\\'")+'\')">×</button></div>';
+  });
+  // Estudiantes ocultados (para poder restaurarlos)
+  (JEF_DATA.removed||[]).forEach(k=>{
+    html+='<div class="jef-row gone"><div class="nm">'+esc(k)+' <small>(oculto)</small></div>'
+      +'<button type="button" class="jef-restore" onclick="jefRestoreStudent(\''+esc(k).replace(/'/g,"\\'")+'\')">Restaurar</button></div>';
+  });
+  box.innerHTML=html;
+}
+async function jefReload(){ await loadDirectory(); try{ JEF_DATA=await jefApi("get"); }catch(e){} jefRenderList(); jefRenderDocs(); renderJefatura(); }
+async function jefAddStudent(){
+  const name=document.getElementById("jefNewName").value.trim();
+  const email=document.getElementById("jefNewEmail").value.trim();
+  const apEmail=document.getElementById("jefNewAp").value.trim();
+  if(!name){ jefMsg("Escribe el nombre y apellido del estudiante.",false); return; }
+  const btn=document.getElementById("jefAddBtn"); btn.disabled=true; jefMsg("Guardando…",true);
+  try{ await jefApi("addStudent",{name,email,apEmail});
+    document.getElementById("jefNewName").value="";document.getElementById("jefNewEmail").value="";document.getElementById("jefNewAp").value="";
+    await jefReload(); jefMsg("✓ Estudiante agregado y guardado.",true);
+  }catch(e){ jefMsg("No se pudo agregar: "+(e.message||"error"),false); }
+  btn.disabled=false;
+}
+async function jefRemoveStudent(key){
+  if(!key)return; if(!confirm("¿Quitar a este estudiante de la lista del curso?"))return;
+  jefMsg("Guardando…",true);
+  try{ await jefApi("removeStudent",{key}); await jefReload(); jefMsg("Estudiante quitado de la lista.",true); }
+  catch(e){ jefMsg("No se pudo quitar: "+(e.message||"error"),false); }
+}
+async function jefRestoreStudent(key){
+  jefMsg("Restaurando…",true);
+  try{ await jefApi("restoreStudent",{key}); await jefReload(); jefMsg("Estudiante restaurado.",true); }
+  catch(e){ jefMsg("No se pudo restaurar: "+(e.message||"error"),false); }
+}
+function jefFmtSize(n){ n=n*0.75; return n<1024?Math.round(n)+" B":n<1048576?(n/1024).toFixed(0)+" KB":(n/1048576).toFixed(1)+" MB"; }
+function jefRenderDocs(){
+  const box=document.getElementById("jefDocs"); if(!box)return;
+  const esc=s=>(s||"").replace(/</g,"&lt;").replace(/"/g,"&quot;");
+  const docs=JEF_DATA.docs||[];
+  if(!docs.length){ box.innerHTML='<div class="jef-empty">Aún no hay documentos cargados.</div>'; return; }
+  box.innerHTML=docs.map(d=>'<div class="jef-doc"><div class="dn">'+esc(d.filename)+(d.note?'<small>'+esc(d.note)+'</small>':'')+'<small>'+jefFmtSize(d.size||0)+'</small></div>'
+    +'<button type="button" class="jef-dl" onclick="jefDownloadDoc(\''+d.id+'\',\''+esc(d.filename).replace(/'/g,"\\'")+'\')">Abrir</button>'
+    +'<button type="button" class="jef-rm" title="Eliminar" onclick="jefDeleteDoc(\''+d.id+'\')">×</button></div>').join("");
+}
+async function jefUploadDoc(){
+  const fi=document.getElementById("jefFile"); const f=fi.files&&fi.files[0];
+  if(!f){ jefMsg("Elige un archivo para subir.",false); return; }
+  if(f.size>5*1024*1024){ jefMsg("El archivo supera los 5 MB.",false); return; }
+  const note=document.getElementById("jefFileNote").value.trim();
+  const btn=document.getElementById("jefUpBtn"); btn.disabled=true; jefMsg("Subiendo…",true);
+  try{
+    const b64=await new Promise((res,rej)=>{ const r=new FileReader(); r.onload=()=>res(String(r.result).split(",")[1]||""); r.onerror=()=>rej(new Error("No se pudo leer el archivo")); r.readAsDataURL(f); });
+    await jefApi("uploadDoc",{filename:f.name,dataBase64:b64,note});
+    fi.value="";document.getElementById("jefFileNote").value="";
+    JEF_DATA=await jefApi("get"); jefRenderDocs(); jefMsg("✓ Documento subido y guardado.",true);
+  }catch(e){ jefMsg("No se pudo subir: "+(e.message||"error"),false); }
+  btn.disabled=false;
+}
+async function jefDownloadDoc(id,filename){
+  jefMsg("Abriendo…",true);
+  try{
+    const d=await jefApi("getDoc",{id});
+    const b64=d.data||""; const bin=atob(b64); const bytes=new Uint8Array(bin.length);
+    for(let i=0;i<bin.length;i++)bytes[i]=bin.charCodeAt(i);
+    const blob=new Blob([bytes]); const url=URL.createObjectURL(blob);
+    const a=document.createElement("a"); a.href=url; a.download=filename||"documento"; document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(()=>URL.revokeObjectURL(url),4000); jefMsg("",true);
+  }catch(e){ jefMsg("No se pudo abrir: "+(e.message||"error"),false); }
+}
+async function jefDeleteDoc(id){
+  if(!confirm("¿Eliminar este documento?"))return;
+  jefMsg("Eliminando…",true);
+  try{ await jefApi("deleteDoc",{id}); JEF_DATA=await jefApi("get"); jefRenderDocs(); jefMsg("Documento eliminado.",true); }
+  catch(e){ jefMsg("No se pudo eliminar: "+(e.message||"error"),false); }
 }
 function jefStudentChanged(){
   const email=document.getElementById("jefStudent").value;
