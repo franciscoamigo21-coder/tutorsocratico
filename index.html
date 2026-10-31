@@ -184,10 +184,11 @@
   .qeditbtn:hover{border-color:#cfe0ff;transform:translateY(-1px);}
   .qeditbtn.on{background:linear-gradient(135deg,#16a34a,#0b7a36);color:#fff;border-color:transparent;box-shadow:0 10px 22px -12px rgba(11,122,54,.7);}
   .quick.editing .qgrid{outline:2px dashed #cfe0ff;outline-offset:6px;border-radius:14px;}
-  .qcard.qediting{animation:qwiggle .5s ease-in-out infinite;cursor:grab;touch-action:none;-webkit-user-select:none;user-select:none;}
+  .qcard.qediting{animation:qwiggle .5s ease-in-out infinite;cursor:grab;touch-action:pan-y;-webkit-user-select:none;user-select:none;}
   @keyframes qwiggle{0%,100%{transform:rotate(-.7deg);}50%{transform:rotate(.7deg);}}
   .qcard.qediting:hover{transform:none;}
-  .qcard.qdragging{animation:none;opacity:.92;transform:scale(1.07);cursor:grabbing;z-index:20;box-shadow:0 18px 36px -12px rgba(11,61,145,.55);}
+  .qcard.qhold{animation:none;transform:scale(1.04);box-shadow:0 10px 22px -12px rgba(11,61,145,.5);}
+  .qcard.qdragging{animation:none;opacity:.92;transform:scale(1.08);cursor:grabbing;z-index:20;box-shadow:0 18px 36px -12px rgba(11,61,145,.55);}
   .qdrag{position:absolute;top:3px;right:5px;font-size:12px;line-height:1;color:#0b3d91;opacity:.65;pointer-events:none;z-index:5;}
   /* Menú desplegable de accesos: se monta en <body> para ocupar el ancho real
      (así nunca queda angosto ni provoca scroll lateral). Texto en una línea. */
@@ -486,6 +487,10 @@
   .jef-form input,.jef-upload input[type=text],.jef-upload input[type=email],.jef-upload input[type=file],.jefselect{width:100%;padding:9px 11px;border:1px solid var(--border);border-radius:10px;font-family:inherit;font-size:13px;background:var(--card);color:var(--text);}
   .jefselect{appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%235b6b85' stroke-width='2' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 11px center;padding-right:30px;cursor:pointer;}
   .jef-add{align-self:flex-start;background:linear-gradient(135deg,#16a34a,#0b7a36);color:#fff;border:none;border-radius:10px;padding:9px 16px;font-weight:800;font-size:13px;cursor:pointer;font-family:inherit;box-shadow:0 8px 18px -10px rgba(11,122,54,.8);}
+  .jef-add.sm{padding:8px 14px;font-size:12.5px;flex:none;}
+  .jef-docrow{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:9px;border:1px solid var(--border);border-radius:11px;background:var(--card);margin-bottom:7px;}
+  .jef-docname{flex:1 1 150px;font-size:12.5px;font-weight:800;color:var(--text);min-width:140px;}
+  .jef-docrow input[type=file]{flex:1 1 150px;min-width:130px;padding:7px 9px;border:1px solid var(--border);border-radius:9px;font-family:inherit;font-size:12px;background:var(--bg);color:var(--text);}
   .jef-add:hover{filter:brightness(1.07);} .jef-add:disabled{opacity:.6;cursor:default;}
   .jef-list{display:flex;flex-direction:column;gap:5px;max-height:240px;overflow:auto;border:1px solid var(--border);border-radius:12px;padding:7px;background:var(--card);}
   .jef-row{display:flex;align-items:center;gap:9px;padding:7px 9px;border-radius:9px;background:var(--bg);}
@@ -1476,16 +1481,22 @@
       </div>
       <div class="jef-sec">
         <h4>📎 Documentos del estudiante</h4>
-        <p class="jef-hint">Sube, uno a uno, los documentos del perfil del estudiante (PDF, máx. ~5 MB). Quedan disponibles en el perfil del estudiante y su apoderado/a.</p>
-        <div class="jef-upload">
-          <select id="jefDocStudent" class="jefselect"><option value="">Selecciona un estudiante…</option></select>
-          <select id="jefDocKind" class="jefselect">
-            <option value="notas">📊 Informe de notas</option>
-            <option value="personalidad">🧭 Informe de personalidad</option>
-            <option value="certificado">📄 Certificado de alumno regular</option>
-          </select>
-          <input id="jefFile" type="file" accept=".pdf,application/pdf">
-          <button type="button" class="jef-add" id="jefUpBtn" onclick="jefUploadStudentDoc()">Subir documento</button>
+        <p class="jef-hint">Elige al estudiante y sube cada documento <b>por separado</b> (PDF, máx. ~5 MB). Quedan disponibles en el perfil del estudiante y su apoderado/a.</p>
+        <select id="jefDocStudent" class="jefselect" style="margin-bottom:10px"><option value="">Selecciona un estudiante…</option></select>
+        <div class="jef-docrow">
+          <div class="jef-docname">📊 Informe de notas</div>
+          <input id="jefFile_notas" type="file" accept=".pdf,application/pdf">
+          <button type="button" class="jef-add sm" onclick="jefUploadStudentDoc('notas')">Subir</button>
+        </div>
+        <div class="jef-docrow">
+          <div class="jef-docname">🧭 Informe de personalidad</div>
+          <input id="jefFile_personalidad" type="file" accept=".pdf,application/pdf">
+          <button type="button" class="jef-add sm" onclick="jefUploadStudentDoc('personalidad')">Subir</button>
+        </div>
+        <div class="jef-docrow">
+          <div class="jef-docname">📄 Certificado de alumno regular</div>
+          <input id="jefFile_certificado" type="file" accept=".pdf,application/pdf">
+          <button type="button" class="jef-add sm" onclick="jefUploadStudentDoc('certificado')">Subir</button>
         </div>
       </div>
       <div id="jefMsg" class="jef-msg" style="display:none"></div>
@@ -1772,21 +1783,41 @@ function moveQuick(key,dir){
   saveQuickOrder(keys);
   renderQuick(ROLE);
 }
-/* Arrastrar para reordenar (funciona en móvil y escritorio, en cualquier dirección). */
-let QDRAG=null;
+/* Arrastrar para reordenar. En el celular hay que MANTENER PRESIONADO (long-press)
+   para tomar el icono; así un toque o un scroll no lo mueven sin querer. */
+let QDRAG=null, QHOLD=null;
+function qDragCleanup(){
+  if(QHOLD){ clearTimeout(QHOLD); QHOLD=null; }
+  document.removeEventListener("pointermove",qDragMove);
+  document.removeEventListener("pointerup",qDragEnd);
+  document.removeEventListener("pointercancel",qDragEnd);
+  if(QDRAG&&QDRAG.el){ QDRAG.el.classList.remove("qdragging","qhold"); QDRAG.el.style.pointerEvents=""; QDRAG.el.style.touchAction=""; }
+}
 function qDragStart(e){
   if(!QUICK_EDIT) return;
-  const el=e.currentTarget; e.preventDefault();
-  QDRAG={el,startX:e.clientX,startY:e.clientY,moved:false,pid:e.pointerId};
-  try{ el.setPointerCapture(e.pointerId); }catch(_){}
-  el.classList.add("qdragging");
-  document.addEventListener("pointermove",qDragMove);
+  const el=e.currentTarget;
+  const touch=(e.pointerType==="touch");
+  QDRAG={el,startX:e.clientX,startY:e.clientY,moved:false,active:!touch,pid:e.pointerId,touch};
+  document.addEventListener("pointermove",qDragMove,{passive:false});
   document.addEventListener("pointerup",qDragEnd);
   document.addEventListener("pointercancel",qDragEnd);
+  if(touch){ el.classList.add("qhold"); QHOLD=setTimeout(()=>{ if(QDRAG&&!QDRAG.active) qDragActivate(); }, 300); }
+  else { e.preventDefault(); qDragActivate(); }
+}
+function qDragActivate(){
+  if(!QDRAG) return;
+  QDRAG.active=true;
+  const el=QDRAG.el; el.classList.remove("qhold"); el.classList.add("qdragging"); el.style.touchAction="none";
+  try{ el.setPointerCapture(QDRAG.pid); }catch(_){}
+  if(QDRAG.touch && navigator.vibrate){ try{ navigator.vibrate(14); }catch(_){} }
 }
 function qDragMove(e){
-  if(!QDRAG)return;
-  if(!QDRAG.moved){ if(Math.abs(e.clientX-QDRAG.startX)+Math.abs(e.clientY-QDRAG.startY)<6) return; QDRAG.moved=true; }
+  if(!QDRAG) return;
+  if(!QDRAG.active){                                  // long-press en curso: si se mueve, era scroll -> cancelar
+    if(Math.abs(e.clientX-QDRAG.startX)+Math.abs(e.clientY-QDRAG.startY)>10){ qDragCleanup(); QDRAG=null; }
+    return;
+  }
+  e.preventDefault(); QDRAG.moved=true;
   const g=document.getElementById("qgrid"); if(!g)return;
   QDRAG.el.style.pointerEvents="none";
   const under=document.elementFromPoint(e.clientX,e.clientY);
@@ -1799,12 +1830,10 @@ function qDragMove(e){
   }
 }
 function qDragEnd(){
-  if(!QDRAG)return;
-  QDRAG.el.classList.remove("qdragging"); QDRAG.el.style.pointerEvents="";
-  document.removeEventListener("pointermove",qDragMove);
-  document.removeEventListener("pointerup",qDragEnd);
-  document.removeEventListener("pointercancel",qDragEnd);
-  if(QDRAG.moved){
+  if(!QDRAG){ qDragCleanup(); return; }
+  const moved=QDRAG.moved && QDRAG.active;
+  qDragCleanup();
+  if(moved){
     const g=document.getElementById("qgrid");
     const keys=[...g.querySelectorAll(".qcard")].map(c=>c.dataset.qkey).filter(Boolean);
     saveQuickOrder(keys);
@@ -3454,6 +3483,9 @@ function add(text,who,extra){
     if(extra.horarioProfe){const b=document.createElement("button");b.type="button";b.className="horbtn";
       const n=extra.horarioProfe;b.innerHTML='📅 <span>Haz clic para ver el horario de '+n.replace(/</g,"&lt;")+'</span>';
       b.onclick=()=>openProfHorario(n);msg.appendChild(document.createElement("br"));msg.appendChild(b);}
+    if(extra.horarioCurso){const b=document.createElement("button");b.type="button";b.className="horbtn";
+      const hc=extra.horarioCurso;b.innerHTML='📅 <span>Haz clic para ver el horario del '+(hc.label||"curso").replace(/</g,"&lt;")+'</span>';
+      b.onclick=()=>openHorarioCurso(hc.code,hc.label);msg.appendChild(document.createElement("br"));msg.appendChild(b);}
     if(extra.docCites&&extra.docCites.length){const box=el("div","srccards");
       extra.docCites.forEach(c=>box.appendChild(srcCardEl(c)));msg.appendChild(box);}
   }
@@ -3798,6 +3830,64 @@ function answerAlexiaFalta(q){
   const extra=best.slice(1).filter(x=>x.s>=top.s-0 && (x.ref!==top.ref||x.lbl!==top.lbl)).slice(0,2);
   return afFormat(top, extra.length?extra:null);
 }
+
+/* ===== Horario de un CURSO desde el chat (botón → abre la imagen oficial) ===== */
+function hcParseCurso(q){
+  const nq=" "+afNorm(q).replace(/[°º]/g," ").replace(/\s+/g," ")+" ";
+  const esMedia=/\bmedio\b|\bmedia\b/.test(nq);
+  let base=null;
+  if(esMedia){
+    if(/\bcuarto\b|\biv\b|\b4\b/.test(nq))base="C";
+    else if(/\btercero\b|\biii\b|\b3\b/.test(nq))base="T";
+    else if(/\bsegundo\b|\bii\b|\b2\b/.test(nq))base="S";
+    else if(/\bprimero\b|\bi\b|\b1\b/.test(nq))base="P";
+  } else if(/\bpre ?kinder\b|\bprekinder\b|\bpk\b/.test(nq)) base="PK";
+  else if(/\bkinder\b|\bk\b/.test(nq)) base="K";
+  else {
+    const ORD={primero:1,segundo:2,tercero:3,cuarto:4,quinto:5,sexto:6,septimo:7,octavo:8};
+    for(const w in ORD){ if(new RegExp("\\b"+w+"\\b").test(nq)){ base=String(ORD[w]); break; } }
+    if(!base){ const m=nq.match(/\b([1-8])\b/); if(m) base=m[1]; }
+  }
+  if(!base) return null;
+  let letra=null; const lm=nq.match(/\b([a-d])\b/g);
+  if(lm){ for(let i=lm.length-1;i>=0;i--){ const L=lm[i].trim().toUpperCase(); if("ABCD".includes(L)){ letra=L; break; } } }
+  if(!letra) return null;
+  return COURSES.find(x=>x.c===(base+" "+letra))||null;
+}
+function answerHorarioCurso(q){
+  const nq=afNorm(q);
+  if(!/horario|a que hora|que hora|\bclases\b|\bsala\b|\bjornada\b/.test(nq)) return null;
+  const c=hcParseCurso(q); if(!c) return null;
+  if(HOR_IMG[c.c]) return {reply:"📅 Aquí tienes el horario del curso "+c.l+". Toca el botón para verlo.", code:c.c, label:c.l};
+  return {reply:"El horario del curso "+c.l+" aún no está cargado. El colegio lo subirá pronto. 🙂", code:"", label:c.l};
+}
+function openHorarioCurso(code,label){
+  document.getElementById("horTitle").textContent="Horario · "+(label||code);
+  const body=document.getElementById("horBody"); body.innerHTML="";
+  const img=HOR_IMG[code];
+  if(img){ const im=new Image(); im.src=img; im.alt="Horario "+(label||""); im.className="horimg"; im.onerror=()=>{ body.innerHTML='<div class="soonbox"><div class="big">🗓️</div>No se pudo cargar el horario. Intenta nuevamente.</div>'; }; body.appendChild(im); }
+  else body.innerHTML='<div class="soonbox"><div class="big">🗓️</div>El horario de '+(label||"este curso")+' estará disponible muy pronto.</div>';
+  document.getElementById("hormodal").classList.add("open");
+}
+/* ===== Correo del apoderado/a de un estudiante desde el chat (solo funcionarios) ===== */
+function answerCorreoApoderado(q){
+  if(!STAFF(ROLE)) return null;
+  const nq=afNorm(q);
+  if(!/(correo|email|mail|contacto)/.test(nq) || !/apoderad/.test(nq)) return null;
+  if(!STUDENTS.length) return "Aún estoy cargando la nómina del colegio. Intenta otra vez en unos segundos. 🙂";
+  const stop=new Set("correo email mail del de la el los las un una apoderado apoderada apoderados contacto estudiante alumno alumna cual cuales para dame necesito por favor quiero saber tiene".split(" "));
+  const toks=nq.replace(/[^a-z0-9ñ ]/g," ").split(/\s+/).filter(w=>w.length>=3&&!stop.has(w));
+  if(!toks.length) return "¿De qué estudiante necesitas el correo del apoderado/a? Dime su nombre y apellido. 🙂";
+  let best=[];
+  STUDENTS.forEach(s=>{ const nm=afNorm(s.name); let sc=0; toks.forEach(t=>{ if(nm.includes(t)) sc++; }); if(sc>0) best.push({s,sc}); });
+  if(!best.length) return "No encontré un estudiante con ese nombre en la nómina. Revisa el nombre e intenta de nuevo. 🙂";
+  best.sort((a,b)=>b.sc-a.sc);
+  const top=best.filter(x=>x.sc===best[0].sc).slice(0,6);
+  if(top.length>1 && best[0].sc<2) return "Hay varios estudiantes que coinciden: "+top.map(x=>apellidoFirst(x.s.name)).join(", ")+". Dime el nombre completo, por favor. 🙂";
+  const s=top[0].s, label=(COURSES.find(c=>c.c===s.course)||{}).l||s.course;
+  if(!s.apEmail) return "El/la estudiante "+s.name+" ("+label+") no tiene un correo de apoderado/a registrado en la planilla. 🙂";
+  return "👪 Apoderado/a de "+s.name+" ("+label+"):\n"+s.apEmail;
+}
 async function ask(text){
   text=(text||"").trim();if(!text)return;
   document.getElementById("sugs").innerHTML="";add(text,"user");document.getElementById("q").value="";typing(true);
@@ -3808,6 +3898,10 @@ async function ask(text){
     add(_hp,"bot",pn?{horarioProfe:pn}:null); speak(_hp); convo.push({role:"user",content:text}); convo.push({role:"assistant",content:clean(_hp)}); return; }
   const _af=answerAlexiaFalta(text);
   if(_af){ await new Promise(r=>setTimeout(r,300)); typing(false); add(_af,"bot"); speak(_af); convo.push({role:"user",content:text}); convo.push({role:"assistant",content:clean(_af)}); return; }
+  const _ca=answerCorreoApoderado(text);
+  if(_ca){ await new Promise(r=>setTimeout(r,300)); typing(false); add(_ca,"bot"); speak(_ca); convo.push({role:"user",content:text}); convo.push({role:"assistant",content:clean(_ca)}); return; }
+  const _hcu=answerHorarioCurso(text);
+  if(_hcu){ await new Promise(r=>setTimeout(r,300)); typing(false); add(_hcu.reply,"bot",_hcu.code?{horarioCurso:{code:_hcu.code,label:_hcu.label}}:null); speak(_hcu.reply); convo.push({role:"user",content:text}); convo.push({role:"assistant",content:clean(_hcu.reply)}); return; }
   const local=answer(text);
   let reply=local.reply;
   let shownCites=local.docCites;            // fichas que se muestran bajo la respuesta
@@ -3978,22 +4072,20 @@ async function jefAddStudent(){
   btn.disabled=false;
 }
 const JEF_DOC_LABELS={notas:"Informe de notas",personalidad:"Informe de personalidad",certificado:"Certificado de alumno regular"};
-async function jefUploadStudentDoc(){
+async function jefUploadStudentDoc(kind){
   const sel=document.getElementById("jefDocStudent"); const student=sel?sel.value:"";
-  const kind=document.getElementById("jefDocKind").value;
-  const fi=document.getElementById("jefFile"); const f=fi.files&&fi.files[0];
+  const fi=document.getElementById("jefFile_"+kind); const f=fi&&fi.files&&fi.files[0];
   if(!student){ jefMsg("Selecciona primero al estudiante.",false); return; }
-  if(!f){ jefMsg("Elige el archivo PDF a subir.",false); return; }
+  if(!f){ jefMsg("Elige el archivo PDF del "+(JEF_DOC_LABELS[kind]||"documento").toLowerCase()+".",false); return; }
   if(!/\.pdf$/i.test(f.name) && f.type!=="application/pdf"){ jefMsg("El documento debe ser un archivo PDF.",false); return; }
   if(f.size>5*1024*1024){ jefMsg("El archivo supera los 5 MB.",false); return; }
-  const btn=document.getElementById("jefUpBtn"); btn.disabled=true; jefMsg("Subiendo "+(JEF_DOC_LABELS[kind]||"documento")+"…",true);
+  jefMsg("Subiendo "+(JEF_DOC_LABELS[kind]||"documento")+"…",true);
   try{
     const b64=await new Promise((res,rej)=>{ const r=new FileReader(); r.onload=()=>res(String(r.result).split(",")[1]||""); r.onerror=()=>rej(new Error("No se pudo leer el archivo")); r.readAsDataURL(f); });
     await jefApi("uploadStudentDoc",{studentEmail:student,kind,dataBase64:b64});
     fi.value="";
     jefMsg("✓ "+(JEF_DOC_LABELS[kind]||"Documento")+" subido. Ya queda disponible en el perfil del estudiante y de su apoderado/a.",true);
   }catch(e){ jefMsg("No se pudo subir: "+(e.message||"error"),false); }
-  btn.disabled=false;
 }
 function jefStudentChanged(){
   const email=document.getElementById("jefStudent").value;
