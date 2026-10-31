@@ -343,6 +343,22 @@ export default {
         await env.TUTORIAS.delete("jefdocdata:" + course + ":" + id);
         await save(d); return json({ ok: true }, 200, cors);
       }
+      // Documento del ESTUDIANTE (informe de notas/personalidad, certificado): se
+      // guarda en R2 con la MISMA clave que lee el recurso "doc", para que aparezca
+      // en el perfil del estudiante y de su apoderado/a.
+      if (action === "uploadStudentDoc") {
+        if (!env.DOCS) return json({ error: "Falta configurar el almacenamiento de documentos (R2 DOCS)" }, 500, cors);
+        const kind = String(body.kind || "").toLowerCase().replace(/[^a-z]/g, "");
+        const student = String(body.studentEmail || "").trim().toLowerCase();
+        const b64 = String(body.dataBase64 || "");
+        if (!["notas", "personalidad", "certificado"].includes(kind)) return json({ error: "Tipo de documento no válido" }, 400, cors);
+        if (!student) return json({ error: "Falta el correo del estudiante" }, 400, cors);
+        if (!b64) return json({ error: "Archivo vacío" }, 400, cors);
+        if (b64.length > 7 * 1024 * 1024) return json({ error: "El archivo es muy grande (máx. ~5 MB)." }, 400, cors);
+        const bytes = Uint8Array.from(atob(b64), (c) => c.charCodeAt(0));
+        await env.DOCS.put(kind + "__" + student.replace("@", "_at_") + ".pdf", bytes);
+        return json({ ok: true }, 200, cors);
+      }
       return json({ error: "Acción no reconocida" }, 400, cors);
     }
 
