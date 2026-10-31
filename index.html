@@ -184,14 +184,11 @@
   .qeditbtn:hover{border-color:#cfe0ff;transform:translateY(-1px);}
   .qeditbtn.on{background:linear-gradient(135deg,#16a34a,#0b7a36);color:#fff;border-color:transparent;box-shadow:0 10px 22px -12px rgba(11,122,54,.7);}
   .quick.editing .qgrid{outline:2px dashed #cfe0ff;outline-offset:6px;border-radius:14px;}
-  .qcard.qediting{animation:qwiggle .4s ease-in-out infinite;}
+  .qcard.qediting{animation:qwiggle .5s ease-in-out infinite;cursor:grab;touch-action:none;-webkit-user-select:none;user-select:none;}
   @keyframes qwiggle{0%,100%{transform:rotate(-.7deg);}50%{transform:rotate(.7deg);}}
   .qcard.qediting:hover{transform:none;}
-  .qmove{position:absolute;top:3px;right:3px;display:flex;gap:3px;z-index:5;}
-  .qmv{width:20px;height:20px;border-radius:50%;border:none;background:#0b3d91;color:#fff;font-size:13px;font-weight:900;
-    line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0;box-shadow:0 4px 10px -4px rgba(11,61,145,.8);}
-  .qmv:hover{filter:brightness(1.12);}
-  .qmv:disabled{background:#c3ccda;cursor:default;box-shadow:none;}
+  .qcard.qdragging{animation:none;opacity:.92;transform:scale(1.07);cursor:grabbing;z-index:20;box-shadow:0 18px 36px -12px rgba(11,61,145,.55);}
+  .qdrag{position:absolute;top:3px;right:5px;font-size:12px;line-height:1;color:#0b3d91;opacity:.65;pointer-events:none;z-index:5;}
   /* Menú desplegable de accesos: se monta en <body> para ocupar el ancho real
      (así nunca queda angosto ni provoca scroll lateral). Texto en una línea. */
   .qcardm{cursor:pointer;}
@@ -486,7 +483,8 @@
   .jef-count{font-weight:700;color:var(--muted);font-size:12px;}
   .jef-hint{margin:0 0 8px;font-size:11.5px;color:var(--muted);line-height:1.35;}
   .jef-form,.jef-upload{display:flex;flex-direction:column;gap:7px;}
-  .jef-form input,.jef-upload input[type=text],.jef-upload input[type=email],.jef-upload input[type=file]{width:100%;padding:9px 11px;border:1px solid var(--border);border-radius:10px;font-family:inherit;font-size:13px;background:var(--card);color:var(--text);}
+  .jef-form input,.jef-upload input[type=text],.jef-upload input[type=email],.jef-upload input[type=file],.jefselect{width:100%;padding:9px 11px;border:1px solid var(--border);border-radius:10px;font-family:inherit;font-size:13px;background:var(--card);color:var(--text);}
+  .jefselect{appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%235b6b85' stroke-width='2' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 11px center;padding-right:30px;cursor:pointer;}
   .jef-add{align-self:flex-start;background:linear-gradient(135deg,#16a34a,#0b7a36);color:#fff;border:none;border-radius:10px;padding:9px 16px;font-weight:800;font-size:13px;cursor:pointer;font-family:inherit;box-shadow:0 8px 18px -10px rgba(11,122,54,.8);}
   .jef-add:hover{filter:brightness(1.07);} .jef-add:disabled{opacity:.6;cursor:default;}
   .jef-list{display:flex;flex-direction:column;gap:5px;max-height:240px;overflow:auto;border:1px solid var(--border);border-radius:12px;padding:7px;background:var(--card);}
@@ -1468,26 +1466,27 @@
     <div class="jefbody" id="jefEditBody">
       <div class="jef-sec">
         <h4>➕ Agregar estudiante</h4>
+        <p class="jef-hint">Todos los campos son obligatorios.</p>
         <div class="jef-form">
-          <input id="jefNewName" type="text" placeholder="Nombre y apellido" autocomplete="off">
-          <input id="jefNewEmail" type="email" placeholder="Correo del estudiante (opcional)" autocomplete="off">
-          <input id="jefNewAp" type="email" placeholder="Correo del apoderado (opcional)" autocomplete="off">
+          <input id="jefNewName" type="text" placeholder="Nombre completo (requerido)" autocomplete="off" required>
+          <input id="jefNewEmail" type="email" placeholder="Correo del estudiante (requerido)" autocomplete="off" required>
+          <input id="jefNewAp" type="email" placeholder="Correo del apoderado (requerido)" autocomplete="off" required>
           <button type="button" class="jef-add" id="jefAddBtn" onclick="jefAddStudent()">Agregar a la lista</button>
         </div>
       </div>
       <div class="jef-sec">
-        <h4>👥 Estudiantes del curso <span id="jefCount" class="jef-count"></span></h4>
-        <div id="jefList" class="jef-list"><div class="jef-empty">Cargando…</div></div>
-      </div>
-      <div class="jef-sec">
-        <h4>📎 Documentos del curso</h4>
-        <p class="jef-hint">Sube la nómina actualizada u otros documentos (PDF, imagen, Excel; máx. ~5 MB). Quedan guardados para el curso.</p>
+        <h4>📎 Documentos del estudiante</h4>
+        <p class="jef-hint">Sube, uno a uno, los documentos del perfil del estudiante (PDF, máx. ~5 MB). Quedan disponibles en el perfil del estudiante y su apoderado/a.</p>
         <div class="jef-upload">
-          <input id="jefFile" type="file" accept=".pdf,.png,.jpg,.jpeg,.webp,.xlsx,.xls,.csv,.doc,.docx">
-          <input id="jefFileNote" type="text" placeholder="Nota (opcional): p. ej. «Nómina octubre»" autocomplete="off">
-          <button type="button" class="jef-add" id="jefUpBtn" onclick="jefUploadDoc()">Subir documento</button>
+          <select id="jefDocStudent" class="jefselect"><option value="">Selecciona un estudiante…</option></select>
+          <select id="jefDocKind" class="jefselect">
+            <option value="notas">📊 Informe de notas</option>
+            <option value="personalidad">🧭 Informe de personalidad</option>
+            <option value="certificado">📄 Certificado de alumno regular</option>
+          </select>
+          <input id="jefFile" type="file" accept=".pdf,application/pdf">
+          <button type="button" class="jef-add" id="jefUpBtn" onclick="jefUploadStudentDoc()">Subir documento</button>
         </div>
-        <div id="jefDocs" class="jef-docs"></div>
       </div>
       <div id="jefMsg" class="jef-msg" style="display:none"></div>
     </div>
@@ -1763,6 +1762,7 @@ function toggleQuickEdit(){
   if(btn){ btn.textContent=QUICK_EDIT?"✓ Listo":"⇅ Reordenar"; btn.classList.toggle("on",QUICK_EDIT); }
   const q=document.querySelector(".quick"); if(q) q.classList.toggle("editing",QUICK_EDIT);
   renderQuick(ROLE);
+  if(QUICK_EDIT) aseToast("Reordenar accesos","Arrastra para ordenar","Mantén presionado un icono y arrástralo donde quieras. Toca «Listo» al terminar. 🙂",6000);
 }
 function moveQuick(key,dir){
   const keys=orderedQuickList(ROLE).map(bKey);
@@ -1771,6 +1771,45 @@ function moveQuick(key,dir){
   const t=keys[i]; keys[i]=keys[j]; keys[j]=t;
   saveQuickOrder(keys);
   renderQuick(ROLE);
+}
+/* Arrastrar para reordenar (funciona en móvil y escritorio, en cualquier dirección). */
+let QDRAG=null;
+function qDragStart(e){
+  if(!QUICK_EDIT) return;
+  const el=e.currentTarget; e.preventDefault();
+  QDRAG={el,startX:e.clientX,startY:e.clientY,moved:false,pid:e.pointerId};
+  try{ el.setPointerCapture(e.pointerId); }catch(_){}
+  el.classList.add("qdragging");
+  document.addEventListener("pointermove",qDragMove);
+  document.addEventListener("pointerup",qDragEnd);
+  document.addEventListener("pointercancel",qDragEnd);
+}
+function qDragMove(e){
+  if(!QDRAG)return;
+  if(!QDRAG.moved){ if(Math.abs(e.clientX-QDRAG.startX)+Math.abs(e.clientY-QDRAG.startY)<6) return; QDRAG.moved=true; }
+  const g=document.getElementById("qgrid"); if(!g)return;
+  QDRAG.el.style.pointerEvents="none";
+  const under=document.elementFromPoint(e.clientX,e.clientY);
+  QDRAG.el.style.pointerEvents="";
+  const target=under&&under.closest?under.closest(".qcard"):null;
+  if(target&&target!==QDRAG.el&&target.parentNode===g){
+    const r=target.getBoundingClientRect();
+    const before=e.clientX < r.left+r.width/2;
+    g.insertBefore(QDRAG.el, before?target:target.nextSibling);
+  }
+}
+function qDragEnd(){
+  if(!QDRAG)return;
+  QDRAG.el.classList.remove("qdragging"); QDRAG.el.style.pointerEvents="";
+  document.removeEventListener("pointermove",qDragMove);
+  document.removeEventListener("pointerup",qDragEnd);
+  document.removeEventListener("pointercancel",qDragEnd);
+  if(QDRAG.moved){
+    const g=document.getElementById("qgrid");
+    const keys=[...g.querySelectorAll(".qcard")].map(c=>c.dataset.qkey).filter(Boolean);
+    saveQuickOrder(keys);
+  }
+  QDRAG=null;
 }
 function renderQuick(role){
   const g=document.getElementById("qgrid");g.innerHTML="";
@@ -1805,15 +1844,12 @@ function renderQuick(role){
       el=a;
     }
     el.dataset.qkey=bKey(b);
-    if(QUICK_EDIT){                                       // modo reordenar: flechas para mover, sin navegar
+    if(QUICK_EDIT){                                       // modo reordenar: ARRASTRA cada icono (sin navegar)
       el.classList.add("qediting");
       if(el.tagName==="A") el.addEventListener("click",e=>e.preventDefault());
-      const mv=document.createElement("span");mv.className="qmove";
-      const up=document.createElement("button");up.type="button";up.className="qmv";up.textContent="‹";up.title="Mover antes";up.disabled=(idx===0);
-      up.onclick=(e)=>{e.preventDefault();e.stopPropagation();moveQuick(el.dataset.qkey,-1);};
-      const dn=document.createElement("button");dn.type="button";dn.className="qmv";dn.textContent="›";dn.title="Mover después";dn.disabled=(idx===list.length-1);
-      dn.onclick=(e)=>{e.preventDefault();e.stopPropagation();moveQuick(el.dataset.qkey,1);};
-      mv.appendChild(up);mv.appendChild(dn);el.appendChild(mv);
+      if(el.tagName==="BUTTON") el.onclick=(e)=>e.preventDefault();
+      const h=document.createElement("span");h.className="qdrag";h.textContent="⠿";el.appendChild(h);
+      el.addEventListener("pointerdown",qDragStart);
     }
     g.appendChild(el);
   });
@@ -3913,40 +3949,27 @@ async function openJefEdit(){
   if(!AUTH_TOKEN){ aseToast("Inicia sesión con Google","Para editar la lista","Entra con tu cuenta Google del colegio; con el acceso de respaldo no se puede guardar.",9000); return; }
   const label=(COURSES.find(c=>c.c===JEF_COURSE)||{}).l||JEF_COURSE;
   document.getElementById("jefEditTitle").textContent="Jefatura · "+label;
-  document.getElementById("jefList").innerHTML='<div class="jef-empty">Cargando…</div>';
-  document.getElementById("jefDocs").innerHTML=""; jefMsg("",true);
+  jefMsg("",true); jefPopulateStudents();
   document.getElementById("jefModal").classList.add("open"); ovOpened("jefModal"); document.body.style.overflow="hidden";
-  try{ JEF_DATA=await jefApi("get"); jefRenderList(); jefRenderDocs(); }
-  catch(e){ document.getElementById("jefList").innerHTML='<div class="jef-empty">No se pudo cargar: '+(e.message||"error")+'</div>'; }
+  try{ JEF_DATA=await jefApi("get"); }catch(e){ /* el worker puede no estar desplegado aún; agregar estudiantes seguirá disponible al desplegarlo */ }
 }
 function closeJefEdit(){ document.getElementById("jefModal").classList.remove("open"); document.body.style.overflow=""; ovClosed("jefModal"); }
-function jefRenderList(){
-  const box=document.getElementById("jefList"); if(!box)return;
+function jefPopulateStudents(){
+  const sel=document.getElementById("jefDocStudent"); if(!sel)return;
+  const prev=sel.value;
   const esc=s=>(s||"").replace(/</g,"&lt;").replace(/"/g,"&quot;");
-  const addedKeys=new Set((JEF_DATA.added||[]).map(a=>(a.email||a.name||"").toLowerCase()));
-  const cur=STUDENTS.filter(s=>s.course===JEF_COURSE).sort((a,b)=>apellidoKey(a.name).localeCompare(apellidoKey(b.name),"es"));
-  document.getElementById("jefCount").textContent="("+cur.length+")";
-  let html="";
-  if(!cur.length) html+='<div class="jef-empty">Aún no hay estudiantes en la lista.</div>';
-  cur.forEach(s=>{
-    const key=(s.email||s.name||"").toLowerCase();
-    const isAdded=addedKeys.has(key);
-    html+='<div class="jef-row"><div class="nm">'+esc(s.name)+(isAdded?' <span class="tagadd">agregado</span>':'')+(s.email?'<small>'+esc(s.email)+'</small>':'')+'</div>'
-      +'<button type="button" class="jef-rm" title="Quitar" onclick="jefRemoveStudent(\''+esc(key).replace(/'/g,"\\'")+'\')">×</button></div>';
-  });
-  // Estudiantes ocultados (para poder restaurarlos)
-  (JEF_DATA.removed||[]).forEach(k=>{
-    html+='<div class="jef-row gone"><div class="nm">'+esc(k)+' <small>(oculto)</small></div>'
-      +'<button type="button" class="jef-restore" onclick="jefRestoreStudent(\''+esc(k).replace(/'/g,"\\'")+'\')">Restaurar</button></div>';
-  });
-  box.innerHTML=html;
+  const cur=STUDENTS.filter(s=>s.course===JEF_COURSE && s.email).sort((a,b)=>apellidoKey(a.name).localeCompare(apellidoKey(b.name),"es"));
+  sel.innerHTML='<option value="">Selecciona un estudiante…</option>'+cur.map(s=>'<option value="'+esc(s.email)+'">'+esc(apellidoFirst(s.name))+'</option>').join("");
+  if(prev)sel.value=prev;
 }
-async function jefReload(){ await loadDirectory(); try{ JEF_DATA=await jefApi("get"); }catch(e){} jefRenderList(); jefRenderDocs(); renderJefatura(); }
+async function jefReload(){ await loadDirectory(); try{ JEF_DATA=await jefApi("get"); }catch(e){} jefPopulateStudents(); renderJefatura(); }
 async function jefAddStudent(){
   const name=document.getElementById("jefNewName").value.trim();
   const email=document.getElementById("jefNewEmail").value.trim();
   const apEmail=document.getElementById("jefNewAp").value.trim();
-  if(!name){ jefMsg("Escribe el nombre y apellido del estudiante.",false); return; }
+  if(!name){ jefMsg("Escribe el nombre completo del estudiante.",false); return; }
+  if(!validEmail(email)){ jefMsg("Escribe un correo válido del estudiante.",false); return; }
+  if(!validEmail(apEmail)){ jefMsg("Escribe un correo válido del apoderado/a.",false); return; }
   const btn=document.getElementById("jefAddBtn"); btn.disabled=true; jefMsg("Guardando…",true);
   try{ await jefApi("addStudent",{name,email,apEmail});
     document.getElementById("jefNewName").value="";document.getElementById("jefNewEmail").value="";document.getElementById("jefNewAp").value="";
@@ -3954,57 +3977,23 @@ async function jefAddStudent(){
   }catch(e){ jefMsg("No se pudo agregar: "+(e.message||"error"),false); }
   btn.disabled=false;
 }
-async function jefRemoveStudent(key){
-  if(!key)return; if(!confirm("¿Quitar a este estudiante de la lista del curso?"))return;
-  jefMsg("Guardando…",true);
-  try{ await jefApi("removeStudent",{key}); await jefReload(); jefMsg("Estudiante quitado de la lista.",true); }
-  catch(e){ jefMsg("No se pudo quitar: "+(e.message||"error"),false); }
-}
-async function jefRestoreStudent(key){
-  jefMsg("Restaurando…",true);
-  try{ await jefApi("restoreStudent",{key}); await jefReload(); jefMsg("Estudiante restaurado.",true); }
-  catch(e){ jefMsg("No se pudo restaurar: "+(e.message||"error"),false); }
-}
-function jefFmtSize(n){ n=n*0.75; return n<1024?Math.round(n)+" B":n<1048576?(n/1024).toFixed(0)+" KB":(n/1048576).toFixed(1)+" MB"; }
-function jefRenderDocs(){
-  const box=document.getElementById("jefDocs"); if(!box)return;
-  const esc=s=>(s||"").replace(/</g,"&lt;").replace(/"/g,"&quot;");
-  const docs=JEF_DATA.docs||[];
-  if(!docs.length){ box.innerHTML='<div class="jef-empty">Aún no hay documentos cargados.</div>'; return; }
-  box.innerHTML=docs.map(d=>'<div class="jef-doc"><div class="dn">'+esc(d.filename)+(d.note?'<small>'+esc(d.note)+'</small>':'')+'<small>'+jefFmtSize(d.size||0)+'</small></div>'
-    +'<button type="button" class="jef-dl" onclick="jefDownloadDoc(\''+d.id+'\',\''+esc(d.filename).replace(/'/g,"\\'")+'\')">Abrir</button>'
-    +'<button type="button" class="jef-rm" title="Eliminar" onclick="jefDeleteDoc(\''+d.id+'\')">×</button></div>').join("");
-}
-async function jefUploadDoc(){
+const JEF_DOC_LABELS={notas:"Informe de notas",personalidad:"Informe de personalidad",certificado:"Certificado de alumno regular"};
+async function jefUploadStudentDoc(){
+  const sel=document.getElementById("jefDocStudent"); const student=sel?sel.value:"";
+  const kind=document.getElementById("jefDocKind").value;
   const fi=document.getElementById("jefFile"); const f=fi.files&&fi.files[0];
-  if(!f){ jefMsg("Elige un archivo para subir.",false); return; }
+  if(!student){ jefMsg("Selecciona primero al estudiante.",false); return; }
+  if(!f){ jefMsg("Elige el archivo PDF a subir.",false); return; }
+  if(!/\.pdf$/i.test(f.name) && f.type!=="application/pdf"){ jefMsg("El documento debe ser un archivo PDF.",false); return; }
   if(f.size>5*1024*1024){ jefMsg("El archivo supera los 5 MB.",false); return; }
-  const note=document.getElementById("jefFileNote").value.trim();
-  const btn=document.getElementById("jefUpBtn"); btn.disabled=true; jefMsg("Subiendo…",true);
+  const btn=document.getElementById("jefUpBtn"); btn.disabled=true; jefMsg("Subiendo "+(JEF_DOC_LABELS[kind]||"documento")+"…",true);
   try{
     const b64=await new Promise((res,rej)=>{ const r=new FileReader(); r.onload=()=>res(String(r.result).split(",")[1]||""); r.onerror=()=>rej(new Error("No se pudo leer el archivo")); r.readAsDataURL(f); });
-    await jefApi("uploadDoc",{filename:f.name,dataBase64:b64,note});
-    fi.value="";document.getElementById("jefFileNote").value="";
-    JEF_DATA=await jefApi("get"); jefRenderDocs(); jefMsg("✓ Documento subido y guardado.",true);
+    await jefApi("uploadStudentDoc",{studentEmail:student,kind,dataBase64:b64});
+    fi.value="";
+    jefMsg("✓ "+(JEF_DOC_LABELS[kind]||"Documento")+" subido. Ya queda disponible en el perfil del estudiante y de su apoderado/a.",true);
   }catch(e){ jefMsg("No se pudo subir: "+(e.message||"error"),false); }
   btn.disabled=false;
-}
-async function jefDownloadDoc(id,filename){
-  jefMsg("Abriendo…",true);
-  try{
-    const d=await jefApi("getDoc",{id});
-    const b64=d.data||""; const bin=atob(b64); const bytes=new Uint8Array(bin.length);
-    for(let i=0;i<bin.length;i++)bytes[i]=bin.charCodeAt(i);
-    const blob=new Blob([bytes]); const url=URL.createObjectURL(blob);
-    const a=document.createElement("a"); a.href=url; a.download=filename||"documento"; document.body.appendChild(a); a.click(); a.remove();
-    setTimeout(()=>URL.revokeObjectURL(url),4000); jefMsg("",true);
-  }catch(e){ jefMsg("No se pudo abrir: "+(e.message||"error"),false); }
-}
-async function jefDeleteDoc(id){
-  if(!confirm("¿Eliminar este documento?"))return;
-  jefMsg("Eliminando…",true);
-  try{ await jefApi("deleteDoc",{id}); JEF_DATA=await jefApi("get"); jefRenderDocs(); jefMsg("Documento eliminado.",true); }
-  catch(e){ jefMsg("No se pudo eliminar: "+(e.message||"error"),false); }
 }
 function jefStudentChanged(){
   const email=document.getElementById("jefStudent").value;
