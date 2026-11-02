@@ -51,7 +51,7 @@ const DIRECTORY = [];
  *  Planilla de Matrículas). El GOOGLE_CLIENT_ID debe ser el mismo de la página.
  * ========================================================================== */
 const GOOGLE_CLIENT_ID = "195849212680-sjfflsv7f96o6742l67ihj5kllitpvj4.apps.googleusercontent.com";
-const DEV_EMAILS = ["franciscoamigo21@gmail.com", "paulina.devia@sip.cl", "jcid@sip.cl", "camila.ortiz@sip.cl", "cesar.cid@sip.cl", "nardyn.mella@sip.cl", "israel.salas@sip.cl", "claudia.calderon@sip.cl"]; // correos de administración
+const DEV_EMAILS = ["franciscoamigo21@gmail.com", "paulina.devia@sip.cl", "jcid@sip.cl", "camila.ortiz@sip.cl", "cesar.cid@sip.cl", "nardyn.mella@sip.cl", "israel.salas@sip.cl", "claudia.calderon@sip.cl", "miranda.fernandez@sip.cl"]; // correos de administración
 /* Profesores/as jefe 2026 (correo -> curso). Solo el jefe de un curso puede
    editar la nómina de ESE curso; los correos de administración (DEV) pueden editar cualquiera. */
 const JEFATURAS_W = {
@@ -351,7 +351,7 @@ export default {
         const kind = String(body.kind || "").toLowerCase().replace(/[^a-z]/g, "");
         const student = String(body.studentEmail || "").trim().toLowerCase();
         const b64 = String(body.dataBase64 || "");
-        if (!["notas", "personalidad", "certificado"].includes(kind)) return json({ error: "Tipo de documento no válido" }, 400, cors);
+        if (!["notas", "personalidad", "certificado", "paec"].includes(kind)) return json({ error: "Tipo de documento no válido" }, 400, cors);
         if (!student) return json({ error: "Falta el correo del estudiante" }, 400, cors);
         if (!b64) return json({ error: "Archivo vacío" }, 400, cors);
         if (b64.length > 7 * 1024 * 1024) return json({ error: "El archivo es muy grande (máx. ~5 MB)." }, 400, cors);
