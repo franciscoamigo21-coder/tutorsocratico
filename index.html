@@ -491,6 +491,7 @@
   .jefselect{appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%235b6b85' stroke-width='2' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 11px center;padding-right:30px;cursor:pointer;}
   .jef-add{align-self:flex-start;background:linear-gradient(135deg,#16a34a,#0b7a36);color:#fff;border:none;border-radius:10px;padding:9px 16px;font-weight:800;font-size:13px;cursor:pointer;font-family:inherit;box-shadow:0 8px 18px -10px rgba(11,122,54,.8);}
   .jef-add.sm{padding:8px 14px;font-size:12.5px;flex:none;}
+  .jef-add.jef-danger{background:linear-gradient(135deg,#e5484d,#b4232a);box-shadow:0 8px 18px -10px rgba(180,35,42,.8);}
   .jef-docrow{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:9px;border:1px solid var(--border);border-radius:11px;background:var(--card);margin-bottom:7px;}
   .jef-docname{flex:1 1 150px;font-size:12.5px;font-weight:800;color:var(--text);min-width:140px;}
   .jef-docrow input[type=file]{flex:1 1 150px;min-width:130px;padding:7px 9px;border:1px solid var(--border);border-radius:9px;font-family:inherit;font-size:12px;background:var(--bg);color:var(--text);}
@@ -1489,6 +1490,14 @@
           <input id="jefNewEmail" type="email" placeholder="Correo del estudiante (requerido)" autocomplete="off" required>
           <input id="jefNewAp" type="email" placeholder="Correo del apoderado (requerido)" autocomplete="off" required>
           <button type="button" class="jef-add" id="jefAddBtn" onclick="jefAddStudent()">Agregar a la lista</button>
+        </div>
+      </div>
+      <div class="jef-sec">
+        <h4>➖ Quitar estudiante</h4>
+        <p class="jef-hint">Selecciona un estudiante del curso y quítalo de la lista.</p>
+        <div class="jef-upload">
+          <select id="jefRmStudent" class="jefselect"><option value="">Selecciona un estudiante…</option></select>
+          <button type="button" class="jef-add jef-danger" onclick="jefRemoveSelected()">Quitar de la lista</button>
         </div>
       </div>
       <div class="jef-sec">
@@ -4121,12 +4130,27 @@ async function openJefEdit(){
 }
 function closeJefEdit(){ document.getElementById("jefModal").classList.remove("open"); document.body.style.overflow=""; ovClosed("jefModal"); }
 function jefPopulateStudents(){
-  const sel=document.getElementById("jefDocStudent"); if(!sel)return;
-  const prev=sel.value;
   const esc=s=>(s||"").replace(/</g,"&lt;").replace(/"/g,"&quot;");
-  const cur=STUDENTS.filter(s=>s.course===JEF_COURSE && s.email).sort((a,b)=>apellidoKey(a.name).localeCompare(apellidoKey(b.name),"es"));
-  sel.innerHTML='<option value="">Selecciona un estudiante…</option>'+cur.map(s=>'<option value="'+esc(s.email)+'">'+esc(apellidoFirst(s.name))+'</option>').join("");
-  if(prev)sel.value=prev;
+  const sorted=STUDENTS.filter(s=>s.course===JEF_COURSE).sort((a,b)=>apellidoKey(a.name).localeCompare(apellidoKey(b.name),"es"));
+  // Documentos: solo estudiantes con correo (los documentos se guardan por correo).
+  const docSel=document.getElementById("jefDocStudent");
+  if(docSel){ const prev=docSel.value; const conMail=sorted.filter(s=>s.email);
+    docSel.innerHTML='<option value="">Selecciona un estudiante…</option>'+conMail.map(s=>'<option value="'+esc(s.email)+'">'+esc(apellidoFirst(s.name))+'</option>').join("");
+    if(prev)docSel.value=prev; }
+  // Quitar: todos los estudiantes del curso (clave = correo o, si no tiene, el nombre).
+  const rmSel=document.getElementById("jefRmStudent");
+  if(rmSel){ const prev=rmSel.value;
+    rmSel.innerHTML='<option value="">Selecciona un estudiante…</option>'+sorted.map(s=>'<option value="'+esc((s.email||s.name||"").toLowerCase())+'">'+esc(apellidoFirst(s.name))+'</option>').join("");
+    if(prev)rmSel.value=prev; }
+}
+async function jefRemoveSelected(){
+  const sel=document.getElementById("jefRmStudent"); const key=sel?sel.value:"";
+  if(!key){ jefMsg("Selecciona el estudiante que quieres quitar.",false); return; }
+  const name=(sel.options[sel.selectedIndex]&&sel.options[sel.selectedIndex].textContent)||"este estudiante";
+  if(!confirm("¿Quitar a "+name+" de la lista del curso?"))return;
+  jefMsg("Guardando…",true);
+  try{ await jefApi("removeStudent",{key}); await jefReload(); jefMsg("✓ Estudiante quitado de la lista.",true); }
+  catch(e){ jefMsg("No se pudo quitar: "+(e.message||"error"),false); }
 }
 async function jefReload(){ await loadDirectory(); try{ JEF_DATA=await jefApi("get"); }catch(e){} jefPopulateStudents(); renderJefatura(); }
 async function jefAddStudent(){
