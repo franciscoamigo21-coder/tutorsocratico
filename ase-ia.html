@@ -4152,7 +4152,7 @@ async function jefRemoveSelected(){
   try{ await jefApi("removeStudent",{key}); await jefReload(); jefMsg("✓ Estudiante quitado de la lista.",true); }
   catch(e){ jefMsg("No se pudo quitar: "+(e.message||"error"),false); }
 }
-async function jefReload(){ await loadDirectory(); try{ JEF_DATA=await jefApi("get"); }catch(e){} jefPopulateStudents(); renderJefatura(); }
+async function jefReload(){ STUDENTS.length=0; DIR_BUSY=false; DIR_STATE="idle"; await loadDirectory(); try{ JEF_DATA=await jefApi("get"); }catch(e){} jefPopulateStudents(); renderJefatura(); }
 async function jefAddStudent(){
   const name=document.getElementById("jefNewName").value.trim();
   const email=document.getElementById("jefNewEmail").value.trim();
