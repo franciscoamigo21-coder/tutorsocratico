@@ -4171,8 +4171,8 @@ function jefStudentChanged(){
     {e:"📊",l:"Informe de notas",sub:"Primer semestre",fn:()=>openDoc("notas"),soon:false},
     {e:"🧭",l:"Informe de personalidad",sub:"Ver documento",fn:()=>openDoc("personalidad"),soon:false},
     {e:"📄",l:"Certificado alumno regular",sub:"Ver documento",fn:()=>openDoc("certificado"),soon:false},
-    {e:"🧩",l:"Ficha PIE (PAEC)",sub:"Ver documento",fn:()=>openDoc("paec"),soon:false},
   ];
+  if(canSeePaec()) cards.push({e:"🧩",l:"Ficha PIE (PAEC)",sub:"Ver documento",fn:()=>openDoc("paec"),soon:false});
   cards.forEach(c=>{const card=el("div","myp-card"+(c.soon?" soon":""));if(c.soon)card.appendChild(el("span","badge-soon","Pronto"));
     card.appendChild(el("div","e",c.e));const l=el("div","l",c.l);if(c.sub){const sm=document.createElement("small");sm.textContent=c.sub;l.appendChild(sm);}
     card.appendChild(l);card.onclick=c.fn;grid.appendChild(card);});
@@ -4213,7 +4213,6 @@ function renderMyPanel(){
   cards.push(
     {e:"🧭",l:"Informe de personalidad",sub:"Ver documento",fn:()=>openDoc("personalidad"),soon:false},
     {e:"📄",l:"Certificado alumno regular",sub:"Ver documento",fn:()=>openDoc("certificado"),soon:false},
-    {e:"🧩",l:"Ficha PIE (PAEC)",sub:"Ver documento",fn:()=>openDoc("paec"),soon:false},
   );
   cards.forEach(c=>{
     const card=el("div","myp-card"+(c.soon?" soon":""));
@@ -4974,6 +4973,7 @@ document.addEventListener("keydown",e=>{ if(e.key==="Escape"){ closeBeneficios()
 const DOC_LABELS={notas:"informe de notas",personalidad:"informe de personalidad",certificado:"certificado de alumno regular",paec:"ficha PIE (PAEC)"};
 /* Abre la ficha PIE (PAEC) de un estudiante puntual (desde el chat), por su correo. */
 async function openPaecFor(email,name){
+  if(!canSeePaec()){ aseToast("Acceso restringido","La ficha PIE (PAEC) es solo para docentes, administrativos y PIE","",7000); return; }
   if(!AUTH_TOKEN){ aseToast("Inicia sesión con Google","Para ver la ficha PIE","Entra con tu cuenta Google del colegio.",8000); return; }
   if(!email) return;
   aseToast("Cargando…","Buscando la ficha PIE (PAEC)","Un momento por favor.",3500);
@@ -4983,9 +4983,11 @@ async function openPaecFor(email,name){
   if(!d.ready){ aseToast("Ficha aún no cargada","No hay ficha PIE (PAEC) de este estudiante","El equipo PIE o el profesor jefe puede subirla desde «Editar lista».",10000); return; }
   showPdf("Ficha PIE (PAEC)", name||"", d.pdf);
 }
-/* El chat ubica la ficha PIE (PAEC) de un estudiante (solo funcionarios). */
+/* La ficha PIE (PAEC) es sensible: solo docentes, administrativos y PIE (y correos maestros). */
+function canSeePaec(){ return ROLE==="teacher"||ROLE==="admin"||ROLE==="pie"||isDev(curEmail()); }
+/* El chat ubica la ficha PIE (PAEC) de un estudiante (solo docentes, administrativos y PIE). */
 function answerFichaPaec(q){
-  if(!STAFF(ROLE)) return null;
+  if(!canSeePaec()) return null;
   const nq=afNorm(q);
   if(!/(ficha|paec)/.test(nq)) return null;
   if(!STUDENTS.length) return "Aún estoy cargando la nómina del colegio. Intenta otra vez en unos segundos. 🙂";
@@ -5310,6 +5312,7 @@ function showPdf(tag,student,b64){
 function closeDoc(){document.getElementById("docmodal").classList.remove("open");const b=document.getElementById("docBody");if(b)b.innerHTML="";}
 document.addEventListener("keydown",e=>{if(e.key==="Escape")closeDoc();});
 async function openDoc(kind){
+  if(kind==="paec" && !canSeePaec()){ aseToast("Acceso restringido","La ficha PIE (PAEC) es solo para docentes, administrativos y PIE","",7000); return; }
   const p=CURRENT.prof;const lbl=DOC_LABELS[kind]||"documento";
   // El informe de notas es exclusivo de apoderados (y perfiles con nómina: docente/admin/maestro).
   if(kind==="notas" && ROLE==="student"){ aseToast("Solo para apoderados","El informe de notas está disponible para el apoderado/a","Pídeselo a tu apoderado/a, que puede verlo desde su perfil.",8000); return; }
