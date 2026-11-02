@@ -252,6 +252,8 @@ export default {
       if (!u) return json({ error: "No pudimos verificar tu cuenta." }, 401, cors);
       const p = profileFor(u);
       const kind = String(body.kind || "personalidad").toLowerCase().replace(/[^a-z]/g, "");
+      // La ficha PIE (PAEC) es sensible: solo funcionarios (docentes/administrativos/PIE) y correos maestros.
+      if (kind === "paec" && p.role !== "staff" && p.role !== "dev") return json({ error: "No autorizado" }, 403, cors);
       const target = String(body.student || "").toLowerCase();     // correo del estudiante pedido
       const allowed = allowedStudentEmails(p);
       let key = null;
