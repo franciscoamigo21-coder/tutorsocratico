@@ -38,7 +38,9 @@ MU1M OA 07: Evaluar la relevancia de la música, destacando el singular sentido 
 
 **Instrumentos confirmados de I°C**: guitarra acústica, flauta, batería, bombo, melódica, metalófono.
 
-**Evidencias de aprendizaje que se usan a lo largo de la unidad**: mano alzada y gira y discute (participación y verificación de comprensión), Padlet (registro de instrumento), rúbrica de avance de repertorio (monitoreo del montaje), Documento de Google vía Classroom (investigación grupal), Google Forms (retroalimentación entre pares), Mentimeter (cierre reflexivo con Artes).
+**Evidencias de aprendizaje que se usan a lo largo de la unidad**: pregunta a mano alzada (participación y verificación de comprensión), ticket de salida oral al cierre de la Clase 1 (se intentó con Nearpod, falló técnicamente, se hizo oral), Padlet (registro de instrumento), rúbrica de avance de repertorio (monitoreo del montaje), Documento de Google vía Classroom + rúbrica de avance de investigación por grupo (investigación grupal), Google Forms (retroalimentación entre pares), Mentimeter (cierre reflexivo con Artes).
+
+**⚠️ Resincronizado (2026-11-06)**: las 4 clases ya se dieron (1, 8, 15 y 22 de octubre). Esta lista refleja lo que realmente se usó, no solo lo planificado: se sacó el Kahoot (nunca se usó) y se agregó la rúbrica de avance de investigación por grupo (Excel, GRUPO N°1 a N°6) como instrumento real de monitoreo de la investigación grupal.
 
 ---
 
