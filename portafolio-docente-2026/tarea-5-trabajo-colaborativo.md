@@ -95,7 +95,32 @@ En conclusión, esta experiencia nos permitió comprender que la diversidad de p
 
 ---
 
+## 5.4 Aprendizajes profesionales a partir de la experiencia de trabajo colaborativo
+
+**⚠️ Esta subtarea es INDIVIDUAL** (a diferencia de 5.1-5.3): la Plataforma advierte que si dos o más docentes presentan la misma respuesta, se considera plagio. Por eso el texto de abajo está en primera persona, propio de Música, y no reutiliza frases de 5.2/5.3.
+
+### Campo (a) — "Evalúe lo que fue aprendiendo..." (2117/3500 caracteres)
+
+Este trabajo colaborativo me hizo caer en cuenta de algo que, como profesor de Música, venía sintiendo de forma intuitiva pero nunca había podido nombrar con claridad: las formas de evaluar pensadas para asignaturas de desarrollo escrito no se traspasan igual a una asignatura práctica y de ejecución como la mía. Cuando como equipo probamos RACES y vimos que no tenía el mismo asidero fuera de Lenguaje e Historia, tuve que preguntarme qué es lo que sí podía adaptar de esa lógica a mi propia práctica, en vez de simplemente descartarla.
+
+Lo que rescaté no fue la estructura de RACES en sí, sino el principio de fondo que estaba detrás: evaluar el proceso de construcción de una respuesta y no solo el resultado final, para poder distinguir un aprendizaje genuino de uno que solo aparenta estar logrado. Trasladé ese principio a mi propia asignatura a través de rúbricas de avance aplicadas de forma continua, clase a clase, en vez de una sola nota final: una para el montaje instrumental del repertorio (pulso, ejecución y expresividad) y otra para el proceso de investigación grupal que mis estudiantes desarrollan en un Documento de Google compartido.
+
+Esta segunda rúbrica nació directamente de la misma preocupación que dio origen al tutor socrático: así como a mis colegas les preocupaba no poder distinguir si una respuesta escrita era genuina, a mí me preocupaba no poder distinguir si un documento grupal reflejaba el trabajo real de los cuatro integrantes o el esfuerzo de uno o dos. La rúbrica de avance de investigación por grupo, que registra trabajo en equipo, participación de todos los integrantes, dudas planteadas y entrega, es mi forma de resolver en Música el mismo problema que mis colegas de Lenguaje e Historia intentaban resolver con RACES y, después, con ASE-IA.
+
+Mi aprendizaje profesional más concreto fue entender que no todas las asignaturas necesitan el mismo instrumento para lograr el mismo propósito: verificar que el aprendizaje sea real y progresivo. Lo que sí es transversal es la lógica de monitorear el proceso en el momento en que ocurre, no solo evaluar el producto terminado.
+
+### Campo (b) — "Señale cómo esa repercusión fue teniendo repercusión en los/as estudiantes" (1648/3600 caracteres)
+
+El cambio hacia una evaluación de proceso, continua y no solo de producto final, tuvo una repercusión directa y observable en mis estudiantes de I°C durante la unidad de Violeta Parra. Al aplicar la rúbrica de avance de repertorio en cada una de las cuatro clases, pude detectar a tiempo que un estudiante del Grupo 3 iba quedando sistemáticamente más atrás que el resto en pulso, ejecución y expresividad. Como esa detección ocurrió clase a clase y no en la presentación final, pude diferenciar el trabajo dentro del mismo ensayo: dejé que los estudiantes con mayor avance siguieran consolidando su parte de forma independiente, mientras yo me concentraba en dar apoyo especializado a ese estudiante en particular. Si hubiera evaluado solo al final, esa intervención ya no habría sido posible.
+
+De manera similar, la rúbrica de avance de investigación por grupo me permitió verificar, antes de que terminara el plazo, qué grupos estaban efectivamente trabajando de forma colaborativa y cuáles no. Esto hizo visible que dos de los cinco grupos no estaban entregando un trabajo real y parejo entre sus integrantes, lo que me permitió otorgarles una semana adicional como acción remedial, en vez de simplemente calificar con una nota baja un trabajo incompleto al final del proceso.
+
+En ambos casos, mis estudiantes se beneficiaron de que la retroalimentación llegara mientras el aprendizaje todavía estaba en construcción, no después, cuando ya no hay nada que hacer con ella. Eso es, en concreto, lo que esta experiencia de trabajo colaborativo con mis colegas de otras asignaturas me ayudó a instalar con más intención en mi propia sala de clases.
+
+---
+
 ## Pendiente de tu parte
 
-1. Las tres subtareas (5.1, 5.2, 5.3) ya tienen texto oficial listo para pegar — solo falta subir el adjunto obligatorio de 5.1(d): **"5.1.d. Evidencia de la definición del problema.pdf"** (Drive: Trabajo colaborativo → 1.Documentos para el portafolio).
-2. Como son participantes de la misma experiencia de trabajo colaborativo, la Plataforma permite presentar una respuesta idéntica entre los 8 — confirma si van a subir todos el mismo texto o si cada uno adapta algo mínimo.
+1. 5.1, 5.2, 5.3 y 5.4 ya tienen texto listo para pegar — solo falta subir el adjunto obligatorio de 5.1(d): **"5.1.d. Evidencia de la definición del problema.pdf"** (Drive: Trabajo colaborativo → 1.Documentos para el portafolio).
+2. Como son participantes de la misma experiencia de trabajo colaborativo, la Plataforma permite presentar una respuesta idéntica entre los 8 en 5.1-5.3 — confirma si van a subir todos el mismo texto o si cada uno adapta algo mínimo. **5.4 es individual: no la compartas ni la calces con la de otro colega.**
+3. Redactar con tu voz el texto final de todos los campos antes de pegarlos en la Plataforma (esto sigue siendo borrador de contenido, no texto final).
