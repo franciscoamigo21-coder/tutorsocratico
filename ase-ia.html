@@ -336,6 +336,15 @@
   .ecurso,.msg input.einput{width:100%;padding:11px 12px;border:1px solid #d9e6ff;border-radius:12px;font-size:13.5px;
     font-family:inherit;background:#f4f8ff;color:var(--azul-ink);outline:none;box-sizing:border-box;}
   .msg input.einput:focus{border-color:var(--cyan);background:#fff;box-shadow:0 0 0 3px rgba(34,195,230,.15);}
+  /* Checklist de estudiantes para el correo masivo */
+  .echecklist{display:flex;flex-direction:column;gap:2px;margin-top:10px;max-height:240px;overflow:auto;
+    border:1px solid #d9e6ff;border-radius:12px;padding:7px 9px;background:#f8fbff;}
+  .echk{display:flex;align-items:center;gap:9px;padding:7px 6px;border-radius:9px;font-size:13.5px;
+    color:var(--azul-ink);font-weight:600;cursor:pointer;}
+  .echk:hover{background:#eaf2ff;}
+  .echk input{width:17px;height:17px;accent-color:var(--azul);flex-shrink:0;cursor:pointer;}
+  .echk.allrow{font-weight:800;border-bottom:1px solid #e3ecfb;border-radius:0;margin-bottom:3px;padding-bottom:9px;}
+  .emasscount{margin-top:8px;font-size:12.5px;color:#5b6b85;font-weight:700;}
   .cites{margin-top:10px;display:flex;flex-wrap:wrap;gap:6px;}
   .cite{background:linear-gradient(135deg,#eef4ff,#e6efff);color:var(--azul);border:1px solid #d6e3ff;border-radius:999px;padding:3px 11px;font-size:11px;font-weight:700;}
   .typing{display:flex;gap:5px;padding:14px 16px;background:#fff;border:1px solid var(--border);border-radius:18px;border-bottom-left-radius:6px;}
@@ -1177,7 +1186,7 @@
           <div style="min-width:0"><div class="pm-n" id="pmName">Estudiante</div><div class="pm-m" id="pmMail"></div><span class="pm-r" id="pmRole">Estudiante</span></div>
         </div>
         <div class="pm-body" id="pmBody"></div>
-        <div class="pm-foot"><button class="pm-logout" type="button" onclick="showGate()">Cerrar sesión</button></div>
+        <div class="pm-foot"><button class="pm-logout" type="button" onclick="logoutFull()">Cerrar sesión</button></div>
       </div>
     </div>
   </div></header>
@@ -2837,12 +2846,20 @@ function gmailComposeUrl(subject,body,to){
     +"&su="+encodeURIComponent(subject||"")
     +"&body="+encodeURIComponent(body||"");
 }
+/* Igual que el anterior, pero con destinatarios en COPIA OCULTA (CCO/bcc):
+   se usa en el correo masivo para que los apoderados no vean los correos de los demás. */
+function gmailComposeUrlBcc(subject,body,bcc){
+  return "https://mail.google.com/mail/u/0/?view=cm&fs=1&tf=1"
+    +(bcc?("&bcc="+encodeURIComponent(bcc)):"")
+    +"&su="+encodeURIComponent(subject||"")
+    +"&body="+encodeURIComponent(body||"");
+}
 /* En celular conviene abrir la APP de correo (Gmail) con un enlace mailto:,
    en vez de la versión web que pide iniciar sesión. */
 function isMobileDev(){ return /Android|iPhone|iPad|iPod|Mobile|Silk/i.test(navigator.userAgent||""); }
 function toMailto(gurl){
-  try{ const u=new URL(gurl); const to=u.searchParams.get("to")||"", su=u.searchParams.get("su")||"", bo=u.searchParams.get("body")||"";
-    return "mailto:"+to+"?subject="+encodeURIComponent(su)+"&body="+encodeURIComponent(bo);
+  try{ const u=new URL(gurl); const to=u.searchParams.get("to")||"", bcc=u.searchParams.get("bcc")||"", su=u.searchParams.get("su")||"", bo=u.searchParams.get("body")||"";
+    return "mailto:"+to+"?"+(bcc?("bcc="+encodeURIComponent(bcc)+"&"):"")+"subject="+encodeURIComponent(su)+"&body="+encodeURIComponent(bo);
   }catch(e){ return gurl; }
 }
 /* ---- Planilla de Matrículas: lectura del CSV publicado (opcional) ---- */
@@ -3080,7 +3097,9 @@ function emailStart(){
   const sg=document.getElementById("sugs");if(sg)sg.innerHTML="";
   EFLOW={};
   const cfg=EMAILCFG[ROLE]||EMAILCFG.teacher;
-  botCard(m=>choiceRow(m,cfg.q,cfg.recipients.map(rec=>({t:rec.t,fn:()=>emailTo(rec)}))));
+  const choices=cfg.recipients.map(rec=>({t:rec.t,fn:()=>emailTo(rec)}));
+  if(STAFF(ROLE)) choices.push({t:"📣 Correo masivo a apoderados (curso o grupo)",fn:()=>massStart()});
+  botCard(m=>choiceRow(m,cfg.q,choices));
 }
 function emailTo(rec){EFLOW.rec=rec;EFLOW.to=rec.id;
   botCard(m=>choiceRow(m,"¿Cuál es el propósito del correo a "+rec.who+"?",
@@ -3190,6 +3209,132 @@ function emailBuild(tone){EFLOW.tone=tone;
   add(reply,"bot",{mail:{url:gmailComposeUrl(subject,body,toEmail)}});
   speak("Tu borrador está listo. Puedes abrirlo en Gmail con el botón de abajo.");
   EFLOW=null;
+  emailAgainCard();
+}
+/* Tras entregar un borrador (individual o masivo): restaura las sugerencias y
+   ofrece redactar otro correo sin tener que empezar de cero. */
+function emailAgainCard(){
+  renderSugs();                               // vuelven los chips de preguntas frecuentes
+  botCard(m=>choiceRow(m,"¿Quieres redactar otro correo?",[
+    {t:"✉️ Sí, redactar otro",fn:()=>emailStart()},
+    {t:"Por ahora no, gracias",fn:()=>{ add("¡Perfecto! Si necesitas otro correo o cualquier consulta del colegio, aquí estoy. 🙂","bot"); }},
+  ]));
+}
+/* ============ CORREO MASIVO A APODERADOS (curso completo o selección) ============
+   Solo funcionarios. Usa la nómina del Worker; los apoderados van en copia oculta
+   (CCO) para proteger sus datos. */
+const MASS_PURPOSES=[
+  {id:"reunion",t:"Citar a reunión de apoderados",subject:"Reunión de apoderados",
+    body:"Junto con saludar, les invito a la próxima reunión de apoderados del curso{curso}. {detalle} Agradeceré su puntual asistencia, dada la importancia de los temas a tratar."},
+  {id:"comunicado",t:"Enviar un comunicado del curso",subject:"Comunicado del curso",
+    body:"Junto con saludar, les comparto el siguiente comunicado del curso{curso}: {detalle} Quedo atento/a a sus consultas por este mismo medio."},
+  {id:"recordatorio",t:"Enviar un recordatorio",subject:"Recordatorio importante",
+    body:"Junto con saludar, les recuerdo lo siguiente respecto del curso{curso}: {detalle} Agradeceré tenerlo presente y apoyar su cumplimiento desde el hogar."},
+  {id:"actividad",t:"Informar una actividad o salida",subject:"Actividad del curso",
+    body:"Junto con saludar, les informo sobre una actividad del curso{curso}: {detalle} Cualquier autorización o material necesario será solicitado oportunamente por este medio."},
+  {id:"felicitar",t:"Felicitar al curso",subject:"Reconocimiento al curso",
+    body:"Junto con saludar, quiero compartir con ustedes una grata noticia sobre el curso{curso}: {detalle} Felicito a las y los estudiantes y a sus familias por el compromiso demostrado."},
+  {id:"otro",t:"Otro (lo escribo)",subject:"Comunicación del curso",
+    body:"Junto con saludar, me dirijo a ustedes, apoderados/as del curso{curso}: {detalle}"},
+];
+function massStart(){
+  if(!AUTH_TOKEN){
+    botCard(m=>m.appendChild(el("div","mtext","El correo masivo usa la nómina del curso, que se carga al iniciar sesión con tu cuenta Google del colegio. Inicia sesión con Google y vuelve a intentarlo.")));
+    emailAgainCard(); return;
+  }
+  if(!STUDENTS.length){
+    if(DIR_STATE!=="done"&&DIR_STATE!=="error") loadDirectory();
+    botCard(m=>m.appendChild(el("div","mtext","Estoy cargando la nómina del colegio… espera unos segundos y vuelve a tocar «Correo masivo». Si no carga, revisa tu conexión.")));
+    emailAgainCard(); return;
+  }
+  EFLOW={mass:true};
+  selectStep("¿A qué curso quieres escribir?",CURSOS,"Selecciona el curso…",v=>{
+    if(!v){ massStart(); return; }
+    EFLOW.course=v; const cc=COURSES.find(c=>c.l===v); EFLOW.courseCode=cc?cc.c:"";
+    massAudience();
+  });
+}
+function massAudience(){
+  const list=STUDENTS.filter(s=>s.course===EFLOW.courseCode);
+  if(!list.length){
+    botCard(m=>m.appendChild(el("div","mtext","No encontré estudiantes de "+(EFLOW.course||"ese curso")+" en la nómina. Revisa el curso o inténtalo nuevamente.")));
+    emailAgainCard(); EFLOW=null; return;
+  }
+  const withAp=list.filter(s=>validEmail((s.apEmail||"").trim())).length;
+  botCard(m=>choiceRow(m,"Son "+list.length+" estudiantes en "+EFLOW.course+" ("+withAp+" con correo de apoderado/a registrado). ¿A quiénes escribo?",[
+    {t:"👪 A todo el curso (sus apoderados)",fn:()=>{ EFLOW.picked=list.slice(); massPurpose(); }},
+    {t:"✅ Seleccionar estudiantes del curso",fn:()=>massSelect(list)},
+  ]));
+}
+function massSelect(list){
+  botCard(m=>{
+    m.appendChild(el("div","mtext","Marca los estudiantes a cuyos apoderados quieres escribir:"));
+    const box=el("div","echecklist");
+    // fila "seleccionar todos"
+    const allRow=el("label","echk allrow"); const allCb=document.createElement("input"); allCb.type="checkbox";
+    allRow.appendChild(allCb); allRow.appendChild(el("span",null,"Seleccionar todos")); box.appendChild(allRow);
+    const checks=[];
+    list.forEach((s,i)=>{
+      const lab=el("label","echk"); const cb=document.createElement("input"); cb.type="checkbox"; cb.value=String(i);
+      if(!validEmail((s.apEmail||"").trim())){ cb.disabled=true; lab.style.opacity=".5"; }
+      lab.appendChild(cb);
+      const nm=apellidoFirst(s.name)+(validEmail((s.apEmail||"").trim())?"":"  (sin correo de apoderado)");
+      lab.appendChild(el("span",null,nm));
+      box.appendChild(lab); checks.push(cb);
+    });
+    const count=el("div","emasscount","0 seleccionados");
+    const upd=()=>{ const n=checks.filter(c=>c.checked).length; count.textContent=n+" seleccionado"+(n===1?"":"s"); };
+    checks.forEach(c=>c.addEventListener("change",upd));
+    allCb.addEventListener("change",()=>{ checks.forEach(c=>{ if(!c.disabled)c.checked=allCb.checked; }); upd(); });
+    m.appendChild(box); m.appendChild(count);
+    const b=el("button","echoice"); b.type="button"; b.style.marginTop="10px"; b.textContent="Continuar";
+    b.onclick=()=>{ const picked=checks.filter(c=>c.checked).map(c=>list[+c.value]);
+      if(!picked.length){ count.textContent="Marca al menos un estudiante para continuar."; return; }
+      box.querySelectorAll("input").forEach(c=>c.disabled=true); allCb.disabled=true; b.disabled=true; b.classList.add("sel");
+      EFLOW.picked=picked; massPurpose();
+    };
+    m.appendChild(b);
+  });
+}
+function massPurpose(){
+  botCard(m=>choiceRow(m,"¿Cuál es el propósito del correo?",MASS_PURPOSES.map(p=>({t:p.t,fn:()=>massDetail(p)}))));
+}
+function massDetail(p){
+  EFLOW.mpurpose=p;
+  inputStep("Escribe el contenido principal (fecha, lugar, instrucciones…):","Ej.: el martes 18 de marzo a las 18:30 h en la sala del curso",v=>{
+    EFLOW.detail=v||"[complete aquí el detalle del comunicado]"; massTone();
+  });
+}
+function massTone(){
+  botCard(m=>choiceRow(m,"¿En qué tono quieres redactarlo?",TONES.map(tn=>({t:tn.t,fn:()=>massBuild(tn.id)}))));
+}
+function massBuild(tone){
+  const p=EFLOW.mpurpose, curso=EFLOW.course||"", picked=EFLOW.picked||[];
+  const cursoTxt=curso?(" "+curso):"";
+  const emails=[...new Set(picked.map(s=>(s.apEmail||"").trim().toLowerCase()).filter(e=>validEmail(e)))];
+  const saludo="Estimados/as apoderados/as"+(curso?(" del curso "+curso):"")+":";
+  const cuerpo=p.body.replace(/\{curso\}/g,cursoTxt).replace(/\{detalle\}/g,EFLOW.detail||"");
+  const cierre= tone==="cercano"?"Saludos cordiales,":tone==="academico"?"Les saluda atentamente,":"Atentamente,";
+  let firma=(CURRENT.name||"[Su nombre]");
+  if(ROLE==="teacher") firma+=", profesor/a · Colegio Presidente José Joaquín Prieto";
+  else if(ROLE==="admin") firma+=", Equipo · Colegio Presidente José Joaquín Prieto";
+  else if(ROLE==="orientador") firma+=", Orientación · Colegio Presidente José Joaquín Prieto";
+  else if(ROLE==="pie") firma+=", Programa de Integración (PIE) · Colegio Presidente José Joaquín Prieto";
+  else firma+=" · Colegio Presidente José Joaquín Prieto";
+  const body=clean(saludo+"\n\n"+cuerpo+"\n\n"+cierre+"\n"+firma);
+  const subject=p.subject+(curso?(" · "+curso):"");
+  const n=emails.length;
+  let reply;
+  if(n){
+    reply="Listo. Preparé un correo para **"+n+"** apoderado/a"+(n===1?"":"s")+(curso?(" del curso "+curso):"")+". Van en copia oculta (CCO) para proteger sus datos. Revísalo y ábrelo en Gmail con el botón:\n\n"+body;
+    add(reply,"bot",{mail:{url:gmailComposeUrlBcc(subject,body,emails.join(",")),label:"Abrir Gmail · "+n+" apoderado"+(n===1?"":"s")+" en CCO"}});
+  }else{
+    reply="Preparé el borrador, pero en la nómina no hay correos de apoderados registrados para ese grupo. Puedes copiar el texto y agregar los destinatarios a mano en Gmail:\n\n"+body;
+    add(reply,"bot",{mail:{url:gmailComposeUrlBcc(subject,body,"")}});
+  }
+  speak("Tu correo para los apoderados está listo. Puedes abrirlo en Gmail con el botón.");
+  EFLOW=null;
+  emailAgainCard();
 }
 
 const convo=[];let ROLE="student";
@@ -4049,8 +4194,48 @@ function enter(role,email,name,photo,prof){
   applyPrefsOnEnter();startReminders();
   history.replaceState({screen:"app"},"");  // reemplaza 'login': el botón atrás vuelve a elegir perfil
   showScreen("app");
+  saveSession();   // guarda la sesión para sobrevivir a un F5 (recargar) por los próximos minutos
 }
 function showGate(){ closeProfileMenu(); if(history.state&&history.state.screen==="app") history.back(); else showScreen("gate"); }
+
+/* ============ SESIÓN PERSISTENTE (sobrevive a recargar / F5) ============
+   Guarda la sesión en este dispositivo con una marca de tiempo. Si la persona
+   recarga por error (F5) o cierra y vuelve a abrir dentro de ~5 minutos, ASE-IA
+   la reabre donde estaba, sin tener que elegir perfil e iniciar sesión de nuevo.
+   Pasados los 5 minutos sin actividad, se pide ingresar otra vez. */
+const SESSION_KEY="aseia_session_v1";
+const SESSION_TTL=5*60*1000;   // 5 minutos de tolerancia tras cerrar
+function saveSession(){
+  try{
+    if(!CURRENT||!ROLE) return;
+    const s={role:ROLE,email:CURRENT.email||"",name:CURRENT.name||"",photo:CURRENT.photo||"",
+      prof:CURRENT.prof||null,token:AUTH_TOKEN||"",pupils:CURRENT_PUPILS||[],savedAt:Date.now()};
+    localStorage.setItem(SESSION_KEY,JSON.stringify(s));
+  }catch(e){}
+}
+function touchSession(){   // refresca la marca de tiempo mientras la plataforma está abierta/activa
+  try{ const raw=localStorage.getItem(SESSION_KEY); if(!raw) return;
+    const s=JSON.parse(raw); if(!s) return; s.savedAt=Date.now();
+    localStorage.setItem(SESSION_KEY,JSON.stringify(s));
+  }catch(e){}
+}
+function clearSession(){ try{ localStorage.removeItem(SESSION_KEY); }catch(e){} }
+function restoreSession(){
+  try{
+    const raw=localStorage.getItem(SESSION_KEY); if(!raw) return false;
+    const s=JSON.parse(raw); if(!s||!s.role) return false;
+    if(Date.now()-(s.savedAt||0) > SESSION_TTL){ clearSession(); return false; }  // venció la tolerancia
+    AUTH_TOKEN=s.token||""; CURRENT_PUPILS=s.pupils||[];
+    enter(s.role,s.email,s.name,s.photo,s.prof||null);   // reabre la app en el mismo perfil
+    return true;
+  }catch(e){ return false; }
+}
+function logoutFull(){ clearSession(); showGate(); }   // "Cerrar sesión": sí borra la sesión guardada
+/* Mantiene viva la sesión mientras la pestaña está abierta y al cerrarla/cambiar de
+   app, de modo que un F5 o reabrir en los próximos 5 min no obligue a reingresar. */
+setInterval(()=>{ if(ROLE&&localStorage.getItem(SESSION_KEY)) touchSession(); },60000);
+window.addEventListener("beforeunload",touchSession);
+document.addEventListener("visibilitychange",()=>{ if(document.visibilityState==="hidden") touchSession(); });
 document.getElementById("f").addEventListener("submit",e=>{e.preventDefault();ask(document.getElementById("q").value);});
 
 /* ============ PERFIL PERSONALIZADO · apoderado y estudiante ============
@@ -6080,6 +6265,11 @@ function skipIntro(){const i=document.getElementById("intro");if(!i||i.classList
   window.addEventListener("touchend",up);
   vel=15;frame(); // giro de bienvenida
 })();
+
+/* ====== Reabrir sesión tras recargar (F5) o volver dentro de ~5 min ======
+   Se ejecuta al final, con todo el DOM y las funciones ya definidas. Si hay una
+   sesión vigente, ASE-IA entra directo a la app por debajo de la intro. */
+(function(){ try{ restoreSession(); }catch(e){} })();
 
 
 </script>
