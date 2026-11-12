@@ -311,6 +311,11 @@
     background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.24);border-radius:12px;color:#fff;cursor:pointer;transition:.15s;flex-shrink:0;}
   .chead .fsbtn:hover{background:rgba(255,255,255,.28);transform:translateY(-1px);}
   .chead .fsbtn svg{width:18px;height:18px;}
+  /* Botón "reiniciar chat": discreto, junto al de pantalla completa */
+  .chead .rsbtn{margin-left:auto;width:38px;height:38px;display:flex;align-items:center;justify-content:center;
+    background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.24);border-radius:12px;color:#fff;cursor:pointer;transition:.15s;flex-shrink:0;}
+  .chead .rsbtn:hover{background:rgba(255,255,255,.28);transform:translateY(-1px);}
+  .chead .rsbtn svg{width:18px;height:18px;}
   #log{flex:1;position:relative;overflow-y:auto;padding:20px 18px;display:flex;flex-direction:column;gap:14px;scroll-behavior:smooth;
     background:radial-gradient(900px 340px at 100% -6%, #eaf1ff, transparent), linear-gradient(#fbfcff,#f4f8ff);}
   .row{display:flex;align-items:flex-end;gap:10px;animation:fadeUp .28s ease both;}
@@ -1250,6 +1255,7 @@
         <img class="badge" alt="ASE-IA" src="assets/ase-ia-robot-main.png"
              onerror="this.outerHTML='<svg class=\'badge\' viewBox=\'0 0 120 120\'><use href=\'#mascot\'/></svg>'">
         <div><div class="h">ASE-IA</div><div class="s"><span class="dot"></span> Asistente Escolar · en línea</div></div>
+        <button class="rsbtn" id="resetBtn" type="button" onclick="resetChat()" title="Reiniciar chat (empezar de cero)" aria-label="Reiniciar chat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 2v6h6"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L3 8"/></svg></button>
         <button class="fsbtn" id="fsBtn" type="button" onclick="toggleFS()" title="Pantalla completa" aria-label="Pantalla completa"><span id="fsIcon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3M16 3h3a2 2 0 0 1 2 2v3M8 21H5a2 2 0 0 1-2-2v-3M16 21h3a2 2 0 0 0 2-2v-3"/></svg></span></button>
       </div>
       <div id="log"></div>
@@ -2957,6 +2963,28 @@ function emailIntent(q){
   if(/estudiant|alumn|pupil/.test(n)) return "estudiante";
   return null;
 }
+/* Intención ESCRITA de redactar un correo (para lanzar el redactor guiado por
+   botones también cuando la persona lo pide escribiendo, no solo con el chip).
+   Devuelve {masivo, rec} o null. Es deliberadamente conservador para no
+   dispararse con consultas como "¿puedo usar el correo institucional?". */
+function emailComposeIntent(text){
+  const n=normalize(text);
+  if(!/\bcorreo\b|\bcorreos\b|\bemail\b|\bmail\b|\bgmail\b/.test(n)) return null;   // debe mencionar correo/email
+  // y un verbo/petición de REDACCIÓN o ENVÍO (no de "usar/consultar el correo")
+  const compose=/(redact\w*|escrib\w*|enviar|envi[aeo]\w*|mandar|mand[aeo]\w*|comunicar\w*|avisar\w*)/.test(n);
+  const petition=/(necesito|quiero|quisiera|ayud\w*|c[oó]mo\s+(enviar|escrib|redact|mand)|me\s+ayudas|podrias|puedes\s+(enviar|escrib|redact|mand)|hazme|arma\w*\s+un\s+correo)/.test(n);
+  if(!compose && !petition) return null;
+  const masivo=/(masiv\w*|a\s+todo\s+el\s+curso|todo\s+el\s+curso|apoderados\s+del\s+curso|a\s+varios|varios\s+apoderados|a\s+un\s+grupo|grupo\s+de\s+(estudiante|alumn|apoderad))/.test(n);
+  let rec=null;
+  if(/apoderad|padre|madre|familia|tutor legal/.test(n)) rec="apoderado";
+  else if(/estudiant|alumn|pupil/.test(n)) rec="estudiante";
+  else if(/profe\w*\s*jefe|jefatura|profesor\w*\s*jefe/.test(n)) rec="jefe";
+  else if(/convivencia/.test(n)) rec="convivencia";
+  else if(/direccion|utp/.test(n)) rec="direccion";
+  else if(/equipo/.test(n)) rec="equipo";
+  else if(/profesor\w*|docente|profe\b/.test(n)) rec="profesor";
+  return {masivo:!!masivo, rec:rec};
+}
 /* Borrador breve y cercano (mensaje central claro, campos entre [corchetes]).
    Devuelve el texto del chat, el CUERPO puro y el asunto para Gmail. */
 function emailDraft(to){
@@ -3100,6 +3128,20 @@ function emailStart(){
   const choices=cfg.recipients.map(rec=>({t:rec.t,fn:()=>emailTo(rec)}));
   if(STAFF(ROLE)) choices.push({t:"📣 Correo masivo a apoderados (curso o grupo)",fn:()=>massStart()});
   botCard(m=>choiceRow(m,cfg.q,choices));
+}
+/* Igual que emailStart, pero cuando la persona ESCRIBIÓ a quién le quiere escribir
+   (p.ej. "necesito enviar un correo a un apoderado") saltamos directo a ese paso. */
+function emailStartFromIntent(recId){
+  const cfg=EMAILCFG[ROLE]||EMAILCFG.teacher;
+  const rec=recId && cfg.recipients.find(r=>r.id===recId);
+  const sg=document.getElementById("sugs"); if(sg)sg.innerHTML="";
+  if(rec){
+    EFLOW={};
+    add("¡Perfecto! Te ayudo a redactar el correo paso a paso 👇","bot");
+    emailTo(rec);
+  }else{
+    emailStart();   // no identificamos destinatario: mostramos el menú completo
+  }
 }
 function emailTo(rec){EFLOW.rec=rec;EFLOW.to=rec.id;
   botCard(m=>choiceRow(m,"¿Cuál es el propósito del correo a "+rec.who+"?",
@@ -4109,6 +4151,16 @@ function answerCorreoApoderado(q){
 async function ask(text){
   text=(text||"").trim();if(!text)return;
   document.getElementById("sugs").innerHTML="";add(text,"user");document.getElementById("q").value="";typing(true);
+  // Intención ESCRITA de redactar un correo → abre el redactor guiado (igual que el botón),
+  // salvo que ya se esté dentro de un flujo de correo (EFLOW activo).
+  const _em=(!EFLOW)?emailComposeIntent(text):null;
+  if(_em){
+    await new Promise(r=>setTimeout(r,250)); typing(false);
+    convo.push({role:"user",content:text});
+    if(_em.masivo && STAFF(ROLE)){ convo.push({role:"assistant",content:"(abriendo el redactor de correo masivo)"}); massStart(); }
+    else { convo.push({role:"assistant",content:"(abriendo el redactor de correo)"}); emailStartFromIntent(_em.rec); }
+    return;
+  }
   const _hp=answerHorarioProfe(text);
   if(_hp){ await new Promise(r=>setTimeout(r,300)); typing(false);
     // Botón para ver la IMAGEN/tabla del horario del profesor (verificable), salvo en la desambiguación.
@@ -5711,7 +5763,19 @@ function pmPrefs(){
   wrap.appendChild(rc);
   d.appendChild(wrap);return d;
 }
-function resetChat(){convo.length=0;log.innerHTML="";add("Conversación reiniciada. ¿En qué te ayudo? 🙂","bot");}
+/* Reinicia el chat COMPLETAMENTE de cero: cancela un redactor de correo a
+   medias, borra el historial y los mensajes, y vuelve a mostrar los chips para
+   poder usar de nuevo los botones de redactar correo o buscar información.
+   No cierra la sesión. */
+function resetChat(){
+  EFLOW=null;                       // cancela cualquier redactor de correo en curso
+  convo.length=0;                   // borra el contexto de la conversación
+  if(log) log.innerHTML="";         // limpia los mensajes en pantalla
+  try{ renderSugs(); }catch(e){}    // vuelven los chips (incluye "Redactar un correo")
+  const nm=(CURRENT&&CURRENT.name)?(" de nuevo, "+CURRENT.name.split(" ")[0]):"";
+  add("¡Hola"+nm+"! 👋 Empecemos de cero. Pregúntame lo que necesites, o toca una opción para redactar un correo o buscar información del colegio.","bot");
+  const q=document.getElementById("q"); if(q){ q.value=""; setTimeout(()=>{try{q.focus();}catch(_){}} ,40); }
+}
 function buildProfileMenu(){
   const disp=CURRENT.name||ROLE_LABEL[ROLE];
   document.getElementById("pmName").textContent=disp;
