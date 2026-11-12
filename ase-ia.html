@@ -330,6 +330,13 @@
     box-shadow:0 13px 28px -13px rgba(234,67,53,.75);transition:.15s;font-family:inherit;}
   .mailbtn:hover{filter:brightness(1.06);transform:translateY(-1px);}
   .mailbtn svg{width:18px;height:18px;flex-shrink:0;}
+  /* Botón secundario: abrir el correo con copia al equipo directivo */
+  .ccbtn{display:inline-flex;align-items:center;gap:8px;margin-top:9px;padding:9px 15px;border-radius:12px;
+    background:#eef4ff;color:var(--azul-ink,#0b3d91);font-weight:800;font-size:12.5px;text-decoration:none;
+    border:1.5px solid #cdddff;transition:.15s;font-family:inherit;}
+  .ccbtn:hover{background:#dfeaff;transform:translateY(-1px);}
+  .ccbtn svg{width:16px;height:16px;flex-shrink:0;}
+  .ccnote{margin-top:6px;font-size:11.5px;color:#5b6b85;line-height:1.5;}
   /* Botones "tipo conversación" del redactor de correos guiado */
   .echoices{display:flex;flex-direction:column;gap:7px;margin-top:11px;}
   .echoice{text-align:left;background:#f4f8ff;border:1px solid #d9e6ff;color:var(--azul-ink);border-radius:12px;
@@ -2864,9 +2871,39 @@ function gmailComposeUrlBcc(subject,body,bcc){
    en vez de la versión web que pide iniciar sesión. */
 function isMobileDev(){ return /Android|iPhone|iPad|iPod|Mobile|Silk/i.test(navigator.userAgent||""); }
 function toMailto(gurl){
-  try{ const u=new URL(gurl); const to=u.searchParams.get("to")||"", bcc=u.searchParams.get("bcc")||"", su=u.searchParams.get("su")||"", bo=u.searchParams.get("body")||"";
-    return "mailto:"+to+"?"+(bcc?("bcc="+encodeURIComponent(bcc)+"&"):"")+"subject="+encodeURIComponent(su)+"&body="+encodeURIComponent(bo);
+  try{ const u=new URL(gurl); const to=u.searchParams.get("to")||"", cc=u.searchParams.get("cc")||"", bcc=u.searchParams.get("bcc")||"", su=u.searchParams.get("su")||"", bo=u.searchParams.get("body")||"";
+    return "mailto:"+to+"?"+(cc?("cc="+encodeURIComponent(cc)+"&"):"")+(bcc?("bcc="+encodeURIComponent(bcc)+"&"):"")+"subject="+encodeURIComponent(su)+"&body="+encodeURIComponent(bo);
   }catch(e){ return gurl; }
+}
+/* Añade destinatarios en COPIA (CC) a una URL de redacción de Gmail ya construida. */
+function gmailWithCc(gurl, cc){ return cc ? (gurl + "&cc=" + encodeURIComponent(cc)) : gurl; }
+/* ============ EQUIPO DIRECTIVO POR CICLO (para copiar en el correo) ============
+   Según el curso del correo, el botón "Copiar al equipo directivo" agrega en
+   copia (CC) al equipo directivo + inspector/a + orientador/a del ciclo. */
+function gradeIndex(courseCode){
+  const tk=(courseCode||"").trim().split(/\s+/)[0].toUpperCase();
+  if(tk==="PK")return -1;            // Pre-Kínder
+  if(tk==="K")return 0;              // Kínder
+  if(/^\d+$/.test(tk))return parseInt(tk,10);   // 1° a 8° Básico
+  if(tk==="P")return 9;              // I° Medio
+  if(tk==="S")return 10;             // II° Medio
+  if(tk==="T")return 11;             // III° Medio
+  if(tk==="C")return 12;             // IV° Medio
+  return null;
+}
+function equipoDirectivo(courseCode){
+  const g=gradeIndex(courseCode);
+  if(g===null) return {list:[],label:""};
+  let dir=[], ciclo="";
+  if(g<=2){ dir=["solesilva@sip.cl","flinares@sip.cl","slabbe@sip.cl"]; ciclo="Pre-Kínder a 2° Básico"; }
+  else if(g<=5){ dir=["cescobar@sip.cl","flinares@sip.cl","slabbe@sip.cl"]; ciclo="3° a 5° Básico"; }
+  else if(g===6){ dir=["israel.salas@sip.cl","flinares@sip.cl","slabbe@sip.cl"]; ciclo="6° Básico"; }
+  else if(g<=9){ dir=["israel.salas@sip.cl","dennys.maldonado@sip.cl","slabbe@sip.cl"]; ciclo="7° Básico a I° Medio"; }
+  else { dir=["nardyn.mella@sip.cl","dennys.maldonado@sip.cl","slabbe@sip.cl"]; ciclo="II° a IV° Medio"; }
+  let insp = g<=2?"bpinilla@sip.cl" : g<=6?"patricia.amaza@sip.cl" : g<=9?"kevin.fernandez@sip.cl" : "catalina.cancino@sip.cl";
+  let ori  = g<=4?"saraya@sip.cl"   : g<=8?"orrmluengo@sip.cl"     : "juan.chavarria@sip.cl";
+  const list=[...new Set(dir.concat(insp,ori).filter(Boolean))];
+  return {list, label:ciclo};
 }
 /* ---- Planilla de Matrículas: lectura del CSV publicado (opcional) ---- */
 let STUDENTS=[];
@@ -3248,7 +3285,9 @@ function emailBuild(tone){EFLOW.tone=tone;
   if(STAFF(ROLE)){ if(rec.id==="estudiante")toEmail=EFLOW.stEmail||""; else if(rec.id==="apoderado")toEmail=EFLOW.apEmail||""; }
   const base = purpose.art ? (", basado en "+purpose.art) : "";
   const reply = "Listo. Este es tu borrador en tono "+tName.toLowerCase()+base+". Revísalo y ábrelo en Gmail con el botón:\n\n"+body;
-  add(reply,"bot",{mail:{url:gmailComposeUrl(subject,body,toEmail)}});
+  const mailObj={url:gmailComposeUrl(subject,body,toEmail)};
+  if(STAFF(ROLE)){ const eq=equipoDirectivo(EFLOW.courseCode); if(eq.list.length){ mailObj.cc=eq.list.join(","); mailObj.ccNote="Equipo directivo del ciclo "+eq.label+": "+eq.list.join(", "); } }
+  add(reply,"bot",{mail:mailObj});
   speak("Tu borrador está listo. Puedes abrirlo en Gmail con el botón de abajo.");
   EFLOW=null;
   emailAgainCard();
@@ -3366,13 +3405,15 @@ function massBuild(tone){
   const body=clean(saludo+"\n\n"+cuerpo+"\n\n"+cierre+"\n"+firma);
   const subject=p.subject+(curso?(" · "+curso):"");
   const n=emails.length;
+  const eq=equipoDirectivo(EFLOW.courseCode);
+  const ccExtra = eq.list.length ? {cc:eq.list.join(","),ccNote:"Equipo directivo del ciclo "+eq.label+": "+eq.list.join(", ")} : {};
   let reply;
   if(n){
     reply="Listo. Preparé un correo para **"+n+"** apoderado/a"+(n===1?"":"s")+(curso?(" del curso "+curso):"")+". Van en copia oculta (CCO) para proteger sus datos. Revísalo y ábrelo en Gmail con el botón:\n\n"+body;
-    add(reply,"bot",{mail:{url:gmailComposeUrlBcc(subject,body,emails.join(",")),label:"Abrir Gmail · "+n+" apoderado"+(n===1?"":"s")+" en CCO"}});
+    add(reply,"bot",{mail:Object.assign({url:gmailComposeUrlBcc(subject,body,emails.join(",")),label:"Abrir Gmail · "+n+" apoderado"+(n===1?"":"s")+" en CCO"},ccExtra)});
   }else{
     reply="Preparé el borrador, pero en la nómina no hay correos de apoderados registrados para ese grupo. Puedes copiar el texto y agregar los destinatarios a mano en Gmail:\n\n"+body;
-    add(reply,"bot",{mail:{url:gmailComposeUrlBcc(subject,body,"")}});
+    add(reply,"bot",{mail:Object.assign({url:gmailComposeUrlBcc(subject,body,"")},ccExtra)});
   }
   speak("Tu correo para los apoderados está listo. Puedes abrirlo en Gmail con el botón.");
   EFLOW=null;
@@ -3704,7 +3745,17 @@ function add(text,who,extra){
     if(extra.mail){const a=document.createElement("a");a.className="mailbtn";const mob=isMobileDev();
       a.href=mob?toMailto(extra.mail.url):extra.mail.url;
       if(!mob){a.target="_blank";a.rel="noopener";}
-      a.innerHTML=GMAIL_ICON+"<span>"+(extra.mail.label||(mob?"Abrir en tu correo y enviar":"Abrir Gmail y redactar"))+"</span>";msg.appendChild(a);}
+      a.innerHTML=GMAIL_ICON+"<span>"+(extra.mail.label||(mob?"Abrir en tu correo y enviar":"Abrir Gmail y redactar"))+"</span>";msg.appendChild(a);
+      // Botón secundario: abrir el mismo correo con copia (CC) al equipo directivo del ciclo
+      if(extra.mail.cc){
+        const ccUrl=gmailWithCc(extra.mail.url,extra.mail.cc);
+        const a2=document.createElement("a");a2.className="ccbtn";
+        a2.href=mob?toMailto(ccUrl):ccUrl; if(!mob){a2.target="_blank";a2.rel="noopener";}
+        const PEOPLE='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>';
+        a2.innerHTML=PEOPLE+"<span>👥 Copiar al equipo directivo</span>";
+        msg.appendChild(document.createElement("br"));msg.appendChild(a2);
+        if(extra.mail.ccNote){const nt=document.createElement("div");nt.className="ccnote";nt.textContent=extra.mail.ccNote;msg.appendChild(nt);}
+      }}
     if(extra.horarioProfe){const b=document.createElement("button");b.type="button";b.className="horbtn";
       const n=extra.horarioProfe;b.innerHTML='📅 <span>Haz clic para ver el horario de '+n.replace(/</g,"&lt;")+'</span>';
       b.onclick=()=>openProfHorario(n);msg.appendChild(document.createElement("br"));msg.appendChild(b);}
