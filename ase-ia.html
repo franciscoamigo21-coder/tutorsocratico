@@ -1192,6 +1192,9 @@
   .qlogin .qltxt small{font-size:11.5px;color:#5f6b82;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
   .qlogin .qlgo{margin-left:auto;font-size:18px;font-weight:800;color:#1a73e8;flex:none;transition:.18s;}
   .qlogin:hover .qlgo{transform:translateX(3px);}
+  .qlogin.fast{border-color:#c3e8d2;box-shadow:0 18px 40px -20px rgba(16,120,70,.5);}
+  .qlogin.fast .qltxt small{color:#15803d;}
+  .qlogin.fast .qlgo{color:#16a34a;}
   .qlor{display:flex;align-items:center;gap:10px;margin:13px 2px 2px;color:#9fb6e6;font-size:11px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;}
   .qlor::before,.qlor::after{content:"";flex:1;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.4),transparent);}
 
@@ -1228,9 +1231,84 @@
   @keyframes spDot{0%,80%,100%{transform:translateY(0);opacity:.5;}40%{transform:translateY(-7px);opacity:1;}}
   @media(max-width:640px){ #splash .spLogoWrap{width:132px;height:132px;} #splash .spLogo{width:92px;height:92px;} #splash .spName{font-size:38px;} }
   @media (prefers-reduced-motion:reduce){ #splash .spAura,#splash .spRing,#splash .spDots i{animation:none;} }
+
+  /* ============ CREADOR DE AVATAR ============ */
+  .hasavatar{padding:0 !important;background:none !important;border:none !important;overflow:hidden;}
+  .hasavatar svg{width:100%;height:100%;border-radius:50%;display:block;}
+  #avModal{position:fixed;inset:0;z-index:600;display:none;align-items:center;justify-content:center;padding:16px;
+    background:rgba(8,20,48,.55);backdrop-filter:blur(4px);}
+  #avModal.open{display:flex;animation:mlIn .2s ease both;}
+  #avModal .avbox{width:100%;max-width:440px;max-height:92vh;display:flex;flex-direction:column;overflow:hidden;
+    background:linear-gradient(180deg,#ffffff,#f4f8ff);border-radius:24px;border:1px solid rgba(255,255,255,.7);
+    box-shadow:0 40px 90px -30px rgba(8,20,60,.7);}
+  #avModal .avhead{display:flex;align-items:center;justify-content:space-between;padding:15px 18px;color:#fff;
+    background:linear-gradient(120deg,#1853b8,#0b3486 60%,#0a2a66);font-family:'Montserrat',sans-serif;font-weight:800;font-size:16px;}
+  #avModal .avx{width:34px;height:34px;border-radius:11px;border:1px solid rgba(255,255,255,.3);background:rgba(255,255,255,.16);
+    color:#fff;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+  #avModal .avx:hover{background:rgba(255,255,255,.3);}
+  #avModal .avpreview{display:flex;align-items:center;justify-content:center;padding:14px 0 6px;}
+  #avModal .avpreview svg{width:150px;height:150px;border-radius:50%;box-shadow:0 16px 34px -14px rgba(11,61,145,.55);}
+  #avModal .avopts{padding:6px 16px 10px;overflow-y:auto;}
+  .avsec{margin:10px 0;}
+  .avsec-t{font-size:11.5px;font-weight:800;color:#5b6b85;text-transform:uppercase;letter-spacing:.5px;margin-bottom:7px;}
+  .avsec-r{display:flex;flex-wrap:wrap;gap:7px;}
+  .avsw{width:30px;height:30px;border-radius:50%;border:2px solid #fff;cursor:pointer;padding:0;
+    box-shadow:0 0 0 1px #d7e1f2, 0 6px 12px -6px rgba(11,61,145,.4);transition:.14s;}
+  .avsw:hover{transform:translateY(-2px);}
+  .avsw.sel{box-shadow:0 0 0 2px #1a73e8, 0 8px 16px -6px rgba(26,115,232,.6);transform:translateY(-1px);}
+  .avchip{border:1.5px solid #dbe8ff;background:#fff;color:var(--azul-ink);border-radius:11px;padding:7px 12px;font-size:12.5px;
+    font-weight:700;font-family:inherit;cursor:pointer;transition:.14s;}
+  .avchip:hover{background:#eef5ff;border-color:#b9d1ff;}
+  .avchip.sel{background:linear-gradient(135deg,#1e63d6,#0b3d91);color:#fff;border-color:#1e63d6;}
+  #avModal .avfoot{display:flex;gap:10px;padding:12px 16px;border-top:1px solid #e8eefb;background:#fff;}
+  #avModal .avbtn{flex:1;border:none;border-radius:13px;padding:12px;font-size:14px;font-weight:800;font-family:inherit;cursor:pointer;
+    background:linear-gradient(135deg,#36c6ff,#1157c9 70%,#0b3d91);color:#fff;box-shadow:0 14px 26px -12px rgba(17,87,201,.8);transition:.15s;}
+  #avModal .avbtn:hover{transform:translateY(-1px);filter:brightness(1.05);}
+  #avModal .avbtn.ghost{background:#eef3fc;color:var(--azul-ink);box-shadow:none;border:1px solid #dde7f6;flex:0 0 auto;}
+
+  /* ============ REFRESH DE LA PLATAFORMA PRINCIPAL ============ */
+  .hero{padding:22px 22px 20px;margin:18px 0 6px;border-radius:26px;overflow:hidden;
+    background:linear-gradient(135deg,rgba(255,255,255,.92),rgba(233,243,255,.72));
+    border:1px solid rgba(255,255,255,.8);backdrop-filter:blur(10px) saturate(1.05);
+    box-shadow:0 30px 64px -36px rgba(11,61,145,.5),inset 0 1px 0 rgba(255,255,255,.7);}
+  .hero::before{content:"";position:absolute;left:0;right:0;top:0;height:3px;z-index:2;
+    background:linear-gradient(90deg,#36c6ff,#6a8bff,#f5b301);opacity:.92;}
+  .hero::after{content:"";position:absolute;right:-60px;top:-60px;width:220px;height:220px;border-radius:50%;
+    background:radial-gradient(circle,rgba(54,198,255,.16),transparent 65%);pointer-events:none;}
+  .hero .badge{filter:drop-shadow(0 14px 28px rgba(54,198,255,.42));}
+  .hero h1 .g{background:linear-gradient(90deg,#1a73e8,#22c3e6);-webkit-background-clip:text;background-clip:text;color:transparent;}
+  .quickhead h3{font-family:'Montserrat',sans-serif;font-weight:800;color:var(--azul-ink);letter-spacing:.2px;}
+  /* Tarjetas de acceso: más modernas y con vida */
+  .qcard{border-radius:18px;background:linear-gradient(180deg,#ffffff,#f3f8ff);
+    border:1px solid rgba(210,224,245,.9);box-shadow:0 14px 30px -20px rgba(11,61,145,.4);
+    transition:.18s cubic-bezier(.2,.7,.3,1);}
+  .qcard:hover{transform:translateY(-4px);border-color:#bcd6ff;
+    box-shadow:0 26px 46px -20px rgba(26,115,232,.55),0 0 0 1px rgba(54,198,255,.16);}
+  .qcard .ic{border-radius:14px;background:linear-gradient(160deg,#eef5ff,#dce9fb);
+    box-shadow:inset 0 0 0 1px rgba(26,115,232,.08),0 6px 12px -8px rgba(11,61,145,.4);transition:.18s;}
+  .qcard:hover .ic{transform:scale(1.07) translateY(-1px);}
+  .qcard .lb{font-weight:800;}
+  .qcard.feat{box-shadow:0 22px 44px -22px rgba(26,115,232,.6);}
+  .qcard.feat::before{opacity:1;}
+  /* Botones de la cabecera de accesos */
+  .weekbtn{background:linear-gradient(135deg,#1e73e6,#0b3d91)!important;box-shadow:0 14px 26px -12px rgba(17,87,201,.7)!important;}
+  .qeditbtn{border-radius:12px;}
 </style>
 </head>
 <body>
+
+<!-- MODAL · Creador de avatar -->
+<div id="avModal">
+  <div class="avbox">
+    <div class="avhead"><span>🎨 Crea tu avatar</span><button type="button" class="avx" onclick="closeAvatar()" aria-label="Cerrar">✕</button></div>
+    <div class="avpreview" id="avPreview"></div>
+    <div class="avopts" id="avOpts"></div>
+    <div class="avfoot">
+      <button type="button" class="avbtn ghost" onclick="randomAvatar()" aria-label="Aleatorio">🎲</button>
+      <button type="button" class="avbtn" onclick="saveAvatarAndClose()">Guardar avatar</button>
+    </div>
+  </div>
+</div>
 
 <!-- Escudo y mascota de respaldo (SVG) -->
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
@@ -4461,12 +4539,175 @@ function niceName(email,name){
   if(email) return email.split("@")[0].replace(/[._-]+/g," ").replace(/\b\w/g,c=>c.toUpperCase());
   return ROLE_LABEL[ROLE]||"Invitado";
 }
-/* Pone la foto del correo (Google) en un avatar; si no hay, muestra la inicial/emoji. */
+/* Pone el avatar personalizado si existe; si no, la foto de Google; si no, la inicial. */
 function avatarInto(elId,photo,fallback){
   const e=document.getElementById(elId);if(!e)return;
+  const av=loadAvatar();
+  if(av){ e.classList.add("hasavatar"); e.innerHTML=avatarSVG(av); return; }
+  e.classList.remove("hasavatar");
   if(photo){const img=new Image();img.src=photo;img.alt="";img.referrerPolicy="no-referrer";
     img.onerror=()=>{e.textContent=fallback||"A";};e.textContent="";e.appendChild(img);}
   else e.textContent=fallback||"A";
+}
+
+/* ============ CREADOR DE AVATAR (ícono personal dentro de ASE-IA) ============
+   Avatar SVG por capas, personalizable: piel, peinado, color de pelo, lentes,
+   vello facial, ropa (incluye el delantal institucional SIP) y fondo. Se guarda
+   en este dispositivo por usuario y se usa como ícono del perfil. */
+function avShade(hex,amt){ let c=(hex||"#000").replace('#','');if(c.length===3)c=c.split('').map(x=>x+x).join('');
+  let r=parseInt(c.slice(0,2),16),g=parseInt(c.slice(2,4),16),b=parseInt(c.slice(4,6),16);
+  const m=Math.abs(amt)/100,t=amt<0?0:255;
+  r=Math.round(amt<0?r*(1-m):r+(t-r)*m);g=Math.round(amt<0?g*(1-m):g+(t-g)*m);b=Math.round(amt<0?b*(1-m):b+(t-b)*m);
+  return '#'+[r,g,b].map(x=>('0'+Math.max(0,Math.min(255,x)).toString(16)).slice(-2)).join(''); }
+const AV_SKINS=["#ffdfc4","#f3c9a0","#e7b088","#d69a6e","#c07f53","#9c6239","#7a4a2b","#53341f"];
+const AV_HAIR_COLORS=["#1b1b1b","#3a2a1b","#5a3a22","#7c4a2a","#a9692f","#d7a24a","#ecc96b","#9b9b9b","#6b4ea8","#e05aa0","#2f6bd8"];
+const AV_CLOTH_COLORS=["#2f6bd8","#13346e","#e05454","#16a37a","#f5a623","#7c5cff","#444c5e","#e8edf5"];
+const AV_BG=[["#8fb6ff","#3f74e0"],["#b9a6ff","#6c5cff"],["#9fe6c9","#2bb389"],["#ffd48a","#f5a623"],["#ffa8c8","#e05aa0"],["#cfd8e8","#8696b3"]];
+const AV_HAIRS=[["bald","Calvo"],["buzz","Rapado"],["short","Corto"],["sideShort","Corto lado"],["curly","Rizado"],["afro","Afro"],["longStraight","Largo liso"],["longWavy","Largo ondulado"],["ponytail","Cola"],["bun","Moño"]];
+const AV_GLASSES=[["none","Ninguno"],["round","Redondos"],["square","Cuadrados"],["aviator","Aviador"],["reading","Lectura"]];
+const AV_CLOTHES=[["shirt","Camisa"],["shirtTie","Camisa y corbata"],["blouse","Blusa"],["sweater","Suéter"],["delantal","Delantal SIP"],["delantalCoat","Delantal + camisa"]];
+const AV_BEARDS=[["none","Ninguno"],["stubble","Incipiente"],["mustache","Bigote"],["beard","Barba"]];
+const AV_SEX=[["fem","Femenino"],["masc","Masculino"],["otro","Otro"]];
+function avatarDefault(){ return {sex:"otro",skin:2,hair:"short",hairColor:0,glasses:"none",clothes:"delantal",clothColor:1,beard:"none",bg:0}; }
+function avHairBack(style,hc){
+  if(style==="longStraight") return `<path d="M24 40 Q24 20 50 20 Q76 20 76 40 L78 92 L70 94 L70 50 Q70 38 50 38 Q30 38 30 50 L30 94 L22 92 Z" fill="${hc}"/>`;
+  if(style==="longWavy") return `<path d="M24 42 Q22 18 50 18 Q78 18 76 42 Q82 70 72 92 Q70 78 68 60 L68 48 Q60 40 50 40 Q40 40 32 48 L32 60 Q30 78 28 92 Q18 70 24 42 Z" fill="${hc}"/>`;
+  if(style==="ponytail") return `<path d="M70 40 Q84 48 80 70 Q78 82 72 86 Q78 70 72 54 Q70 46 66 44 Z" fill="${hc}"/>`;
+  if(style==="bun") return `<circle cx="50" cy="20" r="9" fill="${hc}"/>`;
+  return "";
+}
+function avHairFront(style,hc){
+  if(style==="bald") return "";
+  if(style==="buzz") return `<path d="M29 42 Q29 21 50 21 Q71 21 71 42 Q71 34 50 32 Q29 34 29 42 Z" fill="${hc}"/>`;
+  if(style==="short") return `<path d="M28 44 Q27 20 50 20 Q73 20 72 44 Q72 33 62 30 Q58 36 50 36 Q40 36 36 30 Q28 34 28 44 Z" fill="${hc}"/>`;
+  if(style==="sideShort") return `<path d="M28 44 Q27 20 50 20 Q73 20 72 42 Q70 30 55 29 Q50 40 38 36 Q30 34 28 44 Z" fill="${hc}"/>`;
+  if(style==="curly") return `<path d="M27 42 Q24 30 32 24 Q36 16 46 19 Q50 15 56 19 Q66 16 70 25 Q78 30 73 43 Q72 34 66 33 Q66 27 60 28 Q58 23 52 26 Q50 22 45 26 Q40 23 38 29 Q32 29 33 35 Q28 35 27 42 Z" fill="${hc}"/>`;
+  if(style==="afro") return `<path d="M22 40 Q16 16 50 14 Q84 16 78 40 Q78 30 50 28 Q22 30 22 40 Z" fill="${hc}"/><circle cx="30" cy="30" r="8" fill="${hc}"/><circle cx="50" cy="22" r="10" fill="${hc}"/><circle cx="70" cy="30" r="8" fill="${hc}"/>`;
+  if(style==="longStraight"||style==="longWavy") return `<path d="M28 44 Q27 20 50 20 Q73 20 72 44 Q72 33 60 30 Q57 37 50 37 Q42 37 40 30 Q28 33 28 44 Z" fill="${hc}"/>`;
+  if(style==="ponytail"||style==="bun") return `<path d="M28 44 Q27 19 50 19 Q73 19 72 44 Q72 32 60 30 Q56 36 50 36 Q44 36 40 30 Q28 32 28 44 Z" fill="${hc}"/>`;
+  return `<path d="M28 44 Q27 20 50 20 Q73 20 72 44 Q72 33 62 30 Q58 36 50 36 Q40 36 36 30 Q28 34 28 44 Z" fill="${hc}"/>`;
+}
+function avGlasses(kind){
+  if(kind==="none"||!kind) return "";
+  const c="#2b2b2b";
+  if(kind==="round") return `<g fill="none" stroke="${c}" stroke-width="1.6"><circle cx="41" cy="45" r="6"/><circle cx="59" cy="45" r="6"/><path d="M47 45 h6"/><path d="M35 44 l-5 -2"/><path d="M65 44 l5 -2"/></g>`;
+  if(kind==="square") return `<g fill="none" stroke="${c}" stroke-width="1.8"><rect x="34" y="40" width="13" height="10" rx="2"/><rect x="53" y="40" width="13" height="10" rx="2"/><path d="M47 44 h6"/><path d="M34 43 l-4 -1"/><path d="M66 43 l4 -1"/></g>`;
+  if(kind==="aviator") return `<g fill="none" stroke="#5a4a2a" stroke-width="1.6"><path d="M35 42 h11 q1 7 -5.5 7 Q34 49 35 42 Z"/><path d="M54 42 h11 q1 7 -5.5 7 Q53 49 54 42 Z"/><path d="M46 44 h8"/></g>`;
+  if(kind==="reading") return `<g fill="none" stroke="${c}" stroke-width="1.2"><rect x="35" y="41" width="12" height="8" rx="3"/><rect x="53" y="41" width="12" height="8" rx="3"/><path d="M47 44 h6"/></g>`;
+  return "";
+}
+function avBeard(kind,hc){
+  if(kind==="none"||!kind) return "";
+  if(kind==="mustache") return `<path d="M44 55 Q50 58 56 55 Q53 53 50 54 Q47 53 44 55 Z" fill="${hc}"/>`;
+  if(kind==="stubble") return `<path d="M33 48 Q35 66 50 66 Q65 66 67 48 Q66 60 50 60 Q34 60 33 48 Z" fill="${hc}" opacity=".32"/>`;
+  if(kind==="beard") return `<path d="M32 46 Q34 70 50 70 Q66 70 68 46 Q66 60 58 62 L58 56 Q50 60 42 56 L42 62 Q34 60 32 46 Z" fill="${hc}"/>`;
+  return "";
+}
+function avClothes(kind,cloth){
+  const sh=avShade(cloth,-16), lite=avShade(cloth,20);
+  const base=(c)=>`<path d="M14 100 Q14 76 50 72 Q86 76 86 100 Z" fill="${c}"/>`;
+  if(kind==="delantal"||kind==="delantalCoat"){
+    const navy="#13346e";
+    const inner = kind==="delantalCoat" ? `<path d="M42 72 L50 90 L58 72 Z" fill="#8fc0e8"/>` : `<path d="M42 72 L50 90 L58 72 Z" fill="#ffffff"/>`;
+    return base(navy)+inner
+      +`<path d="M42 72 L50 82 L37 92 Q34 80 42 72 Z" fill="#ffffff"/>`
+      +`<path d="M58 72 L50 82 L63 92 Q66 80 58 72 Z" fill="#ffffff"/>`
+      +`<rect x="58" y="86" width="15" height="9" rx="2.2" fill="#ffffff"/>`
+      +`<text x="65.5" y="92.8" text-anchor="middle" font-family="Montserrat,Arial" font-size="6" font-weight="800" fill="#13346e">SiP</text>`;
+  }
+  if(kind==="shirtTie") return base(cloth)+`<path d="M43 72 L50 80 L57 72 Z" fill="${lite}"/><path d="M48 78 L52 78 L54 98 L50 100 L46 98 Z" fill="#b2243a"/><path d="M47 76 L53 76 L52 80 L48 80 Z" fill="#8f1b2e"/>`;
+  if(kind==="blouse") return base(cloth)+`<path d="M43 72 Q50 70 57 72 L53 82 Q50 80 47 82 Z" fill="${lite}"/><circle cx="50" cy="90" r="2" fill="${sh}"/>`;
+  if(kind==="sweater") return base(cloth)+`<path d="M41 74 Q50 84 59 74" fill="none" stroke="${sh}" stroke-width="3"/>`;
+  return base(cloth)+`<path d="M44 72 L50 80 L56 72 Z" fill="${lite}"/><line x1="50" y1="80" x2="50" y2="100" stroke="${sh}" stroke-width="0.9"/><circle cx="50" cy="88" r="1.1" fill="${sh}"/><circle cx="50" cy="94" r="1.1" fill="${sh}"/>`;
+}
+function avatarSVG(cfg,size){
+  cfg=Object.assign(avatarDefault(),cfg||{});
+  const w=(size==null)?"100%":(typeof size==="number"?(size+""):size);
+  const skin=AV_SKINS[cfg.skin]||AV_SKINS[2], skinD=avShade(skin,-14);
+  const hc=AV_HAIR_COLORS[cfg.hairColor]||AV_HAIR_COLORS[0];
+  const bg=AV_BG[cfg.bg]||AV_BG[0];
+  const cloth=AV_CLOTH_COLORS[cfg.clothColor]||AV_CLOTH_COLORS[0];
+  const brow=avShade(hc,-10);
+  const uid="av"+Math.random().toString(36).slice(2,8);
+  return `<svg viewBox="0 0 100 100" width="${w}" height="${w}" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" style="display:block">`
+    +`<defs><clipPath id="${uid}"><circle cx="50" cy="50" r="50"/></clipPath>`
+    +`<linearGradient id="${uid}b" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${bg[0]}"/><stop offset="1" stop-color="${bg[1]}"/></linearGradient></defs>`
+    +`<g clip-path="url(#${uid})"><rect width="100" height="100" fill="url(#${uid}b)"/>`
+    +avHairBack(cfg.hair,hc)
+    +`<path d="M43 58 h14 v12 q-7 5 -14 0 z" fill="${skinD}"/>`
+    +avClothes(cfg.clothes,cloth)
+    +`<ellipse cx="50" cy="43" rx="20.5" ry="23.5" fill="${skin}"/>`
+    +`<circle cx="29.5" cy="45" r="4" fill="${skin}"/><circle cx="70.5" cy="45" r="4" fill="${skin}"/>`
+    +`<path d="M39 40 q4 -2.5 8 0" fill="none" stroke="${brow}" stroke-width="1.6" stroke-linecap="round"/>`
+    +`<path d="M53 40 q4 -2.5 8 0" fill="none" stroke="${brow}" stroke-width="1.6" stroke-linecap="round"/>`
+    +`<ellipse cx="43" cy="45.5" rx="2.6" ry="3" fill="#fff"/><circle cx="43" cy="46" r="1.6" fill="#3a2a1a"/>`
+    +`<ellipse cx="57" cy="45.5" rx="2.6" ry="3" fill="#fff"/><circle cx="57" cy="46" r="1.6" fill="#3a2a1a"/>`
+    +`<path d="M49 48 q1 3 2 4" fill="none" stroke="${skinD}" stroke-width="1.2" stroke-linecap="round"/>`
+    +`<path d="M45 54 q5 4 10 0" fill="none" stroke="${avShade(skin,-30)}" stroke-width="1.6" stroke-linecap="round"/>`
+    +avBeard(cfg.beard,hc)+avGlasses(cfg.glasses)+avHairFront(cfg.hair,hc)
+    +`</g></svg>`;
+}
+/* Almacenamiento por usuario */
+function avatarKey(){ return "aseia_avatar_v1_"+((CURRENT&&CURRENT.email)||"anon").toLowerCase(); }
+function loadAvatar(){ try{ const r=localStorage.getItem(avatarKey()); return r?JSON.parse(r):null; }catch(e){ return null; } }
+function saveAvatarCfg(cfg){ try{ localStorage.setItem(avatarKey(),JSON.stringify(cfg)); }catch(e){} }
+function hasAvatar(){ return !!loadAvatar(); }
+/* Modal creador */
+let AV_DRAFT=null;
+function openAvatar(){
+  closeProfileMenu();
+  AV_DRAFT=Object.assign(avatarDefault(), loadAvatar()||{});
+  const m=document.getElementById("avModal"); if(!m) return;
+  m.classList.add("open"); document.body.style.overflow="hidden";
+  renderAvatarUI();
+}
+function closeAvatar(){ const m=document.getElementById("avModal"); if(m)m.classList.remove("open"); document.body.style.overflow=""; }
+function avSwatches(key,colors,isGrad){
+  return colors.map((c,i)=>{ const bg=isGrad?("linear-gradient(135deg,"+c[0]+","+c[1]+")"):c;
+    const sel=AV_DRAFT[key]===i?" sel":"";
+    return '<button type="button" class="avsw'+sel+'" style="background:'+bg+'" onclick="avSet(\''+key+'\','+i+')" aria-label="'+key+' '+i+'"></button>'; }).join("");
+}
+function avChips(key,opts){
+  return opts.map(o=>{ const sel=AV_DRAFT[key]===o[0]?" sel":"";
+    return '<button type="button" class="avchip'+sel+'" onclick="avSet(\''+key+'\',\''+o[0]+'\')">'+o[1]+'</button>'; }).join("");
+}
+function avSection(title,inner){ return '<div class="avsec"><div class="avsec-t">'+title+'</div><div class="avsec-r">'+inner+'</div></div>'; }
+function renderAvatarUI(){
+  const pv=document.getElementById("avPreview"); if(pv) pv.innerHTML=avatarSVG(AV_DRAFT,160);
+  const box=document.getElementById("avOpts"); if(!box) return;
+  box.innerHTML=
+     avSection("Perfil", avChips("sex",AV_SEX))
+    +avSection("Tono de piel", avSwatches("skin",AV_SKINS,false))
+    +avSection("Peinado", avChips("hair",AV_HAIRS))
+    +avSection("Color de pelo", avSwatches("hairColor",AV_HAIR_COLORS,false))
+    +avSection("Vello facial", avChips("beard",AV_BEARDS))
+    +avSection("Lentes", avChips("glasses",AV_GLASSES))
+    +avSection("Ropa", avChips("clothes",AV_CLOTHES))
+    +avSection("Color de ropa", avSwatches("clothColor",AV_CLOTH_COLORS,false))
+    +avSection("Fondo", avSwatches("bg",AV_BG,true));
+}
+function avSet(key,val){
+  if(key==="sex"){ AV_DRAFT.sex=val;
+    if(val==="fem"){ AV_DRAFT.hair="longStraight"; AV_DRAFT.beard="none"; AV_DRAFT.clothes="delantal"; }
+    else if(val==="masc"){ AV_DRAFT.hair="short"; AV_DRAFT.clothes="delantalCoat"; }
+    else { AV_DRAFT.hair="short"; }
+  } else { AV_DRAFT[key]=val; }
+  renderAvatarUI();
+}
+function randomAvatar(){
+  const R=a=>a[Math.floor(Math.random()*a.length)];
+  AV_DRAFT={ sex:R(AV_SEX)[0], skin:Math.floor(Math.random()*AV_SKINS.length),
+    hair:R(AV_HAIRS)[0], hairColor:Math.floor(Math.random()*AV_HAIR_COLORS.length),
+    glasses:R(AV_GLASSES)[0], beard:R(AV_BEARDS)[0], clothes:R(AV_CLOTHES)[0],
+    clothColor:Math.floor(Math.random()*AV_CLOTH_COLORS.length), bg:Math.floor(Math.random()*AV_BG.length) };
+  renderAvatarUI();
+}
+function saveAvatarAndClose(){
+  saveAvatarCfg(AV_DRAFT);
+  try{ const disp=niceName(CURRENT.email,CURRENT.name); avatarInto("rbAv",CURRENT.photo,(disp.trim()[0]||"A").toUpperCase()); }catch(e){}
+  try{ buildProfileMenu(); }catch(e){}
+  closeAvatar();
+  try{ aseToast("Avatar","¡Listo! 🎨","Tu avatar quedó guardado como tu ícono en ASE-IA.",6000); }catch(e){}
 }
 /* Mini pantalla de carga: breve, tras elegir perfil / al reabrir la sesión.
    Reemplaza la intro larga del inicio para optimizar el tiempo de ingreso. */
@@ -6034,8 +6275,7 @@ function buildProfileMenu(){
   document.getElementById("pmName").textContent=disp;
   document.getElementById("pmMail").textContent=CURRENT.email||"—";
   document.getElementById("pmRole").textContent=ROLE_LABEL[ROLE]+((isPIE()&&ROLE!=="pie")?" · Programa de Integración":"")+(isGestion()?" · Equipo de Gestión":"");
-  if(CURRENT.photo)avatarInto("pmAv",CURRENT.photo,null);
-  else document.getElementById("pmAv").textContent=(LOGIN_INFO[ROLE]||{}).emo||"👤";
+  avatarInto("pmAv",CURRENT.photo,(LOGIN_INFO[ROLE]||{}).emo||"👤");   // avatar personalizado › foto › emoji
   const body=document.getElementById("pmBody");body.innerHTML="";
   const acts=[];
   if(STAFF(ROLE))acts.push({em:"📅",t:"¿Qué eventos hay esta semana?",action:"weekcal"});
@@ -6044,6 +6284,8 @@ function buildProfileMenu(){
   body.appendChild(pmSection("⚡","Acciones frecuentes",acts,true));
   if(isDev(CURRENT.email)) body.appendChild(pmDevSim());   // perfil MAESTRO: simular PIE / Gestión para probar
   body.appendChild(pmPrefs());
+  // Crear / editar el avatar personal (ícono dentro de ASE-IA).
+  body.appendChild(pmSolo("🎨",hasAvatar()?"Editar mi avatar":"Crea tu avatar",()=>{openAvatar();}));
   // "Completa los datos de mi perfil" como opción por sí sola.
   body.appendChild(pmSolo("📝","Completa los datos de mi perfil",()=>{closeProfileMenu();openProfileData();}));
   body.appendChild(pmAbout());
@@ -6409,6 +6651,11 @@ async function googleCallback(resp){
   gDom("Verificando tu cuenta…",false);
   const me=await apiPost("me",{credential:cred});   // el Worker VERIFICA el token
   if(!me||me.__err||!me.role){gDom("No pudimos verificar tu cuenta. Intenta de nuevo.",true);return;}
+  finishAuth(me, cred);
+}
+/* Entra a la app con el resultado verificado del Worker (lo usan tanto el login
+   de Google como el re-ingreso rápido con el token recordado). */
+async function finishAuth(me, cred){
   AUTH_TOKEN=cred;
   const email=me.email||"", name=me.name||"";
   const pic=me.picture||(decodeJwt(cred).picture)||"";   // foto de Google (respaldo desde el token)
@@ -6467,8 +6714,11 @@ function realGoogle(){
 }
 /* ===== Recordar el último perfil usado: entrar con un solo toque ===== */
 const LAST_PROFILE_KEY="aseia_lastprofile_v1";
-function saveLastProfile(){ try{ if(!ROLE)return; localStorage.setItem(LAST_PROFILE_KEY,JSON.stringify({role:ROLE,email:(CURRENT&&CURRENT.email)||"",name:(CURRENT&&CURRENT.name)||""})); }catch(e){} }
+function saveLastProfile(){ try{ if(!ROLE)return;
+  let exp=0; try{ if(AUTH_TOKEN){ const d=decodeJwt(AUTH_TOKEN); exp=(d&&d.exp)||0; } }catch(e){}
+  localStorage.setItem(LAST_PROFILE_KEY,JSON.stringify({role:ROLE,email:(CURRENT&&CURRENT.email)||"",name:(CURRENT&&CURRENT.name)||"",token:AUTH_TOKEN||"",tokenExp:exp})); }catch(e){} }
 function getLastProfile(){ try{ const r=localStorage.getItem(LAST_PROFILE_KEY); if(!r)return null; const o=JSON.parse(r); return (o&&o.role)?o:null; }catch(e){ return null; } }
+function lastTokenValid(lp){ return !!(lp && lp.token && lp.tokenExp && Date.now() < (lp.tokenExp*1000 - 60000)); }
 /* Dibuja el botón "Continuar como <último perfil>" en la pantalla de inicio. */
 function renderQuickLogin(){
   const box=document.getElementById("quickLogin"); if(!box) return;
@@ -6478,27 +6728,29 @@ function renderQuickLogin(){
   const who=lp.name?lp.name.split(/\s+/).slice(0,2).join(" "):(lp.email||"");
   const esc=s=>(s||"").replace(/</g,"&lt;").replace(/"/g,"&quot;");
   const GLOGO='<svg class="qlg" viewBox="0 0 48 48" aria-hidden="true"><path fill="#4285F4" d="M45.12 24.5c0-1.56-.14-3.06-.4-4.5H24v8.51h11.84c-.51 2.75-2.06 5.08-4.39 6.64v5.52h7.11c4.16-3.83 6.56-9.47 6.56-16.17z"/><path fill="#34A853" d="M24 46c5.94 0 10.92-1.97 14.56-5.33l-7.11-5.52c-1.97 1.32-4.49 2.1-7.45 2.1-5.73 0-10.58-3.87-12.31-9.07H4.34v5.7C7.96 41.07 15.4 46 24 46z"/><path fill="#FBBC05" d="M11.69 28.18C11.25 26.86 11 25.45 11 24s.25-2.86.69-4.18v-5.7H4.34C2.85 17.09 2 20.45 2 24s.85 6.91 2.34 9.88l7.35-5.7z"/><path fill="#EA4335" d="M24 10.75c3.23 0 6.13 1.11 8.41 3.29l6.31-6.31C34.91 4.18 29.93 2 24 2 15.4 2 7.96 6.93 4.34 14.12l7.35 5.7c1.73-5.2 6.58-9.07 12.31-9.07z"/></svg>';
+  const fast=lastTokenValid(lp);
+  const sub=fast ? "Última sesión iniciada · entra directo" : ("con tu cuenta de Google · "+esc(label));
   box.style.display="";
-  box.innerHTML='<button type="button" class="qlogin" onclick="quickLogin()" aria-label="Continuar como '+esc(who||label)+' con Google">'
+  box.innerHTML='<button type="button" class="qlogin'+(fast?' fast':'')+'" onclick="quickLogin()" aria-label="Continuar como '+esc(who||label)+'">'
     +GLOGO
-    +'<span class="qltxt"><b>Continuar como '+esc(who||label)+'</b><small>con tu cuenta de Google · '+esc(label)+'</small></span>'
+    +'<span class="qltxt"><b>Continuar como '+esc(who||label)+'</b><small>'+sub+'</small></span>'
     +'<span class="qlgo">→</span></button>'
     +'<div class="qlor">o elige otro perfil</div>';
 }
+/* Botón rápido: si el token recordado sigue vigente, re-entra directo (sin
+   popup de Google); si venció, usa Google con selección automática (un toque). */
 function quickLogin(){
   const lp=getLastProfile(); if(!lp) return;
-  PENDING=lp.role;                                 // el perfil se valida luego por el correo
-  // Ingreso con un toque (One Tap) directo a la última cuenta de Google.
+  PENDING=lp.role;                                 // el perfil se valida luego por el correo verificado
+  if(lastTokenValid(lp)){ quickLoginFast(lp); return; }
   loadGIS(()=>{ try{ initGIS(true); google.accounts.id.prompt(); }catch(_){ pick(lp.role); } });
 }
-/* Al abrir la pantalla de inicio: muestra automáticamente la tarjeta de Google
-   "Continuar como ..." (One Tap), para que reconozca la cuenta sin elegir perfil. */
-let QUICK_AUTO_DONE=false;
-function quickLoginAuto(){
-  if(QUICK_AUTO_DONE) return;
-  const lp=getLastProfile(); if(!lp || !GOOGLE_CLIENT_ID) return;
-  QUICK_AUTO_DONE=true; PENDING=lp.role;
-  setTimeout(()=>{ loadGIS(()=>{ try{ initGIS(false); google.accounts.id.prompt(); }catch(_){ } }); }, 1600);
+async function quickLoginFast(lp){
+  showMiniLoad();                                  // feedback inmediato mientras verifica
+  const me=await apiPost("me",{credential:lp.token});
+  if(me && !me.__err && me.role){ finishAuth(me, lp.token); return; }
+  // El token fue rechazado (vencido/no válido): cae a Google.
+  loadGIS(()=>{ try{ initGIS(true); google.accounts.id.prompt(); }catch(_){ pick(lp.role); } });
 }
 
 /* ============ INTRO · se cierra sola (o al tocar) y muestra el acceso ============ */
@@ -6643,9 +6895,8 @@ function hideSplash(delay){
   if(restored){
     const s=document.getElementById("splash"); if(s){ s.style.display="none"; } SPLASH_HID=true;   // ya hay sesión: entra directo con la mini-carga
   }else{
-    try{ renderQuickLogin(); }catch(_){}  // botón "Continuar como…" estilo Google
+    try{ renderQuickLogin(); }catch(_){}  // botón rápido "Continuar como…" (re-ingreso directo)
     hideSplash(1250);                     // deja ver la animación de bienvenida y pasa al login
-    try{ quickLoginAuto(); }catch(_){}    // One Tap: reconoce la cuenta sin elegir perfil
   }
 })();
 
