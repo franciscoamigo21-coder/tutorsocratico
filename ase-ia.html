@@ -1152,6 +1152,40 @@
     animation:mlBar .62s cubic-bezier(.4,.1,.2,1) forwards;}
   @keyframes mlBar{to{width:100%;}}
   @media (prefers-reduced-motion:reduce){ .chead::before,#miniLoad .mlRing::before{animation:none;} }
+
+  /* ===== Bienvenida: entrada animada del logo y la tarjeta del login ===== */
+  #gate .gcard>*{animation:gateIn .6s cubic-bezier(.2,.7,.3,1) both;}
+  #gate .brandrow{animation-delay:.04s;}
+  #gate .gtop{animation-delay:.12s;}
+  #gate .pill{animation-delay:.18s;}
+  #gate h1{animation-delay:.24s;}
+  #gate .lema{animation-delay:.30s;}
+  #gate #step1,#gate #step2{animation-delay:.36s;}
+  @keyframes gateIn{from{opacity:0;transform:translateY(12px) scale(.985);}to{opacity:1;transform:none;}}
+  #gate .coin3d{animation:gateCoin .8s cubic-bezier(.2,.8,.25,1) both;}
+  @keyframes gateCoin{0%{opacity:0;transform:translateY(6px) scale(.6);filter:drop-shadow(0 0 0 rgba(54,198,255,0));}
+    60%{opacity:1;transform:translateY(0) scale(1.08);} 100%{transform:scale(1);filter:drop-shadow(0 10px 26px rgba(54,198,255,.45));}}
+
+  /* ===== Botón "Continuar como ..." (recordar último perfil, 1 toque) ===== */
+  #quickLogin{margin:2px 0 12px;}
+  .qlogin{display:flex;align-items:center;gap:12px;width:100%;cursor:pointer;font-family:inherit;text-align:left;
+    padding:12px 14px;border-radius:16px;color:#08306b;
+    background:linear-gradient(135deg,#ffffff,#eef5ff);border:1.5px solid rgba(255,255,255,.65);
+    box-shadow:0 16px 34px -18px rgba(8,30,90,.65),inset 0 1px 0 rgba(255,255,255,.7);
+    transition:.18s cubic-bezier(.2,.7,.3,1);position:relative;overflow:hidden;}
+  .qlogin:hover{transform:translateY(-2px);box-shadow:0 22px 42px -16px rgba(8,30,90,.7);}
+  .qlogin:active{transform:translateY(0) scale(.99);}
+  .qlogin .qlemo{display:flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:12px;font-size:21px;flex:none;
+    background:linear-gradient(160deg,#eaf3ff,#d7e7ff);border:1px solid #cfe0ff;}
+  .qlogin .qltxt{display:flex;flex-direction:column;line-height:1.2;flex:1;min-width:0;}
+  .qlogin .qltxt b{font-size:14.5px;font-weight:800;font-family:'Montserrat',sans-serif;}
+  .qlogin .qltxt small{font-size:11.5px;color:#5b6b85;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .qlogin .qlgo{margin-left:auto;font-size:18px;font-weight:800;color:#1157c9;flex:none;transition:.18s;}
+  .qlogin:hover .qlgo{transform:translateX(3px);}
+  /* chip Google dentro del botón */
+  .qlogin .qlg{width:19px;height:19px;flex:none;}
+  .qlor{display:flex;align-items:center;gap:10px;margin:12px 2px 2px;color:#9fb6e6;font-size:11px;font-weight:700;letter-spacing:.4px;text-transform:uppercase;}
+  .qlor::before,.qlor::after{content:"";flex:1;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.35),transparent);}
 </style>
 </head>
 <body>
@@ -1232,6 +1266,7 @@
       <div class="gstep" id="step1">
         <p>Hola 👋 Elige tu perfil e ingresa con tu correo y contraseña. Responderé solo con
            información autorizada del colegio.</p>
+        <div id="quickLogin" style="display:none"></div>
         <div class="picker">
           <button class="pick" data-role="teacher" onclick="pick('teacher')"><span class="emo">👩‍🏫</span><span class="t">Docente</span><span class="d">Correo @sip.cl</span></button>
           <button class="pick" data-role="admin" onclick="pick('admin')"><span class="emo">🗂️</span><span class="t">Administrativo</span><span class="d">Correo @sip.cl</span></button>
@@ -4405,7 +4440,8 @@ function enter(role,email,name,photo,prof){
   applyPrefsOnEnter();startReminders();
   history.replaceState({screen:"app"},"");  // reemplaza 'login': el botón atrás vuelve a elegir perfil
   showScreen("app");
-  saveSession();   // guarda la sesión para sobrevivir a un F5 (recargar) por los próximos minutos
+  saveSession();       // guarda la sesión para sobrevivir a un F5 (recargar) por los próximos minutos
+  saveLastProfile();   // recuerda el último perfil para el botón "Continuar como…"
 }
 function showGate(){ closeProfileMenu(); if(history.state&&history.state.screen==="app") history.back(); else showScreen("gate"); }
 
@@ -6138,7 +6174,9 @@ function showScreen(s){
   else if(s==="login"){ app.style.display="none"; gate.style.display="flex";
     document.getElementById("step1").hidden=true; document.getElementById("step2").hidden=false; }
   else { app.style.display="none"; gate.style.display="flex";
-    document.getElementById("step1").hidden=false; document.getElementById("step2").hidden=true; PENDING=null; }
+    document.getElementById("step1").hidden=false; document.getElementById("step2").hidden=true; PENDING=null;
+    try{ renderQuickLogin(); }catch(_){}   // botón "Continuar como…" si hay un último perfil recordado
+  }
   window.scrollTo(0,0);
 }
 window.addEventListener("popstate",e=>{ showScreen((e.state&&e.state.screen)||"gate"); });
@@ -6347,10 +6385,13 @@ async function googleCallback(resp){
   enter("guardian",email,name,pic,CURRENT_PUPILS[0]);
   if(CURRENT_PUPILS.length>1)aseToast("Tienes "+CURRENT_PUPILS.length+" pupilos/as","Mostrando a "+CURRENT_PUPILS[0].student,"Cámbialo con el botón Cambiar.",8000);
 }
-function initGIS(){
-  if(!GIS_READY||GIS_INITED)return;
-  google.accounts.id.initialize({client_id:GOOGLE_CLIENT_ID,callback:googleCallback,auto_select:false,cancel_on_tap_outside:true,ux_mode:"popup"});
-  GIS_INITED=true;
+let GIS_AUTO=false;
+function initGIS(auto){
+  if(!GIS_READY)return;
+  auto=!!auto;
+  if(GIS_INITED && GIS_AUTO===auto)return;   // re-inicializa solo si cambia el modo (one-tap)
+  google.accounts.id.initialize({client_id:GOOGLE_CLIENT_ID,callback:googleCallback,auto_select:auto,cancel_on_tap_outside:true,ux_mode:"popup"});
+  GIS_INITED=true; GIS_AUTO=auto;
 }
 /* Dibuja el botón oficial "Iniciar sesión con Google" en la pantalla del perfil. */
 function renderGoogleButton(){
@@ -6365,6 +6406,31 @@ function renderGoogleButton(){
 /* Compatibilidad: si el botón no cargó, este acceso lanza el One Tap de Google. */
 function realGoogle(){
   loadGIS(()=>{ try{ initGIS(); google.accounts.id.prompt(); }catch(_){ gDom("No se pudo iniciar Google.",true); } });
+}
+/* ===== Recordar el último perfil usado: entrar con un solo toque ===== */
+const LAST_PROFILE_KEY="aseia_lastprofile_v1";
+function saveLastProfile(){ try{ if(!ROLE)return; localStorage.setItem(LAST_PROFILE_KEY,JSON.stringify({role:ROLE,email:(CURRENT&&CURRENT.email)||"",name:(CURRENT&&CURRENT.name)||""})); }catch(e){} }
+function getLastProfile(){ try{ const r=localStorage.getItem(LAST_PROFILE_KEY); if(!r)return null; const o=JSON.parse(r); return (o&&o.role)?o:null; }catch(e){ return null; } }
+/* Dibuja el botón "Continuar como <último perfil>" en la pantalla de inicio. */
+function renderQuickLogin(){
+  const box=document.getElementById("quickLogin"); if(!box) return;
+  const lp=getLastProfile();
+  if(!lp || !GOOGLE_CLIENT_ID){ box.style.display="none"; box.innerHTML=""; return; }
+  const info=LOGIN_INFO[lp.role]||{}; const label=(ROLE_LABEL&&ROLE_LABEL[lp.role])||info.t||"tu perfil";
+  const who=lp.name?lp.name.split(/\s+/).slice(0,2).join(" "):(lp.email||"");
+  const esc=s=>(s||"").replace(/</g,"&lt;").replace(/"/g,"&quot;");
+  box.style.display="";
+  box.innerHTML='<button type="button" class="qlogin" onclick="quickLogin()" aria-label="Continuar como '+esc(label)+'">'
+    +'<span class="qlemo">'+(info.emo||"✨")+'</span>'
+    +'<span class="qltxt"><b>Continuar como '+esc(label)+'</b>'+(who?('<small>'+esc(who)+'</small>'):'')+'</span>'
+    +'<span class="qlgo">→</span></button>'
+    +'<div class="qlor">o elige tu perfil</div>';
+}
+function quickLogin(){
+  const lp=getLastProfile(); if(!lp) return;
+  pick(lp.role);                                   // muestra el paso 2 (respaldo visible)
+  // Ingreso con un toque (One Tap) directo a la última cuenta de Google.
+  setTimeout(()=>{ loadGIS(()=>{ try{ initGIS(true); google.accounts.id.prompt(); }catch(_){ } }); }, 150);
 }
 
 /* ============ INTRO · se cierra sola (o al tocar) y muestra el acceso ============ */
@@ -6495,7 +6561,11 @@ function skipIntro(){const i=document.getElementById("intro");if(!i||i.classList
 /* ====== Reabrir sesión tras recargar (F5) o volver dentro de ~30 min ======
    Se ejecuta al final, con todo el DOM y las funciones ya definidas. Si hay una
    sesión vigente, ASE-IA entra directo a la app por debajo de la intro. */
-(function(){ try{ restoreSession(); }catch(e){} })();
+(function(){
+  let restored=false;
+  try{ restored=restoreSession(); }catch(e){}
+  if(!restored){ try{ renderQuickLogin(); }catch(_){} }   // muestra "Continuar como…" en el login inicial
+})();
 
 
 </script>
