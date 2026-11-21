@@ -311,6 +311,11 @@
     background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.24);border-radius:12px;color:#fff;cursor:pointer;transition:.15s;flex-shrink:0;}
   .chead .fsbtn:hover{background:rgba(255,255,255,.28);transform:translateY(-1px);}
   .chead .fsbtn svg{width:18px;height:18px;}
+  /* Botón "reiniciar chat": discreto, junto al de pantalla completa */
+  .chead .rsbtn{margin-left:auto;width:38px;height:38px;display:flex;align-items:center;justify-content:center;
+    background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.24);border-radius:12px;color:#fff;cursor:pointer;transition:.15s;flex-shrink:0;}
+  .chead .rsbtn:hover{background:rgba(255,255,255,.28);transform:translateY(-1px);}
+  .chead .rsbtn svg{width:18px;height:18px;}
   #log{flex:1;position:relative;overflow-y:auto;padding:20px 18px;display:flex;flex-direction:column;gap:14px;scroll-behavior:smooth;
     background:radial-gradient(900px 340px at 100% -6%, #eaf1ff, transparent), linear-gradient(#fbfcff,#f4f8ff);}
   .row{display:flex;align-items:flex-end;gap:10px;animation:fadeUp .28s ease both;}
@@ -325,6 +330,13 @@
     box-shadow:0 13px 28px -13px rgba(234,67,53,.75);transition:.15s;font-family:inherit;}
   .mailbtn:hover{filter:brightness(1.06);transform:translateY(-1px);}
   .mailbtn svg{width:18px;height:18px;flex-shrink:0;}
+  /* Botón secundario: abrir el correo con copia al equipo directivo */
+  .ccbtn{display:inline-flex;align-items:center;gap:8px;margin-top:9px;padding:9px 15px;border-radius:12px;
+    background:#eef4ff;color:var(--azul-ink,#0b3d91);font-weight:800;font-size:12.5px;text-decoration:none;
+    border:1.5px solid #cdddff;transition:.15s;font-family:inherit;}
+  .ccbtn:hover{background:#dfeaff;transform:translateY(-1px);}
+  .ccbtn svg{width:16px;height:16px;flex-shrink:0;}
+  .ccnote{margin-top:6px;font-size:11.5px;color:#5b6b85;line-height:1.5;}
   /* Botones "tipo conversación" del redactor de correos guiado */
   .echoices{display:flex;flex-direction:column;gap:7px;margin-top:11px;}
   .echoice{text-align:left;background:#f4f8ff;border:1px solid #d9e6ff;color:var(--azul-ink);border-radius:12px;
@@ -336,6 +348,15 @@
   .ecurso,.msg input.einput{width:100%;padding:11px 12px;border:1px solid #d9e6ff;border-radius:12px;font-size:13.5px;
     font-family:inherit;background:#f4f8ff;color:var(--azul-ink);outline:none;box-sizing:border-box;}
   .msg input.einput:focus{border-color:var(--cyan);background:#fff;box-shadow:0 0 0 3px rgba(34,195,230,.15);}
+  /* Checklist de estudiantes para el correo masivo */
+  .echecklist{display:flex;flex-direction:column;gap:2px;margin-top:10px;max-height:240px;overflow:auto;
+    border:1px solid #d9e6ff;border-radius:12px;padding:7px 9px;background:#f8fbff;}
+  .echk{display:flex;align-items:center;gap:9px;padding:7px 6px;border-radius:9px;font-size:13.5px;
+    color:var(--azul-ink);font-weight:600;cursor:pointer;}
+  .echk:hover{background:#eaf2ff;}
+  .echk input{width:17px;height:17px;accent-color:var(--azul);flex-shrink:0;cursor:pointer;}
+  .echk.allrow{font-weight:800;border-bottom:1px solid #e3ecfb;border-radius:0;margin-bottom:3px;padding-bottom:9px;}
+  .emasscount{margin-top:8px;font-size:12.5px;color:#5b6b85;font-weight:700;}
   .cites{margin-top:10px;display:flex;flex-wrap:wrap;gap:6px;}
   .cite{background:linear-gradient(135deg,#eef4ff,#e6efff);color:var(--azul);border:1px solid #d6e3ff;border-radius:999px;padding:3px 11px;font-size:11px;font-weight:700;}
   .typing{display:flex;gap:5px;padding:14px 16px;background:#fff;border:1px solid var(--border);border-radius:18px;border-bottom-left-radius:6px;}
@@ -1044,6 +1065,127 @@
     opacity:0;transition:opacity .5s ease;animation:iUp .7s ease 1.4s backwards;}
   #intro .imsg.on{opacity:.92;}
   @media(max-width:640px){ #intro .ilogoWrap{width:170px;height:170px;} #intro .iring{width:166px;height:166px;} #intro .ihalo{width:200px;height:200px;} #intro .ilogo{width:120px;height:120px;} #intro .iname{font-size:42px;} #intro .isub{font-size:13.5px;} #intro .imsg{font-size:12.5px;bottom:24px;} }
+
+  /* ================= CAPA FUTURISTA (overrides finales) ================= */
+  /* Intro de inicio eliminada: entra directo al login (mini-carga va después). */
+  #intro{display:none !important;}
+
+  /* Tarjeta del chat: más redonda, con vidrio y halo suave */
+  .chat{border-radius:30px;border:1px solid rgba(255,255,255,.75);
+    box-shadow:0 40px 90px -38px rgba(11,45,120,.6), 0 0 0 1px rgba(54,198,255,.08);}
+  .chead{background:linear-gradient(120deg,#1853b8,#0b3486 55%,#0a2a66);}
+  /* Línea de acento tipo "aurora" en el borde superior de la cabecera */
+  .chead::before{content:"";position:absolute;left:0;right:0;top:0;height:2px;z-index:3;
+    background:linear-gradient(90deg,transparent,#36c6ff,#6a8bff,#f5b301,transparent);
+    background-size:200% 100%;animation:auroraLine 7s linear infinite;opacity:.9;pointer-events:none;}
+  @keyframes auroraLine{0%{background-position:0 0;}100%{background-position:200% 0;}}
+
+  /* Fondo del log y burbujas */
+  #log{background:linear-gradient(180deg,#f7fbff,#eef4fe);}
+  .msg{border-radius:22px;}
+  .bot .msg{background:linear-gradient(180deg,#ffffff,#f4f9ff);border:1px solid #e6eefb;
+    border-bottom-left-radius:8px;box-shadow:0 16px 32px -22px rgba(11,61,145,.45),inset 0 1px 0 rgba(255,255,255,.75);}
+  .user .msg{background:linear-gradient(135deg,#2f7bf0,#0b3d91);border-bottom-right-radius:8px;
+    box-shadow:0 18px 32px -16px rgba(17,87,201,.7);}
+
+  /* Chips de sugerencia: vidrio con brillo */
+  .sug{border:1px solid rgba(120,160,230,.35);
+    background:linear-gradient(180deg,rgba(255,255,255,.92),rgba(238,245,255,.82));
+    backdrop-filter:blur(8px);border-radius:999px;transition:.18s cubic-bezier(.2,.7,.3,1);}
+  .sug:hover{background:linear-gradient(135deg,#eaf3ff,#dcebff);border-color:#9cc0ff;
+    transform:translateY(-2px);box-shadow:0 12px 24px -12px rgba(54,130,255,.55);}
+
+  /* Campo de texto: pastilla con anillo de enfoque neón */
+  .chat form{background:linear-gradient(180deg,#ffffff,#f6faff);border-top:1px solid #eaf0fb;}
+  .chat input[type=text]{border:1.5px solid #e2ebfa;border-radius:16px;background:#f4f8ff;transition:.18s;}
+  .chat input[type=text]:focus{border-color:#36c6ff;background:#fff;
+    box-shadow:0 0 0 4px rgba(54,198,255,.18),0 10px 22px -14px rgba(54,198,255,.6);}
+
+  /* Botón enviar: degradado cian→azul con glow; micro-interacción */
+  button.send{background:linear-gradient(135deg,#36c6ff,#1157c9 68%,#0b3d91);
+    box-shadow:0 16px 30px -12px rgba(17,87,201,.8),inset 0 0 0 1px rgba(255,255,255,.14);}
+  button.send:hover{filter:brightness(1.07);transform:translateY(-2px) scale(1.03);
+    box-shadow:0 20px 36px -12px rgba(54,130,255,.85);}
+  button.mic{background:linear-gradient(180deg,#ffffff,#eef4ff);border:1px solid #d9e6ff;}
+  button.mic:hover{transform:translateY(-2px);box-shadow:0 12px 24px -12px rgba(17,87,201,.5);}
+
+  /* Botones del redactor de correos: modernos, con acento neón lateral */
+  .echoice{position:relative;border:1px solid #dbe8ff;border-radius:15px;padding-left:18px;overflow:hidden;
+    background:linear-gradient(180deg,#ffffff,#eff5ff);color:var(--azul-ink);
+    box-shadow:0 10px 22px -16px rgba(17,87,201,.45);transition:.18s cubic-bezier(.2,.7,.3,1);}
+  .echoice::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;opacity:0;transition:.18s;
+    background:linear-gradient(180deg,#36c6ff,#6a8bff);}
+  .echoice:hover{background:linear-gradient(135deg,#1e63d6,#0b3d91);color:#fff;border-color:#1e63d6;
+    transform:translateY(-2px);box-shadow:0 18px 30px -14px rgba(17,87,201,.75);}
+  .echoice:hover::before{opacity:1;}
+  .echoice.sel{background:linear-gradient(135deg,#1e63d6,#0b3d91);color:#fff;border-color:#1e63d6;}
+  .ecurso,.msg input.einput{border:1.5px solid #dbe8ff;border-radius:14px;background:#f5f9ff;}
+  .ecurso:focus,.msg input.einput:focus{border-color:#36c6ff;box-shadow:0 0 0 4px rgba(54,198,255,.16);}
+
+  /* Botones de acción del borrador */
+  .mailbtn{border-radius:15px;box-shadow:0 16px 30px -14px rgba(234,67,53,.7);}
+  .ccbtn{border-radius:14px;}
+  /* Botones redondos de la cabecera del chat */
+  .chead .rsbtn,.chead .fsbtn{border-radius:14px;background:rgba(255,255,255,.16);
+    border:1px solid rgba(255,255,255,.3);backdrop-filter:blur(6px);}
+  .chead .rsbtn:hover,.chead .fsbtn:hover{background:rgba(255,255,255,.32);transform:translateY(-1px);}
+
+  /* ============ MINI PANTALLA DE CARGA ============ */
+  #miniLoad{position:fixed;inset:0;z-index:400;display:none;flex-direction:column;align-items:center;justify-content:center;color:#fff;
+    background:radial-gradient(900px 600px at 50% 36%,#123f93,#0a2559 66%,#071a3f);}
+  #miniLoad.on{display:flex;animation:mlIn .22s ease both;}
+  #miniLoad.out{animation:mlOut .34s ease forwards;}
+  @keyframes mlIn{from{opacity:0;}to{opacity:1;}}
+  @keyframes mlOut{to{opacity:0;visibility:hidden;}}
+  #miniLoad .mlRing{position:relative;width:118px;height:118px;display:flex;align-items:center;justify-content:center;}
+  #miniLoad .mlRing::before{content:"";position:absolute;inset:0;border-radius:50%;
+    background:conic-gradient(from 0deg,#36c6ff,#6a8bff,#f5b301,#36c6ff);
+    -webkit-mask:radial-gradient(farthest-side,transparent calc(100% - 5px),#000 calc(100% - 5px));
+    mask:radial-gradient(farthest-side,transparent calc(100% - 5px),#000 calc(100% - 5px));
+    animation:mlSpin 1s linear infinite;filter:drop-shadow(0 0 12px rgba(54,198,255,.65));}
+  @keyframes mlSpin{to{transform:rotate(360deg);}}
+  #miniLoad .mlLogo{width:76px;height:76px;object-fit:contain;border-radius:50%;filter:drop-shadow(0 6px 16px rgba(0,0,0,.45));}
+  #miniLoad .mlTxt{margin-top:22px;font-weight:700;font-size:15px;letter-spacing:.3px;font-family:'Montserrat',sans-serif;}
+  #miniLoad .mlBar{margin-top:15px;width:180px;height:4px;border-radius:999px;background:rgba(255,255,255,.18);overflow:hidden;}
+  #miniLoad .mlBar i{display:block;height:100%;width:0;border-radius:999px;
+    background:linear-gradient(90deg,#36c6ff,#6a8bff,#f5b301);box-shadow:0 0 10px rgba(54,198,255,.8);
+    animation:mlBar .62s cubic-bezier(.4,.1,.2,1) forwards;}
+  @keyframes mlBar{to{width:100%;}}
+  @media (prefers-reduced-motion:reduce){ .chead::before,#miniLoad .mlRing::before{animation:none;} }
+
+  /* ===== Bienvenida: entrada animada del logo y la tarjeta del login ===== */
+  #gate .gcard>*{animation:gateIn .6s cubic-bezier(.2,.7,.3,1) both;}
+  #gate .brandrow{animation-delay:.04s;}
+  #gate .gtop{animation-delay:.12s;}
+  #gate .pill{animation-delay:.18s;}
+  #gate h1{animation-delay:.24s;}
+  #gate .lema{animation-delay:.30s;}
+  #gate #step1,#gate #step2{animation-delay:.36s;}
+  @keyframes gateIn{from{opacity:0;transform:translateY(12px) scale(.985);}to{opacity:1;transform:none;}}
+  #gate .coin3d{animation:gateCoin .8s cubic-bezier(.2,.8,.25,1) both;}
+  @keyframes gateCoin{0%{opacity:0;transform:translateY(6px) scale(.6);filter:drop-shadow(0 0 0 rgba(54,198,255,0));}
+    60%{opacity:1;transform:translateY(0) scale(1.08);} 100%{transform:scale(1);filter:drop-shadow(0 10px 26px rgba(54,198,255,.45));}}
+
+  /* ===== Botón "Continuar como ..." (recordar último perfil, 1 toque) ===== */
+  #quickLogin{margin:2px 0 12px;}
+  .qlogin{display:flex;align-items:center;gap:12px;width:100%;cursor:pointer;font-family:inherit;text-align:left;
+    padding:12px 14px;border-radius:16px;color:#08306b;
+    background:linear-gradient(135deg,#ffffff,#eef5ff);border:1.5px solid rgba(255,255,255,.65);
+    box-shadow:0 16px 34px -18px rgba(8,30,90,.65),inset 0 1px 0 rgba(255,255,255,.7);
+    transition:.18s cubic-bezier(.2,.7,.3,1);position:relative;overflow:hidden;}
+  .qlogin:hover{transform:translateY(-2px);box-shadow:0 22px 42px -16px rgba(8,30,90,.7);}
+  .qlogin:active{transform:translateY(0) scale(.99);}
+  .qlogin .qlemo{display:flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:12px;font-size:21px;flex:none;
+    background:linear-gradient(160deg,#eaf3ff,#d7e7ff);border:1px solid #cfe0ff;}
+  .qlogin .qltxt{display:flex;flex-direction:column;line-height:1.2;flex:1;min-width:0;}
+  .qlogin .qltxt b{font-size:14.5px;font-weight:800;font-family:'Montserrat',sans-serif;}
+  .qlogin .qltxt small{font-size:11.5px;color:#5b6b85;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .qlogin .qlgo{margin-left:auto;font-size:18px;font-weight:800;color:#1157c9;flex:none;transition:.18s;}
+  .qlogin:hover .qlgo{transform:translateX(3px);}
+  /* chip Google dentro del botón */
+  .qlogin .qlg{width:19px;height:19px;flex:none;}
+  .qlor{display:flex;align-items:center;gap:10px;margin:12px 2px 2px;color:#9fb6e6;font-size:11px;font-weight:700;letter-spacing:.4px;text-transform:uppercase;}
+  .qlor::before,.qlor::after{content:"";flex:1;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.35),transparent);}
 </style>
 </head>
 <body>
@@ -1081,6 +1223,14 @@
   <div class="imsg" id="imsg"></div>
 </div>
 
+<!-- MINI PANTALLA DE CARGA (aparece breve tras elegir perfil) -->
+<div id="miniLoad" aria-hidden="true">
+  <div class="mlRing"><img class="mlLogo" src="assets/ase-ia-robot-main.png" alt="ASE-IA"
+    onerror="this.outerHTML='<svg class=\'mlLogo\' viewBox=\'0 0 120 120\'><use href=\'#mascot\'/></svg>'"></div>
+  <div class="mlTxt">Preparando tu asistente…</div>
+  <div class="mlBar"><i></i></div>
+</div>
+
 <!-- PANTALLA DE INICIO -->
 <div id="gate">
   <div class="gside left"></div>
@@ -1116,6 +1266,7 @@
       <div class="gstep" id="step1">
         <p>Hola 👋 Elige tu perfil e ingresa con tu correo y contraseña. Responderé solo con
            información autorizada del colegio.</p>
+        <div id="quickLogin" style="display:none"></div>
         <div class="picker">
           <button class="pick" data-role="teacher" onclick="pick('teacher')"><span class="emo">👩‍🏫</span><span class="t">Docente</span><span class="d">Correo @sip.cl</span></button>
           <button class="pick" data-role="admin" onclick="pick('admin')"><span class="emo">🗂️</span><span class="t">Administrativo</span><span class="d">Correo @sip.cl</span></button>
@@ -1177,7 +1328,7 @@
           <div style="min-width:0"><div class="pm-n" id="pmName">Estudiante</div><div class="pm-m" id="pmMail"></div><span class="pm-r" id="pmRole">Estudiante</span></div>
         </div>
         <div class="pm-body" id="pmBody"></div>
-        <div class="pm-foot"><button class="pm-logout" type="button" onclick="showGate()">Cerrar sesión</button></div>
+        <div class="pm-foot"><button class="pm-logout" type="button" onclick="logoutFull()">Cerrar sesión</button></div>
       </div>
     </div>
   </div></header>
@@ -1241,6 +1392,7 @@
         <img class="badge" alt="ASE-IA" src="assets/ase-ia-robot-main.png"
              onerror="this.outerHTML='<svg class=\'badge\' viewBox=\'0 0 120 120\'><use href=\'#mascot\'/></svg>'">
         <div><div class="h">ASE-IA</div><div class="s"><span class="dot"></span> Asistente Escolar · en línea</div></div>
+        <button class="rsbtn" id="resetBtn" type="button" onclick="resetChat()" title="Reiniciar chat (empezar de cero)" aria-label="Reiniciar chat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 2v6h6"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L3 8"/></svg></button>
         <button class="fsbtn" id="fsBtn" type="button" onclick="toggleFS()" title="Pantalla completa" aria-label="Pantalla completa"><span id="fsIcon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3M16 3h3a2 2 0 0 1 2 2v3M8 21H5a2 2 0 0 1-2-2v-3M16 21h3a2 2 0 0 0 2-2v-3"/></svg></span></button>
       </div>
       <div id="log"></div>
@@ -2837,13 +2989,51 @@ function gmailComposeUrl(subject,body,to){
     +"&su="+encodeURIComponent(subject||"")
     +"&body="+encodeURIComponent(body||"");
 }
+/* Igual que el anterior, pero con destinatarios en COPIA OCULTA (CCO/bcc):
+   se usa en el correo masivo para que los apoderados no vean los correos de los demás. */
+function gmailComposeUrlBcc(subject,body,bcc){
+  return "https://mail.google.com/mail/u/0/?view=cm&fs=1&tf=1"
+    +(bcc?("&bcc="+encodeURIComponent(bcc)):"")
+    +"&su="+encodeURIComponent(subject||"")
+    +"&body="+encodeURIComponent(body||"");
+}
 /* En celular conviene abrir la APP de correo (Gmail) con un enlace mailto:,
    en vez de la versión web que pide iniciar sesión. */
 function isMobileDev(){ return /Android|iPhone|iPad|iPod|Mobile|Silk/i.test(navigator.userAgent||""); }
 function toMailto(gurl){
-  try{ const u=new URL(gurl); const to=u.searchParams.get("to")||"", su=u.searchParams.get("su")||"", bo=u.searchParams.get("body")||"";
-    return "mailto:"+to+"?subject="+encodeURIComponent(su)+"&body="+encodeURIComponent(bo);
+  try{ const u=new URL(gurl); const to=u.searchParams.get("to")||"", cc=u.searchParams.get("cc")||"", bcc=u.searchParams.get("bcc")||"", su=u.searchParams.get("su")||"", bo=u.searchParams.get("body")||"";
+    return "mailto:"+to+"?"+(cc?("cc="+encodeURIComponent(cc)+"&"):"")+(bcc?("bcc="+encodeURIComponent(bcc)+"&"):"")+"subject="+encodeURIComponent(su)+"&body="+encodeURIComponent(bo);
   }catch(e){ return gurl; }
+}
+/* Añade destinatarios en COPIA (CC) a una URL de redacción de Gmail ya construida. */
+function gmailWithCc(gurl, cc){ return cc ? (gurl + "&cc=" + encodeURIComponent(cc)) : gurl; }
+/* ============ EQUIPO DIRECTIVO POR CICLO (para copiar en el correo) ============
+   Según el curso del correo, el botón "Copiar al equipo directivo" agrega en
+   copia (CC) al equipo directivo + inspector/a + orientador/a del ciclo. */
+function gradeIndex(courseCode){
+  const tk=(courseCode||"").trim().split(/\s+/)[0].toUpperCase();
+  if(tk==="PK")return -1;            // Pre-Kínder
+  if(tk==="K")return 0;              // Kínder
+  if(/^\d+$/.test(tk))return parseInt(tk,10);   // 1° a 8° Básico
+  if(tk==="P")return 9;              // I° Medio
+  if(tk==="S")return 10;             // II° Medio
+  if(tk==="T")return 11;             // III° Medio
+  if(tk==="C")return 12;             // IV° Medio
+  return null;
+}
+function equipoDirectivo(courseCode){
+  const g=gradeIndex(courseCode);
+  if(g===null) return {list:[],label:""};
+  let dir=[], ciclo="";
+  if(g<=2){ dir=["solesilva@sip.cl","flinares@sip.cl","slabbe@sip.cl"]; ciclo="Pre-Kínder a 2° Básico"; }
+  else if(g<=5){ dir=["cescobar@sip.cl","flinares@sip.cl","slabbe@sip.cl"]; ciclo="3° a 5° Básico"; }
+  else if(g===6){ dir=["israel.salas@sip.cl","flinares@sip.cl","slabbe@sip.cl"]; ciclo="6° Básico"; }
+  else if(g<=9){ dir=["israel.salas@sip.cl","dennys.maldonado@sip.cl","slabbe@sip.cl"]; ciclo="7° Básico a I° Medio"; }
+  else { dir=["nardyn.mella@sip.cl","dennys.maldonado@sip.cl","slabbe@sip.cl"]; ciclo="II° a IV° Medio"; }
+  let insp = g<=2?"bpinilla@sip.cl" : g<=6?"patricia.amaza@sip.cl" : g<=9?"kevin.fernandez@sip.cl" : "catalina.cancino@sip.cl";
+  let ori  = g<=4?"saraya@sip.cl"   : g<=8?"orrmluengo@sip.cl"     : "juan.chavarria@sip.cl";
+  const list=[...new Set(dir.concat(insp,ori).filter(Boolean))];
+  return {list, label:ciclo};
 }
 /* ---- Planilla de Matrículas: lectura del CSV publicado (opcional) ---- */
 let STUDENTS=[];
@@ -2939,6 +3129,28 @@ function emailIntent(q){
   if(/apoderad|padre|madre|familia|tutor legal/.test(n)) return "apoderado";
   if(/estudiant|alumn|pupil/.test(n)) return "estudiante";
   return null;
+}
+/* Intención ESCRITA de redactar un correo (para lanzar el redactor guiado por
+   botones también cuando la persona lo pide escribiendo, no solo con el chip).
+   Devuelve {masivo, rec} o null. Es deliberadamente conservador para no
+   dispararse con consultas como "¿puedo usar el correo institucional?". */
+function emailComposeIntent(text){
+  const n=normalize(text);
+  if(!/\bcorreo\b|\bcorreos\b|\bemail\b|\bmail\b|\bgmail\b/.test(n)) return null;   // debe mencionar correo/email
+  // y un verbo/petición de REDACCIÓN o ENVÍO (no de "usar/consultar el correo")
+  const compose=/(redact\w*|escrib\w*|enviar|envi[aeo]\w*|mandar|mand[aeo]\w*|comunicar\w*|avisar\w*)/.test(n);
+  const petition=/(necesito|quiero|quisiera|ayud\w*|c[oó]mo\s+(enviar|escrib|redact|mand)|me\s+ayudas|podrias|puedes\s+(enviar|escrib|redact|mand)|hazme|arma\w*\s+un\s+correo)/.test(n);
+  if(!compose && !petition) return null;
+  const masivo=/(masiv\w*|a\s+todo\s+el\s+curso|todo\s+el\s+curso|apoderados\s+del\s+curso|a\s+varios|varios\s+apoderados|a\s+un\s+grupo|grupo\s+de\s+(estudiante|alumn|apoderad))/.test(n);
+  let rec=null;
+  if(/apoderad|padre|madre|familia|tutor legal/.test(n)) rec="apoderado";
+  else if(/estudiant|alumn|pupil/.test(n)) rec="estudiante";
+  else if(/profe\w*\s*jefe|jefatura|profesor\w*\s*jefe/.test(n)) rec="jefe";
+  else if(/convivencia/.test(n)) rec="convivencia";
+  else if(/direccion|utp/.test(n)) rec="direccion";
+  else if(/equipo/.test(n)) rec="equipo";
+  else if(/profesor\w*|docente|profe\b/.test(n)) rec="profesor";
+  return {masivo:!!masivo, rec:rec};
 }
 /* Borrador breve y cercano (mensaje central claro, campos entre [corchetes]).
    Devuelve el texto del chat, el CUERPO puro y el asunto para Gmail. */
@@ -3080,7 +3292,23 @@ function emailStart(){
   const sg=document.getElementById("sugs");if(sg)sg.innerHTML="";
   EFLOW={};
   const cfg=EMAILCFG[ROLE]||EMAILCFG.teacher;
-  botCard(m=>choiceRow(m,cfg.q,cfg.recipients.map(rec=>({t:rec.t,fn:()=>emailTo(rec)}))));
+  const choices=cfg.recipients.map(rec=>({t:rec.t,fn:()=>emailTo(rec)}));
+  if(STAFF(ROLE)) choices.push({t:"📣 Correo masivo a apoderados (curso o grupo)",fn:()=>massStart()});
+  botCard(m=>choiceRow(m,cfg.q,choices));
+}
+/* Igual que emailStart, pero cuando la persona ESCRIBIÓ a quién le quiere escribir
+   (p.ej. "necesito enviar un correo a un apoderado") saltamos directo a ese paso. */
+function emailStartFromIntent(recId){
+  const cfg=EMAILCFG[ROLE]||EMAILCFG.teacher;
+  const rec=recId && cfg.recipients.find(r=>r.id===recId);
+  const sg=document.getElementById("sugs"); if(sg)sg.innerHTML="";
+  if(rec){
+    EFLOW={};
+    add("¡Perfecto! Te ayudo a redactar el correo paso a paso 👇","bot");
+    emailTo(rec);
+  }else{
+    emailStart();   // no identificamos destinatario: mostramos el menú completo
+  }
 }
 function emailTo(rec){EFLOW.rec=rec;EFLOW.to=rec.id;
   botCard(m=>choiceRow(m,"¿Cuál es el propósito del correo a "+rec.who+"?",
@@ -3187,9 +3415,139 @@ function emailBuild(tone){EFLOW.tone=tone;
   if(STAFF(ROLE)){ if(rec.id==="estudiante")toEmail=EFLOW.stEmail||""; else if(rec.id==="apoderado")toEmail=EFLOW.apEmail||""; }
   const base = purpose.art ? (", basado en "+purpose.art) : "";
   const reply = "Listo. Este es tu borrador en tono "+tName.toLowerCase()+base+". Revísalo y ábrelo en Gmail con el botón:\n\n"+body;
-  add(reply,"bot",{mail:{url:gmailComposeUrl(subject,body,toEmail)}});
+  const mailObj={url:gmailComposeUrl(subject,body,toEmail)};
+  if(STAFF(ROLE)){ const eq=equipoDirectivo(EFLOW.courseCode); if(eq.list.length){ mailObj.cc=eq.list.join(","); mailObj.ccNote="Equipo directivo del ciclo "+eq.label+": "+eq.list.join(", "); } }
+  add(reply,"bot",{mail:mailObj});
   speak("Tu borrador está listo. Puedes abrirlo en Gmail con el botón de abajo.");
   EFLOW=null;
+  emailAgainCard();
+}
+/* Tras entregar un borrador (individual o masivo): restaura las sugerencias y
+   ofrece redactar otro correo sin tener que empezar de cero. */
+function emailAgainCard(){
+  renderSugs();                               // vuelven los chips de preguntas frecuentes
+  botCard(m=>choiceRow(m,"¿Quieres redactar otro correo?",[
+    {t:"✉️ Sí, redactar otro",fn:()=>emailStart()},
+    {t:"Por ahora no, gracias",fn:()=>{ add("¡Perfecto! Si necesitas otro correo o cualquier consulta del colegio, aquí estoy. 🙂","bot"); }},
+  ]));
+}
+/* ============ CORREO MASIVO A APODERADOS (curso completo o selección) ============
+   Solo funcionarios. Usa la nómina del Worker; los apoderados van en copia oculta
+   (CCO) para proteger sus datos. */
+const MASS_PURPOSES=[
+  {id:"reunion",t:"Citar a reunión de apoderados",subject:"Reunión de apoderados",
+    body:"Junto con saludar, les invito a la próxima reunión de apoderados del curso{curso}. {detalle} Agradeceré su puntual asistencia, dada la importancia de los temas a tratar."},
+  {id:"comunicado",t:"Enviar un comunicado del curso",subject:"Comunicado del curso",
+    body:"Junto con saludar, les comparto el siguiente comunicado del curso{curso}: {detalle} Quedo atento/a a sus consultas por este mismo medio."},
+  {id:"recordatorio",t:"Enviar un recordatorio",subject:"Recordatorio importante",
+    body:"Junto con saludar, les recuerdo lo siguiente respecto del curso{curso}: {detalle} Agradeceré tenerlo presente y apoyar su cumplimiento desde el hogar."},
+  {id:"actividad",t:"Informar una actividad o salida",subject:"Actividad del curso",
+    body:"Junto con saludar, les informo sobre una actividad del curso{curso}: {detalle} Cualquier autorización o material necesario será solicitado oportunamente por este medio."},
+  {id:"felicitar",t:"Felicitar al curso",subject:"Reconocimiento al curso",
+    body:"Junto con saludar, quiero compartir con ustedes una grata noticia sobre el curso{curso}: {detalle} Felicito a las y los estudiantes y a sus familias por el compromiso demostrado."},
+  {id:"otro",t:"Otro (lo escribo)",subject:"Comunicación del curso",
+    body:"Junto con saludar, me dirijo a ustedes, apoderados/as del curso{curso}: {detalle}"},
+];
+function massStart(){
+  if(!AUTH_TOKEN){
+    botCard(m=>m.appendChild(el("div","mtext","El correo masivo usa la nómina del curso, que se carga al iniciar sesión con tu cuenta Google del colegio. Inicia sesión con Google y vuelve a intentarlo.")));
+    emailAgainCard(); return;
+  }
+  if(!STUDENTS.length){
+    if(DIR_STATE!=="done"&&DIR_STATE!=="error") loadDirectory();
+    botCard(m=>m.appendChild(el("div","mtext","Estoy cargando la nómina del colegio… espera unos segundos y vuelve a tocar «Correo masivo». Si no carga, revisa tu conexión.")));
+    emailAgainCard(); return;
+  }
+  EFLOW={mass:true};
+  selectStep("¿A qué curso quieres escribir?",CURSOS,"Selecciona el curso…",v=>{
+    if(!v){ massStart(); return; }
+    EFLOW.course=v; const cc=COURSES.find(c=>c.l===v); EFLOW.courseCode=cc?cc.c:"";
+    massAudience();
+  });
+}
+function massAudience(){
+  const list=STUDENTS.filter(s=>s.course===EFLOW.courseCode);
+  if(!list.length){
+    botCard(m=>m.appendChild(el("div","mtext","No encontré estudiantes de "+(EFLOW.course||"ese curso")+" en la nómina. Revisa el curso o inténtalo nuevamente.")));
+    emailAgainCard(); EFLOW=null; return;
+  }
+  const withAp=list.filter(s=>validEmail((s.apEmail||"").trim())).length;
+  botCard(m=>choiceRow(m,"Son "+list.length+" estudiantes en "+EFLOW.course+" ("+withAp+" con correo de apoderado/a registrado). ¿A quiénes escribo?",[
+    {t:"👪 A todo el curso (sus apoderados)",fn:()=>{ EFLOW.picked=list.slice(); massPurpose(); }},
+    {t:"✅ Seleccionar estudiantes del curso",fn:()=>massSelect(list)},
+  ]));
+}
+function massSelect(list){
+  botCard(m=>{
+    m.appendChild(el("div","mtext","Marca los estudiantes a cuyos apoderados quieres escribir:"));
+    const box=el("div","echecklist");
+    // fila "seleccionar todos"
+    const allRow=el("label","echk allrow"); const allCb=document.createElement("input"); allCb.type="checkbox";
+    allRow.appendChild(allCb); allRow.appendChild(el("span",null,"Seleccionar todos")); box.appendChild(allRow);
+    const checks=[];
+    list.forEach((s,i)=>{
+      const lab=el("label","echk"); const cb=document.createElement("input"); cb.type="checkbox"; cb.value=String(i);
+      if(!validEmail((s.apEmail||"").trim())){ cb.disabled=true; lab.style.opacity=".5"; }
+      lab.appendChild(cb);
+      const nm=apellidoFirst(s.name)+(validEmail((s.apEmail||"").trim())?"":"  (sin correo de apoderado)");
+      lab.appendChild(el("span",null,nm));
+      box.appendChild(lab); checks.push(cb);
+    });
+    const count=el("div","emasscount","0 seleccionados");
+    const upd=()=>{ const n=checks.filter(c=>c.checked).length; count.textContent=n+" seleccionado"+(n===1?"":"s"); };
+    checks.forEach(c=>c.addEventListener("change",upd));
+    allCb.addEventListener("change",()=>{ checks.forEach(c=>{ if(!c.disabled)c.checked=allCb.checked; }); upd(); });
+    m.appendChild(box); m.appendChild(count);
+    const b=el("button","echoice"); b.type="button"; b.style.marginTop="10px"; b.textContent="Continuar";
+    b.onclick=()=>{ const picked=checks.filter(c=>c.checked).map(c=>list[+c.value]);
+      if(!picked.length){ count.textContent="Marca al menos un estudiante para continuar."; return; }
+      box.querySelectorAll("input").forEach(c=>c.disabled=true); allCb.disabled=true; b.disabled=true; b.classList.add("sel");
+      EFLOW.picked=picked; massPurpose();
+    };
+    m.appendChild(b);
+  });
+}
+function massPurpose(){
+  botCard(m=>choiceRow(m,"¿Cuál es el propósito del correo?",MASS_PURPOSES.map(p=>({t:p.t,fn:()=>massDetail(p)}))));
+}
+function massDetail(p){
+  EFLOW.mpurpose=p;
+  inputStep("Escribe el contenido principal (fecha, lugar, instrucciones…):","Ej.: el martes 18 de marzo a las 18:30 h en la sala del curso",v=>{
+    EFLOW.detail=v||"[complete aquí el detalle del comunicado]"; massTone();
+  });
+}
+function massTone(){
+  botCard(m=>choiceRow(m,"¿En qué tono quieres redactarlo?",TONES.map(tn=>({t:tn.t,fn:()=>massBuild(tn.id)}))));
+}
+function massBuild(tone){
+  const p=EFLOW.mpurpose, curso=EFLOW.course||"", picked=EFLOW.picked||[];
+  const cursoTxt=curso?(" "+curso):"";
+  const emails=[...new Set(picked.map(s=>(s.apEmail||"").trim().toLowerCase()).filter(e=>validEmail(e)))];
+  const saludo="Estimados/as apoderados/as"+(curso?(" del curso "+curso):"")+":";
+  const cuerpo=p.body.replace(/\{curso\}/g,cursoTxt).replace(/\{detalle\}/g,EFLOW.detail||"");
+  const cierre= tone==="cercano"?"Saludos cordiales,":tone==="academico"?"Les saluda atentamente,":"Atentamente,";
+  let firma=(CURRENT.name||"[Su nombre]");
+  if(ROLE==="teacher") firma+=", profesor/a · Colegio Presidente José Joaquín Prieto";
+  else if(ROLE==="admin") firma+=", Equipo · Colegio Presidente José Joaquín Prieto";
+  else if(ROLE==="orientador") firma+=", Orientación · Colegio Presidente José Joaquín Prieto";
+  else if(ROLE==="pie") firma+=", Programa de Integración (PIE) · Colegio Presidente José Joaquín Prieto";
+  else firma+=" · Colegio Presidente José Joaquín Prieto";
+  const body=clean(saludo+"\n\n"+cuerpo+"\n\n"+cierre+"\n"+firma);
+  const subject=p.subject+(curso?(" · "+curso):"");
+  const n=emails.length;
+  const eq=equipoDirectivo(EFLOW.courseCode);
+  const ccExtra = eq.list.length ? {cc:eq.list.join(","),ccNote:"Equipo directivo del ciclo "+eq.label+": "+eq.list.join(", ")} : {};
+  let reply;
+  if(n){
+    reply="Listo. Preparé un correo para **"+n+"** apoderado/a"+(n===1?"":"s")+(curso?(" del curso "+curso):"")+". Van en copia oculta (CCO) para proteger sus datos. Revísalo y ábrelo en Gmail con el botón:\n\n"+body;
+    add(reply,"bot",{mail:Object.assign({url:gmailComposeUrlBcc(subject,body,emails.join(",")),label:"Abrir Gmail · "+n+" apoderado"+(n===1?"":"s")+" en CCO"},ccExtra)});
+  }else{
+    reply="Preparé el borrador, pero en la nómina no hay correos de apoderados registrados para ese grupo. Puedes copiar el texto y agregar los destinatarios a mano en Gmail:\n\n"+body;
+    add(reply,"bot",{mail:Object.assign({url:gmailComposeUrlBcc(subject,body,"")},ccExtra)});
+  }
+  speak("Tu correo para los apoderados está listo. Puedes abrirlo en Gmail con el botón.");
+  EFLOW=null;
+  emailAgainCard();
 }
 
 const convo=[];let ROLE="student";
@@ -3517,7 +3875,17 @@ function add(text,who,extra){
     if(extra.mail){const a=document.createElement("a");a.className="mailbtn";const mob=isMobileDev();
       a.href=mob?toMailto(extra.mail.url):extra.mail.url;
       if(!mob){a.target="_blank";a.rel="noopener";}
-      a.innerHTML=GMAIL_ICON+"<span>"+(extra.mail.label||(mob?"Abrir en tu correo y enviar":"Abrir Gmail y redactar"))+"</span>";msg.appendChild(a);}
+      a.innerHTML=GMAIL_ICON+"<span>"+(extra.mail.label||(mob?"Abrir en tu correo y enviar":"Abrir Gmail y redactar"))+"</span>";msg.appendChild(a);
+      // Botón secundario: abrir el mismo correo con copia (CC) al equipo directivo del ciclo
+      if(extra.mail.cc){
+        const ccUrl=gmailWithCc(extra.mail.url,extra.mail.cc);
+        const a2=document.createElement("a");a2.className="ccbtn";
+        a2.href=mob?toMailto(ccUrl):ccUrl; if(!mob){a2.target="_blank";a2.rel="noopener";}
+        const PEOPLE='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>';
+        a2.innerHTML=PEOPLE+"<span>👥 Copiar al equipo directivo</span>";
+        msg.appendChild(document.createElement("br"));msg.appendChild(a2);
+        if(extra.mail.ccNote){const nt=document.createElement("div");nt.className="ccnote";nt.textContent=extra.mail.ccNote;msg.appendChild(nt);}
+      }}
     if(extra.horarioProfe){const b=document.createElement("button");b.type="button";b.className="horbtn";
       const n=extra.horarioProfe;b.innerHTML='📅 <span>Haz clic para ver el horario de '+n.replace(/</g,"&lt;")+'</span>';
       b.onclick=()=>openProfHorario(n);msg.appendChild(document.createElement("br"));msg.appendChild(b);}
@@ -3964,6 +4332,16 @@ function answerCorreoApoderado(q){
 async function ask(text){
   text=(text||"").trim();if(!text)return;
   document.getElementById("sugs").innerHTML="";add(text,"user");document.getElementById("q").value="";typing(true);
+  // Intención ESCRITA de redactar un correo → abre el redactor guiado (igual que el botón),
+  // salvo que ya se esté dentro de un flujo de correo (EFLOW activo).
+  const _em=(!EFLOW)?emailComposeIntent(text):null;
+  if(_em){
+    await new Promise(r=>setTimeout(r,250)); typing(false);
+    convo.push({role:"user",content:text});
+    if(_em.masivo && STAFF(ROLE)){ convo.push({role:"assistant",content:"(abriendo el redactor de correo masivo)"}); massStart(); }
+    else { convo.push({role:"assistant",content:"(abriendo el redactor de correo)"}); emailStartFromIntent(_em.rec); }
+    return;
+  }
   const _hp=answerHorarioProfe(text);
   if(_hp){ await new Promise(r=>setTimeout(r,300)); typing(false);
     // Botón para ver la IMAGEN/tabla del horario del profesor (verificable), salvo en la desambiguación.
@@ -4032,7 +4410,20 @@ function avatarInto(elId,photo,fallback){
     img.onerror=()=>{e.textContent=fallback||"A";};e.textContent="";e.appendChild(img);}
   else e.textContent=fallback||"A";
 }
+/* Mini pantalla de carga: breve, tras elegir perfil / al reabrir la sesión.
+   Reemplaza la intro larga del inicio para optimizar el tiempo de ingreso. */
+function showMiniLoad(){
+  const m=document.getElementById("miniLoad"); if(!m) return;
+  m.classList.remove("out");
+  const bar=m.querySelector(".mlBar i"); if(bar){ bar.style.animation="none"; void bar.offsetWidth; bar.style.animation=""; }
+  m.classList.add("on");
+  clearTimeout(m._t1); clearTimeout(m._t2);
+  m._t1=setTimeout(()=>{ m.classList.add("out");
+    m._t2=setTimeout(()=>{ m.classList.remove("on","out"); }, 340);
+  }, 640);
+}
 function enter(role,email,name,photo,prof){
+  showMiniLoad();                                                  // mini-carga breve al ingresar
   SIM_PIE=""; SIM_GESTION=false;                                   // se reinicia la simulación de maestro
   if(role==="teacher"||role==="admin"){ const _forced=(!isDev(email)&&pieForcedRole(email)); if(_forced) role=_forced; }  // PIE: perfil según nómina 2026 (no aplica si eligió Orientador/PIE)
   ROLE=role;convo.length=0;log.innerHTML="";
@@ -4049,8 +4440,49 @@ function enter(role,email,name,photo,prof){
   applyPrefsOnEnter();startReminders();
   history.replaceState({screen:"app"},"");  // reemplaza 'login': el botón atrás vuelve a elegir perfil
   showScreen("app");
+  saveSession();       // guarda la sesión para sobrevivir a un F5 (recargar) por los próximos minutos
+  saveLastProfile();   // recuerda el último perfil para el botón "Continuar como…"
 }
 function showGate(){ closeProfileMenu(); if(history.state&&history.state.screen==="app") history.back(); else showScreen("gate"); }
+
+/* ============ SESIÓN PERSISTENTE (sobrevive a recargar / F5) ============
+   Guarda la sesión en este dispositivo con una marca de tiempo. Si la persona
+   recarga por error (F5) o cierra y vuelve a abrir dentro de ~30 minutos, ASE-IA
+   la reabre donde estaba, sin tener que elegir perfil e iniciar sesión de nuevo.
+   Pasados los 30 minutos sin actividad, se pide ingresar otra vez. */
+const SESSION_KEY="aseia_session_v1";
+const SESSION_TTL=30*60*1000;   // 30 minutos de tolerancia tras cerrar (reabrir sin reingresar)
+function saveSession(){
+  try{
+    if(!CURRENT||!ROLE) return;
+    const s={role:ROLE,email:CURRENT.email||"",name:CURRENT.name||"",photo:CURRENT.photo||"",
+      prof:CURRENT.prof||null,token:AUTH_TOKEN||"",pupils:CURRENT_PUPILS||[],savedAt:Date.now()};
+    localStorage.setItem(SESSION_KEY,JSON.stringify(s));
+  }catch(e){}
+}
+function touchSession(){   // refresca la marca de tiempo mientras la plataforma está abierta/activa
+  try{ const raw=localStorage.getItem(SESSION_KEY); if(!raw) return;
+    const s=JSON.parse(raw); if(!s) return; s.savedAt=Date.now();
+    localStorage.setItem(SESSION_KEY,JSON.stringify(s));
+  }catch(e){}
+}
+function clearSession(){ try{ localStorage.removeItem(SESSION_KEY); }catch(e){} }
+function restoreSession(){
+  try{
+    const raw=localStorage.getItem(SESSION_KEY); if(!raw) return false;
+    const s=JSON.parse(raw); if(!s||!s.role) return false;
+    if(Date.now()-(s.savedAt||0) > SESSION_TTL){ clearSession(); return false; }  // venció la tolerancia
+    AUTH_TOKEN=s.token||""; CURRENT_PUPILS=s.pupils||[];
+    enter(s.role,s.email,s.name,s.photo,s.prof||null);   // reabre la app en el mismo perfil
+    return true;
+  }catch(e){ return false; }
+}
+function logoutFull(){ clearSession(); showGate(); }   // "Cerrar sesión": sí borra la sesión guardada
+/* Mantiene viva la sesión mientras la pestaña está abierta y al cerrarla/cambiar de
+   app, de modo que un F5 o reabrir en los próximos 30 min no obligue a reingresar. */
+setInterval(()=>{ if(ROLE&&localStorage.getItem(SESSION_KEY)) touchSession(); },60000);
+window.addEventListener("beforeunload",touchSession);
+document.addEventListener("visibilitychange",()=>{ if(document.visibilityState==="hidden") touchSession(); });
 document.getElementById("f").addEventListener("submit",e=>{e.preventDefault();ask(document.getElementById("q").value);});
 
 /* ============ PERFIL PERSONALIZADO · apoderado y estudiante ============
@@ -5526,7 +5958,19 @@ function pmPrefs(){
   wrap.appendChild(rc);
   d.appendChild(wrap);return d;
 }
-function resetChat(){convo.length=0;log.innerHTML="";add("Conversación reiniciada. ¿En qué te ayudo? 🙂","bot");}
+/* Reinicia el chat COMPLETAMENTE de cero: cancela un redactor de correo a
+   medias, borra el historial y los mensajes, y vuelve a mostrar los chips para
+   poder usar de nuevo los botones de redactar correo o buscar información.
+   No cierra la sesión. */
+function resetChat(){
+  EFLOW=null;                       // cancela cualquier redactor de correo en curso
+  convo.length=0;                   // borra el contexto de la conversación
+  if(log) log.innerHTML="";         // limpia los mensajes en pantalla
+  try{ renderSugs(); }catch(e){}    // vuelven los chips (incluye "Redactar un correo")
+  const nm=(CURRENT&&CURRENT.name)?(" de nuevo, "+CURRENT.name.split(" ")[0]):"";
+  add("¡Hola"+nm+"! 👋 Empecemos de cero. Pregúntame lo que necesites, o toca una opción para redactar un correo o buscar información del colegio.","bot");
+  const q=document.getElementById("q"); if(q){ q.value=""; setTimeout(()=>{try{q.focus();}catch(_){}} ,40); }
+}
 function buildProfileMenu(){
   const disp=CURRENT.name||ROLE_LABEL[ROLE];
   document.getElementById("pmName").textContent=disp;
@@ -5730,7 +6174,9 @@ function showScreen(s){
   else if(s==="login"){ app.style.display="none"; gate.style.display="flex";
     document.getElementById("step1").hidden=true; document.getElementById("step2").hidden=false; }
   else { app.style.display="none"; gate.style.display="flex";
-    document.getElementById("step1").hidden=false; document.getElementById("step2").hidden=true; PENDING=null; }
+    document.getElementById("step1").hidden=false; document.getElementById("step2").hidden=true; PENDING=null;
+    try{ renderQuickLogin(); }catch(_){}   // botón "Continuar como…" si hay un último perfil recordado
+  }
   window.scrollTo(0,0);
 }
 window.addEventListener("popstate",e=>{ showScreen((e.state&&e.state.screen)||"gate"); });
@@ -5939,10 +6385,13 @@ async function googleCallback(resp){
   enter("guardian",email,name,pic,CURRENT_PUPILS[0]);
   if(CURRENT_PUPILS.length>1)aseToast("Tienes "+CURRENT_PUPILS.length+" pupilos/as","Mostrando a "+CURRENT_PUPILS[0].student,"Cámbialo con el botón Cambiar.",8000);
 }
-function initGIS(){
-  if(!GIS_READY||GIS_INITED)return;
-  google.accounts.id.initialize({client_id:GOOGLE_CLIENT_ID,callback:googleCallback,auto_select:false,cancel_on_tap_outside:true,ux_mode:"popup"});
-  GIS_INITED=true;
+let GIS_AUTO=false;
+function initGIS(auto){
+  if(!GIS_READY)return;
+  auto=!!auto;
+  if(GIS_INITED && GIS_AUTO===auto)return;   // re-inicializa solo si cambia el modo (one-tap)
+  google.accounts.id.initialize({client_id:GOOGLE_CLIENT_ID,callback:googleCallback,auto_select:auto,cancel_on_tap_outside:true,ux_mode:"popup"});
+  GIS_INITED=true; GIS_AUTO=auto;
 }
 /* Dibuja el botón oficial "Iniciar sesión con Google" en la pantalla del perfil. */
 function renderGoogleButton(){
@@ -5957,6 +6406,31 @@ function renderGoogleButton(){
 /* Compatibilidad: si el botón no cargó, este acceso lanza el One Tap de Google. */
 function realGoogle(){
   loadGIS(()=>{ try{ initGIS(); google.accounts.id.prompt(); }catch(_){ gDom("No se pudo iniciar Google.",true); } });
+}
+/* ===== Recordar el último perfil usado: entrar con un solo toque ===== */
+const LAST_PROFILE_KEY="aseia_lastprofile_v1";
+function saveLastProfile(){ try{ if(!ROLE)return; localStorage.setItem(LAST_PROFILE_KEY,JSON.stringify({role:ROLE,email:(CURRENT&&CURRENT.email)||"",name:(CURRENT&&CURRENT.name)||""})); }catch(e){} }
+function getLastProfile(){ try{ const r=localStorage.getItem(LAST_PROFILE_KEY); if(!r)return null; const o=JSON.parse(r); return (o&&o.role)?o:null; }catch(e){ return null; } }
+/* Dibuja el botón "Continuar como <último perfil>" en la pantalla de inicio. */
+function renderQuickLogin(){
+  const box=document.getElementById("quickLogin"); if(!box) return;
+  const lp=getLastProfile();
+  if(!lp || !GOOGLE_CLIENT_ID){ box.style.display="none"; box.innerHTML=""; return; }
+  const info=LOGIN_INFO[lp.role]||{}; const label=(ROLE_LABEL&&ROLE_LABEL[lp.role])||info.t||"tu perfil";
+  const who=lp.name?lp.name.split(/\s+/).slice(0,2).join(" "):(lp.email||"");
+  const esc=s=>(s||"").replace(/</g,"&lt;").replace(/"/g,"&quot;");
+  box.style.display="";
+  box.innerHTML='<button type="button" class="qlogin" onclick="quickLogin()" aria-label="Continuar como '+esc(label)+'">'
+    +'<span class="qlemo">'+(info.emo||"✨")+'</span>'
+    +'<span class="qltxt"><b>Continuar como '+esc(label)+'</b>'+(who?('<small>'+esc(who)+'</small>'):'')+'</span>'
+    +'<span class="qlgo">→</span></button>'
+    +'<div class="qlor">o elige tu perfil</div>';
+}
+function quickLogin(){
+  const lp=getLastProfile(); if(!lp) return;
+  pick(lp.role);                                   // muestra el paso 2 (respaldo visible)
+  // Ingreso con un toque (One Tap) directo a la última cuenta de Google.
+  setTimeout(()=>{ loadGIS(()=>{ try{ initGIS(true); google.accounts.id.prompt(); }catch(_){ } }); }, 150);
 }
 
 /* ============ INTRO · se cierra sola (o al tocar) y muestra el acceso ============ */
@@ -5996,6 +6470,9 @@ function skipIntro(){const i=document.getElementById("intro");if(!i||i.classList
   stopIntroSound();
   i.classList.add("done");setTimeout(()=>{i.style.display="none";},850);}  // deja completar el zoom del logo
 (function(){const i=document.getElementById("intro");if(!i)return;
+  /* Intro de inicio DESACTIVADA: se reemplazó por una mini-carga tras elegir
+     perfil, para entrar más rápido (sin audio ni animación larga). */
+  i.style.display="none"; return;
   const msg=document.getElementById("imsg");
   /* Mensajes sobre ASE-IA y la educación (rotan durante la intro). */
   const FRASES=[
@@ -6079,6 +6556,15 @@ function skipIntro(){const i=document.getElementById("intro");if(!i||i.classList
   window.addEventListener("touchmove",move,{passive:false});
   window.addEventListener("touchend",up);
   vel=15;frame(); // giro de bienvenida
+})();
+
+/* ====== Reabrir sesión tras recargar (F5) o volver dentro de ~30 min ======
+   Se ejecuta al final, con todo el DOM y las funciones ya definidas. Si hay una
+   sesión vigente, ASE-IA entra directo a la app por debajo de la intro. */
+(function(){
+  let restored=false;
+  try{ restored=restoreSession(); }catch(e){}
+  if(!restored){ try{ renderQuickLogin(); }catch(_){} }   // muestra "Continuar como…" en el login inicial
 })();
 
 
