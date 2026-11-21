@@ -1065,6 +1065,93 @@
     opacity:0;transition:opacity .5s ease;animation:iUp .7s ease 1.4s backwards;}
   #intro .imsg.on{opacity:.92;}
   @media(max-width:640px){ #intro .ilogoWrap{width:170px;height:170px;} #intro .iring{width:166px;height:166px;} #intro .ihalo{width:200px;height:200px;} #intro .ilogo{width:120px;height:120px;} #intro .iname{font-size:42px;} #intro .isub{font-size:13.5px;} #intro .imsg{font-size:12.5px;bottom:24px;} }
+
+  /* ================= CAPA FUTURISTA (overrides finales) ================= */
+  /* Intro de inicio eliminada: entra directo al login (mini-carga va después). */
+  #intro{display:none !important;}
+
+  /* Tarjeta del chat: más redonda, con vidrio y halo suave */
+  .chat{border-radius:30px;border:1px solid rgba(255,255,255,.75);
+    box-shadow:0 40px 90px -38px rgba(11,45,120,.6), 0 0 0 1px rgba(54,198,255,.08);}
+  .chead{background:linear-gradient(120deg,#1853b8,#0b3486 55%,#0a2a66);}
+  /* Línea de acento tipo "aurora" en el borde superior de la cabecera */
+  .chead::before{content:"";position:absolute;left:0;right:0;top:0;height:2px;z-index:3;
+    background:linear-gradient(90deg,transparent,#36c6ff,#6a8bff,#f5b301,transparent);
+    background-size:200% 100%;animation:auroraLine 7s linear infinite;opacity:.9;pointer-events:none;}
+  @keyframes auroraLine{0%{background-position:0 0;}100%{background-position:200% 0;}}
+
+  /* Fondo del log y burbujas */
+  #log{background:linear-gradient(180deg,#f7fbff,#eef4fe);}
+  .msg{border-radius:22px;}
+  .bot .msg{background:linear-gradient(180deg,#ffffff,#f4f9ff);border:1px solid #e6eefb;
+    border-bottom-left-radius:8px;box-shadow:0 16px 32px -22px rgba(11,61,145,.45),inset 0 1px 0 rgba(255,255,255,.75);}
+  .user .msg{background:linear-gradient(135deg,#2f7bf0,#0b3d91);border-bottom-right-radius:8px;
+    box-shadow:0 18px 32px -16px rgba(17,87,201,.7);}
+
+  /* Chips de sugerencia: vidrio con brillo */
+  .sug{border:1px solid rgba(120,160,230,.35);
+    background:linear-gradient(180deg,rgba(255,255,255,.92),rgba(238,245,255,.82));
+    backdrop-filter:blur(8px);border-radius:999px;transition:.18s cubic-bezier(.2,.7,.3,1);}
+  .sug:hover{background:linear-gradient(135deg,#eaf3ff,#dcebff);border-color:#9cc0ff;
+    transform:translateY(-2px);box-shadow:0 12px 24px -12px rgba(54,130,255,.55);}
+
+  /* Campo de texto: pastilla con anillo de enfoque neón */
+  .chat form{background:linear-gradient(180deg,#ffffff,#f6faff);border-top:1px solid #eaf0fb;}
+  .chat input[type=text]{border:1.5px solid #e2ebfa;border-radius:16px;background:#f4f8ff;transition:.18s;}
+  .chat input[type=text]:focus{border-color:#36c6ff;background:#fff;
+    box-shadow:0 0 0 4px rgba(54,198,255,.18),0 10px 22px -14px rgba(54,198,255,.6);}
+
+  /* Botón enviar: degradado cian→azul con glow; micro-interacción */
+  button.send{background:linear-gradient(135deg,#36c6ff,#1157c9 68%,#0b3d91);
+    box-shadow:0 16px 30px -12px rgba(17,87,201,.8),inset 0 0 0 1px rgba(255,255,255,.14);}
+  button.send:hover{filter:brightness(1.07);transform:translateY(-2px) scale(1.03);
+    box-shadow:0 20px 36px -12px rgba(54,130,255,.85);}
+  button.mic{background:linear-gradient(180deg,#ffffff,#eef4ff);border:1px solid #d9e6ff;}
+  button.mic:hover{transform:translateY(-2px);box-shadow:0 12px 24px -12px rgba(17,87,201,.5);}
+
+  /* Botones del redactor de correos: modernos, con acento neón lateral */
+  .echoice{position:relative;border:1px solid #dbe8ff;border-radius:15px;padding-left:18px;overflow:hidden;
+    background:linear-gradient(180deg,#ffffff,#eff5ff);color:var(--azul-ink);
+    box-shadow:0 10px 22px -16px rgba(17,87,201,.45);transition:.18s cubic-bezier(.2,.7,.3,1);}
+  .echoice::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;opacity:0;transition:.18s;
+    background:linear-gradient(180deg,#36c6ff,#6a8bff);}
+  .echoice:hover{background:linear-gradient(135deg,#1e63d6,#0b3d91);color:#fff;border-color:#1e63d6;
+    transform:translateY(-2px);box-shadow:0 18px 30px -14px rgba(17,87,201,.75);}
+  .echoice:hover::before{opacity:1;}
+  .echoice.sel{background:linear-gradient(135deg,#1e63d6,#0b3d91);color:#fff;border-color:#1e63d6;}
+  .ecurso,.msg input.einput{border:1.5px solid #dbe8ff;border-radius:14px;background:#f5f9ff;}
+  .ecurso:focus,.msg input.einput:focus{border-color:#36c6ff;box-shadow:0 0 0 4px rgba(54,198,255,.16);}
+
+  /* Botones de acción del borrador */
+  .mailbtn{border-radius:15px;box-shadow:0 16px 30px -14px rgba(234,67,53,.7);}
+  .ccbtn{border-radius:14px;}
+  /* Botones redondos de la cabecera del chat */
+  .chead .rsbtn,.chead .fsbtn{border-radius:14px;background:rgba(255,255,255,.16);
+    border:1px solid rgba(255,255,255,.3);backdrop-filter:blur(6px);}
+  .chead .rsbtn:hover,.chead .fsbtn:hover{background:rgba(255,255,255,.32);transform:translateY(-1px);}
+
+  /* ============ MINI PANTALLA DE CARGA ============ */
+  #miniLoad{position:fixed;inset:0;z-index:400;display:none;flex-direction:column;align-items:center;justify-content:center;color:#fff;
+    background:radial-gradient(900px 600px at 50% 36%,#123f93,#0a2559 66%,#071a3f);}
+  #miniLoad.on{display:flex;animation:mlIn .22s ease both;}
+  #miniLoad.out{animation:mlOut .34s ease forwards;}
+  @keyframes mlIn{from{opacity:0;}to{opacity:1;}}
+  @keyframes mlOut{to{opacity:0;visibility:hidden;}}
+  #miniLoad .mlRing{position:relative;width:118px;height:118px;display:flex;align-items:center;justify-content:center;}
+  #miniLoad .mlRing::before{content:"";position:absolute;inset:0;border-radius:50%;
+    background:conic-gradient(from 0deg,#36c6ff,#6a8bff,#f5b301,#36c6ff);
+    -webkit-mask:radial-gradient(farthest-side,transparent calc(100% - 5px),#000 calc(100% - 5px));
+    mask:radial-gradient(farthest-side,transparent calc(100% - 5px),#000 calc(100% - 5px));
+    animation:mlSpin 1s linear infinite;filter:drop-shadow(0 0 12px rgba(54,198,255,.65));}
+  @keyframes mlSpin{to{transform:rotate(360deg);}}
+  #miniLoad .mlLogo{width:76px;height:76px;object-fit:contain;border-radius:50%;filter:drop-shadow(0 6px 16px rgba(0,0,0,.45));}
+  #miniLoad .mlTxt{margin-top:22px;font-weight:700;font-size:15px;letter-spacing:.3px;font-family:'Montserrat',sans-serif;}
+  #miniLoad .mlBar{margin-top:15px;width:180px;height:4px;border-radius:999px;background:rgba(255,255,255,.18);overflow:hidden;}
+  #miniLoad .mlBar i{display:block;height:100%;width:0;border-radius:999px;
+    background:linear-gradient(90deg,#36c6ff,#6a8bff,#f5b301);box-shadow:0 0 10px rgba(54,198,255,.8);
+    animation:mlBar .62s cubic-bezier(.4,.1,.2,1) forwards;}
+  @keyframes mlBar{to{width:100%;}}
+  @media (prefers-reduced-motion:reduce){ .chead::before,#miniLoad .mlRing::before{animation:none;} }
 </style>
 </head>
 <body>
@@ -1100,6 +1187,14 @@
     <div class="ibar"><i></i></div>
   </div>
   <div class="imsg" id="imsg"></div>
+</div>
+
+<!-- MINI PANTALLA DE CARGA (aparece breve tras elegir perfil) -->
+<div id="miniLoad" aria-hidden="true">
+  <div class="mlRing"><img class="mlLogo" src="assets/ase-ia-robot-main.png" alt="ASE-IA"
+    onerror="this.outerHTML='<svg class=\'mlLogo\' viewBox=\'0 0 120 120\'><use href=\'#mascot\'/></svg>'"></div>
+  <div class="mlTxt">Preparando tu asistente…</div>
+  <div class="mlBar"><i></i></div>
 </div>
 
 <!-- PANTALLA DE INICIO -->
@@ -4280,7 +4375,20 @@ function avatarInto(elId,photo,fallback){
     img.onerror=()=>{e.textContent=fallback||"A";};e.textContent="";e.appendChild(img);}
   else e.textContent=fallback||"A";
 }
+/* Mini pantalla de carga: breve, tras elegir perfil / al reabrir la sesión.
+   Reemplaza la intro larga del inicio para optimizar el tiempo de ingreso. */
+function showMiniLoad(){
+  const m=document.getElementById("miniLoad"); if(!m) return;
+  m.classList.remove("out");
+  const bar=m.querySelector(".mlBar i"); if(bar){ bar.style.animation="none"; void bar.offsetWidth; bar.style.animation=""; }
+  m.classList.add("on");
+  clearTimeout(m._t1); clearTimeout(m._t2);
+  m._t1=setTimeout(()=>{ m.classList.add("out");
+    m._t2=setTimeout(()=>{ m.classList.remove("on","out"); }, 340);
+  }, 640);
+}
 function enter(role,email,name,photo,prof){
+  showMiniLoad();                                                  // mini-carga breve al ingresar
   SIM_PIE=""; SIM_GESTION=false;                                   // se reinicia la simulación de maestro
   if(role==="teacher"||role==="admin"){ const _forced=(!isDev(email)&&pieForcedRole(email)); if(_forced) role=_forced; }  // PIE: perfil según nómina 2026 (no aplica si eligió Orientador/PIE)
   ROLE=role;convo.length=0;log.innerHTML="";
@@ -4303,11 +4411,11 @@ function showGate(){ closeProfileMenu(); if(history.state&&history.state.screen=
 
 /* ============ SESIÓN PERSISTENTE (sobrevive a recargar / F5) ============
    Guarda la sesión en este dispositivo con una marca de tiempo. Si la persona
-   recarga por error (F5) o cierra y vuelve a abrir dentro de ~5 minutos, ASE-IA
+   recarga por error (F5) o cierra y vuelve a abrir dentro de ~30 minutos, ASE-IA
    la reabre donde estaba, sin tener que elegir perfil e iniciar sesión de nuevo.
-   Pasados los 5 minutos sin actividad, se pide ingresar otra vez. */
+   Pasados los 30 minutos sin actividad, se pide ingresar otra vez. */
 const SESSION_KEY="aseia_session_v1";
-const SESSION_TTL=5*60*1000;   // 5 minutos de tolerancia tras cerrar
+const SESSION_TTL=30*60*1000;   // 30 minutos de tolerancia tras cerrar (reabrir sin reingresar)
 function saveSession(){
   try{
     if(!CURRENT||!ROLE) return;
@@ -4335,7 +4443,7 @@ function restoreSession(){
 }
 function logoutFull(){ clearSession(); showGate(); }   // "Cerrar sesión": sí borra la sesión guardada
 /* Mantiene viva la sesión mientras la pestaña está abierta y al cerrarla/cambiar de
-   app, de modo que un F5 o reabrir en los próximos 5 min no obligue a reingresar. */
+   app, de modo que un F5 o reabrir en los próximos 30 min no obligue a reingresar. */
 setInterval(()=>{ if(ROLE&&localStorage.getItem(SESSION_KEY)) touchSession(); },60000);
 window.addEventListener("beforeunload",touchSession);
 document.addEventListener("visibilitychange",()=>{ if(document.visibilityState==="hidden") touchSession(); });
@@ -6296,6 +6404,9 @@ function skipIntro(){const i=document.getElementById("intro");if(!i||i.classList
   stopIntroSound();
   i.classList.add("done");setTimeout(()=>{i.style.display="none";},850);}  // deja completar el zoom del logo
 (function(){const i=document.getElementById("intro");if(!i)return;
+  /* Intro de inicio DESACTIVADA: se reemplazó por una mini-carga tras elegir
+     perfil, para entrar más rápido (sin audio ni animación larga). */
+  i.style.display="none"; return;
   const msg=document.getElementById("imsg");
   /* Mensajes sobre ASE-IA y la educación (rotan durante la intro). */
   const FRASES=[
@@ -6381,7 +6492,7 @@ function skipIntro(){const i=document.getElementById("intro");if(!i||i.classList
   vel=15;frame(); // giro de bienvenida
 })();
 
-/* ====== Reabrir sesión tras recargar (F5) o volver dentro de ~5 min ======
+/* ====== Reabrir sesión tras recargar (F5) o volver dentro de ~30 min ======
    Se ejecuta al final, con todo el DOM y las funciones ya definidas. Si hay una
    sesión vigente, ASE-IA entra directo a la app por debajo de la intro. */
 (function(){ try{ restoreSession(); }catch(e){} })();
