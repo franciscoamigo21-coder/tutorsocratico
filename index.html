@@ -3742,11 +3742,19 @@ function el(t,c,x){const e=document.createElement(t);if(c)e.className=c;if(x!=nu
 const ROBOT_IMG={think:"assets/ase-ia-think.png",answer:"assets/ase-ia-answer.png"};
 function avatarEl(variant){
   const src=ROBOT_IMG[variant]||"assets/ase-ia-robot-main.png";
-  const w=el("span");
-  w.innerHTML = BADGE_OK ? '<img src="'+src+'" width="30" height="30" alt="ASE-IA" style="object-fit:contain">'
-                         : '<svg viewBox="0 0 120 120" width="30" height="30"><use href="#mascot"/></svg>';
-  const n=w.firstElementChild; if(n) n.setAttribute("class","av"+(variant?(" av-"+variant):""));
-  return n||w;
+  const cls="av"+(variant?(" av-"+variant):"");
+  const img=document.createElement("img");
+  img.src=src; img.width=30; img.height=30; img.alt="ASE-IA";
+  img.style.objectFit="contain"; img.setAttribute("class",cls);
+  // Solo si la imagen realmente falla, caemos al SVG de respaldo.
+  img.onerror=function(){
+    const NS="http://www.w3.org/2000/svg";
+    const svg=document.createElementNS(NS,"svg");
+    svg.setAttribute("viewBox","0 0 120 120"); svg.setAttribute("width","30"); svg.setAttribute("height","30"); svg.setAttribute("class",cls);
+    const use=document.createElementNS(NS,"use"); use.setAttribute("href","#mascot"); svg.appendChild(use);
+    if(img.parentNode) img.parentNode.replaceChild(svg,img);
+  };
+  return img;
 }
 /* Limpia el formato Markdown (##, **, viñetas, `código`, citas [n]) para que el
    texto se vea natural, en prosa, sin caracteres sobrantes. */
