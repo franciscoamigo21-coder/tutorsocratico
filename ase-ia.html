@@ -1260,6 +1260,10 @@
     font-weight:700;font-family:inherit;cursor:pointer;transition:.14s;}
   .avchip:hover{background:#eef5ff;border-color:#b9d1ff;}
   .avchip.sel{background:linear-gradient(135deg,#1e63d6,#0b3d91);color:#fff;border-color:#1e63d6;}
+  .avtabs{display:flex;gap:6px;margin-bottom:8px;flex-wrap:wrap;}
+  .avtab{border:1.5px solid #dbe8ff;background:#f4f8ff;color:var(--azul-ink);border-radius:999px;padding:6px 12px;font-size:12px;font-weight:800;font-family:inherit;cursor:pointer;transition:.14s;}
+  .avtab:hover{background:#eaf2ff;}
+  .avtab.sel{background:linear-gradient(135deg,#36c6ff,#1157c9);color:#fff;border-color:#1157c9;}
   #avModal .avfoot{display:flex;gap:10px;padding:12px 16px;border-top:1px solid #e8eefb;background:#fff;}
   #avModal .avbtn{flex:1;border:none;border-radius:13px;padding:12px;font-size:14px;font-weight:800;font-family:inherit;cursor:pointer;
     background:linear-gradient(135deg,#36c6ff,#1157c9 70%,#0b3d91);color:#fff;box-shadow:0 14px 26px -12px rgba(17,87,201,.8);transition:.15s;}
@@ -4573,44 +4577,73 @@ const AV_EYES=[["round","Redondos"],["almond","Almendra"],["big","Grandes"],["sm
 const AV_BROWS=[["arched","Arqueadas"],["straight","Rectas"],["thick","Gruesas"],["soft","Suaves"]];
 const AV_NOSES=[["soft","Suave"],["button","Botón"],["pointed","Respingada"],["line","Fina"]];
 const AV_MOUTHS=[["smile","Sonrisa"],["soft","Leve"],["grin","Amplia"],["laugh","Risa"],["neutral","Neutra"]];
-const AV_BEARDS=[["none","Ninguno"],["stubble","Incipiente"],["mustache","Bigote"],["beard","Barba"]];
+const AV_BEARDS=[["none","Ninguno"],["stubble","Incipiente"],["mustache","Bigote"],["goatee","Candado"],["beard","Barba"]];
 const AV_GLASSES=[["none","Ninguno"],["round","Redondos"],["square","Cuadrados"],["reading","Lectura"]];
-const AV_CLOTHES=[["sweaterSip","Suéter SIP"],["delantal","Delantal SIP"],["shirtTie","Camisa y corbata"],["blouse","Blusa"],["sweater","Suéter"],["shirt","Camisa"]];
+const AV_CLOTHES=[
+ {id:"shirtWhite",n:"Camisa blanca",cat:"camisas",color:false},
+ {id:"shirtSky",n:"Camisa celeste",cat:"camisas",color:false},
+ {id:"shirtBlue",n:"Camisa azul",cat:"camisas",color:false},
+ {id:"shirtCasual",n:"Camisa informal",cat:"camisas",color:true},
+ {id:"polo",n:"Polo",cat:"camisas",color:true},
+ {id:"tee",n:"Polera",cat:"camisas",color:true},
+ {id:"longSleeve",n:"Manga larga",cat:"camisas",color:true},
+ {id:"hoodie",n:"Polerón capucha",cat:"polerones",color:true},
+ {id:"crewneck",n:"Polerón",cat:"polerones",color:true},
+ {id:"zipHoodie",n:"Polerón con cierre",cat:"polerones",color:true},
+ {id:"track",n:"Chaqueta deportiva",cat:"polerones",color:true},
+ {id:"blazer",n:"Chaqueta formal",cat:"polerones",color:true},
+ {id:"vest",n:"Chaleco",cat:"polerones",color:true},
+ {id:"cardigan",n:"Cardigán",cat:"polerones",color:true},
+ {id:"sweaterSip",n:"Suéter SIP",cat:"inst",color:false},
+ {id:"delantal",n:"Delantal SIP",cat:"inst",color:false},
+ {id:"sweaterInst",n:"Suéter institucional",cat:"inst",color:false},
+ {id:"shirtTie",n:"Camisa y corbata",cat:"inst",color:true},
+ {id:"blouse",n:"Blusa",cat:"inst",color:true}
+];
+const AV_CLOTH_CATS=[["camisas","Camisas y poleras"],["polerones","Polerones y chaquetas"],["inst","Institucional"]];
+const AV_ACC=[["none","Ninguno"],["tie","Corbata"],["bowtie","Corbatín"],["scarf","Pañuelo"],["pin","Pin SIP"]];
+const AV_ACC_COLORS=["#b2243a","#15336b","#1f9e6a","#e0a020","#7c5cff","#2b2b2b"];
+let AV_CLOTHCAT="inst";
 function H(hc){ return {m:hc, d:avShade(hc,-24), l:avShade(hc,16)}; }
-function avBrows(style,hc){ const c=avShade(hc,-12); const L=40.5,R=59.5,Y=42.2,w=2;
-  if(style==="straight") return `<rect x="${L-4}" y="${Y-0.7}" width="8" height="${w}" rx="1" fill="${c}"/><rect x="${R-4}" y="${Y-0.7}" width="8" height="${w}" rx="1" fill="${c}"/>`;
-  if(style==="thick") return `<path d="M${L-4.3} ${Y+0.4} Q${L} ${Y-2.4} ${L+4.3} ${Y}" stroke="${c}" stroke-width="2.9" fill="none" stroke-linecap="round"/><path d="M${R-4.3} ${Y} Q${R} ${Y-2.4} ${R+4.3} ${Y+0.4}" stroke="${c}" stroke-width="2.9" fill="none" stroke-linecap="round"/>`;
-  if(style==="soft") return `<path d="M${L-3.6} ${Y} Q${L} ${Y-1.4} ${L+3.6} ${Y-0.2}" stroke="${c}" stroke-width="1.5" fill="none" stroke-linecap="round"/><path d="M${R-3.6} ${Y-0.2} Q${R} ${Y-1.4} ${R+3.6} ${Y}" stroke="${c}" stroke-width="1.5" fill="none" stroke-linecap="round"/>`;
-  return `<path d="M${L-4.2} ${Y+0.4} Q${L} ${Y-2.7} ${L+4.2} ${Y-0.6}" stroke="${c}" stroke-width="1.9" fill="none" stroke-linecap="round"/><path d="M${R-4.2} ${Y-0.6} Q${R} ${Y-2.7} ${R+4.2} ${Y+0.4}" stroke="${c}" stroke-width="1.9" fill="none" stroke-linecap="round"/>`;
+function avBrows(style,hc){ const c=avShade(hc,-10); const L=40.3,R=59.7,Y=41.6;
+  if(style==="straight") return `<rect x="${L-4}" y="${Y-0.7}" width="8" height="2" rx="1" fill="${c}"/><rect x="${R-4}" y="${Y-0.7}" width="8" height="2" rx="1" fill="${c}"/>`;
+  if(style==="thick") return `<path d="M${L-4.4} ${Y+0.5} Q${L} ${Y-2.6} ${L+4.4} ${Y-0.2}" stroke="${c}" stroke-width="3" fill="none" stroke-linecap="round"/><path d="M${R-4.4} ${Y-0.2} Q${R} ${Y-2.6} ${R+4.4} ${Y+0.5}" stroke="${c}" stroke-width="3" fill="none" stroke-linecap="round"/>`;
+  if(style==="soft") return `<path d="M${L-3.6} ${Y} Q${L} ${Y-1.3} ${L+3.6} ${Y-0.2}" stroke="${c}" stroke-width="1.6" fill="none" stroke-linecap="round"/><path d="M${R-3.6} ${Y-0.2} Q${R} ${Y-1.3} ${R+3.6} ${Y}" stroke="${c}" stroke-width="1.6" fill="none" stroke-linecap="round"/>`;
+  return `<path d="M${L-4.3} ${Y+0.5} Q${L} ${Y-2.9} ${L+4.3} ${Y-0.7}" stroke="${c}" stroke-width="2.1" fill="none" stroke-linecap="round"/><path d="M${R-4.3} ${Y-0.7} Q${R} ${Y-2.9} ${R+4.3} ${Y+0.5}" stroke="${c}" stroke-width="2.1" fill="none" stroke-linecap="round"/>`;
 }
-function avOneEye(cx,Y,shape,iris){ const dark="#201810"; let ry=5.0, rx=4.0;
-  if(shape==="almond"){ry=4.2;rx=4.2;} if(shape==="round"){ry=5.2;rx=4.6;} if(shape==="small"){ry=3.8;rx=3.3;}
+function avOneEye(cx,Y,shape,iris,lash){ const dark="#17100a";
+  let ry=5.5,rx=4.4; if(shape==="almond"){ry=4.5;rx=4.6;} if(shape==="round"){ry=5.8;rx=4.9;} if(shape==="small"){ry=4.3;rx=3.7;} if(shape==="big"){ry=6.4;rx=5.1;}
+  const irisD=avShade(iris,-32); const dir=cx<50?-1:1;
   let s=`<ellipse cx="${cx}" cy="${Y}" rx="${rx}" ry="${ry}" fill="#fff"/>`;
-  s+=`<ellipse cx="${cx}" cy="${Y+0.7}" rx="${rx-0.9}" ry="${ry-0.7}" fill="${iris}"/>`;
-  s+=`<ellipse cx="${cx}" cy="${Y+1.2}" rx="${rx-2.1}" ry="${ry-2.0}" fill="${dark}"/>`;
-  s+=`<circle cx="${cx-1.1}" cy="${Y-1.3}" r="1.2" fill="#fff"/>`;
-  s+=`<circle cx="${cx+1.3}" cy="${Y+2.0}" r="0.6" fill="#fff" opacity=".85"/>`;
-  s+=`<path d="M${cx-rx-0.2} ${Y-ry+1.2} Q${cx} ${Y-ry-1.4} ${cx+rx+0.2} ${Y-ry+1.2}" fill="none" stroke="#241a12" stroke-width="1.7" stroke-linecap="round"/>`;
-  if(shape!=="small") s+=`<path d="M${cx+rx-0.5} ${Y-ry+1.6} l1.8 -1.3" stroke="#241a12" stroke-width="1.4" stroke-linecap="round"/>`;
+  s+=`<ellipse cx="${cx}" cy="${Y+0.9}" rx="${rx-0.6}" ry="${ry-0.5}" fill="${iris}"/>`;
+  s+=`<ellipse cx="${cx}" cy="${Y+1.4}" rx="${rx-1.8}" ry="${ry-1.5}" fill="${irisD}"/>`;
+  s+=`<circle cx="${cx}" cy="${Y+1.3}" r="${Math.max(1,rx-2.9)}" fill="${dark}"/>`;
+  s+=`<circle cx="${cx-1.3}" cy="${Y-1.5}" r="1.4" fill="#fff"/><circle cx="${cx+1.4}" cy="${Y+2.3}" r="0.7" fill="#fff" opacity=".9"/>`;
+  s+=`<path d="M${cx-rx-0.5} ${Y-ry+1.5} Q${cx} ${Y-ry-1.9} ${cx+rx+0.7} ${Y-ry+1.0}" fill="none" stroke="#1d140d" stroke-width="2.1" stroke-linecap="round"/>`;
+  s+=`<path d="M${cx+dir*(rx+0.4)} ${Y-ry+1.0} l${dir*2.4} -1.7" stroke="#1d140d" stroke-width="1.6" stroke-linecap="round"/>`;
+  if(lash==="long"){ s+=`<path d="M${cx+dir*(rx-0.6)} ${Y-ry+1.7} l${dir*1.9} -1.9" stroke="#1d140d" stroke-width="1.4" stroke-linecap="round"/>`;
+    s+=`<path d="M${cx+dir*(rx+1.1)} ${Y-ry+2.3} l${dir*2.6} -0.7" stroke="#1d140d" stroke-width="1.3" stroke-linecap="round"/>`; }
+  s+=`<path d="M${cx-rx+1} ${Y+ry-0.5} Q${cx} ${Y+ry+0.7} ${cx+rx-1} ${Y+ry-0.5}" fill="none" stroke="${irisD}" stroke-width="0.8" opacity=".5"/>`;
   return s; }
-function avEyes(shape,iris){ return avOneEye(40.5,49,shape,iris)+avOneEye(59.5,49,shape,iris); }
+function avEyes(shape,iris,lash){ return avOneEye(40.3,49,shape,iris,lash)+avOneEye(59.7,49,shape,iris,lash); }
 function avNose(style,skinD){ const Y=55;
   if(style==="button") return `<ellipse cx="50" cy="${Y+1}" rx="1.6" ry="1.2" fill="${skinD}" opacity=".5"/>`;
   if(style==="pointed") return `<path d="M49.3 ${Y-2} L50.7 ${Y-2} L50 ${Y+1.6} Z" fill="${skinD}" opacity=".35"/>`;
   if(style==="line") return `<path d="M49 ${Y-1.5} Q48.2 ${Y+1.4} 50 ${Y+2}" fill="none" stroke="${skinD}" stroke-width="1.1" stroke-linecap="round" opacity=".6"/>`;
   return `<path d="M49.2 ${Y-1} Q48.6 ${Y+1.4} 50 ${Y+1.8}" fill="none" stroke="${skinD}" stroke-width="1" stroke-linecap="round" opacity=".55"/>`;
 }
-function avMouth(style){ const Y=60.5, c="#b05a4a";
+function avMouth(style){ const Y=60.8, c="#b05a4a";
   if(style==="soft") return `<path d="M45.5 ${Y} Q50 ${Y+2.6} 54.5 ${Y}" fill="none" stroke="${c}" stroke-width="1.6" stroke-linecap="round"/>`;
   if(style==="neutral") return `<path d="M46.5 ${Y+0.6} L53.5 ${Y+0.6}" stroke="${c}" stroke-width="1.5" stroke-linecap="round"/>`;
   if(style==="grin") return `<path d="M44 ${Y-0.4} Q50 ${Y+5.4} 56 ${Y-0.4} Q50 ${Y+1.6} 44 ${Y-0.4} Z" fill="#fff" stroke="${c}" stroke-width="1.5" stroke-linejoin="round"/>`;
   if(style==="laugh") return `<path d="M43.5 ${Y-0.6} Q50 ${Y+6.6} 56.5 ${Y-0.6} Q50 ${Y+2.2} 43.5 ${Y-0.6} Z" fill="#b5544a"/><path d="M45 ${Y} Q50 ${Y+1.4} 55 ${Y}" fill="#fff"/>`;
   return `<path d="M44.5 ${Y} Q50 ${Y+4.4} 55.5 ${Y}" fill="none" stroke="${c}" stroke-width="1.8" stroke-linecap="round"/>`;
 }
-function avBeard(kind,hc){ const c=H(hc).m; if(kind==="none"||!kind) return "";
-  if(kind==="mustache") return `<path d="M45 57 Q50 60 55 57 Q52 55 50 56 Q48 55 45 57 Z" fill="${c}"/>`;
-  if(kind==="stubble") return `<path d="M33 52 Q35 69 50 69 Q65 69 67 52 Q66 62 50 62 Q34 62 33 52 Z" fill="${c}" opacity=".30"/>`;
-  if(kind==="beard") return `<path d="M32 50 Q34 70 50 70 Q66 70 68 50 Q66 63 58 64 L58 58 Q50 62 42 58 L42 64 Q34 63 32 50 Z" fill="${c}"/>`;
+function avBeard(kind,hc){ const c=H(hc); if(kind==="none"||!kind) return "";
+  if(kind==="mustache") return `<path d="M44.5 56.5 Q47 59 50 58 Q53 59 55.5 56.5 Q53 55 50 56 Q47 55 44.5 56.5 Z" fill="${c.m}"/>`;
+  if(kind==="stubble") return `<path d="M33 51 Q34 68 50 69 Q66 68 67 51 Q66 62 58 64 L58 60 Q50 63 42 60 L42 64 Q34 62 33 51 Z" fill="${c.m}" opacity=".26"/>`;
+  if(kind==="goatee") return `<path d="M45.5 62 Q50 67.5 54.5 62 Q52.5 60 50 60.6 Q47.5 60 45.5 62 Z" fill="${c.m}"/><path d="M45 56.5 Q50 59 55 56.5" stroke="${c.m}" stroke-width="2.1" fill="none" stroke-linecap="round"/>`;
+  if(kind==="beard") return `<path d="M31 50 Q33 71 50 71 Q67 71 69 50 Q67 63 58 65 L58 59 Q50 63 42 59 L42 65 Q33 63 31 50 Z" fill="${c.m}"/><path d="M42 58 Q50 62 58 58" stroke="${c.d}" stroke-width="0.8" fill="none" opacity=".5"/>`;
   return ""; }
 function avHairBack(style,hc){ const c=H(hc);
   switch(style){
@@ -4633,7 +4666,7 @@ function avHairBack(style,hc){ const c=H(hc);
 }
 function avHairFront(style,hc){ const c=H(hc);
   switch(style){
-    case "m_tousle": return `<path d="M27 47 Q25 23 50 21 Q75 23 73 47 Q71 36 64 34 Q66 29 60 29 Q58 25 52 28 Q50 24 46 28 Q40 26 39 31 Q33 30 34 36 Q27 36 27 47 Z" fill="${c.m}"/>`;
+    case "m_tousle": return `<path d="M27 47 Q25 23 50 21 Q75 23 73 47 Q71 36 64 34 Q66 29 60 29 Q58 25 52 28 Q50 24 46 28 Q40 26 39 31 Q33 30 34 36 Q27 36 27 47 Z" fill="${c.m}"/><path d="M38 33 Q46 28 56 31" stroke="${c.l}" stroke-width="1.1" fill="none" opacity=".4"/>`;
     case "m_curly": return `<path d="M26 47 Q23 33 31 27 Q35 20 45 23 Q50 19 56 23 Q66 21 69 29 Q77 33 72 47 Q71 38 65 37 Q66 31 59 32 Q57 27 51 30 Q49 26 44 30 Q39 27 37 33 Q31 33 32 39 Q27 39 26 47 Z" fill="${c.m}"/>`;
     case "m_fringe": return `<path d="M27 47 Q26 23 50 21 Q74 23 73 47 Q73 40 69 38 L68 40 Q64 36 60 39 Q56 35 52 39 Q48 35 44 39 Q40 36 36 40 L35 38 Q27 40 27 47 Z" fill="${c.m}"/>`;
     case "m_buzz": return `<path d="M30 45 Q29 26 50 25 Q71 26 70 45 Q70 36 50 34 Q30 36 30 45 Z" fill="${c.m}"/>`;
@@ -4645,8 +4678,8 @@ function avHairFront(style,hc){ const c=H(hc);
     case "m_slick": return `<path d="M28 44 Q27 24 50 23 Q73 24 72 44 Q70 30 50 29 Q30 30 28 44 Z" fill="${c.m}"/><path d="M34 34 Q50 30 66 34" stroke="${c.l}" stroke-width="0.9" fill="none" opacity=".4"/>`;
     case "m_topknot": return `<circle cx="50" cy="20" r="5" fill="${c.m}"/><path d="M33 42 Q33 28 50 27 Q67 28 67 42 Q65 33 50 32 Q35 33 33 42 Z" fill="${c.m}"/>`;
     case "m_beanie": return `<path d="M30 40 Q30 24 50 23 Q70 24 70 40 Z" fill="#26407a"/><rect x="29" y="38" width="42" height="7" rx="3.5" fill="#1b2f5e"/><circle cx="50" cy="20" r="3" fill="#26407a"/>`;
-    case "f_long": case "f_straightMid": return `<path d="M28 48 Q26 22 50 21 Q74 22 72 48 Q71 36 62 34 Q57 38 50 38 Q43 38 38 34 Q29 36 28 48 Z" fill="${c.m}"/><path d="M50 22 L50 36" stroke="${c.d}" stroke-width="0.8" opacity=".4"/>`;
-    case "f_wavy": return `<path d="M28 49 Q26 21 50 20 Q74 21 72 49 Q71 37 63 35 Q58 39 50 39 Q42 39 37 35 Q29 37 28 49 Z" fill="${c.m}"/><path d="M35 33 Q44 29 50 31 Q57 29 65 33" stroke="${c.l}" stroke-width="1" fill="none" opacity=".5"/>`;
+    case "f_long": case "f_straightMid": return `<path d="M28 48 Q26 22 50 21 Q74 22 72 48 Q71 36 62 34 Q57 38 50 38 Q43 38 38 34 Q29 36 28 48 Z" fill="${c.m}"/><path d="M50 22 L50 36" stroke="${c.d}" stroke-width="0.8" opacity=".4"/><path d="M34 32 Q42 28 48 30" stroke="${c.l}" stroke-width="1" fill="none" opacity=".4"/>`;
+    case "f_wavy": return `<path d="M28 49 Q26 21 50 20 Q74 21 72 49 Q71 37 63 35 Q58 39 50 39 Q42 39 37 35 Q29 37 28 49 Z" fill="${c.m}"/><path d="M35 33 Q44 29 50 31 Q57 29 65 33" stroke="${c.l}" stroke-width="1.1" fill="none" opacity=".5"/>`;
     case "f_bangs": return `<path d="M28 48 Q26 22 50 21 Q74 22 72 48 L72 42 Q67 40 62 41 L62 43 Q57 39 52 42 Q50 39 48 42 Q43 39 38 43 L38 41 Q33 40 28 42 Z" fill="${c.m}"/>`;
     case "f_bob": return `<path d="M27 58 Q26 24 50 22 Q74 24 73 58 Q74 48 68 48 L68 40 Q58 36 50 36 Q42 36 32 40 L32 48 Q26 48 27 58 Z" fill="${c.m}"/>`;
     case "f_ponytail": return `<path d="M28 47 Q27 22 50 21 Q73 22 72 47 Q71 35 62 34 Q57 38 50 38 Q43 38 38 34 Q29 35 28 47 Z" fill="${c.m}"/>`;
@@ -4662,26 +4695,40 @@ function avHairFront(style,hc){ const c=H(hc);
   }
 }
 function avSipBadge(){ return `<rect x="58" y="88" width="15" height="8.5" rx="2" fill="#ffffff"/><text x="65.5" y="94.4" text-anchor="middle" font-family="Montserrat,Arial" font-size="5.6" font-weight="800" fill="#15336b">SiP</text>`; }
+function avBody(c){ return `<path d="M12 100 Q12 78 50 74 Q88 78 88 100 Z" fill="${c}"/>`; }
+function avCollarW(){ return `<path d="M42 74 L50 84 L37 94 Q34 82 42 74 Z" fill="#ffffff"/><path d="M58 74 L50 84 L63 94 Q66 82 58 74 Z" fill="#ffffff"/>`; }
 function avClothes(kind,cloth){
-  const sh=avShade(cloth,-16), lite=avShade(cloth,20);
-  const base=(c)=>`<path d="M12 100 Q12 78 50 74 Q88 78 88 100 Z" fill="${c}"/>`;
-  if(kind==="sweaterSip"){ const navy="#15336b";
-    return base(navy)
-      +`<path d="M42 74 L50 88 L58 74 Z" fill="#ffffff"/>`
-      +`<path d="M42 74 L50 83 L38 92 Q35 80 42 74 Z" fill="#ffffff"/>`
-      +`<path d="M58 74 L50 83 L62 92 Q65 80 58 74 Z" fill="#ffffff"/>`
-      +`<path d="M42 74 Q50 80 58 74" fill="none" stroke="${avShade(navy,-18)}" stroke-width="1"/>`+avSipBadge();
+  const sh=avShade(cloth,-16),lite=avShade(cloth,20),navy="#15336b";
+  switch(kind){
+    case "sweaterSip": return avBody(navy)+`<path d="M42 74 L50 88 L58 74 Z" fill="#ffffff"/>`+avCollarW()+`<path d="M42 74 Q50 80 58 74" fill="none" stroke="${avShade(navy,-18)}" stroke-width="1"/>`+avSipBadge();
+    case "delantal": return avBody("#13346e")+`<path d="M42 74 L50 88 L58 74 Z" fill="#ffffff"/>`+avCollarW()+avSipBadge();
+    case "sweaterInst": return avBody(navy)+`<path d="M41 77 Q50 86 59 77" fill="none" stroke="${avShade(navy,-20)}" stroke-width="3"/>`+avSipBadge();
+    case "shirtWhite": return avBody("#f3f5f9")+`<path d="M44 74 L50 83 L56 74 Z" fill="#e3e8f0"/><path d="M44 74 L50 82 L45 90 Q42 82 44 74 Z" fill="#ffffff"/><path d="M56 74 L50 82 L55 90 Q58 82 56 74 Z" fill="#ffffff"/><line x1="50" y1="83" x2="50" y2="100" stroke="#d2d9e6" stroke-width="0.8"/>`;
+    case "shirtSky": return avBody("#bfe0f5")+`<path d="M44 74 L50 82 L45 90 Q42 82 44 74 Z" fill="#d8eefb"/><path d="M56 74 L50 82 L55 90 Q58 82 56 74 Z" fill="#d8eefb"/><line x1="50" y1="83" x2="50" y2="100" stroke="#9cc6e6" stroke-width="0.8"/>`;
+    case "shirtBlue": return avBody("#2f6bd8")+`<path d="M44 74 L50 82 L45 90 Q42 82 44 74 Z" fill="#5a8ce6"/><path d="M56 74 L50 82 L55 90 Q58 82 56 74 Z" fill="#5a8ce6"/><line x1="50" y1="83" x2="50" y2="100" stroke="#1f4f9e" stroke-width="0.8"/>`;
+    case "polo": return avBody(cloth)+`<path d="M43 74 L50 82 L57 74 Z" fill="${lite}"/><path d="M48 80 L52 80 L52 90 L48 90 Z" fill="${lite}"/><circle cx="50" cy="83" r="0.8" fill="${sh}"/><circle cx="50" cy="87" r="0.8" fill="${sh}"/>`;
+    case "tee": return avBody(cloth)+`<path d="M42 75 Q50 81 58 75" fill="none" stroke="${sh}" stroke-width="2.4"/>`;
+    case "longSleeve": return avBody(cloth)+`<path d="M42 75 Q50 81 58 75" fill="none" stroke="${sh}" stroke-width="2.4"/><path d="M14 100 L20 84" stroke="${sh}" stroke-width="0.8"/><path d="M86 100 L80 84" stroke="${sh}" stroke-width="0.8"/>`;
+    case "shirtCasual": return avBody(cloth)+`<path d="M44 74 L50 82 L45 90 Q42 82 44 74 Z" fill="${lite}"/><path d="M56 74 L50 82 L55 90 Q58 82 56 74 Z" fill="${lite}"/><line x1="50" y1="83" x2="50" y2="100" stroke="${sh}" stroke-width="0.8"/>`;
+    case "hoodie": return avBody(cloth)+`<path d="M34 76 Q50 70 66 76 Q60 88 50 88 Q40 88 34 76 Z" fill="${sh}"/><path d="M44 76 L47 100" stroke="${sh}" stroke-width="2"/><path d="M56 76 L53 100" stroke="${sh}" stroke-width="2"/>`;
+    case "crewneck": return avBody(cloth)+`<path d="M42 76 Q50 82 58 76" fill="none" stroke="${sh}" stroke-width="2.8"/><rect x="14" y="96" width="72" height="4" fill="${sh}" opacity=".4"/>`;
+    case "zipHoodie": return avBody(cloth)+`<path d="M38 75 Q50 70 62 75" fill="none" stroke="${sh}" stroke-width="3"/><rect x="49" y="76" width="2" height="24" fill="${avShade(cloth,-30)}"/><circle cx="50" cy="80" r="1.1" fill="#dfe6f2"/>`;
+    case "track": return avBody(cloth)+`<rect x="49" y="74" width="2" height="26" fill="${avShade(cloth,-30)}"/><path d="M22 86 L18 100 M78 86 L82 100" stroke="#ffffff" stroke-width="1.4"/><path d="M30 80 L28 100 M70 80 L72 100" stroke="${lite}" stroke-width="1.2"/>`;
+    case "blazer": return avBody(cloth)+`<path d="M44 74 L50 84 L40 100 Z" fill="${sh}"/><path d="M56 74 L50 84 L60 100 Z" fill="${sh}"/><path d="M42 74 L50 82 L45 92 Z" fill="#fff" opacity=".9"/><path d="M58 74 L50 82 L55 92 Z" fill="#fff" opacity=".9"/><path d="M48 80 L52 80 L53 92 L50 94 L47 92 Z" fill="#5a2230"/>`;
+    case "vest": return avBody(cloth)+`<path d="M42 74 L50 84 L58 74 Z" fill="#ffffff"/><path d="M44 74 L50 82 L45 92 Q42 82 44 74 Z" fill="#fff"/><path d="M56 74 L50 82 L55 92 Q58 82 56 74 Z" fill="#fff"/><path d="M40 86 Q50 92 60 86" fill="none" stroke="${sh}" stroke-width="2"/>`;
+    case "cardigan": return avBody(cloth)+`<path d="M42 75 Q50 72 58 75 L54 86 Q50 83 46 86 Z" fill="${lite}"/><rect x="48.5" y="76" width="1.5" height="24" fill="${sh}"/><circle cx="49.2" cy="83" r="0.8" fill="${avShade(cloth,-30)}"/><circle cx="49.2" cy="90" r="0.8" fill="${avShade(cloth,-30)}"/>`;
+    case "shirtTie": return avBody(cloth)+`<path d="M43 74 L50 82 L57 74 Z" fill="${lite}"/><path d="M48 80 L52 80 L54 98 L50 100 L46 98 Z" fill="#b2243a"/>`;
+    case "blouse": return avBody(cloth)+`<path d="M43 74 Q50 72 57 74 L53 84 Q50 82 47 84 Z" fill="${lite}"/>`;
+    default: return avBody(cloth)+`<path d="M44 74 L50 82 L56 74 Z" fill="${lite}"/>`;
   }
-  if(kind==="delantal"||kind==="delantalCoat"){ const navy="#13346e";
-    const inner = kind==="delantalCoat"?`<path d="M42 74 L50 92 L58 74 Z" fill="#8fc0e8"/>`:`<path d="M42 74 L50 92 L58 74 Z" fill="#ffffff"/>`;
-    return base(navy)+inner
-      +`<path d="M42 74 L50 84 L37 94 Q34 82 42 74 Z" fill="#ffffff"/>`
-      +`<path d="M58 74 L50 84 L63 94 Q66 82 58 74 Z" fill="#ffffff"/>`+avSipBadge();
-  }
-  if(kind==="shirtTie") return base(cloth)+`<path d="M43 74 L50 82 L57 74 Z" fill="${lite}"/><path d="M48 80 L52 80 L54 98 L50 100 L46 98 Z" fill="#b2243a"/>`;
-  if(kind==="blouse") return base(cloth)+`<path d="M43 74 Q50 72 57 74 L53 84 Q50 82 47 84 Z" fill="${lite}"/>`;
-  if(kind==="sweater") return base(cloth)+`<path d="M41 76 Q50 86 59 76" fill="none" stroke="${sh}" stroke-width="3"/>`;
-  return base(cloth)+`<path d="M44 74 L50 82 L56 74 Z" fill="${lite}"/><line x1="50" y1="82" x2="50" y2="100" stroke="${sh}" stroke-width="0.9"/>`;
+}
+function avAccessory(acc,col){
+  if(acc==="none"||!acc) return "";
+  if(acc==="tie") return `<path d="M48 80 L52 80 L54 98 L50 100 L46 98 Z" fill="${col}"/><path d="M47.5 78 L52.5 78 L51.5 81 L48.5 81 Z" fill="${avShade(col,-20)}"/>`;
+  if(acc==="bowtie") return `<path d="M44 80 L50 83 L44 86 Z" fill="${col}"/><path d="M56 80 L50 83 L56 86 Z" fill="${col}"/><rect x="48.5" y="81.5" width="3" height="3" rx="0.6" fill="${avShade(col,-20)}"/>`;
+  if(acc==="scarf") return `<path d="M38 76 Q50 82 62 76 L60 84 Q50 88 40 84 Z" fill="${col}"/><path d="M58 83 L62 96 L56 96 Z" fill="${avShade(col,-10)}"/>`;
+  if(acc==="pin") return `<circle cx="40" cy="86" r="2.4" fill="#ffd23f" stroke="#c99a1e" stroke-width="0.5"/><text x="40" y="87.6" text-anchor="middle" font-family="Arial" font-size="2.4" font-weight="800" fill="#15336b">S</text>`;
+  return "";
 }
 function avGlasses(kind){ if(kind==="none"||!kind) return ""; const c="#23282f";
   if(kind==="round") return `<g fill="none" stroke="${c}" stroke-width="1.8"><circle cx="40.5" cy="49" r="7"/><circle cx="59.5" cy="49" r="7"/><path d="M47.5 48 h5"/><path d="M33.5 47 l-4 -1"/><path d="M66.5 47 l4 -1"/></g>`;
@@ -4689,7 +4736,7 @@ function avGlasses(kind){ if(kind==="none"||!kind) return ""; const c="#23282f";
   if(kind==="reading") return `<g fill="none" stroke="${c}" stroke-width="1.3"><rect x="33" y="45" width="14" height="9" rx="4"/><rect x="53" y="45" width="14" height="9" rx="4"/><path d="M47 48 h6"/></g>`;
   return "";
 }
-function avatarDefault(){ return {sex:"otro",skin:2,hair:"m_tousle",hairColor:1,eyes:"round",eyeColor:0,brows:"arched",nose:"soft",mouth:"smile",beard:"none",glasses:"none",clothes:"sweaterSip",clothColor:0,bg:6,blush:1}; }
+function avatarDefault(){ return {sex:"otro",skin:2,hair:"m_tousle",hairColor:1,eyes:"round",eyeColor:0,brows:"arched",nose:"soft",mouth:"smile",beard:"none",glasses:"none",clothes:"sweaterSip",clothColor:0,accessory:"none",accColor:0,bg:6,blush:1}; }
 function avatarSVG(cfg,size){
   cfg=Object.assign(avatarDefault(),cfg||{});
   const w=(size==null)?"100%":(typeof size==="number"?(size+""):size);
@@ -4698,6 +4745,8 @@ function avatarSVG(cfg,size){
   const iris=AV_EYE_COLORS[cfg.eyeColor]||AV_EYE_COLORS[0];
   const bg=AV_BG[cfg.bg]||AV_BG[0];
   const cloth=AV_CLOTH_COLORS[cfg.clothColor]||AV_CLOTH_COLORS[0];
+  const acc=AV_ACC_COLORS[cfg.accColor]||AV_ACC_COLORS[0];
+  const lash=cfg.sex==="fem"?"long":"normal";
   const uid="av"+Math.random().toString(36).slice(2,8);
   const blush = cfg.blush? `<ellipse cx="36.5" cy="55" rx="3.4" ry="2" fill="#ff8aa0" opacity=".32"/><ellipse cx="63.5" cy="55" rx="3.4" ry="2" fill="#ff8aa0" opacity=".32"/>`:"";
   return `<svg viewBox="0 0 100 100" width="${w}" height="${w}" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" style="display:block">`
@@ -4706,13 +4755,14 @@ function avatarSVG(cfg,size){
     +`<g clip-path="url(#${uid})"><rect width="100" height="100" fill="url(#${uid}b)"/>`
     +avHairBack(cfg.hair,hc)
     +`<path d="M44 60 h12 v12 q-6 5 -12 0 z" fill="${skinD}"/>`
-    +avClothes(cfg.clothes,cloth)
+    +avClothes(cfg.clothes,cloth)+avAccessory(cfg.accessory,acc)
     +`<ellipse cx="50" cy="47" rx="19.5" ry="22" fill="${skin}"/>`
     +`<circle cx="30.5" cy="49" r="4" fill="${skin}"/><circle cx="69.5" cy="49" r="4" fill="${skin}"/>`
     +blush
-    +avBrows(cfg.brows,hc)+avEyes(cfg.eyes,iris)+avNose(cfg.nose,skinD)+avBeard(cfg.beard,hc)+avMouth(cfg.mouth)+avGlasses(cfg.glasses)+avHairFront(cfg.hair,hc)
+    +avBrows(cfg.brows,hc)+avEyes(cfg.eyes,iris,lash)+avNose(cfg.nose,skinD)+avBeard(cfg.beard,hc)+avMouth(cfg.mouth)+avGlasses(cfg.glasses)+avHairFront(cfg.hair,hc)
     +`</g></svg>`;
 }
+
 /* Almacenamiento por usuario */
 function avatarKey(){ return "aseia_avatar_v1_"+((CURRENT&&CURRENT.email)||"anon").toLowerCase(); }
 function loadAvatar(){ try{ const r=localStorage.getItem(avatarKey()); return r?JSON.parse(r):null; }catch(e){ return null; } }
@@ -4738,9 +4788,14 @@ function avChips(key,opts){
     return '<button type="button" class="avchip'+sel+'" onclick="avSet(\''+key+'\',\''+o[0]+'\')">'+o[1]+'</button>'; }).join("");
 }
 function avSection(title,inner){ return '<div class="avsec"><div class="avsec-t">'+title+'</div><div class="avsec-r">'+inner+'</div></div>'; }
+function avClothById(id){ return AV_CLOTHES.find(c=>c.id===id)||AV_CLOTHES[0]; }
+function avSetCat(cat){ AV_CLOTHCAT=cat; renderAvatarUI(); }
+function avCatTabs(){ return '<div class="avtabs">'+AV_CLOTH_CATS.map(c=>'<button type="button" class="avtab'+(AV_CLOTHCAT===c[0]?' sel':'')+'" onclick="avSetCat(\''+c[0]+'\')">'+c[1]+'</button>').join('')+'</div>'; }
+function avClothGrid(){ return '<div class="avsec-r">'+AV_CLOTHES.filter(c=>c.cat===AV_CLOTHCAT).map(c=>'<button type="button" class="avchip'+(AV_DRAFT.clothes===c.id?' sel':'')+'" onclick="avSet(\'clothes\',\''+c.id+'\')">'+c.n+'</button>').join('')+'</div>'; }
 function renderAvatarUI(){
   const pv=document.getElementById("avPreview"); if(pv) pv.innerHTML=avatarSVG(AV_DRAFT,170);
   const box=document.getElementById("avOpts"); if(!box) return;
+  const g=avClothById(AV_DRAFT.clothes); if(g && AV_CLOTHCAT!==g.cat) AV_CLOTHCAT=g.cat;
   box.innerHTML=
      avSection("Perfil", avChips("sex",AV_SEX))
     +avSection("Peinado", avChips("hair",avHairList(AV_DRAFT.sex)))
@@ -4753,8 +4808,10 @@ function renderAvatarUI(){
     +avSection("Sonrisa", avChips("mouth",AV_MOUTHS))
     +avSection("Vello facial", avChips("beard",AV_BEARDS))
     +avSection("Lentes", avChips("glasses",AV_GLASSES))
-    +avSection("Ropa", avChips("clothes",AV_CLOTHES))
-    +avSection("Color de ropa", avSwatches("clothColor",AV_CLOTH_COLORS,false))
+    +'<div class="avsec"><div class="avsec-t">Ropa</div>'+avCatTabs()+avClothGrid()+'</div>'
+    +(avClothById(AV_DRAFT.clothes).color? avSection("Color de la ropa", avSwatches("clothColor",AV_CLOTH_COLORS,false)):"")
+    +avSection("Accesorio", avChips("accessory",AV_ACC))
+    +(AV_DRAFT.accessory!=="none"? avSection("Color del accesorio", avSwatches("accColor",AV_ACC_COLORS,false)):"")
     +avSection("Fondo", avSwatches("bg",AV_BG,true));
 }
 function avSet(key,val){
@@ -4770,8 +4827,8 @@ function randomAvatar(){
   const sex=R(AV_SEX)[0];
   AV_DRAFT={ sex, skin:RI(AV_SKINS.length), hair:R(avHairList(sex))[0], hairColor:RI(AV_HAIR_COLORS.length),
     eyes:R(AV_EYES)[0], eyeColor:RI(AV_EYE_COLORS.length), brows:R(AV_BROWS)[0], nose:R(AV_NOSES)[0], mouth:R(AV_MOUTHS)[0],
-    beard: sex==="fem"?"none":R(AV_BEARDS)[0], glasses:R(AV_GLASSES)[0], clothes:R(AV_CLOTHES)[0],
-    clothColor:RI(AV_CLOTH_COLORS.length), bg:RI(AV_BG.length), blush:1 };
+    beard: sex==="fem"?"none":R(AV_BEARDS)[0], glasses:R(AV_GLASSES)[0], clothes:R(AV_CLOTHES).id, clothColor:RI(AV_CLOTH_COLORS.length),
+    accessory:R(AV_ACC)[0], accColor:RI(AV_ACC_COLORS.length), bg:RI(AV_BG.length), blush:1 };
   renderAvatarUI();
 }
 function saveAvatarAndClose(){
@@ -6812,17 +6869,18 @@ function renderQuickLogin(){
 /* Botón rápido: si el token recordado sigue vigente, re-entra directo (sin
    popup de Google); si venció, usa Google con selección automática (un toque). */
 function quickLogin(){
-  const lp=getLastProfile(); if(!lp) return;
+  const lp=getLastProfile(); if(!lp){ showScreen("gate"); return; }
   PENDING=lp.role;                                 // el perfil se valida luego por el correo verificado
   if(lastTokenValid(lp)){ quickLoginFast(lp); return; }
-  loadGIS(()=>{ try{ initGIS(true); google.accounts.id.prompt(); }catch(_){ pick(lp.role); } });
+  pick(lp.role);                                   // sin token vigente: abre el acceso de Google del perfil (siempre funciona)
 }
 async function quickLoginFast(lp){
   showMiniLoad();                                  // feedback inmediato mientras verifica
-  const me=await apiPost("me",{credential:lp.token});
-  if(me && !me.__err && me.role){ finishAuth(me, lp.token); return; }
-  // El token fue rechazado (vencido/no válido): cae a Google.
-  loadGIS(()=>{ try{ initGIS(true); google.accounts.id.prompt(); }catch(_){ pick(lp.role); } });
+  try{
+    const me=await apiPost("me",{credential:lp.token});
+    if(me && !me.__err && me.role){ finishAuth(me, lp.token); return; }
+  }catch(e){}
+  pick(lp.role);                                   // token rechazado: cae al acceso de Google del perfil (confiable)
 }
 
 /* ============ INTRO · se cierra sola (o al tocar) y muestra el acceso ============ */
