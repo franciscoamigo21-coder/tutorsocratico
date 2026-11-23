@@ -4579,8 +4579,8 @@ const AV_EYE_COLORS=["#4a2f1b","#6b4a2a","#2a6b4a","#2a5a8a","#6a6a6a","#7a4a8a"
 const AV_CLOTH_COLORS=["#15336b","#2f6bd8","#e05454","#16a37a","#f5a623","#7c5cff","#444c5e","#e8edf5"];
 const AV_BG=[["#9fc0ff","#3f74e0"],["#b9a6ff","#6c5cff"],["#9fe6c9","#2bb389"],["#ffd48a","#f5a623"],["#ffa8c8","#e05aa0"],["#d4def0","#8696b3"],["#cfe0ff","#20489e"]];
 const AV_SEX=[["fem","Femenino"],["masc","Masculino"],["otro","Otro"]];
-const AV_HAIRS_M=[["m_tousle","Alborotado"],["m_curly","Rizado"],["m_fringe","Flequillo"],["m_buzz","Rapado"],["m_spiky","Puntas"],["m_sidePart","Raya al lado"],["m_undercut","Undercut"],["m_afro","Afro"],["m_wavyMed","Ondulado"],["m_slick","Peinado atrás"],["m_topknot","Moño alto"],["m_beanie","Gorro"],["m_long","Largo"],["m_wavyLong","Largo ondulado"],["m_comma","Cortina"],["m_crop","Crop texturizado"],["m_pompadour","Tupé"],["bald","Sin pelo"]];
-const AV_HAIRS_F=[["f_long","Largo liso"],["f_wavy","Largo ondulado"],["f_bangs","Con flequillo"],["f_bob","Bob"],["f_ponytail","Cola"],["f_bunHigh","Moño alto"],["f_bunLow","Moño bajo"],["f_braids","Trenzas"],["f_halfup","Semirecogido"],["f_curly","Rizado"],["f_shoulder","Media melena"],["f_spaceBuns","Dos moños"],["f_straightMid","Raya al medio"],["f_lob","Long bob"],["f_sideSwept","Lado"],["f_pixie","Pixie"],["bald","Sin pelo"]];
+const AV_HAIRS_M=[["m_tousle","Alborotado"],["m_curly","Rizado"],["m_fringe","Flequillo"],["m_buzz","Rapado"],["m_spiky","Puntas"],["m_sidePart","Raya al lado"],["m_undercut","Undercut"],["m_afro","Afro"],["m_wavyMed","Ondulado"],["m_slick","Peinado atrás"],["m_topknot","Moño alto"],["m_beanie","Gorro"],["m_long","Largo"],["m_wavyLong","Largo ondulado"],["m_comma","Cortina"],["m_crop","Crop texturizado"],["m_pompadour","Tupé"],["m_quiff","Quiff"],["m_fade","Fade"],["m_waves","Ondas"],["bald","Sin pelo"]];
+const AV_HAIRS_F=[["f_long","Largo liso"],["f_wavy","Largo ondulado"],["f_bangs","Con flequillo"],["f_bob","Bob"],["f_ponytail","Cola"],["f_bunHigh","Moño alto"],["f_bunLow","Moño bajo"],["f_braids","Trenzas"],["f_halfup","Semirecogido"],["f_curly","Rizado"],["f_shoulder","Media melena"],["f_spaceBuns","Dos moños"],["f_straightMid","Raya al medio"],["f_lob","Long bob"],["f_sideSwept","Lado"],["f_pixie","Pixie"],["f_longLayers","Capas largas"],["f_curtainBangs","Flequillo cortina"],["f_highPony","Cola alta"],["bald","Sin pelo"]];
 function avHairList(sex){ if(sex==="fem") return AV_HAIRS_F; if(sex==="masc") return AV_HAIRS_M; return AV_HAIRS_M.slice(0,14).concat(AV_HAIRS_F.slice(0,13)); }
 const AV_EYES=[["round","Redondos"],["almond","Almendra"],["big","Grandes"],["small","Pequeños"]];
 const AV_BROWS=[["arched","Arqueadas"],["straight","Rectas"],["thick","Gruesas"],["soft","Suaves"]];
@@ -4676,6 +4676,12 @@ function avHairBack(style,hc){ const c=H(hc);
       return `<path d="M27 44 Q26 22 50 21 Q74 22 73 44 L74 78 Q70 80 68 66 L68 46 Q60 38 50 38 Q40 38 32 46 L32 66 Q30 80 26 78 Z" fill="${c.d}"/>`;
     case "f_sideSwept":
       return `<path d="M27 44 Q26 22 50 21 Q74 22 73 44 L75 86 L65 87 L66 46 Q60 38 50 38 Q40 38 34 46 L35 87 L25 86 Z" fill="${c.d}"/>`;
+    case "f_longLayers":
+      return `<path d="M25 42 Q24 20 50 19 Q76 20 75 42 L79 96 L69 97 L68 48 Q68 38 50 38 Q32 38 32 48 L31 97 L21 96 Z" fill="${c.d}"/>`;
+    case "f_curtainBangs":
+      return `<path d="M26 40 Q25 21 50 20 Q75 21 74 40 L77 95 L67 96 L67 46 Q67 37 50 37 Q33 37 33 46 L33 96 L23 95 Z" fill="${c.d}"/>`;
+    case "f_highPony":
+      return `<path d="M55 22 Q78 26 79 53 Q79 75 66 89 Q78 64 68 44 Q63 30 53 27 Z" fill="${c.d}"/>`;
     default: return "";
   }
 }
@@ -4711,11 +4717,17 @@ function avHairFront(style,hc){ const c=H(hc);
     case "f_lob": return `<path d="M28 50 Q26 22 50 21 Q74 22 72 50 Q71 37 62 35 Q57 39 50 39 Q43 39 38 35 Q29 37 28 50 Z" fill="${c.m}"/><path d="M36 32 Q46 28 52 30" stroke="${c.l}" stroke-width="1" fill="none" opacity=".45"/>`;
     case "f_sideSwept": return `<path d="M27 49 Q26 22 50 21 Q74 22 73 49 Q72 35 58 33 Q46 34 40 40 Q34 38 33 44 Q29 42 27 49 Z" fill="${c.m}"/><path d="M41 29 Q53 31 64 38" stroke="${c.l}" stroke-width="1" fill="none" opacity=".45"/>`;
     case "f_pixie": return `<path d="M29 46 Q27 25 50 24 Q73 25 71 46 Q70 36 64 35 Q66 40 60 42 Q62 36 55 35 Q52 37 48 35 Q44 38 40 36 Q36 40 38 43 Q33 40 34 36 Q30 37 29 46 Z" fill="${c.m}"/>`;
+    case "m_quiff": return `<path d="M29 46 Q27 25 43 23 Q50 17 60 24 Q73 28 71 46 Q70 33 58 31 L55 27 Q50 29 46 31 Q34 33 29 46 Z" fill="${c.m}"/><path d="M44 29 Q52 25 58 29" stroke="${c.l}" stroke-width="1" fill="none" opacity=".5"/><path d="M38 34 Q48 30 60 33" stroke="${c.d}" stroke-width="0.7" fill="none" opacity=".4"/>`;
+    case "m_fade": return `<path d="M33 45 Q32 26 50 24 Q68 26 67 45 Q66 35 50 33 Q34 35 33 45 Z" fill="${c.m}"/><path d="M33 45 Q31 41 33 40 M67 45 Q69 41 67 40" stroke="${c.d}" stroke-width="1.6" fill="none" opacity=".5"/><path d="M41 30 l1 4 M50 29 l0 4 M59 30 l-1 4" stroke="${c.l}" stroke-width="0.7" opacity=".45"/>`;
+    case "m_waves": return `<path d="M30 45 Q29 26 50 24 Q71 26 70 45 Q69 36 63 35 Q66 39 60 39 Q63 35 56 35 Q52 37 50 35 Q48 37 44 35 Q37 35 40 39 Q34 39 37 35 Q31 36 30 45 Z" fill="${c.m}"/><path d="M35 31 Q41 28 45 31 M52 30 Q58 28 63 31" stroke="${c.l}" stroke-width="0.8" fill="none" opacity=".5"/>`;
+    case "f_longLayers": return `<path d="M27 49 Q26 21 50 20 Q74 21 73 49 Q72 36 62 34 Q57 38 50 38 Q43 38 38 34 Q28 36 27 49 Z" fill="${c.m}"/><path d="M34 30 Q44 26 50 28 Q57 26 66 30" stroke="${c.l}" stroke-width="1.1" fill="none" opacity=".55"/><path d="M31 40 Q40 36 44 39 M69 40 Q60 36 56 39" stroke="${c.d}" stroke-width="0.7" fill="none" opacity=".4"/>`;
+    case "f_curtainBangs": return `<path d="M28 50 Q26 22 50 21 Q74 22 72 50 Q71 36 63 34 Q61 47 53 49 Q56 41 51 37 Q50 36 49 37 Q44 41 47 49 Q39 47 37 34 Q29 36 28 50 Z" fill="${c.m}"/><path d="M50 23 L50 34" stroke="${c.d}" stroke-width="0.8" opacity=".4"/>`;
+    case "f_highPony": return `<path d="M28 45 Q27 22 50 21 Q73 22 72 45 Q71 31 50 30 Q29 31 28 45 Z" fill="${c.m}"/><path d="M34 32 Q50 28 66 32" stroke="${c.l}" stroke-width="0.9" fill="none" opacity=".5"/><circle cx="50" cy="21" r="3.1" fill="${c.m}"/>`;
     case "bald": return "";
     default: return `<path d="M28 46 Q26 22 50 21 Q74 22 72 46 Q72 35 62 33 Q57 37 50 37 Q43 37 38 33 Q28 35 28 46 Z" fill="${c.m}"/>`;
   }
 }
-function avSipBadge(){ return `<rect x="58" y="88" width="15" height="8.5" rx="2" fill="#ffffff"/><text x="65.5" y="94.4" text-anchor="middle" font-family="Montserrat,Arial" font-size="5.6" font-weight="800" fill="#15336b">SiP</text>`; }
+function avSipBadge(){ return `<rect x="56" y="85.5" width="15" height="8.5" rx="2" fill="#ffffff"/><text x="63.5" y="91.9" text-anchor="middle" font-family="Montserrat,Arial" font-size="5.6" font-weight="800" fill="#15336b">SiP</text>`; }
 function avBody(c){ return `<path d="M12 100 Q12 78 50 74 Q88 78 88 100 Z" fill="${c}"/>`; }
 function avCollarW(){ return `<path d="M42 74 L50 84 L37 94 Q34 82 42 74 Z" fill="#ffffff"/><path d="M58 74 L50 84 L63 94 Q66 82 58 74 Z" fill="#ffffff"/>`; }
 function avClothes(kind,cloth,tie){
@@ -4771,20 +4783,23 @@ function avatarSVG(cfg,size){
   const lash=cfg.sex==="fem"?"long":"normal";
   const eyeK=cfg.sex==="masc"?0.8:(cfg.sex==="fem"?1:0.9);
   const uid="av"+Math.random().toString(36).slice(2,8);
+  const hcL=avShade(hc,22), hcD=avShade(hc,-22), hcDar=avShade(hc,-24), hcDD=avShade(hc,-38);
+  const hairGrad=`<linearGradient id="${uid}h" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${hcL}"/><stop offset=".52" stop-color="${hc}"/><stop offset="1" stop-color="${hcD}"/></linearGradient>`
+    +`<linearGradient id="${uid}hb" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${hc}"/><stop offset="1" stop-color="${hcDD}"/></linearGradient>`;
+  const hairFill=str=>str.split(`fill="${hc}"`).join(`fill="url(#${uid}h)"`).split(`fill="${hcDar}"`).join(`fill="url(#${uid}hb)"`);
   const blush = cfg.blush? `<ellipse cx="36.5" cy="55" rx="3.4" ry="2" fill="#ff8aa0" opacity=".32"/><ellipse cx="63.5" cy="55" rx="3.4" ry="2" fill="#ff8aa0" opacity=".32"/>`:"";
   return `<svg viewBox="0 0 100 100" width="${w}" height="${w}" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" style="display:block">`
     +`<defs><clipPath id="${uid}"><circle cx="50" cy="50" r="50"/></clipPath>`
-    +`<linearGradient id="${uid}b" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${bg[0]}"/><stop offset="1" stop-color="${bg[1]}"/></linearGradient></defs>`
+    +`<linearGradient id="${uid}b" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${bg[0]}"/><stop offset="1" stop-color="${bg[1]}"/></linearGradient>`+hairGrad+`</defs>`
     +`<g clip-path="url(#${uid})"><rect width="100" height="100" fill="url(#${uid}b)"/>`
-    +`<g transform="translate(50,47) scale(1.2) translate(-50,-47)">`
-    +avHairBack(cfg.hair,hc)
+    +hairFill(avHairBack(cfg.hair,hc))
     +`<path d="M44 60 h12 v12 q-6 5 -12 0 z" fill="${skinD}"/>`
     +avClothes(cfg.clothes,cloth,acc)+avAccessory(cfg.accessory,acc)
     +`<ellipse cx="50" cy="47" rx="19.5" ry="22" fill="${skin}"/>`
     +`<circle cx="30.5" cy="49" r="4" fill="${skin}"/><circle cx="69.5" cy="49" r="4" fill="${skin}"/>`
     +blush
-    +avBrows(cfg.brows,hc)+avEyes(cfg.eyes,iris,lash,eyeK)+avNose(cfg.nose,skinD)+avBeard(cfg.beard,hc)+avMouth(cfg.mouth)+avGlasses(cfg.glasses,gcol)+avHairFront(cfg.hair,hc)
-    +`</g></g></svg>`;
+    +avBrows(cfg.brows,hc)+avEyes(cfg.eyes,iris,lash,eyeK)+avNose(cfg.nose,skinD)+avBeard(cfg.beard,hc)+avMouth(cfg.mouth)+avGlasses(cfg.glasses,gcol)+hairFill(avHairFront(cfg.hair,hc))
+    +`</g></svg>`;
 }
 
 /* Almacenamiento por usuario */
