@@ -4061,6 +4061,43 @@ function typing(on){
     typingRow.appendChild(t);log.appendChild(typingRow);log.scrollTop=log.scrollHeight;}
   else if(!on&&typingRow){const r=typingRow;typingRow=null;r.classList.add("leaving");setTimeout(()=>{try{r.remove();}catch(_){}},220);}
 }
+/* ===== "Pensando" con pasos visibles (estilo Claude) =====
+   Muestra el proceso real que sigue ASE-IA para llegar a la respuesta
+   (analiza, abre el reglamento, busca la norma, redacta) con una pausa
+   deliberada: priorizamos una respuesta correcta por sobre la velocidad. */
+let thinkTimer=null;
+function thinkingStart(steps){
+  typing(true);
+  const label = typingRow && typingRow.querySelector(".tlabel");
+  if(!label) return;
+  steps = (steps&&steps.length)?steps:["ASE-IA está pensando…"];
+  let i=0; label.textContent=steps[0];
+  if(thinkTimer){ clearInterval(thinkTimer); thinkTimer=null; }
+  thinkTimer=setInterval(()=>{
+    i++;
+    if(i<steps.length){ label.textContent=steps[i]; }
+    else { clearInterval(thinkTimer); thinkTimer=null; }
+  }, 700);
+}
+function thinkingStop(){ if(thinkTimer){clearInterval(thinkTimer);thinkTimer=null;} typing(false); }
+/* Espera hasta completar un tiempo mínimo de "pensado" desde t0 (ms). */
+function minThink(t0,ms){ const left=ms-(Date.now()-t0); return left>0?new Promise(r=>setTimeout(r,left)):Promise.resolve(); }
+/* Elige los pasos a mostrar según el tipo de consulta. */
+function thinkPlanFor(text){
+  const nq=afNorm(text);
+  const base=["Analizando tu pregunta…"];
+  if(typeof esTemaAlexia==="function" && esTemaAlexia(nq))
+    return base.concat(["Abriendo el catálogo de faltas (Alexia)…","Contrastando con el Reglamento Interno de Convivencia…","Determinando la falta y su número…","Redactando la respuesta…"]);
+  if(/\b(evalua|nota|calific|prueba|promedi|eximi|repiten|repitencia|promocion)\b/.test(nq))
+    return base.concat(["Abriendo el Reglamento de Evaluación 2026…","Buscando el artículo que aplica…","Redactando la respuesta…"]);
+  if(/\bhorario/.test(nq))
+    return base.concat(["Abriendo los horarios oficiales…","Buscando el curso o profesor…","Preparando la respuesta…"]);
+  if(/\b(correo|email|e-mail|redactar|escribir(le)?)\b/.test(nq))
+    return base.concat(["Preparando el redactor de correo…"]);
+  if(/\b(protocolo|acoso|bullying|convivencia|maltrato|abuso|desregulacion|emocional|accidente|violencia)\b/.test(nq))
+    return base.concat(["Abriendo el Plan de Gestión de la Convivencia y los protocolos…","Buscando el procedimiento que corresponde…","Redactando la respuesta…"]);
+  return base.concat(["Abriendo el Reglamento Interno y el PEI…","Buscando la información verificada…","Redactando la respuesta…"]);
+}
 function renderSugs(){const box=document.getElementById("sugs");box.innerHTML="";(SUGS[ROLE]||SUGS.teacher||[]).forEach(s=>{const b=el("button","sug",s);b.type="button";b.onclick=(s===EMAIL_SUG)?(()=>emailStart()):(()=>ask(s));box.appendChild(b);});}
 /* ============ PANTALLA COMPLETA del chat (expandir / reducir) ============ */
 const FS_EXPAND='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3M16 3h3a2 2 0 0 1 2 2v3M8 21H5a2 2 0 0 1-2-2v-3M16 21h3a2 2 0 0 0 2-2v-3"/></svg>';
@@ -4377,6 +4414,14 @@ const ALEXIA_HINTS=[
   {re:/\b(pelea|peleando|golpe|golpear|puñete|patada|empuj).*(compañer|estudiante|alumno|persona)|se agarr.*combo\b/,sev:"grave",ref:"21"},
   {re:/\b(consumo|consumir|tomar|beber).*(alcohol|droga|marihuana)|alcohol.*colegio|droga.*colegio\b/,sev:"grave",ref:"24"},
   {re:/\b(roba|robar|hurt|sustra).*(objeto|celular|dinero|pertenencia)\b/,sev:"grave",ref:"28"},
+  {re:/\b(fug\w*|arranc\w*|escap\w*|huy\w*|huir)\b|\b(se fue|salio|salir|retiro|retirar|retira|abandon\w*)\b.*(colegio|establecimiento|recinto|jornada)|ingres\w*.*retir/,sev:"grave",ref:"31"},
+  {re:/\b(encapuchad\w*|capucha|tapad\w* (el rostro|la cara)|tapandose (el rostro|la cara)|cubrir\w* (el rostro|la cara)|con la cara tapada)\b/,sev:"grave",ref:"37"},
+  {re:/\b(suplant\w*|hacerse pasar por|se hizo pasar por|usurp\w* (la )?identidad)\b/,sev:"grave",ref:"33"},
+  {re:/\b(falsific\w*|adulter\w*)\b/,sev:"grave",ref:"19"},
+  {re:/\b(pornograf\w*|porno|material sexual explicito)\b/,sev:"grave",ref:"30"},
+  {re:/\b(no ingres\w*|no entr\w*)\b.*clase.*(estando|colegio|dentro)|cimarra interna/,sev:"grave",ref:"5"},
+  {re:/\b(vender|venta|comercializ\w*)\b.*(articulo|producto|dulce|golosina|complet|cosas|mercaderia)/,sev:"grave",ref:"6"},
+  {re:/\bseparars?e? del (grupo|curso)\b.*(salida|paseo)|se separo.*(salida pedagogica|paseo)/,sev:"grave",ref:"17"},
   {re:/\b(venta|vender|distribu).*(droga|alcohol)\b/,sev:"gravisima",ref:"3"},
   {re:/\b(arma|pistola|cuchillo|navaja|cortaplum|artefacto incendiario)\b/,sev:"gravisima",ref:"4"},
   {re:/\b(tocacion|abuso sexual|acoso sexual|violacion)\b/,sev:"gravisima",ref:"5"},
@@ -4418,8 +4463,13 @@ function answerAlexiaFalta(q){
   if(!best.length) return "No encontré una falta que calce exactamente con eso. En Alexia las anotaciones son LEVES, GRAVES o GRAVÍSIMAS. Reformula la conducta (por ejemplo, «usa el celular en clases») y te digo el número. 🙂";
   best.sort((a,b)=>b.s-a.s);
   const top=best[0];
-  const extra=best.slice(1).filter(x=>x.s>=top.s-0 && (x.ref!==top.ref||x.lbl!==top.lbl)).slice(0,2);
-  return afFormat(top, extra.length?extra:null);
+  // Umbral de confianza: si el calce es débil, NO inventamos un número.
+  // Preferimos pedir detalle antes que dar información incorrecta.
+  if(top.s<2){
+    return "Para no arriesgar un número equivocado, cuéntame la conducta con un poco más de detalle (qué hizo exactamente). Así te indico con certeza la falta y su número en Alexia. Si es urgente, confírmalo con Convivencia Escolar. 🙂";
+  }
+  // Una sola respuesta clara (sin "también podría aplicar", que confundía).
+  return afFormat(top, null);
 }
 
 /* ===== Horario de un CURSO desde el chat (botón → abre la imagen oficial) ===== */
@@ -4481,36 +4531,37 @@ function answerCorreoApoderado(q){
 }
 async function ask(text){
   text=(text||"").trim();if(!text)return;
-  document.getElementById("sugs").innerHTML="";add(text,"user");document.getElementById("q").value="";typing(true);
+  document.getElementById("sugs").innerHTML="";add(text,"user");document.getElementById("q").value="";
+  const _t0=Date.now(); thinkingStart(thinkPlanFor(text));
   // Intención ESCRITA de redactar un correo → abre el redactor guiado (igual que el botón),
   // salvo que ya se esté dentro de un flujo de correo (EFLOW activo).
   const _em=(!EFLOW)?emailComposeIntent(text):null;
   if(_em){
-    await new Promise(r=>setTimeout(r,250)); typing(false);
+    await minThink(_t0,1000); thinkingStop();
     convo.push({role:"user",content:text});
     if(_em.masivo && STAFF(ROLE)){ convo.push({role:"assistant",content:"(abriendo el redactor de correo masivo)"}); massStart(); }
     else { convo.push({role:"assistant",content:"(abriendo el redactor de correo)"}); emailStartFromIntent(_em.rec); }
     return;
   }
   const _hp=answerHorarioProfe(text);
-  if(_hp){ await new Promise(r=>setTimeout(r,300)); typing(false);
+  if(_hp){ await minThink(_t0,1600); thinkingStop();
     // Botón para ver la IMAGEN/tabla del horario del profesor (verificable), salvo en la desambiguación.
     const pn=(HP_CTX&&HP_CTX.nombre&&PROF_HORARIOS[HP_CTX.nombre]&&!/^Hay varios profes/.test(_hp))?HP_CTX.nombre:null;
     add(_hp,"bot",pn?{horarioProfe:pn}:null); speak(_hp); convo.push({role:"user",content:text}); convo.push({role:"assistant",content:clean(_hp)}); return; }
   const _af=answerAlexiaFalta(text);
-  if(_af){ await new Promise(r=>setTimeout(r,300)); typing(false); add(_af,"bot"); speak(_af); convo.push({role:"user",content:text}); convo.push({role:"assistant",content:clean(_af)}); return; }
+  if(_af){ await minThink(_t0,1900); thinkingStop(); add(_af,"bot"); speak(_af); convo.push({role:"user",content:text}); convo.push({role:"assistant",content:clean(_af)}); return; }
   const _ca=answerCorreoApoderado(text);
-  if(_ca){ await new Promise(r=>setTimeout(r,300)); typing(false);
+  if(_ca){ await minThink(_t0,1500); thinkingStop();
     const rep=(typeof _ca==="string")?_ca:_ca.reply;
     const ex=(typeof _ca==="object"&&_ca.to)?{mail:{url:gmailComposeUrl("","",_ca.to),label:"Enviar correo"}}:null;
     add(rep,"bot",ex); speak(rep); convo.push({role:"user",content:text}); convo.push({role:"assistant",content:clean(rep)}); return; }
   const _fp=answerFichaPaec(text);
-  if(_fp){ await new Promise(r=>setTimeout(r,300)); typing(false);
+  if(_fp){ await minThink(_t0,1600); thinkingStop();
     const rep=(typeof _fp==="string")?_fp:_fp.reply;
     const ex=(typeof _fp==="object"&&_fp.paec)?{paec:_fp.paec}:null;
     add(rep,"bot",ex); speak(rep); convo.push({role:"user",content:text}); convo.push({role:"assistant",content:clean(rep)}); return; }
   const _hcu=answerHorarioCurso(text);
-  if(_hcu){ await new Promise(r=>setTimeout(r,300)); typing(false); add(_hcu.reply,"bot",_hcu.code?{horarioCurso:{code:_hcu.code,label:_hcu.label}}:null); speak(_hcu.reply); convo.push({role:"user",content:text}); convo.push({role:"assistant",content:clean(_hcu.reply)}); return; }
+  if(_hcu){ await minThink(_t0,1500); thinkingStop(); add(_hcu.reply,"bot",_hcu.code?{horarioCurso:{code:_hcu.code,label:_hcu.label}}:null); speak(_hcu.reply); convo.push({role:"user",content:text}); convo.push({role:"assistant",content:clean(_hcu.reply)}); return; }
   const local=answer(text);
   let reply=local.reply;
   let shownCites=local.docCites;            // fichas que se muestran bajo la respuesta
@@ -4539,10 +4590,9 @@ async function ask(text){
       const data=await res.json();
       if(data&&data.reply) reply=data.reply;
     }catch(e){ /* respaldo local */ }
-  } else {
-    await new Promise(r=>setTimeout(r,420));
   }
-  typing(false);add(reply,"bot",{docCites:shownCites,cards:local.cards,mail:local.mail});  // renderRich limpia y arma tablas
+  await minThink(_t0,1900);        // pausa deliberada: mostramos el proceso y priorizamos exactitud
+  thinkingStop();add(reply,"bot",{docCites:shownCites,cards:local.cards,mail:local.mail});  // renderRich limpia y arma tablas
   speak(reply);   // ASE-IA con voz (si está activado en Preferencias)
   convo.push({role:"user",content:text});convo.push({role:"assistant",content:clean(reply)});
 }
